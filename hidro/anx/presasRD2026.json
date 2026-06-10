@@ -1,0 +1,344 @@
+{
+  "type": "FeatureCollection",
+  "name": "presasRD2026",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.200628, 19.024801]
+      },
+      "properties": {
+        "TITULO": "Presa de Hatillo",
+        "descripcion": "Construida en 1984, Muro de Tierra, Cuenca del río Yuna.",
+        "latitud": 19.024801,
+        "longitud": -70.200628
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.407949, 19.102286]
+      },
+      "properties": {
+        "TITULO": "Presa de Rincón",
+        "descripcion": "Construida en 1978, Muro de Concreto armado, Cuenca del río Yuna.",
+        "latitud": 19.102286,
+        "longitud": -70.407949
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.722309, 19.284084]
+      },
+      "properties": {
+        "TITULO": "Presa de Tavera",
+        "descripcion": "Construida en 1973, Muro de Concreto armado, Cuenca del río Yaque del Norte.",
+        "latitud": 19.284084,
+        "longitud": -70.722309
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.748341, 19.308470]
+      },
+      "properties": {
+        "TITULO": "Presa de Bao",
+        "descripcion": "Construida en 1984, Muro de Tierra, Cuenca del río Yaque del Norte.",
+        "latitud": 19.308470,
+        "longitud": -70.748341
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.121913, 19.392822]
+      },
+      "properties": {
+        "TITULO": "Presa de Monción",
+        "descripcion": "Construida en 2001, Muro de Tierra, Cuenca del río Yaque del Norte.",
+        "latitud": 19.392822,
+        "longitud": -71.121913
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.0799134569459, 19.464737240162243]
+      },
+      "properties": {
+        "TITULO": "Presa de Monción (contraembalse)",
+        "descripcion": "Construida en 2001, Muro de Tierra, Cuenca del río Yaque del Norte.",
+        "latitud": 19.464737240162243,
+        "longitud": -71.0799134569459
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.511149, 19.615541]
+      },
+      "properties": {
+        "TITULO": "Presa de Maguaca",
+        "descripcion": "Construida en 1978, Muro de Tierra, Cuenca del río Yaque del Norte.",
+        "latitud": 19.615541,
+        "longitud": -71.511149
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.545628, 19.620177]
+      },
+      "properties": {
+        "TITULO": "Presa de Chacuey",
+        "descripcion": "Construida en 1979, Muro de Tierra, Cuenca del río Yaque del Norte.",
+        "latitud": 19.620177,
+        "longitud": -71.545628
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.56106466789846, 18.886896755032836]
+      },
+      "properties": {
+        "TITULO": "Presa de Blanco",
+        "descripcion": "Construida en 1996, Muro de Concreto armado, Cuenca del río Yuna.",
+        "latitud": 18.886896755032836,
+        "longitud": -70.56106466789846
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.5220662785689, 18.860600196004842]
+      },
+      "properties": {
+        "TITULO": "Presa de Tireo",
+        "descripcion": "Construida en 1996, Muro de Concreto armado, Cuenca del río Yuna.",
+        "latitud": 18.860600196004842,
+        "longitud": -70.5220662785689
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-69.332373, 19.235003]
+      },
+      "properties": {
+        "TITULO": "Presa Samaná-El Valle",
+        "descripcion": "Cuenca río ???.",
+        "latitud": 19.235003,
+        "longitud": -69.332373
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-69.883949, 18.763942]
+      },
+      "properties": {
+        "TITULO": "Presa Luisa Blanca",
+        "descripcion": "Cuenca río Ozama.",
+        "latitud": 18.763942,
+        "longitud": -69.883949
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.267723, 18.362193]
+      },
+      "properties": {
+        "TITULO": "Presa Las Barías",
+        "descripcion": "Construida en 1976, Muro de Concreto Armado, Cuenca del río Nizao.",
+        "latitud": 18.362193,
+        "longitud": -70.267723
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.279075, 18.401510]
+      },
+      "properties": {
+        "TITULO": "Presa de Valdesia",
+        "descripcion": "Construida en 1975, Muro de Concreto armado, Cuenca del río Nizao.",
+        "latitud": 18.401510,
+        "longitud": -70.279075
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.379179, 18.547538]
+      },
+      "properties": {
+        "TITULO": "Presa de Jiguey",
+        "descripcion": "Construida en 1992, Muro de Concreto Armado, Cuenca del río Nizao.",
+        "latitud": 18.547538,
+        "longitud": -70.379179
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.32280828798551, 18.496620130505793]
+      },
+      "properties": {
+        "TITULO": "Presa de Aguacate",
+        "descripcion": "Construida en 1992, Muro de Concreto Armado, Cuenca del río Nizao.",
+        "latitud": 18.496620130505793,
+        "longitud": -70.32280828798551
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.041243, 18.715224]
+      },
+      "properties": {
+        "TITULO": "Presa de Sabana Yegua",
+        "descripcion": "Construida en 1979, Muro de Tierra, Cuenca del río Yaque del Sur.",
+        "latitud": 18.715224,
+        "longitud": -71.041243
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.010660, 18.504773]
+      },
+      "properties": {
+        "TITULO": "Presa de Monte Grande",
+        "descripcion": "Muro de tierra, Cuenca yaque del Sur.",
+        "latitud": 18.504773,
+        "longitud": -71.010660
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.291282, 18.986858]
+      },
+      "properties": {
+        "TITULO": "Presa de Sabaneta",
+        "descripcion": "Construida en 1981, Muro de Tierra, Cuenca del río Yaque del Sur.",
+        "latitud": 18.986858,
+        "longitud": -71.291282
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.571287, 18.319457]
+      },
+      "properties": {
+        "TITULO": "Presa Las Damas-Puerto Escondido",
+        "descripcion": "Construida en 1967, Muro de Concreto Armado, Cuenca del Lago Enriquillo río Las Damas.",
+        "latitud": 18.319457,
+        "longitud": -71.571287
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.00901324681328, 18.92376788332129]
+      },
+      "properties": {
+        "TITULO": "Presa de Palomino",
+        "descripcion": "Cuenca del río Yaque del Sur.",
+        "latitud": 18.92376788332129,
+        "longitud": -71.00901324681328
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.67122031739898, 19.506136475313824]
+      },
+      "properties": {
+        "TITULO": "Presa La Piña",
+        "descripcion": "Cuenca río Dajabón.",
+        "latitud": 19.506136475313824,
+        "longitud": -71.67122031739898
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.99874560003336, 19.480583193114164]
+      },
+      "properties": {
+        "TITULO": "Presa de Guanajuma",
+        "descripcion": "Construida en 2001, Muro de Tierra, Cuenca del río Yaque del Norte.",
+        "latitud": 19.480583193114164,
+        "longitud": -70.99874560003336
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.72221332095197, 19.335398228493066]
+      },
+      "properties": {
+        "TITULO": "Presa de López-Angostura",
+        "descripcion": "Construida en 1987, Muro de Tierra, Cuenca río Yaque del Norte.",
+        "latitud": 19.335398228493066,
+        "longitud": -70.72221332095197
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.09721422813743, 19.434080913193018]
+      },
+      "properties": {
+        "TITULO": "Presa Boba",
+        "descripcion": "Cuenca río Boba.",
+        "latitud": 19.434080913193018,
+        "longitud": -70.09721422813743
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-72.03402308510566, 18.901467224788057]
+      },
+      "properties": {
+        "TITULO": "Presa de Peligre (Haití)",
+        "descripcion": "Muro de concreto, Cuenca río Artibonito.",
+        "latitud": 18.901467224788057,
+        "longitud": -72.03402308510566
+      }
+    }
+  ]
+}

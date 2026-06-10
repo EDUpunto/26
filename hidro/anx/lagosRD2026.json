@@ -1,0 +1,188 @@
+{
+  "type": "FeatureCollection",
+  "name": "lagosRD2026",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.65982420634246, 18.519990563250573]
+      },
+      "properties": {
+        "TITULO": "Lago Enriquillo",
+        "descripcion": "Aguas hipersalinas.",
+        "latitud": 18.519990563250573,
+        "longitud": -71.65982420634246
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.24559860081713, 18.292674979536578]
+      },
+      "properties": {
+        "TITULO": "Laguna de Cabral/Rincón",
+        "descripcion": "Aguas salobres. En peligro de extinción.",
+        "latitud": 18.292674979536578,
+        "longitud": -71.24559860081713
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.36551951874868, 17.767176443820244]
+      },
+      "properties": {
+        "TITULO": "Laguna de Oviedo",
+        "descripcion": "Aguas salobres.",
+        "latitud": 17.767176443820244,
+        "longitud": -71.36551951874868
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-68.9403776631565, 19.01276132666113]
+      },
+      "properties": {
+        "TITULO": "Laguna Redonda",
+        "descripcion": "Aguas salobres, conexión directa con el mar y alimentada por el río Cuarón.",
+        "latitud": 19.01276132666113,
+        "longitud": -68.9403776631565
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-68.85276328453624, 18.97908095627074]
+      },
+      "properties": {
+        "TITULO": "Laguna del Limón",
+        "descripcion": "Agua dulce, posee conexión directa con el mar.",
+        "latitud": 18.97908095627074,
+        "longitud": -68.85276328453624
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-71.71200698225906, 19.654734249307957]
+      },
+      "properties": {
+        "TITULO": "Laguna Saladilla / La Jagua",
+        "descripcion": "Aguas salobres.",
+        "latitud": 19.654734249307957,
+        "longitud": -71.71200698225906
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-68.37464983220711, 18.64637568490231]
+      },
+      "properties": {
+        "TITULO": "Laguna de Bávaro",
+        "descripcion": "Aguas salobres. En peligro de extinción.",
+        "latitud": 18.64637568490231,
+        "longitud": -68.37464983220711
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-69.7319410366798, 19.097546174205203]
+      },
+      "properties": {
+        "TITULO": "Laguna Cristal",
+        "descripcion": "Aguas profundas.",
+        "latitud": 19.097546174205203,
+        "longitud": -69.7319410366798
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-69.74727485749725, 19.099945053116862]
+      },
+      "properties": {
+        "TITULO": "Laguna Cristalina",
+        "descripcion": "",
+        "latitud": 19.099945053116862,
+        "longitud": -69.74727485749725
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.07783498762859, 19.646924667907967]
+      },
+      "properties": {
+        "TITULO": "Laguna Gri-Gri",
+        "descripcion": "Agua dulce, posee conexión directa con el mar.",
+        "latitud": 19.646924667907967,
+        "longitud": -70.07783498762859
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-72.01184244280826, 18.576580910363845]
+      },
+      "properties": {
+        "TITULO": "Lago Saumatre (Haití)",
+        "descripcion": "Aguas hipersalinas.",
+        "latitud": 18.576580910363845,
+        "longitud": -72.01184244280826
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-72.14918338617152, 18.644187141953292]
+      },
+      "properties": {
+        "TITULO": "Laguna Trou Caiman (Haití)",
+        "descripcion": "En peligro de extinción.",
+        "latitud": 18.644187141953292,
+        "longitud": -72.14918338617152
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.04747518345019, 18.399820152327973]
+      },
+      "properties": {
+        "TITULO": "Lago Miragoane (Haití)",
+        "descripcion": "",
+        "latitud": 18.399820152327973,
+        "longitud": -73.04747518345019
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-72.99392446632011, 18.406976613081717]
+      },
+      "properties": {
+        "TITULO": "Lago pequeño Miragoane (Haití)",
+        "descripcion": "",
+        "latitud": 18.406976613081717,
+        "longitud": -72.99392446632011
+      }
+    }
+  ]
+}
