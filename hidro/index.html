@@ -1,356 +1,547 @@
 <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body {
-                  background-color: white; /* Ensure the iframe has a white background */
-                }
-
-                
-              </style>
-                        </head>
-                        <body>
-                            
-
-              <script>
-                              // ═══════════════════════════════════════════════════════════
-// 1. INICIALIZAR EL MAPA — centrado en RD
-// ═══════════════════════════════════════════════════════════
-var map = L.map('map', { zoomControl: false }).setView([19.03556466237287, -70.89432006796727], 8);
-
-// ═══════════════════════════════════════════════════════════
-// 2. CAPAS BASE
-// ═══════════════════════════════════════════════════════════
-var capaOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-});
-var capaSatelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19,
-    attribution: 'Tiles © Esri'
-});
-capaOSM.addTo(map);
-
-// Función global para cambiar capa base
-window.cambiarBase = function(tipo) {
-    if (tipo === 'satelite') {
-        map.removeLayer(capaOSM);
-        capaSatelite.addTo(map);
-    } else {
-        map.removeLayer(capaSatelite);
-        capaOSM.addTo(map);
-    }
-};
-
-// ═══════════════════════════════════════════════════════════
-// 3. ESTADO GLOBAL DE CUENCAS
-// ═══════════════════════════════════════════════════════════
-var todasLasCuencas = [];   // { nombre, layerCuenca, layerCauce, bounds }
-var cuencaActiva = null;
-var capaVisible = 'ambos';  // 'cuenca' | 'cauce' | 'ambos'
-
-// ═══════════════════════════════════════════════════════════
-// 4. ESTILOS
-// ═══════════════════════════════════════════════════════════
-var estiloCuencaNormal = {
-    color: "#27ae60",
-    weight: 1.5,
-    fillColor: "#2ecc71",
-    fillOpacity: 0.18,
-    opacity: 0.8
-};
-var estiloCuencaDestacada = {
-    color: "#f39c12",
-    weight: 2.5,
-    fillColor: "#f1c40f",
-    fillOpacity: 0.35,
-    opacity: 1
-};
-var estiloCuencaOculta = {
-    color: "#27ae60",
-    weight: 1,
-    fillColor: "#2ecc71",
-    fillOpacity: 0.04,
-    opacity: 0.15
-};
-var estiloCauceNormal = {
-    color: "#2980b9",
-    weight: 3,
-    opacity: 0.85,
-    lineCap: 'round'
-};
-var estiloCauceDestacado = {
-    color: "#3498db",
-    weight: 4.5,
-    opacity: 1,
-    lineCap: 'round'
-};
-var estiloCauceOculto = {
-    color: "#2980b9",
-    weight: 1.5,
-    opacity: 0.12,
-    lineCap: 'round'
-};
-
-// ═══════════════════════════════════════════════════════════
-// 5. FUNCIÓN PARA CONSTRUIR POPUP
-// ═══════════════════════════════════════════════════════════
-function construirPopup(properties, nombreCapa, tipo) {
-    var titulo = nombreCapa || 'Cuenca hidrográfica';
-    var html = '<div style="font-family:\'Segoe UI\',sans-serif; max-width:260px;">';
-    html += '<div style="font-weight:700; font-size:13px; color:#1a5276; margin-bottom:6px; border-bottom:2px solid #2980b9; padding-bottom:4px;">💧 ' + titulo + '</div>';
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Mapa de Cuencas Hidrográficas - República Dominicana</title>
     
-    if (tipo !== 'cauce') {
-        var descripcion = null;
-        if (properties) {
-            Object.keys(properties).forEach(function(key) {
-                if (key.toLowerCase() === 'name') {
-                    descripcion = properties[key];
-                }
-            });
+    <!-- Leaflet CSS y JS (dependencias necesarias) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        if (descripcion && descripcion.trim() !== '') {
-            html += '<div style="font-size:12px; color:#333; line-height:1.5;">' + descripcion + '</div>';
-        } else {
-            html += '<div style="font-size:12px; color:#888; font-style:italic;">Sin descripción disponible.</div>';
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            overflow: hidden;
         }
-    }
-
-    html += '</div>';
-    return html;
-}
-
-// ═══════════════════════════════════════════════════════════
-// 6. CAMBIAR VISIBILIDAD DE CAPAS
-// ═══════════════════════════════════════════════════════════
-window.cambiarCapas = function(modo) {
-    capaVisible = modo;
-    ['cuenca', 'cauce', 'ambos'].forEach(function(m) {
-        var btn = document.getElementById('btn-capa-' + m);
-        if (btn) btn.classList.toggle('active', m === modo);
-    });
-
-    todasLasCuencas.forEach(function(c) {
-        var estaActiva = (c === cuencaActiva);
-        var mostrarCuenca = (modo === 'cuenca' || modo === 'ambos');
-        var mostrarCauce  = (modo === 'cauce'  || modo === 'ambos');
-
-        if (mostrarCuenca) {
-            if (!map.hasLayer(c.layerCuenca)) c.layerCuenca.addTo(map);
-            c.layerCuenca.setStyle(estaActiva ? estiloCuencaDestacada : (cuencaActiva ? estiloCuencaOculta : estiloCuencaNormal));
-        } else {
-            if (map.hasLayer(c.layerCuenca)) map.removeLayer(c.layerCuenca);
+        /* Contenedor del mapa: debe tener altura definida */
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1;
         }
-
-        if (mostrarCauce) {
-            if (!map.hasLayer(c.layerCauce)) c.layerCauce.addTo(map);
-            c.layerCauce.setStyle(estaActiva ? estiloCauceDestacado : (cuencaActiva ? estiloCauceOculto : estiloCauceNormal));
-        } else {
-            if (map.hasLayer(c.layerCauce)) map.removeLayer(c.layerCauce);
+        /* Panel de controles flotante */
+        .controls-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+            backdrop-filter: blur(4px);
+            font-size: 13px;
+            min-width: 200px;
+            pointer-events: auto;
+            border: 1px solid #ddd;
         }
-    });
-
-    var itemCuenca = document.querySelector('#panel-leyenda .item-leyenda:nth-child(2)');
-    var itemCauce  = document.querySelector('#panel-leyenda .item-leyenda:nth-child(3)');
-    if (itemCuenca) itemCuenca.style.display = (modo === 'cauce')  ? 'none' : 'flex';
-    if (itemCauce)  itemCauce.style.display  = (modo === 'cuenca') ? 'none' : 'flex';
-};
-
-// ═══════════════════════════════════════════════════════════
-// 7. SELECCIÓN DE CUENCA
-// ═══════════════════════════════════════════════════════════
-function seleccionarCuenca(entrada) {
-    cuencaActiva = entrada;
-    var el = document.getElementById('nombreCuenca');
-    if (el) el.textContent = entrada.nombre;
-
-    var btnMostrar = document.getElementById('btn-mostrar-todas');
-    if (btnMostrar) btnMostrar.style.display = 'block';
-
-    todasLasCuencas.forEach(function(c) {
-        var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
-        var mostrarCauce  = (capaVisible === 'cauce'  || capaVisible === 'ambos');
-
-        if (c === entrada) {
-            if (mostrarCuenca) {
-                if (!map.hasLayer(c.layerCuenca)) c.layerCuenca.addTo(map);
-                c.layerCuenca.setStyle(estiloCuencaDestacada);
-                c.layerCuenca.bringToFront();
-            }
-            if (mostrarCauce) {
-                if (!map.hasLayer(c.layerCauce)) c.layerCauce.addTo(map);
-                c.layerCauce.setStyle(estiloCauceDestacado);
-                c.layerCauce.bringToFront();
-            }
-        } else {
-            if (mostrarCuenca) c.layerCuenca.setStyle(estiloCuencaOculta);
-            if (mostrarCauce)  c.layerCauce.setStyle(estiloCauceOculto);
+        .controls-panel h4 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #1a5276;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
         }
-    });
-
-    var leyendaCuenca = document.getElementById('leyenda-cuenca');
-    if (leyendaCuenca) {
-        leyendaCuenca.classList.add('resaltado');
-    }
-
-    if (entrada.bounds && entrada.bounds.isValid()) {
-        map.fitBounds(entrada.bounds, { padding: [30, 30] });
-    }
-}
-
-// ═══════════════════════════════════════════════════════════
-// 8. MOSTRAR TODAS
-// ═══════════════════════════════════════════════════════════
-window.mostrarTodas = function() {
-    cuencaActiva = null;
-    var el = document.getElementById('nombreCuenca');
-    if (el) el.textContent = '— ninguna —';
-
-    var btnMostrar = document.getElementById('btn-mostrar-todas');
-    if (btnMostrar) btnMostrar.style.display = 'none';
-
-    todasLasCuencas.forEach(function(c) {
-        var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
-        var mostrarCauce  = (capaVisible === 'cauce'  || capaVisible === 'ambos');
-
-        if (mostrarCuenca) {
-            if (!map.hasLayer(c.layerCuenca)) c.layerCuenca.addTo(map);
-            c.layerCuenca.setStyle(estiloCuencaNormal);
-        } else {
-            if (map.hasLayer(c.layerCuenca)) map.removeLayer(c.layerCuenca);
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
         }
-        if (mostrarCauce) {
-            if (!map.hasLayer(c.layerCauce)) c.layerCauce.addTo(map);
-            c.layerCauce.setStyle(estiloCauceNormal);
-        } else {
-            if (map.hasLayer(c.layerCauce)) map.removeLayer(c.layerCauce);
+        button {
+            background: white;
+            border: 1px solid #2980b9;
+            padding: 6px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            color: #2980b9;
         }
-    });
-
-    var leyendaCuenca = document.getElementById('leyenda-cuenca');
-    if (leyendaCuenca) {
-        leyendaCuenca.classList.remove('resaltado');
-    }
-
-    map.setView([19.03556466237287, -70.89432006796727], 8);
-};
-
-// ═══════════════════════════════════════════════════════════
-// 9. CARGA DE GEOJSON ROBUSTA
-// ═══════════════════════════════════════════════════════════
-function cargarParCuenca(urlCuenca, urlCauce, nombreCapa) {
-    var entrada = {
-        nombre: nombreCapa,
-        layerCuenca: null,
-        layerCauce: null,
-        bounds: null
-    };
-
-    var cargadas = 0;
-    function verificarYAgregar() {
-        cargadas++;
-        if (cargadas === 2) {
-            todasLasCuencas.push(entrada);
+        button.active {
+            background: #2980b9;
+            color: white;
+            border-color: #1a5276;
         }
-    }
+        button:hover {
+            background: #eef5fc;
+            transform: scale(0.97);
+        }
+        .cuenca-activa {
+            background: #fef9e6;
+            border-left: 4px solid #f39c12;
+            padding: 6px 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        .cuenca-activa span {
+            font-weight: bold;
+            color: #e67e22;
+        }
+        .leyenda {
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+        }
+        .item-leyenda {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+        .color-box {
+            width: 18px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        .resaltado {
+            background-color: #fff3e0;
+            transition: 0.2s;
+        }
+        #btn-mostrar-todas {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .btn-base {
+            background: #ecf0f1;
+            border-color: #7f8c8d;
+            color: #2c3e50;
+        }
+        small {
+            display: block;
+            text-align: center;
+            margin-top: 8px;
+            font-size: 10px;
+            color: #777;
+        }
+        @media (max-width: 500px) {
+            .controls-panel { top: 10px; right: 10px; padding: 8px 12px; min-width: 170px; }
+            button { padding: 4px 8px; font-size: 10px; }
+        }
+    </style>
+</head>
+<body>
 
-    // Cargar cuenca
-    fetch(urlCuenca)
-        .then(function(r) { 
-            if (!r.ok) throw new Error('Error ' + urlCuenca); 
-            return r.json(); 
-        })
-        .then(function(data) {
-            var layer = L.json(data, {
-                coordsToLatLng: function(coords) { return new L.LatLng(coords[1], coords[0]); },
-                style: estiloCuencaNormal,
-                onEachFeature: function(feature, fl) {
-                    var popupContent = construirPopup(feature.properties, nombreCapa, 'cuenca');
-                    fl.bindPopup(popupContent);
-                }
-            });
-            entrada.layerCuenca = layer;
-            entrada.bounds = layer.getBounds();
-            verificarYAgregar();
-        })
-        .catch(function(e) { 
-            console.warn('Cuenca no cargada:', nombreCapa, e); 
-            verificarYAgregar(); 
+    <!-- Contenedor del mapa (OBLIGATORIO) -->
+    <div id="map"></div>
+
+    <!-- Panel de control flotante con todos los elementos que usa el script -->
+    <div class="controls-panel">
+        <h4>🗺️ Capas base</h4>
+        <div class="btn-group">
+            <button id="btn-base-calles" class="active" onclick="cambiarBase('calles')">🗺️ Calles</button>
+            <button id="btn-base-satelite" onclick="cambiarBase('satelite')">🛰️ Satélite</button>
+        </div>
+
+        <h4>💧 Visualizar</h4>
+        <div class="btn-group">
+            <button id="btn-capa-ambos" class="active">🌊 Ambos</button>
+            <button id="btn-capa-cuenca">🗺️ Solo cuenca</button>
+            <button id="btn-capa-cauce">💧 Solo cauce</button>
+        </div>
+
+        <div class="cuenca-activa">
+            📍 Cuenca seleccionada: <span id="nombreCuenca">— ninguna —</span>
+        </div>
+        <button id="btn-mostrar-todas" style="display: none;">🔁 Mostrar todas las cuencas</button>
+
+        <div class="leyenda" id="panel-leyenda">
+            <div class="item-leyenda">
+                <div class="color-box" style="background: #2ecc71;"></div>
+                <span>Límite de cuenca</span>
+            </div>
+            <div class="item-leyenda" id="leyenda-cuenca">
+                <div class="color-box" style="background: #f1c40f;"></div>
+                <span>Cuenca destacada</span>
+            </div>
+            <div class="item-leyenda">
+                <div class="color-box" style="background: #2980b9;"></div>
+                <span>Cauce principal</span>
+            </div>
+        </div>
+        <small>Haz clic en cualquier polígono o río para seleccionar cuenca</small>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════
+        // 1. INICIALIZAR EL MAPA — centrado en RD
+        // ═══════════════════════════════════════════════════════════
+        var map = L.map('map', { zoomControl: true }).setView([19.03556466237287, -70.89432006796727], 8);
+
+        // ═══════════════════════════════════════════════════════════
+        // 2. CAPAS BASE
+        // ═══════════════════════════════════════════════════════════
+        var capaOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         });
+        var capaSatelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19,
+            attribution: 'Tiles © Esri'
+        });
+        capaOSM.addTo(map);
 
-    // Cargar cauce
-    fetch(urlCauce)
-        .then(function(r) { 
-            if (!r.ok) throw new Error('Error ' + urlCauce); 
-            return r.json(); 
-        })
-        .then(function(data) {
-            var layer = L.json(data, {
-                coordsToLatLng: function(coords) { return new L.LatLng(coords[1], coords[0]); },
-                style: estiloCauceNormal,
-                onEachFeature: function(feature, fl) {
-                    var popupContent = construirPopup(feature.properties, nombreCapa, 'cauce');
-                    fl.bindPopup(popupContent);
+        // Función global para cambiar capa base (corregida)
+        window.cambiarBase = function(tipo) {
+            if (tipo === 'satelite') {
+                map.removeLayer(capaOSM);
+                capaSatelite.addTo(map);
+                document.getElementById('btn-base-calles').classList.remove('active');
+                document.getElementById('btn-base-satelite').classList.add('active');
+            } else {
+                map.removeLayer(capaSatelite);
+                capaOSM.addTo(map);
+                document.getElementById('btn-base-satelite').classList.remove('active');
+                document.getElementById('btn-base-calles').classList.add('active');
+            }
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 3. ESTADO GLOBAL DE CUENCAS
+        // ═══════════════════════════════════════════════════════════
+        var todasLasCuencas = [];   // { nombre, layerCuenca, layerCauce, bounds }
+        var cuencaActiva = null;
+        var capaVisible = 'ambos';  // 'cuenca' | 'cauce' | 'ambos'
+
+        // ═══════════════════════════════════════════════════════════
+        // 4. ESTILOS
+        // ═══════════════════════════════════════════════════════════
+        var estiloCuencaNormal = {
+            color: "#27ae60",
+            weight: 1.5,
+            fillColor: "#2ecc71",
+            fillOpacity: 0.18,
+            opacity: 0.8
+        };
+        var estiloCuencaDestacada = {
+            color: "#f39c12",
+            weight: 2.5,
+            fillColor: "#f1c40f",
+            fillOpacity: 0.35,
+            opacity: 1
+        };
+        var estiloCuencaOculta = {
+            color: "#27ae60",
+            weight: 1,
+            fillColor: "#2ecc71",
+            fillOpacity: 0.04,
+            opacity: 0.15
+        };
+        var estiloCauceNormal = {
+            color: "#2980b9",
+            weight: 3,
+            opacity: 0.85,
+            lineCap: 'round'
+        };
+        var estiloCauceDestacado = {
+            color: "#3498db",
+            weight: 4.5,
+            opacity: 1,
+            lineCap: 'round'
+        };
+        var estiloCauceOculto = {
+            color: "#2980b9",
+            weight: 1.5,
+            opacity: 0.12,
+            lineCap: 'round'
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 5. FUNCIÓN PARA CONSTRUIR POPUP
+        // ═══════════════════════════════════════════════════════════
+        function construirPopup(properties, nombreCapa, tipo) {
+            var titulo = nombreCapa || 'Cuenca hidrográfica';
+            var html = '<div style="font-family:\'Segoe UI\',sans-serif; max-width:260px;">';
+            html += '<div style="font-weight:700; font-size:13px; color:#1a5276; margin-bottom:6px; border-bottom:2px solid #2980b9; padding-bottom:4px;">💧 ' + titulo + '</div>';
+            
+            if (tipo !== 'cauce') {
+                var descripcion = null;
+                if (properties) {
+                    Object.keys(properties).forEach(function(key) {
+                        if (key.toLowerCase() === 'name') {
+                            descripcion = properties[key];
+                        }
+                    });
+                }
+                if (descripcion && descripcion.trim() !== '') {
+                    html += '<div style="font-size:12px; color:#333; line-height:1.5;">' + descripcion + '</div>';
+                } else {
+                    html += '<div style="font-size:12px; color:#888; font-style:italic;">Sin descripción disponible.</div>';
+                }
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 6. CAMBIAR VISIBILIDAD DE CAPAS (cuenca / cauce / ambos)
+        // ═══════════════════════════════════════════════════════════
+        window.cambiarCapas = function(modo) {
+            capaVisible = modo;
+            // actualizar botones
+            ['cuenca', 'cauce', 'ambos'].forEach(function(m) {
+                var btn = document.getElementById('btn-capa-' + m);
+                if (btn) btn.classList.toggle('active', m === modo);
+            });
+
+            todasLasCuencas.forEach(function(c) {
+                var estaActiva = (c === cuencaActiva);
+                var mostrarCuenca = (modo === 'cuenca' || modo === 'ambos');
+                var mostrarCauce  = (modo === 'cauce'  || modo === 'ambos');
+
+                if (mostrarCuenca) {
+                    if (!map.hasLayer(c.layerCuenca)) c.layerCuenca.addTo(map);
+                    c.layerCuenca.setStyle(estaActiva ? estiloCuencaDestacada : (cuencaActiva ? estiloCuencaOculta : estiloCuencaNormal));
+                } else {
+                    if (map.hasLayer(c.layerCuenca)) map.removeLayer(c.layerCuenca);
+                }
+
+                if (mostrarCauce) {
+                    if (!map.hasLayer(c.layerCauce)) c.layerCauce.addTo(map);
+                    c.layerCauce.setStyle(estaActiva ? estiloCauceDestacado : (cuencaActiva ? estiloCauceOculto : estiloCauceNormal));
+                } else {
+                    if (map.hasLayer(c.layerCauce)) map.removeLayer(c.layerCauce);
                 }
             });
-            entrada.layerCauce = layer;
-            verificarYAgregar();
-        })
-        .catch(function(e) { 
-            console.warn('Cauce no cargado:', nombreCapa, e); 
-            verificarYAgregar(); 
-        });
-}
 
-// ═══════════════════════════════════════════════════════════
-// 10. CARGAR TODAS LAS CUENCAS
-// ═══════════════════════════════════════════════════════════
-cargarParCuenca('anx/cuencaOZAMA.json', 'anx/cauceOZAMA.json', 'Cuenca del río Ozama');
-cargarParCuenca('cuencaYUMA.json', 'cauceYUMA.json', 'Cuenca del río Yuma');
-cargarParCuenca('cuencaMAIMONESTE.json', 'cauceMAIMONESTE.json', 'Cuenca del río Maimón del Este');
-cargarParCuenca('cuencaANAMUYA.json', 'cauceANAMUYA.json', 'Cuenca del río Anamuya');
-cargarParCuenca('cuencaTOSA.json', 'cauceTOSA.json', 'Cuenca del río Tosa o Brujuelas');
-cargarParCuenca('cuencaHIGUAMO.json', 'cauceHIGUAMO.json', 'Cuenca del río Higuamo');
-cargarParCuenca('cuencaSOCO.json', 'cauceSOCO.json', 'Cuenca del río Soco');
-cargarParCuenca('cuencaCUMAYASA.json', 'cauceCUMAYASA.json', 'Cuenca del río Cumayasa');
-cargarParCuenca('cuencaROMANA.json', 'cauceROMANA.json', 'Cuenca del río Romana, Dulce o Salado');
-cargarParCuenca('cuencaCHAVON.json', 'cauceCHAVON.json', 'Cuenca del río Chavón');
-cargarParCuenca('cuencaYABON.json', 'cauceYABON.json', 'Cuenca del río Yabón');
-cargarParCuenca('cuencaMAGUA.json', 'cauceMAGUA.json', 'Cuenca del río Maguá');
-cargarParCuenca('cuencaCUARON.json', 'cauceCUARON.json', 'Cuenca del río Cuarón');
-cargarParCuenca('cuencaJOVERO.json', 'cauceJOVERO.json', 'Cuenca del río Jovero');
-cargarParCuenca('cuencaYEGUADA.json', 'cauceYEGUADA.json', 'Cuenca del río Yeguada');
-cargarParCuenca('anx/cuencaYUNA.json', 'anx/cauceYUNA.json', 'Cuenca del río Yuna');
-cargarParCuenca('anx/cuencaYNORTE.json', 'anx/cauceYNORTE.json', 'Cuenca del río Yaque del Norte');
-cargarParCuenca('cuencaBACUI.json', 'cauceBACUI.json', 'Cuenca del río Bacuí');
-cargarParCuenca('cuencaBAJABONICO.json', 'cauceBAJABONICO.json', 'Cuenca del río Bajabonico');
-cargarParCuenca('cuencaBOBA.json', 'cauceBOBA.json', 'Cuenca del río Boba');
-cargarParCuenca('cuencaELLIMON.json', 'cauceELLIMON.json', 'Cuenca del río El Limón');
-cargarParCuenca('cuencaJOBA.json', 'cauceJOBA.json', 'Cuenca del río Joba');
-cargarParCuenca('cuencaMAIMONCIBAO.json', 'cauceMAIMONCIBAO.json', 'Cuenca del río Maimón del norte');
-cargarParCuenca('cuencaSMARCOS.json', 'cauceSMARCOS.json', 'Cuenca del río San Marcos');
-cargarParCuenca('cuencaNAGUA.json', 'cauceNAGUA.json', 'Cuenca del río Nagua');
-cargarParCuenca('cuencaSJUANCIBAO.json', 'cauceSJUANCIBAO.json', 'Cuenca del río San Juan del Cibao');
-cargarParCuenca('cuencaYASICA.json', 'cauceYASICA.json', 'Cuenca del río Yásica');
-cargarParCuenca('cuencaCAMU.json', 'cauceCAMU.json', 'Cuenca del río Camú del norte');
-cargarParCuenca('cuencaMASACRE.json', 'cauceMASACRE.json', 'Cuenca del río Dajabón o Masacre');
-cargarParCuenca('cuencaCHACUEY.json', 'cauceCHACUEY.json', 'Cuenca del río Chacuey');
-cargarParCuenca('cuencaHAINA.json', 'cauceHAINA.json', 'Cuenca del río Haina');
-cargarParCuenca('cuencaNIGUA.json', 'cauceNIGUA.json', 'Cuenca del río Nigua');
-cargarParCuenca('cuencaNIZAO.json', 'cauceNIZAO.json', 'Cuenca del río Nizao');
-cargarParCuenca('cuencaOCOA.json', 'cauceOCOA.json', 'Cuenca del río Ocoa');
-cargarParCuenca('cuencaJURA.json', 'cauceJURA.json', 'Cuenca del río Jura');
-cargarParCuenca('cuencaTABARA.json', 'cauceTABARA.json', 'Cuenca del río Tábara');
-cargarParCuenca('anx/cuencaYSUR.json', 'anx/cauceYSUR.json', 'Cuenca del río Yaque del Sur');
-cargarParCuenca('cuencaNIZAITO.json', 'cauceNIZAITO.json', 'Cuenca del río Nizaito');
-cargarParCuenca('cuencaPEDERNALES.json', 'caucePEDERNALES.json', 'Cuenca del río Pedernales');
-cargarParCuenca('cuencaVIA.json', 'cauceVIA.json', 'Cuenca del río Vía');
-cargarParCuenca('cuencaBANI.json', 'cauceBANI.json', 'Cuenca del río Baní / Banilejo');
-cargarParCuenca('anx/cuencaARTIBONITO.json', 'anx/cauceARTIBONITO.json', 'Cuenca del río Artibonito');
+            var itemCuenca = document.querySelector('#panel-leyenda .item-leyenda:nth-child(2)');
+            var itemCauce  = document.querySelector('#panel-leyenda .item-leyenda:nth-child(3)');
+            if (itemCuenca) itemCuenca.style.display = (modo === 'cauce')  ? 'none' : 'flex';
+            if (itemCauce)  itemCauce.style.display  = (modo === 'cuenca') ? 'none' : 'flex';
+        };
 
+        // ═══════════════════════════════════════════════════════════
+        // 7. SELECCIÓN DE CUENCA (se activa al hacer clic en popup o llamada externa)
+        // ═══════════════════════════════════════════════════════════
+        function seleccionarCuenca(entrada) {
+            if (!entrada) return;
+            cuencaActiva = entrada;
+            var el = document.getElementById('nombreCuenca');
+            if (el) el.textContent = entrada.nombre;
 
-              </script>
-                        </body>
-                        </html>
+            var btnMostrar = document.getElementById('btn-mostrar-todas');
+            if (btnMostrar) btnMostrar.style.display = 'block';
+
+            todasLasCuencas.forEach(function(c) {
+                var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
+                var mostrarCauce  = (capaVisible === 'cauce'  || capaVisible === 'ambos');
+
+                if (c === entrada) {
+                    if (mostrarCuenca) {
+                        if (!map.hasLayer(c.layerCuenca)) c.layerCuenca.addTo(map);
+                        c.layerCuenca.setStyle(estiloCuencaDestacada);
+                        c.layerCuenca.bringToFront();
+                    }
+                    if (mostrarCauce) {
+                        if (!map.hasLayer(c.layerCauce)) c.layerCauce.addTo(map);
+                        c.layerCauce.setStyle(estiloCauceDestacado);
+                        c.layerCauce.bringToFront();
+                    }
+                } else {
+                    if (mostrarCuenca && c.layerCuenca) c.layerCuenca.setStyle(estiloCuencaOculta);
+                    if (mostrarCauce && c.layerCauce) c.layerCauce.setStyle(estiloCauceOculto);
+                }
+            });
+
+            var leyendaCuenca = document.getElementById('leyenda-cuenca');
+            if (leyendaCuenca) leyendaCuenca.classList.add('resaltado');
+
+            if (entrada.bounds && entrada.bounds.isValid()) {
+                map.fitBounds(entrada.bounds, { padding: [30, 30] });
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 8. MOSTRAR TODAS LAS CUENCAS SIN DESTACAR
+        // ═══════════════════════════════════════════════════════════
+        window.mostrarTodas = function() {
+            cuencaActiva = null;
+            var el = document.getElementById('nombreCuenca');
+            if (el) el.textContent = '— ninguna —';
+
+            var btnMostrar = document.getElementById('btn-mostrar-todas');
+            if (btnMostrar) btnMostrar.style.display = 'none';
+
+            todasLasCuencas.forEach(function(c) {
+                var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
+                var mostrarCauce  = (capaVisible === 'cauce'  || capaVisible === 'ambos');
+
+                if (mostrarCuenca && c.layerCuenca) {
+                    if (!map.hasLayer(c.layerCuenca)) c.layerCuenca.addTo(map);
+                    c.layerCuenca.setStyle(estiloCuencaNormal);
+                } else if (c.layerCuenca && !mostrarCuenca) {
+                    if (map.hasLayer(c.layerCuenca)) map.removeLayer(c.layerCuenca);
+                }
+                if (mostrarCauce && c.layerCauce) {
+                    if (!map.hasLayer(c.layerCauce)) c.layerCauce.addTo(map);
+                    c.layerCauce.setStyle(estiloCauceNormal);
+                } else if (c.layerCauce && !mostrarCauce) {
+                    if (map.hasLayer(c.layerCauce)) map.removeLayer(c.layerCauce);
+                }
+            });
+
+            var leyendaCuenca = document.getElementById('leyenda-cuenca');
+            if (leyendaCuenca) leyendaCuenca.classList.remove('resaltado');
+
+            map.setView([19.03556466237287, -70.89432006796727], 8);
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 9. CARGA DE PAR CUENCA + CAUCE con geojson robusta
+        // ═══════════════════════════════════════════════════════════
+        function cargarParCuenca(urlCuenca, urlCauce, nombreCapa) {
+            var entrada = {
+                nombre: nombreCapa,
+                layerCuenca: null,
+                layerCauce: null,
+                bounds: null
+            };
+
+            var cargadas = 0;
+            function verificarYAgregar() {
+                cargadas++;
+                if (cargadas === 2) {
+                    todasLasCuencas.push(entrada);
+                    // Si no hay cuenca activa y ya existen capas, aseguramos estilo normal según visibilidad actual
+                    if (cuencaActiva === null && entrada.layerCuenca && entrada.layerCauce) {
+                        var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
+                        var mostrarCauce  = (capaVisible === 'cauce'  || capaVisible === 'ambos');
+                        if (mostrarCuenca && !map.hasLayer(entrada.layerCuenca)) entrada.layerCuenca.addTo(map);
+                        if (mostrarCauce && !map.hasLayer(entrada.layerCauce)) entrada.layerCauce.addTo(map);
+                    }
+                }
+            }
+
+            // Cargar cuenca (polígono)
+            fetch(urlCuenca)
+                .then(function(r) { 
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' para ' + urlCuenca); 
+                    return r.json(); 
+                })
+                .then(function(data) {
+                    var layer = L.geoJSON(data, {
+                        coordsToLatLng: function(coords) { return new L.LatLng(coords[1], coords[0]); },
+                        style: estiloCuencaNormal,
+                        onEachFeature: function(feature, fl) {
+                            var popupContent = construirPopup(feature.properties, nombreCapa, 'cuenca');
+                            fl.bindPopup(popupContent);
+                            // Al hacer clic en el polígono, seleccionamos esta cuenca
+                            fl.on('click', function() {
+                                seleccionarCuenca(entrada);
+                            });
+                        }
+                    });
+                    entrada.layerCuenca = layer;
+                    entrada.bounds = layer.getBounds();
+                    verificarYAgregar();
+                })
+                .catch(function(e) { 
+                    console.warn('⚠️ Cuenca no cargada:', nombreCapa, e); 
+                    verificarYAgregar(); 
+                });
+
+            // Cargar cauce (línea)
+            fetch(urlCauce)
+                .then(function(r) { 
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' para ' + urlCauce); 
+                    return r.json(); 
+                })
+                .then(function(data) {
+                    var layer = L.geoJSON(data, {
+                        coordsToLatLng: function(coords) { return new L.LatLng(coords[1], coords[0]); },
+                        style: estiloCauceNormal,
+                        onEachFeature: function(feature, fl) {
+                            var popupContent = construirPopup(feature.properties, nombreCapa, 'cauce');
+                            fl.bindPopup(popupContent);
+                            // También el cauce selecciona la misma cuenca
+                            fl.on('click', function() {
+                                seleccionarCuenca(entrada);
+                            });
+                        }
+                    });
+                    entrada.layerCauce = layer;
+                    verificarYAgregar();
+                })
+                .catch(function(e) { 
+                    console.warn('⚠️ Cauce no cargado:', nombreCapa, e); 
+                    verificarYAgregar(); 
+                });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 10. CARGAR TODAS LAS CUENCAS (con rutas relativas a los archivos)
+        // ═══════════════════════════════════════════════════════════
+        // Nota: Asegúrate de que los archivos .json existan en las rutas indicadas.
+        cargarParCuenca('anx/cuencaOZAMA.json', 'anx/cauceOZAMA.json', 'Cuenca del río Ozama');
+        cargarParCuenca('cuencaYUMA.json', 'cauceYUMA.json', 'Cuenca del río Yuma');
+        cargarParCuenca('cuencaMAIMONESTE.json', 'cauceMAIMONESTE.json', 'Cuenca del río Maimón del Este');
+        cargarParCuenca('cuencaANAMUYA.json', 'cauceANAMUYA.json', 'Cuenca del río Anamuya');
+        cargarParCuenca('cuencaTOSA.json', 'cauceTOSA.json', 'Cuenca del río Tosa o Brujuelas');
+        cargarParCuenca('cuencaHIGUAMO.json', 'cauceHIGUAMO.json', 'Cuenca del río Higuamo');
+        cargarParCuenca('cuencaSOCO.json', 'cauceSOCO.json', 'Cuenca del río Soco');
+        cargarParCuenca('cuencaCUMAYASA.json', 'cauceCUMAYASA.json', 'Cuenca del río Cumayasa');
+        cargarParCuenca('cuencaROMANA.json', 'cauceROMANA.json', 'Cuenca del río Romana, Dulce o Salado');
+        cargarParCuenca('cuencaCHAVON.json', 'cauceCHAVON.json', 'Cuenca del río Chavón');
+        cargarParCuenca('cuencaYABON.json', 'cauceYABON.json', 'Cuenca del río Yabón');
+        cargarParCuenca('cuencaMAGUA.json', 'cauceMAGUA.json', 'Cuenca del río Maguá');
+        cargarParCuenca('cuencaCUARON.json', 'cauceCUARON.json', 'Cuenca del río Cuarón');
+        cargarParCuenca('cuencaJOVERO.json', 'cauceJOVERO.json', 'Cuenca del río Jovero');
+        cargarParCuenca('cuencaYEGUADA.json', 'cauceYEGUADA.json', 'Cuenca del río Yeguada');
+        cargarParCuenca('anx/cuencaYUNA.json', 'anx/cauceYUNA.json', 'Cuenca del río Yuna');
+        cargarParCuenca('anx/cuencaYNORTE.json', 'anx/cauceYNORTE.json', 'Cuenca del río Yaque del Norte');
+        cargarParCuenca('cuencaBACUI.json', 'cauceBACUI.json', 'Cuenca del río Bacuí');
+        cargarParCuenca('cuencaBAJABONICO.json', 'cauceBAJABONICO.json', 'Cuenca del río Bajabonico');
+        cargarParCuenca('cuencaBOBA.json', 'cauceBOBA.json', 'Cuenca del río Boba');
+        cargarParCuenca('cuencaELLIMON.json', 'cauceELLIMON.json', 'Cuenca del río El Limón');
+        cargarParCuenca('cuencaJOBA.json', 'cauceJOBA.json', 'Cuenca del río Joba');
+        cargarParCuenca('cuencaMAIMONCIBAO.json', 'cauceMAIMONCIBAO.json', 'Cuenca del río Maimón del norte');
+        cargarParCuenca('cuencaSMARCOS.json', 'cauceSMARCOS.json', 'Cuenca del río San Marcos');
+        cargarParCuenca('cuencaNAGUA.json', 'cauceNAGUA.json', 'Cuenca del río Nagua');
+        cargarParCuenca('cuencaSJUANCIBAO.json', 'cauceSJUANCIBAO.json', 'Cuenca del río San Juan del Cibao');
+        cargarParCuenca('cuencaYASICA.json', 'cauceYASICA.json', 'Cuenca del río Yásica');
+        cargarParCuenca('cuencaCAMU.json', 'cauceCAMU.json', 'Cuenca del río Camú del norte');
+        cargarParCuenca('cuencaMASACRE.json', 'cauceMASACRE.json', 'Cuenca del río Dajabón o Masacre');
+        cargarParCuenca('cuencaCHACUEY.json', 'cauceCHACUEY.json', 'Cuenca del río Chacuey');
+        cargarParCuenca('cuencaHAINA.json', 'cauceHAINA.json', 'Cuenca del río Haina');
+        cargarParCuenca('cuencaNIGUA.json', 'cauceNIGUA.json', 'Cuenca del río Nigua');
+        cargarParCuenca('cuencaNIZAO.json', 'cauceNIZAO.json', 'Cuenca del río Nizao');
+        cargarParCuenca('cuencaOCOA.json', 'cauceOCOA.json', 'Cuenca del río Ocoa');
+        cargarParCuenca('cuencaJURA.json', 'cauceJURA.json', 'Cuenca del río Jura');
+        cargarParCuenca('cuencaTABARA.json', 'cauceTABARA.json', 'Cuenca del río Tábara');
+        cargarParCuenca('anx/cuencaYSUR.json', 'anx/cauceYSUR.json', 'Cuenca del río Yaque del Sur');
+        cargarParCuenca('cuencaNIZAITO.json', 'cauceNIZAITO.json', 'Cuenca del río Nizaito');
+        cargarParCuenca('cuencaPEDERNALES.json', 'caucePEDERNALES.json', 'Cuenca del río Pedernales');
+        cargarParCuenca('cuencaVIA.json', 'cauceVIA.json', 'Cuenca del río Vía');
+        cargarParCuenca('cuencaBANI.json', 'cauceBANI.json', 'Cuenca del río Baní / Banilejo');
+        cargarParCuenca('anx/cuencaARTIBONITO.json', 'anx/cauceARTIBONITO.json', 'Cuenca del río Artibonito');
+
+        // ═══════════════════════════════════════════════════════════
+        // 11. ASIGNAR EVENTOS A LOS BOTONES DE LA INTERFAZ (ya existentes)
+        // ═══════════════════════════════════════════════════════════
+        document.getElementById('btn-capa-ambos').addEventListener('click', function() { window.cambiarCapas('ambos'); });
+        document.getElementById('btn-capa-cuenca').addEventListener('click', function() { window.cambiarCapas('cuenca'); });
+        document.getElementById('btn-capa-cauce').addEventListener('click', function() { window.cambiarCapas('cauce'); });
+        document.getElementById('btn-mostrar-todas').addEventListener('click', function() { window.mostrarTodas(); });
+        
+        // Inicializar visibilidad por defecto (ambos activos)
+        window.cambiarCapas('ambos');
+    </script>
+</body>
+</html>
