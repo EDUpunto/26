@@ -69,8 +69,8 @@ function cargarCapaIndependiente(url, estilo, nombreCapa) {
 // Cada llamada es independiente. Si un archivo falta (404), las demás se dibujarán igual.
 
 // --- Capas Hidrográficas ---
-cargarCapaIndependiente('cuencaTABARA.json', { color: 'green', weight: 2, fillOpacity: 0.3 }, 'Cuenca del río Tábara');
-cargarCapaIndependiente('cauceTABARA.json', { color: 'blue', weight: 3 }, 'Cauce del río Tábara');
+cargarCapaIndependiente('cuencaYUNA.json', { color: 'green', weight: 2, fillOpacity: 0.3 }, 'Cuenca del río Yuna');
+cargarCapaIndependiente('cauceYUNA.json', { color: 'blue', weight: 3 }, 'Cauce del río Yuna');
 
 // --- Capas Adicionales (según tu HTML) ---
 // Asegúrate de que estos archivos existan en la misma carpeta o ajusta la ruta si es necesario.
