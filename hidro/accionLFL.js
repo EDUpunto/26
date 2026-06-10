@@ -67,10 +67,10 @@ function cargarCapaIndependiente(url, estilo, nombreCapa) {
 // Cada llamada es independiente. Si una falla (ej. 404), las demás se dibujarán normal.
 
 // Cargar Cuenca (Ejemplo: verde)
-cargarCapaIndependiente('cuencaTABARA.json', { color: 'green', weight: 2, fillOpacity: 0.3 }, 'Cuenca del río Tábara');
+cargarCapaIndependiente('cuencaYUNA.json', { color: 'green', weight: 2, fillOpacity: 0.3 }, 'Cuenca del río Yuna');
 
 // Cargar Cauce (Ejemplo: azul)
-cargarCapaIndependiente('cauceTABARA.json', { color: 'blue', weight: 3 }, 'Cauce del río Tábara');
+cargarCapaIndependiente('cauceYUNA.json', { color: 'blue', weight: 3 }, 'Cauce del río Yuna');
 
 // Descomenta y ajusta las siguientes líneas si tienes los archivos para Presas y Lagos
 // cargarCapaIndependiente('presas.json', { color: 'orange', weight: 2, radius: 6 }, 'Presas');
