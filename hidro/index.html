@@ -551,7 +551,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 8. CARGA DE JSON DESDE CARPETA /ANX
+        // 8. CARGA DE JSON (RUTAS CORREGIDAS - SIN CARPETA ANX)
         // ═══════════════════════════════════════════════════════════
         function cargarParCuenca(urlCuenca, urlCauce, nombreCapa) {
             var entrada = { nombre: nombreCapa, layerCuenca: null, layerCauce: null, bounds: null };
@@ -641,53 +641,53 @@
                 .catch(function(e) { console.warn('Capa adicional no cargada:', tipo, e); });
         }
 
-        // Cargar cuencas y cauces desde la carpeta /ANX con extensión .json
-        cargarParCuenca('ANX/cuencaOZAMA.json', 'ANX/cauceOZAMA.json', 'Cuenca del río Ozama');
-        cargarParCuenca('ANX/cuencaYUMA.json', 'ANX/cauceYUMA.json', 'Cuenca del río Yuma');
-        cargarParCuenca('ANX/cuencaMAIMONESTE.json', 'ANX/cauceMAIMONESTE.json', 'Cuenca del río Maimón del Este');
-        cargarParCuenca('ANX/cuencaANAMUYA.json', 'ANX/cauceANAMUYA.json', 'Cuenca del río Anamuya');
-        cargarParCuenca('ANX/cuencaTOSA.json', 'ANX/cauceTOSA.json', 'Cuenca del río Tosa o Brujuelas');
-        cargarParCuenca('ANX/cuencaHIGUAMO.json', 'ANX/cauceHIGUAMO.json', 'Cuenca del río Higuamo');
-        cargarParCuenca('ANX/cuencaSOCO.json', 'ANX/cauceSOCO.json', 'Cuenca del río Soco');
-        cargarParCuenca('ANX/cuencaCUMAYASA.json', 'ANX/cauceCUMAYASA.json', 'Cuenca del río Cumayasa');
-        cargarParCuenca('ANX/cuencaROMANA.json', 'ANX/cauceROMANA.json', 'Cuenca del río Romana, Dulce o Salado');
-        cargarParCuenca('ANX/cuencaCHAVON.json', 'ANX/cauceCHAVON.json', 'Cuenca del río Chavón');
-        cargarParCuenca('ANX/cuencaYABON.json', 'ANX/cauceYABON.json', 'Cuenca del río Yabón');
-        cargarParCuenca('ANX/cuencaMAGUA.json', 'ANX/cauceMAGUA.json', 'Cuenca del río Maguá');
-        cargarParCuenca('ANX/cuencaCUARON.json', 'ANX/cauceCUARON.json', 'Cuenca del río Cuarón');
-        cargarParCuenca('ANX/cuencaJOVERO.json', 'ANX/cauceJOVERO.json', 'Cuenca del río Jovero');
-        cargarParCuenca('ANX/cuencaYEGUADA.json', 'ANX/cauceYEGUADA.json', 'Cuenca del río Yeguada');
-        cargarParCuenca('ANX/cuencaYUNA.json', 'ANX/cauceYUNA.json', 'Cuenca del río Yuna');
-        cargarParCuenca('ANX/cuencaYNORTE.json', 'ANX/cauceYNORTE.json', 'Cuenca del río Yaque del Norte');
-        cargarParCuenca('ANX/cuencaBACUI.json', 'ANX/cauceBACUI.json', 'Cuenca del río Bacuí');
-        cargarParCuenca('ANX/cuencaBAJABONICO.json', 'ANX/cauceBAJABONICO.json', 'Cuenca del río Bajabonico');
-        cargarParCuenca('ANX/cuencaBOBA.json', 'ANX/cauceBOBA.json', 'Cuenca del río Boba');
-        cargarParCuenca('ANX/cuencaELLIMON.json', 'ANX/cauceELLIMON.json', 'Cuenca del río El Limón');
-        cargarParCuenca('ANX/cuencaJOBA.json', 'ANX/cauceJOBA.json', 'Cuenca del río Joba');
-        cargarParCuenca('ANX/cuencaMAIMONCIBAO.json', 'ANX/cauceMAIMONCIBAO.json', 'Cuenca del río Maimón del norte');
-        cargarParCuenca('ANX/cuencaSMARCOS.json', 'ANX/cauceSMARCOS.json', 'Cuenca del río San Marcos');
-        cargarParCuenca('ANX/cuencaNAGUA.json', 'ANX/cauceNAGUA.json', 'Cuenca del río Nagua');
-        cargarParCuenca('ANX/cuencaSJUANCIBAO.json', 'ANX/cauceSJUANCIBAO.json', 'Cuenca del río San Juan del Cibao');
-        cargarParCuenca('ANX/cuencaYASICA.json', 'ANX/cauceYASICA.json', 'Cuenca del río Yásica');
-        cargarParCuenca('ANX/cuencaCAMU.json', 'ANX/cauceCAMU.json', 'Cuenca del río Camú del norte');
-        cargarParCuenca('ANX/cuencaMASACRE.json', 'ANX/cauceMASACRE.json', 'Cuenca del río Dajabón o Masacre');
-        cargarParCuenca('ANX/cuencaCHACUEY.json', 'ANX/cauceCHACUEY.json', 'Cuenca del río Chacuey');
-        cargarParCuenca('ANX/cuencaHAINA.json', 'ANX/cauceHAINA.json', 'Cuenca del río Haina');
-        cargarParCuenca('ANX/cuencaNIGUA.json', 'ANX/cauceNIGUA.json', 'Cuenca del río Nigua');
-        cargarParCuenca('ANX/cuencaNIZAO.json', 'ANX/cauceNIZAO.json', 'Cuenca del río Nizao');
-        cargarParCuenca('ANX/cuencaOCOA.json', 'ANX/cauceOCOA.json', 'Cuenca del río Ocoa');
-        cargarParCuenca('ANX/cuencaJURA.json', 'ANX/cauceJURA.json', 'Cuenca del río Jura');
-        cargarParCuenca('ANX/cuencaTABARA.json', 'ANX/cauceTABARA.json', 'Cuenca del río Tábara');
-        cargarParCuenca('ANX/cuencaYSUR.json', 'ANX/cauceYSUR.json', 'Cuenca del río Yaque del Sur');
-        cargarParCuenca('ANX/cuencaNIZAITO.json', 'ANX/cauceNIZAITO.json', 'Cuenca del río Nizaito');
-        cargarParCuenca('ANX/cuencaPEDERNALES.json', 'ANX/caucePEDERNALES.json', 'Cuenca del río Pedernales');
-        cargarParCuenca('ANX/cuencaVIA.json', 'ANX/cauceVIA.json', 'Cuenca del río Vía');
-        cargarParCuenca('ANX/cuencaBANI.json', 'ANX/cauceBANI.json', 'Cuenca del río Baní / Banilejo');
-        cargarParCuenca('ANX/cuencaARTIBONITO.json', 'ANX/cauceARTIBONITO.json', 'Cuenca del río Artibonito');
+        // Cargar cuencas y cauces (rutas relativas a la raíz)
+        cargarParCuenca('cuencaOZAMA.json', 'cauceOZAMA.json', 'Cuenca del río Ozama');
+        cargarParCuenca('cuencaYUMA.json', 'cauceYUMA.json', 'Cuenca del río Yuma');
+        cargarParCuenca('cuencaMAIMONESTE.json', 'cauceMAIMONESTE.json', 'Cuenca del río Maimón del Este');
+        cargarParCuenca('cuencaANAMUYA.json', 'cauceANAMUYA.json', 'Cuenca del río Anamuya');
+        cargarParCuenca('cuencaTOSA.json', 'cauceTOSA.json', 'Cuenca del río Tosa o Brujuelas');
+        cargarParCuenca('cuencaHIGUAMO.json', 'cauceHIGUAMO.json', 'Cuenca del río Higuamo');
+        cargarParCuenca('cuencaSOCO.json', 'cauceSOCO.json', 'Cuenca del río Soco');
+        cargarParCuenca('cuencaCUMAYASA.json', 'cauceCUMAYASA.json', 'Cuenca del río Cumayasa');
+        cargarParCuenca('cuencaROMANA.json', 'cauceROMANA.json', 'Cuenca del río Romana, Dulce o Salado');
+        cargarParCuenca('cuencaCHAVON.json', 'cauceCHAVON.json', 'Cuenca del río Chavón');
+        cargarParCuenca('cuencaYABON.json', 'cauceYABON.json', 'Cuenca del río Yabón');
+        cargarParCuenca('cuencaMAGUA.json', 'cauceMAGUA.json', 'Cuenca del río Maguá');
+        cargarParCuenca('cuencaCUARON.json', 'cauceCUARON.json', 'Cuenca del río Cuarón');
+        cargarParCuenca('cuencaJOVERO.json', 'cauceJOVERO.json', 'Cuenca del río Jovero');
+        cargarParCuenca('cuencaYEGUADA.json', 'cauceYEGUADA.json', 'Cuenca del río Yeguada');
+        cargarParCuenca('cuencaYUNA.json', 'cauceYUNA.json', 'Cuenca del río Yuna');
+        cargarParCuenca('cuencaYNORTE.json', 'cauceYNORTE.json', 'Cuenca del río Yaque del Norte');
+        cargarParCuenca('cuencaBACUI.json', 'cauceBACUI.json', 'Cuenca del río Bacuí');
+        cargarParCuenca('cuencaBAJABONICO.json', 'cauceBAJABONICO.json', 'Cuenca del río Bajabonico');
+        cargarParCuenca('cuencaBOBA.json', 'cauceBOBA.json', 'Cuenca del río Boba');
+        cargarParCuenca('cuencaELLIMON.json', 'cauceELLIMON.json', 'Cuenca del río El Limón');
+        cargarParCuenca('cuencaJOBA.json', 'cauceJOBA.json', 'Cuenca del río Joba');
+        cargarParCuenca('cuencaMAIMONCIBAO.json', 'cauceMAIMONCIBAO.json', 'Cuenca del río Maimón del norte');
+        cargarParCuenca('cuencaSMARCOS.json', 'cauceSMARCOS.json', 'Cuenca del río San Marcos');
+        cargarParCuenca('cuencaNAGUA.json', 'cauceNAGUA.json', 'Cuenca del río Nagua');
+        cargarParCuenca('cuencaSJUANCIBAO.json', 'cauceSJUANCIBAO.json', 'Cuenca del río San Juan del Cibao');
+        cargarParCuenca('cuencaYASICA.json', 'cauceYASICA.json', 'Cuenca del río Yásica');
+        cargarParCuenca('cuencaCAMU.json', 'cauceCAMU.json', 'Cuenca del río Camú del norte');
+        cargarParCuenca('cuencaMASACRE.json', 'cauceMASACRE.json', 'Cuenca del río Dajabón o Masacre');
+        cargarParCuenca('cuencaCHACUEY.json', 'cauceCHACUEY.json', 'Cuenca del río Chacuey');
+        cargarParCuenca('cuencaHAINA.json', 'cauceHAINA.json', 'Cuenca del río Haina');
+        cargarParCuenca('cuencaNIGUA.json', 'cauceNIGUA.json', 'Cuenca del río Nigua');
+        cargarParCuenca('cuencaNIZAO.json', 'cauceNIZAO.json', 'Cuenca del río Nizao');
+        cargarParCuenca('cuencaOCOA.json', 'cauceOCOA.json', 'Cuenca del río Ocoa');
+        cargarParCuenca('cuencaJURA.json', 'cauceJURA.json', 'Cuenca del río Jura');
+        cargarParCuenca('cuencaTABARA.json', 'cauceTABARA.json', 'Cuenca del río Tábara');
+        cargarParCuenca('cuencaYSUR.json', 'cauceYSUR.json', 'Cuenca del río Yaque del Sur');
+        cargarParCuenca('cuencaNIZAITO.json', 'cauceNIZAITO.json', 'Cuenca del río Nizaito');
+        cargarParCuenca('cuencaPEDERNALES.json', 'caucePEDERNALES.json', 'Cuenca del río Pedernales');
+        cargarParCuenca('cuencaVIA.json', 'cauceVIA.json', 'Cuenca del río Vía');
+        cargarParCuenca('cuencaBANI.json', 'cauceBANI.json', 'Cuenca del río Baní / Banilejo');
+        cargarParCuenca('cuencaARTIBONITO.json', 'cauceARTIBONITO.json', 'Cuenca del río Artibonito');
 
-        // Cargar capas adicionales desde /ANX
-        cargarCapaAdicional('ANX/presas.json', 'presas');
-        cargarCapaAdicional('ANX/lagos.json', 'lagos');
+        // Cargar capas adicionales desde la raíz
+        cargarCapaAdicional('presas.json', 'presas');
+        cargarCapaAdicional('lagos.json', 'lagos');
 
         // ═══════════════════════════════════════════════════════════
         // 9. UTILIDADES DE UI
