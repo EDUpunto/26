@@ -1,5 +1,5 @@
 // ====================================================================
-// accionLFL.js - Carga independiente de capas GeoJSON para Leaflet
+// accionLFL.js - Carga independiente y robusta de capas GeoJSON
 // ====================================================================
 
 // 1. INICIALIZAR EL MAPA
@@ -11,7 +11,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(map);
 
-// 3. FUNCIÓN DE CARGA INDEPENDIENTE DE CAPAS GEOJSON
+// 3. FUNCIÓN DE CARGA INDEPENDIENTE Y ROBUSTA
 function cargarCapaIndependiente(url, estilo, nombreCapa) {
     fetch(url)
         .then(response => {
@@ -22,6 +22,8 @@ function cargarCapaIndependiente(url, estilo, nombreCapa) {
         })
         .then(data => {
             L.geoJSON(data, {
+                // Nota: Leaflet ya maneja [longitud, latitud] por defecto en GeoJSON.
+                // Se mantiene esta función solo si tus datos originales lo requieren específicamente.
                 coordsToLatLng: function (coords) {
                     return new L.LatLng(coords[1], coords[0]);
                 },
@@ -29,7 +31,7 @@ function cargarCapaIndependiente(url, estilo, nombreCapa) {
                 onEachFeature: function (feature, layer) {
                     let props = feature.properties;
                     
-                    // Construcción limpia del contenido del popup
+                    // Plantilla literal (backticks) CORREGIDA y limpia para evitar errores HTML
                     let popupContent = `<div style="font-family: sans-serif; max-width: 250px;">` +
                                        `<h4 style="margin:0; color:#2c3e50; font-size: 16px;">${nombreCapa}</h4>` +
                                        `<hr style="margin: 8px 0; border: 0; border-top: 1px solid #ccc;">`;
@@ -37,7 +39,7 @@ function cargarCapaIndependiente(url, estilo, nombreCapa) {
                     if (props) {
                         let hasData = false;
                         for (let key in props) {
-                            // Mostrar solo propiedades con valor real
+                            // Filtramos valores nulos, indefinidos o cadenas vacías
                             if (props[key] !== null && props[key] !== undefined && String(props[key]).trim() !== "") {
                                 popupContent += `<b>${key}:</b> ${props[key]}<br>`;
                                 hasData = true;
@@ -58,20 +60,19 @@ function cargarCapaIndependiente(url, estilo, nombreCapa) {
             console.log(`✅ Capa cargada exitosamente: ${nombreCapa}`);
         })
         .catch(err => {
-            // console.warn permite que el script continúe sin detenerse si un archivo falta (404)
-            console.warn(`⚠️ No se pudo cargar la capa "${nombreCapa}" desde ${url}.`, err.message);
+            // Usamos console.warn para que el fallo de un archivo NO detenga la carga de los demás
+            console.warn(`⚠️ No se pudo cargar "${nombreCapa}" desde ${url}.`, err.message);
         });
 }
 
-// 4. CARGA INDEPENDIENTE DE LAS CAPAS
-// Cada llamada es independiente. Si una falla (ej. 404), las demás se dibujarán normal.
+// 4. CARGA DE TODAS LAS CAPAS (Hidrográficas y Adicionales)
+// Cada llamada es independiente. Si un archivo falta (404), las demás se dibujarán igual.
 
-// Cargar Cuenca (Ejemplo: verde)
-cargarCapaIndependiente('cuencaYUNA.json', { color: 'green', weight: 2, fillOpacity: 0.3 }, 'Cuenca del río Yuna');
+// --- Capas Hidrográficas ---
+cargarCapaIndependiente('cuencaTABARA.json', { color: 'green', weight: 2, fillOpacity: 0.3 }, 'Cuenca del río Tábara');
+cargarCapaIndependiente('cauceTABARA.json', { color: 'blue', weight: 3 }, 'Cauce del río Tábara');
 
-// Cargar Cauce (Ejemplo: azul)
-cargarCapaIndependiente('cauceYUNA.json', { color: 'blue', weight: 3 }, 'Cauce del río Yuna');
-
-// Descomenta y ajusta las siguientes líneas si tienes los archivos para Presas y Lagos
-// cargarCapaIndependiente('presas.json', { color: 'orange', weight: 2, radius: 6 }, 'Presas');
-// cargarCapaIndependiente('lagos.json', { color: 'cyan', weight: 1, fillOpacity: 0.5 }, 'Lagos');
+// --- Capas Adicionales (según tu HTML) ---
+// Asegúrate de que estos archivos existan en la misma carpeta o ajusta la ruta si es necesario.
+cargarCapaIndependiente('presas.json', { color: 'orange', weight: 2, radius: 6 }, 'Presas');
+cargarCapaIndependiente('lagos.json', { color: 'cyan', weight: 1, fillOpacity: 0.5 }, 'Lagos');
