@@ -391,7 +391,7 @@
             var html = '<div style="font-family:\'Segoe UI\',sans-serif; min-width:200px;">';
             
             if (tipo === 'cauce') {
-                html += '<div style="font-weight:700; font-size:14px; color:#1a5276; margin-bottom:6px; border-bottom:2px solid #2980b9; padding-bottom:4px;">〰️ Cauce: ' + nombreCapa + '</div>';
+                html += '<div style="font-weight:700; font-size:14px; color:#1a5276; margin-bottom:6px; border-bottom:2px solid #2980b9; padding-bottom:4px;">〰️ Cuerpo: ' + nombreCapa + '</div>';
                 var desc = properties ? (properties['descripcion'] || properties['Description'] || properties['DESCRIPCION']) : null;
                 if (desc && String(desc).trim() !== '') {
                     html += '<div style="font-size:13px; color:#333; line-height:1.4;">' + desc + '</div>';
@@ -399,7 +399,7 @@
                     html += '<div style="font-size:12px; color:#888; font-style:italic;">Sin descripción disponible.</div>';
                 }
             } else if (tipo === 'cuenca') {
-                html += '<div style="font-weight:700; font-size:14px; color:#1a5276; margin-bottom:6px; border-bottom:2px solid #27ae60; padding-bottom:4px;">🟩 Cuenca: ' + nombreCapa + '</div>';
+                html += '<div style="font-weight:700; font-size:14px; color:#1a5276; margin-bottom:6px; border-bottom:2px solid #27ae60; padding-bottom:4px;">🟩 Cuerpo: ' + nombreCapa + '</div>';
                 var desc = null;
                 if (properties) {
                     desc = properties['descripcion'] || properties['Description'] || properties['DESCRIPCION'];
