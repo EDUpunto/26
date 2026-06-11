@@ -44,7 +44,7 @@
             margin-top: 4px;
         }
 
-        /* Controles Desplegables (incluye cuenca seleccionada) */
+        /* Controles Desplegables */
         #panel-controles {
             top: 20px;
             right: 20px;
@@ -84,40 +84,7 @@
             pointer-events: none;
         }
 
-        /* Sección de Cuenca Seleccionada (dentro del panel) */
-        .cuenca-seleccionada {
-            background: #e8f6f3;
-            border-left: 4px solid #27ae60;
-            padding: 8px 10px;
-            border-radius: 6px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-        .cuenca-seleccionada strong {
-            display: block;
-            color: #1a5276;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-        .btn-mostrar-todas {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 4px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: 600;
-            display: flex !important;   /* siempre visible */
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            width: 100%;
-            transition: background 0.2s;
-        }
-        .btn-mostrar-todas:hover { background: #c0392b; }
-
-        /* Enlaces Discretos (ahora al final del panel) */
+        /* Enlaces Discretos */
         .enlaces-discretos {
             display: flex;
             flex-wrap: wrap;
@@ -141,7 +108,7 @@
         }
         .enlace-texto.cursor-pointer { cursor: pointer; }
 
-        /* Estilos de controles internos (más compactos) */
+        /* Estilos de controles internos */
         .grupo-control { margin-bottom: 12px; }
         .grupo-control:last-child { margin-bottom: 0; }
         .grupo-control h4 {
@@ -242,25 +209,17 @@
 
     <!-- Título Destacado -->
     <div id="panel-titulo" class="panel">
-        <h1>HIDROGRAFÍA RD</h1>
-        <h2>Aguas Superficiales</h2>
+        <h1>HIDROGRAFÍA</h1>
+        <h2>Cuerpos de Aguas Superficiales</h2>
     </div>
 
-    <!-- Controles + Cuenca Seleccionada (todo en un solo panel) -->
+    <!-- Controles -->
     <div id="panel-controles" class="panel">
         <div class="panel-header" onclick="togglePanel('panel-controles')">
-            <span>⚙️ Controles</span>
+            <span>⚙️ CONTROLES</span>
             <span class="toggle-icon">▼</span>
         </div>
         <div class="panel-content">
-            <!-- Sección Cuenca Seleccionada (simplificada) -->
-            <div class="cuenca-seleccionada">
-                <strong id="nombreCuenca"></strong>
-                <button id="btn-mostrar-todas" class="btn-mostrar-todas" onclick="mostrarTodas()">
-                    ✕ Mostrar todas
-                </button>
-            </div>
-
             <div class="grupo-control">
                 <h4>Vista de fondo</h4>
                 <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -278,6 +237,12 @@
                 </div>
             </div>
 
+            <!-- Botón Mostrar todas (estilo consistente) -->
+            <div class="grupo-control">
+                <h4>Acciones</h4>
+                <button class="btn-opcion" onclick="mostrarTodas()">✕ Mostrar todas</button>
+            </div>
+
             <div class="grupo-control">
                 <h4>Capas adicionales</h4>
                 <label class="checkbox-opcion">
@@ -288,7 +253,7 @@
                 </label>
             </div>
 
-            <!-- Enlaces discretos al final -->
+            <!-- Enlaces discretos -->
             <div class="enlaces-discretos">
                 <a href="https://edupunto.com/" target="_blank" class="enlace-texto">🌐 EDUPUNTO</a>
                 <a href="https://drive.google.com/file/d/1kCcGXRuTVtTigYxtQMEITKMT42g8akv5/view?usp=sharing" target="_blank" class="enlace-texto">🖨️ IMPRIMIBLE</a>
@@ -334,6 +299,7 @@
         capaDibujo.addTo(map);
 
         window.cambiarBase = function(tipo, btn) {
+            // Remover active de todos los botones del grupo "Vista de fondo"
             document.querySelectorAll('#panel-controles .grupo-control:first-child .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
             
@@ -380,7 +346,7 @@
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 5. DATOS DE PRESAS Y LAGOS (extraídos del archivo proporcionado)
+        // 5. DATOS DE PRESAS Y LAGOS
         // ═══════════════════════════════════════════════════════════
         var presasData = [
             { nombre: "Presa de Hatillo", lat: 19.024801, lng: -70.200628, desc: "Construida en 1984, muro de Tierra. Cuenca del río Yuna." },
@@ -428,7 +394,6 @@
             { nombre: "Lago pequeño Miragoane (Haití)", lat: 18.406977, lng: -72.993924, desc: "" }
         ];
 
-        // Crear capas de marcadores
         function crearCapaPresas() {
             var grupo = L.layerGroup();
             presasData.forEach(function(p) {
@@ -450,30 +415,23 @@
             return grupo;
         }
 
-        // Inicializar capas (no añadidas aún)
         capaPresas = crearCapaPresas();
         capaLagos = crearCapaLagos();
 
         window.togglePresas = function() {
             var chk = document.getElementById('chk-presas');
-            if (chk.checked) {
-                map.addLayer(capaPresas);
-            } else {
-                map.removeLayer(capaPresas);
-            }
+            if (chk.checked) map.addLayer(capaPresas);
+            else map.removeLayer(capaPresas);
         };
 
         window.toggleLagos = function() {
             var chk = document.getElementById('chk-lagos');
-            if (chk.checked) {
-                map.addLayer(capaLagos);
-            } else {
-                map.removeLayer(capaLagos);
-            }
+            if (chk.checked) map.addLayer(capaLagos);
+            else map.removeLayer(capaLagos);
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 6. FUNCIÓN PARA CONSTRUIR POPUP (cuencas y cauces)
+        // 6. POPUP PARA CUENCAS Y CAUCES
         // ═══════════════════════════════════════════════════════════
         function construirPopup(properties, nombreCapa, tipo) {
             var html = '<div style="font-family:\'Segoe UI\',sans-serif; min-width:200px;">';
@@ -513,7 +471,7 @@
         // ═══════════════════════════════════════════════════════════
         window.cambiarCapas = function(modo, btn) {
             capaVisible = modo;
-            document.querySelectorAll('#panel-controles .grupo-control:nth-child(3) .btn-opcion').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#panel-controles .grupo-control:nth-child(2) .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
 
             todasLasCuencas.forEach(function(c) {
@@ -542,7 +500,7 @@
         // ═══════════════════════════════════════════════════════════
         function seleccionarCuenca(entrada) {
             cuencaActiva = entrada;
-            document.getElementById('nombreCuenca').textContent = entrada.nombre;
+            // No hay elemento para mostrar el nombre, solo se resalta en el mapa
 
             todasLasCuencas.forEach(function(c) {
                 var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
@@ -564,7 +522,6 @@
 
         window.mostrarTodas = function() {
             cuencaActiva = null;
-            document.getElementById('nombreCuenca').textContent = '';
 
             todasLasCuencas.forEach(function(c) {
                 var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
@@ -580,7 +537,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 9. CARGA DE CUENCAS Y CAUCES (archivos locales en carpeta 'anx/')
+        // 9. CARGA DE CUENCAS Y CAUCES (archivos en carpeta 'anx/')
         // ═══════════════════════════════════════════════════════════
         function coordToLatLng(coords) {
             if (Math.abs(coords[0]) <= 90 && (coords[1] < -180 || coords[1] > 180 || Math.abs(coords[1]) > 90)) {
@@ -655,7 +612,7 @@
                 .catch(function(e) { console.warn('Cauce no cargado:', nombreCapa, e); });
         }
 
-        // Listado de cuencas (rutas relativas a la carpeta 'anx/')
+        // Carga masiva de cuencas
         cargarParCuenca('anx/cuencaOZAMA.json', 'anx/cauceOZAMA.json', 'Cuenca del río Ozama');
         cargarParCuenca('anx/cuencaYUMA.json', 'anx/cauceYUMA.json', 'Cuenca del río Yuma');
         cargarParCuenca('anx/cuencaMAIMONESTE.json', 'anx/cauceMAIMONESTE.json', 'Cuenca del río Maimón del Este');
