@@ -44,155 +44,142 @@
             margin-top: 4px;
         }
 
-        /* Panel de Controles Unificado */
+        /* Controles Desplegables */
         #panel-controles {
             top: 20px;
             right: 20px;
-            width: 220px;
+            width: 260px;
             max-height: 85vh;
-            overflow-y: auto;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         #panel-controles.collapsed {
-            max-height: 40px;
-            overflow: hidden;
+            max-height: 48px;
         }
         .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            padding: 9px 12px;
+            padding: 12px 16px;
             border-bottom: 1px solid #eee;
             font-weight: 700;
             color: #2c3e50;
-            font-size: 13px;
+            font-size: 15px;
             user-select: none;
-            flex-shrink: 0;
         }
         .panel-header:hover { background: rgba(0,0,0,0.02); }
-        .toggle-icon { transition: transform 0.3s ease; font-size: 11px; }
+        .toggle-icon { transition: transform 0.3s ease; font-size: 12px; }
         .collapsed .toggle-icon { transform: rotate(-90deg); }
         .panel-content {
-            padding: 10px 12px 12px 12px;
+            padding: 12px 16px 16px 16px;
             transition: opacity 0.3s ease, max-height 0.3s ease;
             opacity: 1;
+            max-height: 1000px;
         }
         .collapsed .panel-content {
             opacity: 0;
             max-height: 0;
-            padding: 0 12px;
+            padding: 0 16px;
             pointer-events: none;
         }
 
-        /* Estilos de controles internos */
-        .grupo-control { margin-bottom: 10px; }
-        .grupo-control:last-child { margin-bottom: 0; }
-        .grupo-control h4 {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: #7f8c8d;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-            font-weight: 700;
+        /* Panel Cuenca Seleccionada (Compacto y Desplegable) */
+        #panel-cuenca {
+            bottom: 20px;
+            left: 20px;
+            width: 280px;
         }
-
-        /* Grid de botones: 2 o 3 columnas según contexto */
-        .btn-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
-        .btn-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
-
-        .btn-opcion {
-            display: flex; align-items: center; justify-content: center;
-            gap: 4px; padding: 6px 4px;
-            border: 1px solid #e0e0e0; border-radius: 6px; background: #fff;
-            color: #333; font-size: 11px; cursor: pointer; transition: all 0.2s;
-            width: 100%; text-align: center; line-height: 1.2;
+        #panel-cuenca.collapsed {
+            max-height: 48px;
         }
-        .btn-opcion:hover { background: #f8f9fa; border-color: #2980b9; color: #2980b9; }
-        .btn-opcion.active { background: #2980b9; color: white; border-color: #2980b9; }
-
-        /* Checkboxes en fila */
-        .checkboxes-fila {
+        #panel-cuenca .panel-content {
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            gap: 12px;
         }
-        .checkbox-opcion {
-            display: flex; align-items: center; gap: 5px;
-            font-size: 12px; color: #333; cursor: pointer;
-        }
-        .checkbox-opcion input { accent-color: #2980b9; width: 14px; height: 14px; cursor: pointer; }
-
-        /* Divisor */
-        .divider {
-            border-top: 1px solid #e0e0e0;
-            margin: 8px 0;
-        }
-
-        /* Cuenca Seleccionada */
-        .cuenca-info-box-compact {
+        .cuenca-info-box {
             background: #e8f6f3;
-            border-left: 3px solid #27ae60;
-            padding: 6px 8px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 6px;
-            flex-wrap: wrap;
+            border-left: 4px solid #27ae60;
+            padding: 10px 12px;
+            border-radius: 6px;
         }
-        .cuenca-info-box-compact strong {
+        .cuenca-info-box strong {
+            display: block;
             color: #1a5276;
-            font-size: 11px;
-            flex: 1;
-            min-width: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 14px;
+            margin-bottom: 4px;
         }
-        .cuenca-info-box-compact p { display: none; }
+        .cuenca-info-box p {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.4;
+        }
         .btn-mostrar-todas {
             background: #e74c3c;
             color: white;
             border: none;
-            padding: 3px 7px;
+            padding: 6px 12px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 600;
             display: none;
             align-items: center;
-            gap: 3px;
-            white-space: nowrap;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
             transition: background 0.2s;
-            flex-shrink: 0;
         }
         .btn-mostrar-todas:hover { background: #c0392b; }
 
-        /* Enlaces en grid 2x2 */
-        .enlaces-discretos-compact {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5px;
+        /* Enlaces Discretos */
+        .enlaces-discretos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
         }
         .enlace-texto {
-            font-size: 11px;
+            font-size: 12px;
             color: #555;
             text-decoration: none;
-            transition: color 0.2s;
+            transition: color 0.2s, padding-left 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            padding: 4px 6px;
-            border: 1px solid #e8e8e8;
-            border-radius: 5px;
-            background: #fafafa;
         }
         .enlace-texto:hover {
             color: #2980b9;
-            background: #f0f7ff;
-            border-color: #2980b9;
+            padding-left: 2px;
         }
         .enlace-texto.cursor-pointer { cursor: pointer; }
+
+        /* Estilos de controles internos */
+        .grupo-control { margin-bottom: 14px; }
+        .grupo-control:last-child { margin-bottom: 0; }
+        .grupo-control h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+        .btn-opcion {
+            display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+            border: 1px solid #e0e0e0; border-radius: 6px; background: #fff;
+            color: #333; font-size: 13px; cursor: pointer; transition: all 0.2s;
+            width: 100%; text-align: left;
+        }
+        .btn-opcion:hover { background: #f8f9fa; border-color: #2980b9; color: #2980b9; }
+        .btn-opcion.active { background: #2980b9; color: white; border-color: #2980b9; }
+        
+        .checkbox-opcion {
+            display: flex; align-items: center; gap: 8px; padding: 4px 0;
+            font-size: 13px; color: #333; cursor: pointer;
+        }
+        .checkbox-opcion input { accent-color: #2980b9; width: 15px; height: 15px; cursor: pointer; }
 
         /* Modal */
         .modal-overlay {
@@ -214,7 +201,7 @@
         }
         .btn-cerrar-modal:hover { background: #1f618d; }
 
-        /* Leaflet Controls Positioning */
+        /* Leaflet Controls Positioning (No Overlap) */
         .leaflet-bottom.leaflet-right {
             margin-bottom: 10px;
             margin-right: 10px;
@@ -247,16 +234,31 @@
             order: 0;
         }
 
-        /* Responsive Design */
+        /* Responsive Design: Laptops and Mobile */
         @media (max-width: 768px) {
             #panel-titulo { 
                 top: 10px; left: 10px; right: 10px; width: auto; 
                 text-align: center; border-left: none; border-bottom: 3px solid #2980b9;
             }
             #panel-controles { 
-                top: 65px; right: 10px; left: 10px; width: auto; 
-                max-height: 55vh;
+                top: 70px; right: 10px; width: 240px; 
             }
+            #panel-cuenca { 
+                bottom: 100px; 
+                left: 10px; right: 10px; width: auto; 
+                max-height: 40vh;
+            }
+            #panel-cuenca.collapsed {
+                max-height: 48px;
+            }
+            .enlaces-discretos {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #panel-controles { width: calc(100vw - 20px); right: 10px; }
+            #panel-cuenca { bottom: 110px; }
         }
     </style>
 </head>
@@ -270,70 +272,62 @@
         <h2>Aguas Superficiales</h2>
     </div>
 
-    <!-- Panel de Controles Unificado -->
+    <!-- Controles Desplegables -->
     <div id="panel-controles" class="panel">
         <div class="panel-header" onclick="togglePanel('panel-controles')">
             <span>⚙️ Controles</span>
             <span class="toggle-icon">▼</span>
         </div>
         <div class="panel-content">
-            <!-- Vista de fondo -->
             <div class="grupo-control">
                 <h4>Vista de fondo</h4>
-                <div class="btn-grid-2">
-                    <button class="btn-opcion active" onclick="cambiarBase('mapa', this)">🗺️ Dibujo</button>
-                    <button class="btn-opcion" onclick="cambiarBase('satelite', this)">🛰️ Satélite</button>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <button class="btn-opcion active" onclick="cambiarBase('mapa', this)">🗺️ Vista Dibujo</button>
+                    <button class="btn-opcion" onclick="cambiarBase('satelite', this)">🛰️ Vista Satélite</button>
                 </div>
             </div>
 
-            <!-- Capa hidrográfica -->
             <div class="grupo-control">
                 <h4>Capa hidrográfica</h4>
-                <div class="btn-grid-3">
-                    <button id="btn-capa-cauce" class="btn-opcion" onclick="cambiarCapas('cauce', this)">〰️<br>Cauce</button>
-                    <button id="btn-capa-cuenca" class="btn-opcion" onclick="cambiarCapas('cuenca', this)">🟩<br>Cuenca</button>
-                    <button id="btn-capa-ambos" class="btn-opcion active" onclick="cambiarCapas('ambos', this)">🗂️<br>Ambos</button>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <button id="btn-capa-cauce" class="btn-opcion" onclick="cambiarCapas('cauce', this)">〰️ Cauce</button>
+                    <button id="btn-capa-cuenca" class="btn-opcion" onclick="cambiarCapas('cuenca', this)">🟩 Cuenca</button>
+                    <button id="btn-capa-ambos" class="btn-opcion active" onclick="cambiarCapas('ambos', this)">🗂️ Ambos</button>
                 </div>
             </div>
 
-            <!-- Capas adicionales -->
             <div class="grupo-control">
                 <h4>Capas adicionales</h4>
-                <div class="checkboxes-fila">
-                    <label class="checkbox-opcion">
-                        <input type="checkbox" id="chk-presas" onchange="toggleCapaAdicional('presas')"> 🟠 Presas
-                    </label>
-                    <label class="checkbox-opcion">
-                        <input type="checkbox" id="chk-lagos" onchange="toggleCapaAdicional('lagos')"> 🔵 Lagos
-                    </label>
-                </div>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-presas" onchange="toggleCapaAdicional('presas')"> 🟠 Presas
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-lagos" onchange="toggleCapaAdicional('lagos')"> 🔵 Lagos / Lagunas
+                </label>
             </div>
+        </div>
+    </div>
 
-            <div class="divider"></div>
-
-            <!-- Cuenca Seleccionada (Compacta) -->
-            <div class="grupo-control">
-                <h4>✨ Cuenca seleccionada</h4>
-                <div class="cuenca-info-box-compact">
-                    <strong id="nombreCuenca">— ninguna —</strong>
-                    <p id="descCuenca">Haz clic en una cuenca o cauce en el mapa.</p>
-                    <button id="btn-mostrar-todas" class="btn-mostrar-todas" onclick="mostrarTodas()">
-                        ✕ Todas
-                    </button>
-                </div>
+    <!-- Panel Cuenca Seleccionada (Compacto y Desplegable) -->
+    <div id="panel-cuenca" class="panel">
+        <div class="panel-header" onclick="togglePanel('panel-cuenca')">
+            <span>✨ Cuenca seleccionada</span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="panel-content">
+            <div class="cuenca-info-box">
+                <strong id="nombreCuenca">— ninguna —</strong>
+                <p id="descCuenca">Haz clic en una cuenca o cauce en el mapa para ver sus detalles.</p>
+                <button id="btn-mostrar-todas" class="btn-mostrar-todas" onclick="mostrarTodas()">
+                    ✕ Mostrar todas
+                </button>
             </div>
-
-            <div class="divider"></div>
-
-            <!-- Enlaces -->
-            <div class="grupo-control">
-                <h4>Enlaces</h4>
-                <div class="enlaces-discretos-compact">
-                    <a href="https://edupunto.com/" target="_blank" class="enlace-texto">🌐 Edupunto</a>
-                    <a href="https://drive.google.com/file/d/1kCcGXRuTVtTigYxtQMEITKMT42g8akv5/view?usp=sharing" target="_blank" class="enlace-texto">🖨️ Imprimir</a>
-                    <span class="enlace-texto cursor-pointer" onclick="abrirModalCreditos()">© Créditos</span>
-                    <a href="https://drive.google.com/file/d/16UP5fYCeAg1RaSXWI9cTsO7FVq6YM0Hf/view?usp=sharing" target="_blank" class="enlace-texto">💡 Concepto</a>
-                </div>
+            
+            <div class="enlaces-discretos">
+                <a href="https://edupunto.com/" target="_blank" class="enlace-texto">🌐 EDUPUNTO</a>
+                <a href="https://drive.google.com/file/d/1kCcGXRuTVtTigYxtQMEITKMT42g8akv5/view?usp=sharing" target="_blank" class="enlace-texto">🖨️ IMPRIMIBLE</a>
+                <span class="enlace-texto cursor-pointer" onclick="abrirModalCreditos()">© CRÉDITOS</span>
+                <a href="https://drive.google.com/file/d/16UP5fYCeAg1RaSXWI9cTsO7FVq6YM0Hf/view?usp=sharing" target="_blank" class="enlace-texto">💡 CONCEPTO</a>
             </div>
         </div>
     </div>
@@ -374,7 +368,7 @@
         capaDibujo.addTo(map);
 
         window.cambiarBase = function(tipo, btn) {
-            document.querySelectorAll('#panel-controles .btn-grid-2 .btn-opcion').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#panel-controles .grupo-control:first-child .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
             
             if (tipo === 'satelite') {
@@ -468,7 +462,7 @@
         // ═══════════════════════════════════════════════════════════
         window.cambiarCapas = function(modo, btn) {
             capaVisible = modo;
-            ['btn-capa-cauce','btn-capa-cuenca','btn-capa-ambos'].forEach(id => document.getElementById(id).classList.remove('active'));
+            document.querySelectorAll('#panel-controles .grupo-control:nth-child(2) .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
 
             todasLasCuencas.forEach(function(c) {
@@ -507,11 +501,9 @@
         function seleccionarCuenca(entrada) {
             cuencaActiva = entrada;
             document.getElementById('nombreCuenca').textContent = entrada.nombre;
-            document.getElementById('descCuenca').textContent = 'Haz zoom o clic en el mapa para ver más detalles.';
+            document.getElementById('descCuenca').textContent = 'Haz zoom o clic en el mapa para ver más detalles de esta cuenca.';
             document.getElementById('btn-mostrar-todas').style.display = 'flex';
-            
-            // Expandir panel si está colapsado
-            document.getElementById('panel-controles').classList.remove('collapsed');
+            document.getElementById('panel-cuenca').classList.remove('collapsed');
 
             todasLasCuencas.forEach(function(c) {
                 var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
@@ -534,7 +526,7 @@
         window.mostrarTodas = function() {
             cuencaActiva = null;
             document.getElementById('nombreCuenca').textContent = '— ninguna —';
-            document.getElementById('descCuenca').textContent = 'Haz clic en una cuenca o cauce en el mapa.';
+            document.getElementById('descCuenca').textContent = 'Haz clic en una cuenca o cauce en el mapa para ver sus detalles.';
             document.getElementById('btn-mostrar-todas').style.display = 'none';
 
             todasLasCuencas.forEach(function(c) {
@@ -551,8 +543,19 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 8. CARGA DE JSON (RUTAS CORREGIDAS - SIN CARPETA ANX)
+        // 8. CARGA DE JSON DESDE CARPETA /ANX (con soporte para .geojson y coordenadas flexibles)
         // ═══════════════════════════════════════════════════════════
+        
+        // Función auxiliar para convertir coordenadas de forma robusta (acepta [lng,lat] o [lat,lng])
+        function coordToLatLng(coords) {
+            // Si el primer valor está entre -90 y 90 y el segundo fuera de ese rango, probablemente es [lat, lng]
+            if (Math.abs(coords[0]) <= 90 && (coords[1] < -180 || coords[1] > 180 || Math.abs(coords[1]) > 90)) {
+                return new L.LatLng(coords[0], coords[1]);
+            }
+            // Caso estándar [lng, lat]
+            return new L.LatLng(coords[1], coords[0]);
+        }
+
         function cargarParCuenca(urlCuenca, urlCauce, nombreCapa) {
             var entrada = { nombre: nombreCapa, layerCuenca: null, layerCauce: null, bounds: null };
             var cargados = 0;
@@ -565,23 +568,25 @@
                 }
             }
 
+            // Cargar cuenca
             fetch(urlCuenca)
                 .then(function(r) { if (!r.ok) throw new Error('Error ' + urlCuenca); return r.json(); })
                 .then(function(data) {
                     entrada.layerCuenca = L.geoJSON(data, {
-                        coordsToLatLng: function(coords) { return new L.LatLng(coords[1], coords[0]); },
+                        coordsToLatLng: coordToLatLng,
                         style: estiloCuencaNormal,
                         onEachFeature: function(feature, layer) {
                             layer.bindPopup(construirPopup(feature.properties, nombreCapa, 'cuenca'));
                             layer.on('click', function() { seleccionarCuenca(entrada); });
+                            // Hover solo si no hay cuenca activa
                             layer.on('mouseover', function() { 
-                                if (cuencaActiva !== entrada) { 
+                                if (cuencaActiva === null) { 
                                     this.setStyle(estiloCuencaHover); 
                                     this.bringToFront(); 
                                 } 
                             });
                             layer.on('mouseout', function() { 
-                                if (cuencaActiva !== entrada) { 
+                                if (cuencaActiva === null) { 
                                     this.setStyle(estiloCuencaNormal); 
                                 } 
                             });
@@ -592,23 +597,25 @@
                 })
                 .catch(function(e) { console.warn('Cuenca no cargada:', nombreCapa, e); });
 
+            // Cargar cauce
             fetch(urlCauce)
                 .then(function(r) { if (!r.ok) throw new Error('Error ' + urlCauce); return r.json(); })
                 .then(function(data) {
                     entrada.layerCauce = L.geoJSON(data, {
-                        coordsToLatLng: function(coords) { return new L.LatLng(coords[1], coords[0]); },
+                        coordsToLatLng: coordToLatLng,
                         style: estiloCauceNormal,
                         onEachFeature: function(feature, layer) {
                             layer.bindPopup(construirPopup(feature.properties, nombreCapa, 'cauce'));
                             layer.on('click', function() { seleccionarCuenca(entrada); });
+                            // Hover solo si no hay cuenca activa
                             layer.on('mouseover', function() { 
-                                if (cuencaActiva !== entrada) { 
+                                if (cuencaActiva === null) { 
                                     this.setStyle(estiloCauceHover); 
                                     this.bringToFront(); 
                                 } 
                             });
                             layer.on('mouseout', function() { 
-                                if (cuencaActiva !== entrada) { 
+                                if (cuencaActiva === null) { 
                                     this.setStyle(estiloCauceNormal); 
                                 } 
                             });
@@ -619,34 +626,45 @@
                 .catch(function(e) { console.warn('Cauce no cargado:', nombreCapa, e); });
         }
 
-        function cargarCapaAdicional(url, tipo) {
-            fetch(url)
-                .then(function(r) { if (!r.ok) throw new Error('Error ' + url); return r.json(); })
-                .then(function(data) {
-                    var icono = tipo === 'presas' ? iconPresa : iconLago;
-                    var tipoPopup = tipo === 'presas' ? 'presa' : 'lago';
-                    capasAdicionales[tipo] = L.geoJSON(data, {
-                        coordsToLatLng: function(coords) { return new L.LatLng(coords[1], coords[0]); },
-                        pointToLayer: function(feature, latlng) {
-                            return L.marker(latlng, { icon: icono });
-                        },
-                        onEachFeature: function(feature, layer) {
-                            layer.bindPopup(construirPopup(feature.properties, null, tipoPopup));
+        function cargarCapaAdicional(urlBase, tipo) {
+            // Intenta primero con .json, si falla prueba con .geojson
+            function intentarCarga(url) {
+                fetch(url)
+                    .then(function(r) { if (!r.ok) throw new Error('No se pudo cargar ' + url); return r.json(); })
+                    .then(function(data) {
+                        var icono = tipo === 'presas' ? iconPresa : iconLago;
+                        var tipoPopup = tipo === 'presas' ? 'presa' : 'lago';
+                        capasAdicionales[tipo] = L.geoJSON(data, {
+                            coordsToLatLng: coordToLatLng,
+                            pointToLayer: function(feature, latlng) {
+                                return L.marker(latlng, { icon: icono });
+                            },
+                            onEachFeature: function(feature, layer) {
+                                layer.bindPopup(construirPopup(feature.properties, null, tipoPopup));
+                            }
+                        });
+                        if (document.getElementById('chk-' + tipo).checked) {
+                            capasAdicionales[tipo].addTo(map);
+                        }
+                        console.log('Capa adicional cargada:', tipo, url);
+                    })
+                    .catch(function(e) {
+                        console.warn('No se pudo cargar', url, e);
+                        // Si falló .json, intentar con .geojson
+                        if (url.endsWith('.json')) {
+                            intentarCarga(url.replace('.json', '.geojson'));
                         }
                     });
-                    if (document.getElementById('chk-' + tipo).checked) {
-                        capasAdicionales[tipo].addTo(map);
-                    }
-                })
-                .catch(function(e) { console.warn('Capa adicional no cargada:', tipo, e); });
+            }
+            intentarCarga(urlBase);
         }
 
-        // Cargar cuencas y cauces
+        // Cargar cuencas y cauces desde la carpeta /ANX con extensión .json
         cargarParCuenca('anx/cuencaOZAMA.json', 'anx/cauceOZAMA.json', 'Cuenca del río Ozama');
         cargarParCuenca('anx/cuencaYUMA.json', 'anx/cauceYUMA.json', 'Cuenca del río Yuma');
         cargarParCuenca('anx/cuencaMAIMONESTE.json', 'anx/cauceMAIMONESTE.json', 'Cuenca del río Maimón del Este');
         cargarParCuenca('anx/cuencaANAMUYA.json', 'anx/cauceANAMUYA.json', 'Cuenca del río Anamuya');
-        cargarParCuenca('anx/cuencaTOSA.json', 'anx/cauceTOSA.json', 'Cuenca del río Tosa o Brujuelas');
+        cargarParCuenca('anx/cuencaBRUJUELAS.json', 'anx/cauceBRUJUELAS.json', 'Cuenca del río Brujuelas o Tosa');
         cargarParCuenca('anx/cuencaHIGUAMO.json', 'anx/cauceHIGUAMO.json', 'Cuenca del río Higuamo');
         cargarParCuenca('anx/cuencaSOCO.json', 'anx/cauceSOCO.json', 'Cuenca del río Soco');
         cargarParCuenca('anx/cuencaCUMAYASA.json', 'anx/cauceCUMAYASA.json', 'Cuenca del río Cumayasa');
@@ -685,9 +703,11 @@
         cargarParCuenca('anx/cuencaBANI.json', 'anx/cauceBANI.json', 'Cuenca del río Baní / Banilejo');
         cargarParCuenca('anx/cuencaARTIBONITO.json', 'anx/cauceARTIBONITO.json', 'Cuenca del río Artibonito');
 
-        // Cargar capas adicionales 
+        // Cargar capas adicionales desde /ANX (con fallback a .geojson)
         cargarCapaAdicional('anx/presas.json', 'presas');
         cargarCapaAdicional('anx/lagos.json', 'lagos');
+        cargarCapaAdicional('anx/presas.geojson', 'presas');
+        cargarCapaAdicional('anx/lagos.geojson', 'lagos');
 
         // ═══════════════════════════════════════════════════════════
         // 9. UTILIDADES DE UI
