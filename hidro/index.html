@@ -44,11 +44,11 @@
             margin-top: 4px;
         }
 
-        /* Controles Desplegables */
+        /* Controles Desplegables (ahora incluye cuenca seleccionada) */
         #panel-controles {
             top: 20px;
             right: 20px;
-            width: 260px;
+            width: 280px;
             max-height: 85vh;
             overflow: hidden;
         }
@@ -75,6 +75,7 @@
             transition: opacity 0.3s ease, max-height 0.3s ease;
             opacity: 1;
             max-height: 1000px;
+            overflow-y: auto;
         }
         .collapsed .panel-content {
             opacity: 0;
@@ -83,45 +84,34 @@
             pointer-events: none;
         }
 
-        /* Panel Cuenca Seleccionada (Compacto y Desplegable) */
-        #panel-cuenca {
-            bottom: 20px;
-            left: 20px;
-            width: 280px;
-        }
-        #panel-cuenca.collapsed {
-            max-height: 48px;
-        }
-        #panel-cuenca .panel-content {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .cuenca-info-box {
+        /* Sección de Cuenca Seleccionada (dentro del panel) */
+        .cuenca-seleccionada {
             background: #e8f6f3;
             border-left: 4px solid #27ae60;
-            padding: 10px 12px;
+            padding: 8px 10px;
             border-radius: 6px;
+            margin-bottom: 16px;
         }
-        .cuenca-info-box strong {
+        .cuenca-seleccionada strong {
             display: block;
             color: #1a5276;
-            font-size: 14px;
+            font-size: 13px;
             margin-bottom: 4px;
         }
-        .cuenca-info-box p {
-            font-size: 12px;
+        .cuenca-seleccionada p {
+            font-size: 11px;
             color: #555;
             line-height: 1.4;
+            margin-bottom: 6px;
         }
         .btn-mostrar-todas {
             background: #e74c3c;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 4px 10px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             display: none;
             align-items: center;
@@ -132,16 +122,17 @@
         }
         .btn-mostrar-todas:hover { background: #c0392b; }
 
-        /* Enlaces Discretos */
+        /* Enlaces Discretos (ahora al final del panel) */
         .enlaces-discretos {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px 16px;
-            padding-top: 8px;
+            gap: 8px 12px;
+            padding-top: 12px;
+            margin-top: 12px;
             border-top: 1px solid #eee;
         }
         .enlace-texto {
-            font-size: 12px;
+            font-size: 11px;
             color: #555;
             text-decoration: none;
             transition: color 0.2s, padding-left 0.2s;
@@ -155,31 +146,31 @@
         }
         .enlace-texto.cursor-pointer { cursor: pointer; }
 
-        /* Estilos de controles internos */
-        .grupo-control { margin-bottom: 14px; }
+        /* Estilos de controles internos (más compactos) */
+        .grupo-control { margin-bottom: 12px; }
         .grupo-control:last-child { margin-bottom: 0; }
         .grupo-control h4 {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
             color: #7f8c8d;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: 0.5px;
             font-weight: 700;
         }
         .btn-opcion {
-            display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+            display: flex; align-items: center; gap: 8px; padding: 6px 10px;
             border: 1px solid #e0e0e0; border-radius: 6px; background: #fff;
-            color: #333; font-size: 13px; cursor: pointer; transition: all 0.2s;
+            color: #333; font-size: 12px; cursor: pointer; transition: all 0.2s;
             width: 100%; text-align: left;
         }
         .btn-opcion:hover { background: #f8f9fa; border-color: #2980b9; color: #2980b9; }
         .btn-opcion.active { background: #2980b9; color: white; border-color: #2980b9; }
         
         .checkbox-opcion {
-            display: flex; align-items: center; gap: 8px; padding: 4px 0;
-            font-size: 13px; color: #333; cursor: pointer;
+            display: flex; align-items: center; gap: 8px; padding: 3px 0;
+            font-size: 12px; color: #333; cursor: pointer;
         }
-        .checkbox-opcion input { accent-color: #2980b9; width: 15px; height: 15px; cursor: pointer; }
+        .checkbox-opcion input { accent-color: #2980b9; width: 14px; height: 14px; cursor: pointer; }
 
         /* Modal */
         .modal-overlay {
@@ -201,7 +192,7 @@
         }
         .btn-cerrar-modal:hover { background: #1f618d; }
 
-        /* Leaflet Controls Positioning (No Overlap) */
+        /* Leaflet Controls Positioning */
         .leaflet-bottom.leaflet-right {
             margin-bottom: 10px;
             margin-right: 10px;
@@ -234,31 +225,19 @@
             order: 0;
         }
 
-        /* Responsive Design: Laptops and Mobile */
+        /* Responsive */
         @media (max-width: 768px) {
             #panel-titulo { 
                 top: 10px; left: 10px; right: 10px; width: auto; 
                 text-align: center; border-left: none; border-bottom: 3px solid #2980b9;
             }
             #panel-controles { 
-                top: 70px; right: 10px; width: 240px; 
-            }
-            #panel-cuenca { 
-                bottom: 100px; 
-                left: 10px; right: 10px; width: auto; 
-                max-height: 40vh;
-            }
-            #panel-cuenca.collapsed {
-                max-height: 48px;
-            }
-            .enlaces-discretos {
-                justify-content: center;
+                top: 70px; right: 10px; width: 260px; 
+                max-height: 70vh;
             }
         }
-        
         @media (max-width: 480px) {
             #panel-controles { width: calc(100vw - 20px); right: 10px; }
-            #panel-cuenca { bottom: 110px; }
         }
     </style>
 </head>
@@ -272,13 +251,22 @@
         <h2>Aguas Superficiales</h2>
     </div>
 
-    <!-- Controles Desplegables -->
+    <!-- Controles + Cuenca Seleccionada (todo en un solo panel) -->
     <div id="panel-controles" class="panel">
         <div class="panel-header" onclick="togglePanel('panel-controles')">
             <span>⚙️ Controles</span>
             <span class="toggle-icon">▼</span>
         </div>
         <div class="panel-content">
+            <!-- Sección Cuenca Seleccionada (integrada) -->
+            <div class="cuenca-seleccionada">
+                <strong id="nombreCuenca">— ninguna —</strong>
+                <p id="descCuenca">Haz clic en una cuenca o cauce en el mapa para ver sus detalles.</p>
+                <button id="btn-mostrar-todas" class="btn-mostrar-todas" onclick="mostrarTodas()">
+                    ✕ Mostrar todas
+                </button>
+            </div>
+
             <div class="grupo-control">
                 <h4>Vista de fondo</h4>
                 <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -305,24 +293,8 @@
                     <input type="checkbox" id="chk-lagos" onchange="toggleCapaAdicional('lagos')"> 🔵 Lagos / Lagunas
                 </label>
             </div>
-        </div>
-    </div>
 
-    <!-- Panel Cuenca Seleccionada (Compacto y Desplegable) -->
-    <div id="panel-cuenca" class="panel">
-        <div class="panel-header" onclick="togglePanel('panel-cuenca')">
-            <span>✨ Cuenca seleccionada</span>
-            <span class="toggle-icon">▼</span>
-        </div>
-        <div class="panel-content">
-            <div class="cuenca-info-box">
-                <strong id="nombreCuenca">— ninguna —</strong>
-                <p id="descCuenca">Haz clic en una cuenca o cauce en el mapa para ver sus detalles.</p>
-                <button id="btn-mostrar-todas" class="btn-mostrar-todas" onclick="mostrarTodas()">
-                    ✕ Mostrar todas
-                </button>
-            </div>
-            
+            <!-- Enlaces discretos al final -->
             <div class="enlaces-discretos">
                 <a href="https://edupunto.com/" target="_blank" class="enlace-texto">🌐 EDUPUNTO</a>
                 <a href="https://drive.google.com/file/d/1kCcGXRuTVtTigYxtQMEITKMT42g8akv5/view?usp=sharing" target="_blank" class="enlace-texto">🖨️ IMPRIMIBLE</a>
@@ -462,7 +434,7 @@
         // ═══════════════════════════════════════════════════════════
         window.cambiarCapas = function(modo, btn) {
             capaVisible = modo;
-            document.querySelectorAll('#panel-controles .grupo-control:nth-child(2) .btn-opcion').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#panel-controles .grupo-control:nth-child(3) .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
 
             todasLasCuencas.forEach(function(c) {
@@ -501,9 +473,8 @@
         function seleccionarCuenca(entrada) {
             cuencaActiva = entrada;
             document.getElementById('nombreCuenca').textContent = entrada.nombre;
-            document.getElementById('descCuenca').textContent = 'Haz zoom o clic en el mapa para ver más detalles de esta cuenca.';
+            document.getElementById('descCuenca').textContent = 'Haz zoom o clic en el mapa para ver más detalles.';
             document.getElementById('btn-mostrar-todas').style.display = 'flex';
-            document.getElementById('panel-cuenca').classList.remove('collapsed');
 
             todasLasCuencas.forEach(function(c) {
                 var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
@@ -543,16 +514,14 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 8. CARGA DE JSON DESDE CARPETA /ANX (con soporte para .geojson y coordenadas flexibles)
+        // 8. CARGA DE DATOS (con soporte robusto para coordenadas y extensiones)
         // ═══════════════════════════════════════════════════════════
         
-        // Función auxiliar para convertir coordenadas de forma robusta (acepta [lng,lat] o [lat,lng])
         function coordToLatLng(coords) {
-            // Si el primer valor está entre -90 y 90 y el segundo fuera de ese rango, probablemente es [lat, lng]
+            // Detecta si es [lat, lng] o [lng, lat]
             if (Math.abs(coords[0]) <= 90 && (coords[1] < -180 || coords[1] > 180 || Math.abs(coords[1]) > 90)) {
                 return new L.LatLng(coords[0], coords[1]);
             }
-            // Caso estándar [lng, lat]
             return new L.LatLng(coords[1], coords[0]);
         }
 
@@ -568,7 +537,7 @@
                 }
             }
 
-            // Cargar cuenca
+            // Cuenca
             fetch(urlCuenca)
                 .then(function(r) { if (!r.ok) throw new Error('Error ' + urlCuenca); return r.json(); })
                 .then(function(data) {
@@ -578,7 +547,6 @@
                         onEachFeature: function(feature, layer) {
                             layer.bindPopup(construirPopup(feature.properties, nombreCapa, 'cuenca'));
                             layer.on('click', function() { seleccionarCuenca(entrada); });
-                            // Hover solo si no hay cuenca activa
                             layer.on('mouseover', function() { 
                                 if (cuencaActiva === null) { 
                                     this.setStyle(estiloCuencaHover); 
@@ -597,7 +565,7 @@
                 })
                 .catch(function(e) { console.warn('Cuenca no cargada:', nombreCapa, e); });
 
-            // Cargar cauce
+            // Cauce
             fetch(urlCauce)
                 .then(function(r) { if (!r.ok) throw new Error('Error ' + urlCauce); return r.json(); })
                 .then(function(data) {
@@ -607,7 +575,6 @@
                         onEachFeature: function(feature, layer) {
                             layer.bindPopup(construirPopup(feature.properties, nombreCapa, 'cauce'));
                             layer.on('click', function() { seleccionarCuenca(entrada); });
-                            // Hover solo si no hay cuenca activa
                             layer.on('mouseover', function() { 
                                 if (cuencaActiva === null) { 
                                     this.setStyle(estiloCauceHover); 
@@ -627,7 +594,6 @@
         }
 
         function cargarCapaAdicional(urlBase, tipo) {
-            // Intenta primero con .json, si falla prueba con .geojson
             function intentarCarga(url) {
                 fetch(url)
                     .then(function(r) { if (!r.ok) throw new Error('No se pudo cargar ' + url); return r.json(); })
@@ -650,7 +616,6 @@
                     })
                     .catch(function(e) {
                         console.warn('No se pudo cargar', url, e);
-                        // Si falló .json, intentar con .geojson
                         if (url.endsWith('.json')) {
                             intentarCarga(url.replace('.json', '.geojson'));
                         }
@@ -659,7 +624,7 @@
             intentarCarga(urlBase);
         }
 
-        // Cargar cuencas y cauces desde la carpeta /ANX con extensión .json
+        // Cargar todas las cuencas (rutas relativas a la carpeta 'anx/')
         cargarParCuenca('anx/cuencaOZAMA.json', 'anx/cauceOZAMA.json', 'Cuenca del río Ozama');
         cargarParCuenca('anx/cuencaYUMA.json', 'anx/cauceYUMA.json', 'Cuenca del río Yuma');
         cargarParCuenca('anx/cuencaMAIMONESTE.json', 'anx/cauceMAIMONESTE.json', 'Cuenca del río Maimón del Este');
@@ -703,11 +668,9 @@
         cargarParCuenca('anx/cuencaBANI.json', 'anx/cauceBANI.json', 'Cuenca del río Baní / Banilejo');
         cargarParCuenca('anx/cuencaARTIBONITO.json', 'anx/cauceARTIBONITO.json', 'Cuenca del río Artibonito');
 
-        // Cargar capas adicionales desde /ANX (con fallback a .geojson)
+        // Cargar capas adicionales (intenta .json y luego .geojson)
         cargarCapaAdicional('anx/presas.json', 'presas');
         cargarCapaAdicional('anx/lagos.json', 'lagos');
-        cargarCapaAdicional('anx/presas.geojson', 'presas');
-        cargarCapaAdicional('anx/lagos.geojson', 'lagos');
 
         // ═══════════════════════════════════════════════════════════
         // 9. UTILIDADES DE UI
