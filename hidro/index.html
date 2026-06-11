@@ -44,7 +44,7 @@
             margin-top: 4px;
         }
 
-        /* Controles Desplegables (ahora incluye cuenca seleccionada) */
+        /* Controles Desplegables (incluye cuenca seleccionada) */
         #panel-controles {
             top: 20px;
             right: 20px;
@@ -91,18 +91,13 @@
             padding: 8px 10px;
             border-radius: 6px;
             margin-bottom: 16px;
+            text-align: center;
         }
         .cuenca-seleccionada strong {
             display: block;
             color: #1a5276;
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
-        .cuenca-seleccionada p {
-            font-size: 11px;
-            color: #555;
-            line-height: 1.4;
-            margin-bottom: 6px;
+            font-size: 14px;
+            margin-bottom: 8px;
         }
         .btn-mostrar-todas {
             background: #e74c3c;
@@ -113,7 +108,7 @@
             cursor: pointer;
             font-size: 11px;
             font-weight: 600;
-            display: none;
+            display: flex !important;   /* siempre visible */
             align-items: center;
             justify-content: center;
             gap: 6px;
@@ -258,10 +253,9 @@
             <span class="toggle-icon">▼</span>
         </div>
         <div class="panel-content">
-            <!-- Sección Cuenca Seleccionada (integrada) -->
+            <!-- Sección Cuenca Seleccionada (simplificada) -->
             <div class="cuenca-seleccionada">
-                <strong id="nombreCuenca">— ninguna —</strong>
-                <p id="descCuenca">Haz clic en una cuenca o cauce en el mapa para ver sus detalles.</p>
+                <strong id="nombreCuenca"></strong>
                 <button id="btn-mostrar-todas" class="btn-mostrar-todas" onclick="mostrarTodas()">
                     ✕ Mostrar todas
                 </button>
@@ -287,10 +281,10 @@
             <div class="grupo-control">
                 <h4>Capas adicionales</h4>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-presas" onchange="toggleCapaAdicional('presas')"> 🟠 Presas
+                    <input type="checkbox" id="chk-presas" onchange="togglePresas()"> 🟠 Presas
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-lagos" onchange="toggleCapaAdicional('lagos')"> 🔵 Lagos / Lagunas
+                    <input type="checkbox" id="chk-lagos" onchange="toggleLagos()"> 🔵 Lagos / Lagunas
                 </label>
             </div>
 
@@ -358,7 +352,8 @@
         var todasLasCuencas = [];
         var cuencaActiva = null;
         var capaVisible = 'ambos';
-        var capasAdicionales = { presas: null, lagos: null };
+        var capaPresas = null;
+        var capaLagos = null;
 
         // ═══════════════════════════════════════════════════════════
         // 4. ESTILOS E ICONOS
@@ -385,11 +380,103 @@
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 5. FUNCIÓN PARA CONSTRUIR POPUP
+        // 5. DATOS DE PRESAS Y LAGOS (extraídos del archivo proporcionado)
+        // ═══════════════════════════════════════════════════════════
+        var presasData = [
+            { nombre: "Presa de Hatillo", lat: 19.024801, lng: -70.200628, desc: "Construida en 1984, muro de Tierra. Cuenca del río Yuna." },
+            { nombre: "Presa de Rincón", lat: 19.102286, lng: -70.407949, desc: "Construida en 1978, muro de Concreto armado. Cuenca del río Yuna." },
+            { nombre: "Presa de Tavera", lat: 19.284084, lng: -70.722309, desc: "Construida en 1973, muro de Concreto armado. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Bao", lat: 19.308470, lng: -70.748341, desc: "Construida en 1984, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Monción", lat: 19.392822, lng: -71.121913, desc: "Construida en 2001, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Monción (contraembalse)", lat: 19.464737, lng: -71.079913, desc: "Construida en 2001, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Maguaca", lat: 19.615541, lng: -71.511149, desc: "Construida en 1978, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Chacuey", lat: 19.620177, lng: -71.545628, desc: "Construida en 1979, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Blanco", lat: 18.886897, lng: -70.561065, desc: "Construida en 1996, muro de Concreto armado. Cuenca del río Yuna." },
+            { nombre: "Presa de Tireo", lat: 18.860600, lng: -70.522066, desc: "Construida en 1996, muro de Concreto armado. Cuenca del río Yuna." },
+            { nombre: "Presa Samaná-El Valle", lat: 19.235003, lng: -69.332373, desc: "Cuenca desconocida." },
+            { nombre: "Presa Luisa Blanca", lat: 18.763942, lng: -69.883949, desc: "Cuenca del río Ozama." },
+            { nombre: "Presa Las Barías", lat: 18.362193, lng: -70.267723, desc: "Construida en 1976, muro de Concreto Armado. Cuenca del río Nizao." },
+            { nombre: "Presa de Valdesia", lat: 18.401510, lng: -70.279075, desc: "Construida en 1975, muro de Concreto armado. Cuenca del río Nizao." },
+            { nombre: "Presa de Jiguey", lat: 18.547538, lng: -70.379179, desc: "Construida en 1992, muro de Concreto Armado. Cuenca del río Nizao." },
+            { nombre: "Presa de Aguacate", lat: 18.496620, lng: -70.322808, desc: "Construida en 1992, muro de Concreto Armado. Cuenca del río Nizao." },
+            { nombre: "Presa de Sabana Yegua", lat: 18.715224, lng: -71.041243, desc: "Construida en 1979, muro de Tierra. Cuenca del río Yaque del Sur." },
+            { nombre: "Presa de Monte Grande", lat: 18.504773, lng: -71.010660, desc: "Muro de tierra. Cuenca Yaque del Sur." },
+            { nombre: "Presa de Sabaneta", lat: 18.986858, lng: -71.291282, desc: "Construida en 1981, muro de Tierra. Cuenca del río Yaque del Sur." },
+            { nombre: "Presa Las Damas-Puerto Escondido", lat: 18.319457, lng: -71.571287, desc: "Construida en 1967, muro de Concreto Armado. Cuenca del Lago Enriquillo, río Las Damas." },
+            { nombre: "Presa de Palomino", lat: 18.923768, lng: -71.009013, desc: "Cuenca del río Yaque del Sur." },
+            { nombre: "Presa La Piña", lat: 19.506136, lng: -71.671220, desc: "Cuenca del río Dajabón." },
+            { nombre: "Presa de Guanajuma", lat: 19.480583, lng: -70.998746, desc: "Construida en 2001, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de López-Angostura", lat: 19.335398, lng: -70.722213, desc: "Construida en 1987, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa Boba", lat: 19.434081, lng: -70.097214, desc: "Cuenca del río Boba." },
+            { nombre: "Presa de Peligre (Haití)", lat: 18.901467, lng: -72.034023, desc: "Muro de concreto. Cuenca del río Artibonito." }
+        ];
+
+        var lagosData = [
+            { nombre: "Lago Enriquillo", lat: 18.519991, lng: -71.659824, desc: "Aguas hipersalinas." },
+            { nombre: "Laguna de Cabral/Rincón", lat: 18.292675, lng: -71.245599, desc: "Aguas salobres. En peligro de extinción." },
+            { nombre: "Laguna de Oviedo", lat: 17.767176, lng: -71.365520, desc: "Aguas salobres." },
+            { nombre: "Laguna Redonda", lat: 19.012761, lng: -68.940378, desc: "Aguas salobres, conexión directa con el mar y alimentada por el río Cuarón." },
+            { nombre: "Laguna del Limón", lat: 18.979081, lng: -68.852763, desc: "Agua dulce, posee conexión directa con el mar." },
+            { nombre: "Laguna Saladilla / La Jagua", lat: 19.654734, lng: -71.712007, desc: "Aguas salobres." },
+            { nombre: "Laguna de Bávaro", lat: 18.646376, lng: -68.374650, desc: "Aguas salobres. En peligro de extinción." },
+            { nombre: "Laguna Cristal", lat: 19.097546, lng: -69.731941, desc: "Aguas profundas." },
+            { nombre: "Laguna Cristalina", lat: 19.099945, lng: -69.747275, desc: "" },
+            { nombre: "Laguna Gri-Gri", lat: 19.646925, lng: -70.077835, desc: "Agua dulce, posee conexión directa con el mar." },
+            { nombre: "Lago Saumatre (Haití)", lat: 18.576581, lng: -72.011842, desc: "Aguas hipersalinas." },
+            { nombre: "Laguna Trou Caiman (Haití)", lat: 18.644187, lng: -72.149183, desc: "En peligro de extinción." },
+            { nombre: "Lago Miragoane (Haití)", lat: 18.399820, lng: -73.047475, desc: "" },
+            { nombre: "Lago pequeño Miragoane (Haití)", lat: 18.406977, lng: -72.993924, desc: "" }
+        ];
+
+        // Crear capas de marcadores
+        function crearCapaPresas() {
+            var grupo = L.layerGroup();
+            presasData.forEach(function(p) {
+                var marker = L.marker([p.lat, p.lng], { icon: iconPresa });
+                marker.bindPopup("<b>🟠 " + p.nombre + "</b><br>" + p.desc);
+                marker.addTo(grupo);
+            });
+            return grupo;
+        }
+
+        function crearCapaLagos() {
+            var grupo = L.layerGroup();
+            lagosData.forEach(function(l) {
+                var marker = L.marker([l.lat, l.lng], { icon: iconLago });
+                var descHtml = l.desc ? "<br>" + l.desc : "";
+                marker.bindPopup("<b>🔵 " + l.nombre + "</b>" + descHtml);
+                marker.addTo(grupo);
+            });
+            return grupo;
+        }
+
+        // Inicializar capas (no añadidas aún)
+        capaPresas = crearCapaPresas();
+        capaLagos = crearCapaLagos();
+
+        window.togglePresas = function() {
+            var chk = document.getElementById('chk-presas');
+            if (chk.checked) {
+                map.addLayer(capaPresas);
+            } else {
+                map.removeLayer(capaPresas);
+            }
+        };
+
+        window.toggleLagos = function() {
+            var chk = document.getElementById('chk-lagos');
+            if (chk.checked) {
+                map.addLayer(capaLagos);
+            } else {
+                map.removeLayer(capaLagos);
+            }
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 6. FUNCIÓN PARA CONSTRUIR POPUP (cuencas y cauces)
         // ═══════════════════════════════════════════════════════════
         function construirPopup(properties, nombreCapa, tipo) {
             var html = '<div style="font-family:\'Segoe UI\',sans-serif; min-width:200px;">';
-            
             if (tipo === 'cauce') {
                 html += '<div style="font-weight:700; font-size:14px; color:#1a5276; margin-bottom:6px; border-bottom:2px solid #2980b9; padding-bottom:4px;">〰️ Cuerpo: ' + nombreCapa + '</div>';
                 var desc = properties ? (properties['descripcion'] || properties['Description'] || properties['DESCRIPCION']) : null;
@@ -416,21 +503,13 @@
                 } else {
                     html += '<div style="font-size:12px; color:#888; font-style:italic;">Sin descripción adicional.</div>';
                 }
-            } else {
-                var nombre = properties ? (properties['nombre'] || properties['Name'] || properties['NAME'] || 'Elemento') : 'Elemento';
-                var descExt = properties ? (properties['descripcion'] || properties['Description'] || '') : '';
-                var icono = tipo === 'presa' ? '🟠' : '🔵';
-                html += '<div style="font-weight:700; font-size:14px; color:#1a5276; margin-bottom:6px;">' + icono + ' ' + nombre + '</div>';
-                if (descExt) {
-                    html += '<div style="font-size:13px; color:#333; line-height:1.4;">' + descExt + '</div>';
-                }
             }
             html += '</div>';
             return html;
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 6. CAMBIAR VISIBILIDAD DE CAPAS
+        // 7. CAMBIAR VISIBILIDAD DE CAPAS HIDROGRÁFICAS
         // ═══════════════════════════════════════════════════════════
         window.cambiarCapas = function(modo, btn) {
             capaVisible = modo;
@@ -458,23 +537,12 @@
             });
         };
 
-        window.toggleCapaAdicional = function(tipo) {
-            var chk = document.getElementById('chk-' + tipo);
-            if (chk.checked) {
-                if (capasAdicionales[tipo]) map.addLayer(capasAdicionales[tipo]);
-            } else {
-                if (capasAdicionales[tipo]) map.removeLayer(capasAdicionales[tipo]);
-            }
-        };
-
         // ═══════════════════════════════════════════════════════════
-        // 7. SELECCIÓN DE CUENCA
+        // 8. SELECCIÓN DE CUENCA
         // ═══════════════════════════════════════════════════════════
         function seleccionarCuenca(entrada) {
             cuencaActiva = entrada;
             document.getElementById('nombreCuenca').textContent = entrada.nombre;
-            document.getElementById('descCuenca').textContent = 'Haz zoom o clic en el mapa para ver más detalles.';
-            document.getElementById('btn-mostrar-todas').style.display = 'flex';
 
             todasLasCuencas.forEach(function(c) {
                 var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
@@ -496,9 +564,7 @@
 
         window.mostrarTodas = function() {
             cuencaActiva = null;
-            document.getElementById('nombreCuenca').textContent = '— ninguna —';
-            document.getElementById('descCuenca').textContent = 'Haz clic en una cuenca o cauce en el mapa para ver sus detalles.';
-            document.getElementById('btn-mostrar-todas').style.display = 'none';
+            document.getElementById('nombreCuenca').textContent = '';
 
             todasLasCuencas.forEach(function(c) {
                 var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
@@ -514,11 +580,9 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 8. CARGA DE DATOS (con soporte robusto para coordenadas y extensiones)
+        // 9. CARGA DE CUENCAS Y CAUCES (archivos locales en carpeta 'anx/')
         // ═══════════════════════════════════════════════════════════
-        
         function coordToLatLng(coords) {
-            // Detecta si es [lat, lng] o [lng, lat]
             if (Math.abs(coords[0]) <= 90 && (coords[1] < -180 || coords[1] > 180 || Math.abs(coords[1]) > 90)) {
                 return new L.LatLng(coords[0], coords[1]);
             }
@@ -537,7 +601,6 @@
                 }
             }
 
-            // Cuenca
             fetch(urlCuenca)
                 .then(function(r) { if (!r.ok) throw new Error('Error ' + urlCuenca); return r.json(); })
                 .then(function(data) {
@@ -565,7 +628,6 @@
                 })
                 .catch(function(e) { console.warn('Cuenca no cargada:', nombreCapa, e); });
 
-            // Cauce
             fetch(urlCauce)
                 .then(function(r) { if (!r.ok) throw new Error('Error ' + urlCauce); return r.json(); })
                 .then(function(data) {
@@ -593,38 +655,7 @@
                 .catch(function(e) { console.warn('Cauce no cargado:', nombreCapa, e); });
         }
 
-        function cargarCapaAdicional(urlBase, tipo) {
-            function intentarCarga(url) {
-                fetch(url)
-                    .then(function(r) { if (!r.ok) throw new Error('No se pudo cargar ' + url); return r.json(); })
-                    .then(function(data) {
-                        var icono = tipo === 'presas' ? iconPresa : iconLago;
-                        var tipoPopup = tipo === 'presas' ? 'presa' : 'lago';
-                        capasAdicionales[tipo] = L.geoJSON(data, {
-                            coordsToLatLng: coordToLatLng,
-                            pointToLayer: function(feature, latlng) {
-                                return L.marker(latlng, { icon: icono });
-                            },
-                            onEachFeature: function(feature, layer) {
-                                layer.bindPopup(construirPopup(feature.properties, null, tipoPopup));
-                            }
-                        });
-                        if (document.getElementById('chk-' + tipo).checked) {
-                            capasAdicionales[tipo].addTo(map);
-                        }
-                        console.log('Capa adicional cargada:', tipo, url);
-                    })
-                    .catch(function(e) {
-                        console.warn('No se pudo cargar', url, e);
-                        if (url.endsWith('.json')) {
-                            intentarCarga(url.replace('.json', '.geojson'));
-                        }
-                    });
-            }
-            intentarCarga(urlBase);
-        }
-
-        // Cargar todas las cuencas (rutas relativas a la carpeta 'anx/')
+        // Listado de cuencas (rutas relativas a la carpeta 'anx/')
         cargarParCuenca('anx/cuencaOZAMA.json', 'anx/cauceOZAMA.json', 'Cuenca del río Ozama');
         cargarParCuenca('anx/cuencaYUMA.json', 'anx/cauceYUMA.json', 'Cuenca del río Yuma');
         cargarParCuenca('anx/cuencaMAIMONESTE.json', 'anx/cauceMAIMONESTE.json', 'Cuenca del río Maimón del Este');
@@ -668,12 +699,8 @@
         cargarParCuenca('anx/cuencaBANI.json', 'anx/cauceBANI.json', 'Cuenca del río Baní / Banilejo');
         cargarParCuenca('anx/cuencaARTIBONITO.json', 'anx/cauceARTIBONITO.json', 'Cuenca del río Artibonito');
 
-        // Cargar capas adicionales (intenta .json y luego .geojson)
-        cargarCapaAdicional('anx/presas.json', 'presas');
-        cargarCapaAdicional('anx/lagos.json', 'lagos');
-
         // ═══════════════════════════════════════════════════════════
-        // 9. UTILIDADES DE UI
+        // 10. UTILIDADES DE UI
         // ═══════════════════════════════════════════════════════════
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
