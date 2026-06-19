@@ -84,50 +84,24 @@
             pointer-events: none;
         }
 
-
-
-/* Enlaces Discretos en cuadrícula 2x2 */
-.enlaces-discretos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 12px;
-    padding-top: 12px;
-    margin-top: 12px;
-    border-top: 1px solid #eee;
-}
-.enlace-texto {
-    font-size: 11px;
-    color: #555;
-    text-decoration: none;
-    transition: color 0.2s, padding-left 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    justify-content: flex-start;
-}
-
-
-
-        /* Enlaces Discretos 
+        /* Enlaces Discretos en cuadrícula 2x2 */
         .enlaces-discretos {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 8px 12px;
             padding-top: 12px;
             margin-top: 12px;
             border-top: 1px solid #eee;
-        }*/
-
-
-
+        }
         .enlace-texto {
-            font-size: 10px;
+            font-size: 11px;
             color: #555;
             text-decoration: none;
             transition: color 0.2s, padding-left 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 4px;
+            justify-content: flex-start;
         }
         .enlace-texto:hover {
             color: #2980b9;
@@ -236,8 +210,8 @@
 
     <!-- Título Destacado -->
     <div id="panel-titulo" class="panel">
-        <h1>HIDROGRAFÍA</h1>
-        <h2>Aguas Superficiales</h2>
+        <h1>HIDROGRAFÍA SD</h1>
+        <h2>Aguas Superficiales de la isla de Santo DOmingo</h2>
     </div>
 
     <!-- Controles -->
@@ -248,7 +222,6 @@
         </div>
         <div class="panel-content">
             <div class="grupo-control">
-<!--                <h4>Vista de fondo</h4> -->
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <button class="btn-opcion active" onclick="cambiarBase('mapa', this)">🗺️ Vista Dibujo</button>
                     <button class="btn-opcion" onclick="cambiarBase('satelite', this)">🛰️ Vista Satélite</button>
@@ -266,7 +239,6 @@
 
             <!-- Botón Mostrar todas (estilo consistente) -->
             <div class="grupo-control">
-<!--                <h4>Acciones</h4>  -->
                 <button class="btn-opcion active" style="background-color: #4AC58A;" onclick="mostrarTodas()"><strong> ⌂ REINICIAR</strong></button>
             </div>
 
@@ -295,17 +267,9 @@
         <div class="modal-content">
             <h3>Créditos</h3>
             <p>HIDROGRAFÍA DE RD</p>
- <!--           <p>INSTITUTO SUPERIOR DE FORMACIÓN DOCENTE SALOMÉ UREÑA</p>
-            <p>ISFODOSU</p>
-            <p>DIGICON - Contenido Digital</p>
-
-            <p>Juan Ernesto De Frías, José Alberto Santos, Carlos Gabriel Tapia</p>
-            <p>Santo Domingo, República Dominicana</p>
-            <p>junio 2026</p>  -->
             <p>Juan Ernesto De Frías, MSc</p>
             <p>Santo Domingo, República Dominicana</p>
             <p>junio 2026</p>
-
             <button class="btn-cerrar-modal" onclick="cerrarModalCreditos()">Cerrar</button>
         </div>
     </div>
@@ -337,7 +301,6 @@
         capaDibujo.addTo(map);
 
         window.cambiarBase = function(tipo, btn) {
-            // Remover active de todos los botones del grupo "Vista de fondo"
             document.querySelectorAll('#panel-controles .grupo-control:first-child .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
             
@@ -362,14 +325,22 @@
         // ═══════════════════════════════════════════════════════════
         // 4. ESTILOS E ICONOS
         // ═══════════════════════════════════════════════════════════
+        // Estilos para República Dominicana
         var estiloCuencaNormal = { color: "#27ae60", weight: 1.5, fillColor: "#2ecc71", fillOpacity: 0.18, opacity: 0.8 };
-        var estiloCuencaDestacada = { color: "#f39c12", weight: 2.5, fillColor: "#f1c40f", fillOpacity: 0.35, opacity: 1 };
         var estiloCuencaOculta = { color: "#27ae60", weight: 1, fillColor: "#2ecc71", fillOpacity: 0.04, opacity: 0.15 };
-        var estiloCuencaHover = { color: "#f1c40f", weight: 2.5, fillColor: "#f39c12", fillOpacity: 0.4, opacity: 1 };
-        
         var estiloCauceNormal = { color: "#2980b9", weight: 3, opacity: 0.85, lineCap: 'round' };
+        var estiloCauceOculta = { color: "#2980b9", weight: 1.5, opacity: 0.12, lineCap: 'round' };
+
+        // Estilos para Haití
+        var estiloCuencaHaiti = { color: "#e67e22", weight: 1.5, fillColor: "#f39c12", fillOpacity: 0.18, opacity: 0.8 };
+        var estiloCuencaHaitiOculta = { color: "#e67e22", weight: 1, fillColor: "#f39c12", fillOpacity: 0.04, opacity: 0.15 };
+        var estiloCauceHaiti = { color: "#d35400", weight: 3, opacity: 0.85, lineCap: 'round' };
+        var estiloCauceHaitiOculta = { color: "#d35400", weight: 1.5, opacity: 0.12, lineCap: 'round' };
+
+        // Estilos comunes para destacado y hover (se usan igual para ambos países)
+        var estiloCuencaDestacada = { color: "#f39c12", weight: 2.5, fillColor: "#f1c40f", fillOpacity: 0.35, opacity: 1 };
+        var estiloCuencaHover = { color: "#f1c40f", weight: 2.5, fillColor: "#f39c12", fillOpacity: 0.4, opacity: 1 };
         var estiloCauceDestacado = { color: "#3498db", weight: 4.5, opacity: 1, lineCap: 'round' };
-        var estiloCauceOculto = { color: "#2980b9", weight: 1.5, opacity: 0.12, lineCap: 'round' };
         var estiloCauceHover = { color: "#2980b9", weight: 5, opacity: 1, lineCap: 'round' };
 
         var iconPresa = L.divIcon({
@@ -384,7 +355,7 @@
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 5. DATOS DE PRESAS Y LAGOS
+        // 5. DATOS DE PRESAS Y LAGOS (sin cambios)
         // ═══════════════════════════════════════════════════════════
         var presasData = [
             { nombre: "Presa de Hatillo", lat: 19.024801, lng: -70.200628, desc: "Construida en 1984, muro de Tierra. Cuenca del río Yuna." },
@@ -414,7 +385,6 @@
             { nombre: "Presa Boba", lat: 19.434081, lng: -70.097214, desc: "Cuenca del río Boba." },
             { nombre: "Presa de Peligre (Haití)", lat: 18.901467, lng: -72.034023, desc: "Muro de concreto. Cuenca del río Artibonito." }
         ];
-
         var lagosData = [
             { nombre: "Lago Enriquillo", lat: 18.519991, lng: -71.659824, desc: "Aguas hipersalinas." },
             { nombre: "Laguna de Cabral/Rincón", lat: 18.292675, lng: -71.245599, desc: "Aguas salobres. En peligro de extinción." },
@@ -425,10 +395,16 @@
             { nombre: "Laguna de Bávaro", lat: 18.646376, lng: -68.374650, desc: "Aguas salobres. En peligro de extinción." },
             { nombre: "Laguna Cristal", lat: 19.097546, lng: -69.731941, desc: "Aguas profundas." },
             { nombre: "Laguna Cristalina", lat: 19.099945, lng: -69.747275, desc: "" },
-            { nombre: "Laguna Gri-Gri", lat: 19.646925, lng: -70.077835, desc: "Agua dulce, posee conexión directa con el mar." },
+            { nombre: "Laguna Gri-Gri", lat: 19.646925, lng: -70.077835, desc: "Agua dulce, posee conexión directa con el mar." }
+        ];
+        var presasDataHAI = [
+            { nombre: "Presa de Peligro", lat: 18.900954889270775, lng: -72.02954584261569, desc: "Construida en 1956, muro de Concreto. Cuenca del río Artibonito." },
+            { nombre: "Presa de Marión", lat: 19.54059115586982, lng: -71.89181643201364, desc: "Muro de Tierra. Cuenca del río Marion." }
+        ];
+        var lagosDataHAI = [
             { nombre: "Lago Saumatre (Haití)", lat: 18.576581, lng: -72.011842, desc: "Aguas hipersalinas." },
             { nombre: "Laguna Trou Caiman (Haití)", lat: 18.644187, lng: -72.149183, desc: "En peligro de extinción." },
-            { nombre: "Lago Miragoane (Haití)", lat: 18.399820, lng: -73.047475, desc: "" },
+            { nombre: "Lago Miragoane (Haití)", lat: 18.399820, lng: -73.047475, desc: "En peligro de extinción." },
             { nombre: "Lago pequeño Miragoane (Haití)", lat: 18.406977, lng: -72.993924, desc: "" }
         ];
 
@@ -439,12 +415,23 @@
                 marker.bindPopup("<b>🟠 " + p.nombre + "</b><br>" + p.desc);
                 marker.addTo(grupo);
             });
+            presasDataHAI.forEach(function(p) {
+                var marker = L.marker([p.lat, p.lng], { icon: iconPresa });
+                marker.bindPopup("<b>🟠 " + p.nombre + "</b><br>" + p.desc);
+                marker.addTo(grupo);
+            });
             return grupo;
         }
 
         function crearCapaLagos() {
             var grupo = L.layerGroup();
             lagosData.forEach(function(l) {
+                var marker = L.marker([l.lat, l.lng], { icon: iconLago });
+                var descHtml = l.desc ? "<br>" + l.desc : "";
+                marker.bindPopup("<b>🔵 " + l.nombre + "</b>" + descHtml);
+                marker.addTo(grupo);
+            });
+            lagosDataHAI.forEach(function(l) {
                 var marker = L.marker([l.lat, l.lng], { icon: iconLago });
                 var descHtml = l.desc ? "<br>" + l.desc : "";
                 marker.bindPopup("<b>🔵 " + l.nombre + "</b>" + descHtml);
@@ -469,7 +456,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 6. POPUP PARA CUENCAS Y CAUCES
+        // 6. POPUP PARA CUENCAS Y CAUCES (sin cambios)
         // ═══════════════════════════════════════════════════════════
         function construirPopup(properties, nombreCapa, tipo) {
             var html = '<div style="font-family:\'Segoe UI\',sans-serif; min-width:200px;">';
@@ -517,16 +504,22 @@
                 var mostrarCuenca = (modo === 'cuenca' || modo === 'ambos');
                 var mostrarCauce  = (modo === 'cauce'  || modo === 'ambos');
 
+                // Elegir estilos según país
+                var estiloCuencaBase = c.esHaiti ? estiloCuencaHaiti : estiloCuencaNormal;
+                var estiloCauceBase  = c.esHaiti ? estiloCauceHaiti : estiloCauceNormal;
+                var estiloCuencaOculto = c.esHaiti ? estiloCuencaHaitiOculta : estiloCuencaOculta;
+                var estiloCauceOculto  = c.esHaiti ? estiloCauceHaitiOculta : estiloCauceOculta;
+
                 if (mostrarCuenca) {
                     if (!map.hasLayer(c.layerCuenca)) c.layerCuenca.addTo(map);
-                    c.layerCuenca.setStyle(estaActiva ? estiloCuencaDestacada : (cuencaActiva ? estiloCuencaOculta : estiloCuencaNormal));
+                    c.layerCuenca.setStyle(estaActiva ? estiloCuencaDestacada : (cuencaActiva ? estiloCuencaOculto : estiloCuencaBase));
                 } else {
                     if (map.hasLayer(c.layerCuenca)) map.removeLayer(c.layerCuenca);
                 }
 
                 if (mostrarCauce) {
                     if (!map.hasLayer(c.layerCauce)) c.layerCauce.addTo(map);
-                    c.layerCauce.setStyle(estaActiva ? estiloCauceDestacado : (cuencaActiva ? estiloCauceOculto : estiloCauceNormal));
+                    c.layerCauce.setStyle(estaActiva ? estiloCauceDestacado : (cuencaActiva ? estiloCauceOculto : estiloCauceBase));
                 } else {
                     if (map.hasLayer(c.layerCauce)) map.removeLayer(c.layerCauce);
                 }
@@ -538,17 +531,19 @@
         // ═══════════════════════════════════════════════════════════
         function seleccionarCuenca(entrada) {
             cuencaActiva = entrada;
-            // No hay elemento para mostrar el nombre, solo se resalta en el mapa
 
             todasLasCuencas.forEach(function(c) {
                 var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
                 var mostrarCauce  = (capaVisible === 'cauce'  || capaVisible === 'ambos');
 
+                var estiloCuencaOculto = c.esHaiti ? estiloCuencaHaitiOculta : estiloCuencaOculta;
+                var estiloCauceOculto  = c.esHaiti ? estiloCauceHaitiOculta : estiloCauceOculta;
+
                 if (c === entrada) {
                     if (mostrarCuenca) { c.layerCuenca.addTo(map); c.layerCuenca.setStyle(estiloCuencaDestacada); c.layerCuenca.bringToFront(); }
                     if (mostrarCauce)  { c.layerCauce.addTo(map); c.layerCauce.setStyle(estiloCauceDestacado); c.layerCauce.bringToFront(); }
                 } else {
-                    if (mostrarCuenca) c.layerCuenca.setStyle(estiloCuencaOculta);
+                    if (mostrarCuenca) c.layerCuenca.setStyle(estiloCuencaOculto);
                     if (mostrarCauce)  c.layerCauce.setStyle(estiloCauceOculto);
                 }
             });
@@ -565,17 +560,20 @@
                 var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
                 var mostrarCauce  = (capaVisible === 'cauce'  || capaVisible === 'ambos');
 
-                if (mostrarCuenca) { c.layerCuenca.addTo(map); c.layerCuenca.setStyle(estiloCuencaNormal); }
+                var estiloCuencaBase = c.esHaiti ? estiloCuencaHaiti : estiloCuencaNormal;
+                var estiloCauceBase  = c.esHaiti ? estiloCauceHaiti : estiloCauceNormal;
+
+                if (mostrarCuenca) { c.layerCuenca.addTo(map); c.layerCuenca.setStyle(estiloCuencaBase); }
                 else { if (map.hasLayer(c.layerCuenca)) map.removeLayer(c.layerCuenca); }
                 
-                if (mostrarCauce) { c.layerCauce.addTo(map); c.layerCauce.setStyle(estiloCauceNormal); }
+                if (mostrarCauce) { c.layerCauce.addTo(map); c.layerCauce.setStyle(estiloCauceBase); }
                 else { if (map.hasLayer(c.layerCauce)) map.removeLayer(c.layerCauce); }
             });
             map.setView([19.03556466237287, -70.89432006796727], 8);
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 9. CARGA DE CUENCAS Y CAUCES (archivos en carpeta 'anx/')
+        // 9. CARGA DE CUENCAS Y CAUCES (con flag esHaiti)
         // ═══════════════════════════════════════════════════════════
         function coordToLatLng(coords) {
             if (Math.abs(coords[0]) <= 90 && (coords[1] < -180 || coords[1] > 180 || Math.abs(coords[1]) > 90)) {
@@ -584,8 +582,15 @@
             return new L.LatLng(coords[1], coords[0]);
         }
 
-        function cargarParCuenca(urlCuenca, urlCauce, nombreCapa) {
-            var entrada = { nombre: nombreCapa, layerCuenca: null, layerCauce: null, bounds: null };
+        function cargarParCuenca(urlCuenca, urlCauce, nombreCapa, esHaiti) {
+            esHaiti = esHaiti || false;
+            var entrada = { 
+                nombre: nombreCapa, 
+                layerCuenca: null, 
+                layerCauce: null, 
+                bounds: null,
+                esHaiti: esHaiti
+            };
             var cargados = 0;
 
             function checkAndAdd() {
@@ -596,12 +601,15 @@
                 }
             }
 
+            var estiloCuenca = esHaiti ? estiloCuencaHaiti : estiloCuencaNormal;
+            var estiloCauce  = esHaiti ? estiloCauceHaiti : estiloCauceNormal;
+
             fetch(urlCuenca)
                 .then(function(r) { if (!r.ok) throw new Error('Error ' + urlCuenca); return r.json(); })
                 .then(function(data) {
                     entrada.layerCuenca = L.geoJSON(data, {
                         coordsToLatLng: coordToLatLng,
-                        style: estiloCuencaNormal,
+                        style: estiloCuenca,
                         onEachFeature: function(feature, layer) {
                             layer.bindPopup(construirPopup(feature.properties, nombreCapa, 'cuenca'));
                             layer.on('click', function() { seleccionarCuenca(entrada); });
@@ -613,7 +621,7 @@
                             });
                             layer.on('mouseout', function() { 
                                 if (cuencaActiva === null) { 
-                                    this.setStyle(estiloCuencaNormal); 
+                                    this.setStyle(estiloCuenca); 
                                 } 
                             });
                         }
@@ -628,7 +636,7 @@
                 .then(function(data) {
                     entrada.layerCauce = L.geoJSON(data, {
                         coordsToLatLng: coordToLatLng,
-                        style: estiloCauceNormal,
+                        style: estiloCauce,
                         onEachFeature: function(feature, layer) {
                             layer.bindPopup(construirPopup(feature.properties, nombreCapa, 'cauce'));
                             layer.on('click', function() { seleccionarCuenca(entrada); });
@@ -640,7 +648,7 @@
                             });
                             layer.on('mouseout', function() { 
                                 if (cuencaActiva === null) { 
-                                    this.setStyle(estiloCauceNormal); 
+                                    this.setStyle(estiloCauce); 
                                 } 
                             });
                         }
@@ -650,52 +658,70 @@
                 .catch(function(e) { console.warn('Cauce no cargado:', nombreCapa, e); });
         }
 
-        // Carga masiva de cuencas
-        cargarParCuenca('anx/cuencaOZAMA.json', 'anx/cauceOZAMA.json', 'del río Ozama');
-        cargarParCuenca('anx/cuencaYUMA.json', 'anx/cauceYUMA.json', 'del río Yuma');
-        cargarParCuenca('anx/cuencaMAIMONESTE.json', 'anx/cauceMAIMONESTE.json', 'del río Maimón del Este');
-        cargarParCuenca('anx/cuencaANAMUYA.json', 'anx/cauceANAMUYA.json', 'del río Anamuya');
-        cargarParCuenca('anx/cuencaBRUJUELAS.json', 'anx/cauceBRUJUELAS.json', 'del río Brujuelas o Tosa');
-        cargarParCuenca('anx/cuencaHIGUAMO.json', 'anx/cauceHIGUAMO.json', 'del río Higuamo');
-        cargarParCuenca('anx/cuencaSOCO.json', 'anx/cauceSOCO.json', 'del río Soco');
-        cargarParCuenca('anx/cuencaCUMAYASA.json', 'anx/cauceCUMAYASA.json', 'del río Cumayasa');
-        cargarParCuenca('anx/cuencaROMANA.json', 'anx/cauceROMANA.json', 'del río Romana, Dulce o Salado');
-        cargarParCuenca('anx/cuencaCHAVON.json', 'anx/cauceCHAVON.json', 'del río Chavón');
-        cargarParCuenca('anx/cuencaYABON.json', 'anx/cauceYABON.json', 'del río Yabón');
-        cargarParCuenca('anx/cuencaMAGUA.json', 'anx/cauceMAGUA.json', 'del río Maguá');
-        cargarParCuenca('anx/cuencaCUARON.json', 'anx/cauceCUARON.json', 'del río Cuarón');
-        cargarParCuenca('anx/cuencaJOVERO.json', 'anx/cauceJOVERO.json', 'del río Jovero');
-        cargarParCuenca('anx/cuencaYEGUADA.json', 'anx/cauceYEGUADA.json', 'del río Yeguada');
-        cargarParCuenca('anx/cuencaYUNA.json', 'anx/cauceYUNA.json', 'del río Yuna');
-        cargarParCuenca('anx/cuencaYNORTE.json', 'anx/cauceYNORTE.json', 'del río Yaque del Norte');
-        cargarParCuenca('anx/cuencaBACUI.json', 'anx/cauceBACUI.json', 'del río Bacuí');
-        cargarParCuenca('anx/cuencaBAJABONICO.json', 'anx/cauceBAJABONICO.json', 'del río Bajabonico');
-        cargarParCuenca('anx/cuencaBOBA.json', 'anx/cauceBOBA.json', 'del río Boba');
-        cargarParCuenca('anx/cuencaELLIMON.json', 'anx/cauceELLIMON.json', 'del río El Limón');
-        cargarParCuenca('anx/cuencaJOBA.json', 'anx/cauceJOBA.json', 'del río Joba');
-        cargarParCuenca('anx/cuencaMAIMONCIBAO.json', 'anx/cauceMAIMONCIBAO.json', 'del río Maimón del norte');
-        cargarParCuenca('anx/cuencaSMARCOS.json', 'anx/cauceSMARCOS.json', 'del río San Marcos');
-        cargarParCuenca('anx/cuencaNAGUA.json', 'anx/cauceNAGUA.json', 'del río Nagua');
-        cargarParCuenca('anx/cuencaSJUANCIBAO.json', 'anx/cauceSJUANCIBAO.json', 'del río San Juan del Cibao');
-        cargarParCuenca('anx/cuencaYASICA.json', 'anx/cauceYASICA.json', 'del río Yásica');
-        cargarParCuenca('anx/cuencaCAMU.json', 'anx/cauceCAMU.json', 'del río Camú del norte');
-        cargarParCuenca('anx/cuencaMASACRE.json', 'anx/cauceMASACRE.json', 'del río Dajabón o Masacre');
-        cargarParCuenca('anx/cuencaCHACUEY.json', 'anx/cauceCHACUEY.json', 'del río Chacuey');
-        cargarParCuenca('anx/cuencaHAINA.json', 'anx/cauceHAINA.json', 'del río Haina');
-        cargarParCuenca('anx/cuencaNIGUA.json', 'anx/cauceNIGUA.json', 'del río Nigua');
-        cargarParCuenca('anx/cuencaNIZAO.json', 'anx/cauceNIZAO.json', 'del río Nizao');
-        cargarParCuenca('anx/cuencaOCOA.json', 'anx/cauceOCOA.json', 'del río Ocoa');
-        cargarParCuenca('anx/cuencaJURA.json', 'anx/cauceJURA.json', 'del río Jura');
-        cargarParCuenca('anx/cuencaTABARA.json', 'anx/cauceTABARA.json', 'del río Tábara');
-        cargarParCuenca('anx/cuencaYSUR.json', 'anx/cauceYSUR.json', 'del río Yaque del Sur');
-        cargarParCuenca('anx/cuencaNIZAITO.json', 'anx/cauceNIZAITO.json', 'del río Nizaito');
-        cargarParCuenca('anx/cuencaPEDERNALES.json', 'anx/caucePEDERNALES.json', 'del río Pedernales');
-        cargarParCuenca('anx/cuencaVIA.json', 'anx/cauceVIA.json', 'del río Vía');
-        cargarParCuenca('anx/cuencaBANI.json', 'anx/cauceBANI.json', 'del río Baní / Banilejo');
-        cargarParCuenca('anx/cuencaARTIBONITO.json', 'anx/cauceARTIBONITO.json', 'del río Artibonito');
+        // ═══════════════════════════════════════════════════════════
+        // 10. CARGA MASIVA DE CUENCAS Y CAUCES (RD y Haití)
+        // ═══════════════════════════════════════════════════════════
+
+        // --- República Dominicana (esHaiti = false) ---
+        cargarParCuenca('anx/cuencaOZAMA.json', 'anx/cauceOZAMA.json', 'del río Ozama', false);
+        cargarParCuenca('anx/cuencaYUMA.json', 'anx/cauceYUMA.json', 'del río Yuma', false);
+        cargarParCuenca('anx/cuencaMAIMONESTE.json', 'anx/cauceMAIMONESTE.json', 'del río Maimón del Este', false);
+        cargarParCuenca('anx/cuencaANAMUYA.json', 'anx/cauceANAMUYA.json', 'del río Anamuya', false);
+        cargarParCuenca('anx/cuencaBRUJUELAS.json', 'anx/cauceBRUJUELAS.json', 'del río Brujuelas o Tosa', false);
+        cargarParCuenca('anx/cuencaHIGUAMO.json', 'anx/cauceHIGUAMO.json', 'del río Higuamo', false);
+        cargarParCuenca('anx/cuencaSOCO.json', 'anx/cauceSOCO.json', 'del río Soco', false);
+        cargarParCuenca('anx/cuencaCUMAYASA.json', 'anx/cauceCUMAYASA.json', 'del río Cumayasa', false);
+        cargarParCuenca('anx/cuencaROMANA.json', 'anx/cauceROMANA.json', 'del río Romana, Dulce o Salado', false);
+        cargarParCuenca('anx/cuencaCHAVON.json', 'anx/cauceCHAVON.json', 'del río Chavón', false);
+        cargarParCuenca('anx/cuencaYABON.json', 'anx/cauceYABON.json', 'del río Yabón', false);
+        cargarParCuenca('anx/cuencaMAGUA.json', 'anx/cauceMAGUA.json', 'del río Maguá', false);
+        cargarParCuenca('anx/cuencaCUARON.json', 'anx/cauceCUARON.json', 'del río Cuarón', false);
+        cargarParCuenca('anx/cuencaJOVERO.json', 'anx/cauceJOVERO.json', 'del río Jovero', false);
+        cargarParCuenca('anx/cuencaYEGUADA.json', 'anx/cauceYEGUADA.json', 'del río Yeguada', false);
+        cargarParCuenca('anx/cuencaYUNA.json', 'anx/cauceYUNA.json', 'del río Yuna', false);
+        cargarParCuenca('anx/cuencaYNORTE.json', 'anx/cauceYNORTE.json', 'del río Yaque del Norte', false);
+        cargarParCuenca('anx/cuencaBACUI.json', 'anx/cauceBACUI.json', 'del río Bacuí', false);
+        cargarParCuenca('anx/cuencaBAJABONICO.json', 'anx/cauceBAJABONICO.json', 'del río Bajabonico', false);
+        cargarParCuenca('anx/cuencaBOBA.json', 'anx/cauceBOBA.json', 'del río Boba', false);
+        cargarParCuenca('anx/cuencaELLIMON.json', 'anx/cauceELLIMON.json', 'del río El Limón', false);
+        cargarParCuenca('anx/cuencaJOBA.json', 'anx/cauceJOBA.json', 'del río Joba', false);
+        cargarParCuenca('anx/cuencaMAIMONCIBAO.json', 'anx/cauceMAIMONCIBAO.json', 'del río Maimón del norte', false);
+        cargarParCuenca('anx/cuencaSMARCOS.json', 'anx/cauceSMARCOS.json', 'del río San Marcos', false);
+        cargarParCuenca('anx/cuencaNAGUA.json', 'anx/cauceNAGUA.json', 'del río Nagua', false);
+        cargarParCuenca('anx/cuencaSJUANCIBAO.json', 'anx/cauceSJUANCIBAO.json', 'del río San Juan del Cibao', false);
+        cargarParCuenca('anx/cuencaYASICA.json', 'anx/cauceYASICA.json', 'del río Yásica', false);
+        cargarParCuenca('anx/cuencaCAMU.json', 'anx/cauceCAMU.json', 'del río Camú del norte', false);
+        cargarParCuenca('anx/cuencaMASACRE.json', 'anx/cauceMASACRE.json', 'del río Dajabón o Masacre', false);
+        cargarParCuenca('anx/cuencaCHACUEY.json', 'anx/cauceCHACUEY.json', 'del río Chacuey', false);
+        cargarParCuenca('anx/cuencaHAINA.json', 'anx/cauceHAINA.json', 'del río Haina', false);
+        cargarParCuenca('anx/cuencaNIGUA.json', 'anx/cauceNIGUA.json', 'del río Nigua', false);
+        cargarParCuenca('anx/cuencaNIZAO.json', 'anx/cauceNIZAO.json', 'del río Nizao', false);
+        cargarParCuenca('anx/cuencaOCOA.json', 'anx/cauceOCOA.json', 'del río Ocoa', false);
+        cargarParCuenca('anx/cuencaJURA.json', 'anx/cauceJURA.json', 'del río Jura', false);
+        cargarParCuenca('anx/cuencaTABARA.json', 'anx/cauceTABARA.json', 'del río Tábara', false);
+        cargarParCuenca('anx/cuencaYSUR.json', 'anx/cauceYSUR.json', 'del río Yaque del Sur', false);
+        cargarParCuenca('anx/cuencaNIZAITO.json', 'anx/cauceNIZAITO.json', 'del río Nizaito', false);
+        cargarParCuenca('anx/cuencaPEDERNALES.json', 'anx/caucePEDERNALES.json', 'del río Pedernales', false);
+        cargarParCuenca('anx/cuencaVIA.json', 'anx/cauceVIA.json', 'del río Vía', false);
+        cargarParCuenca('anx/cuencaBANI.json', 'anx/cauceBANI.json', 'del río Baní / Banilejo', false);
+
+        // --- Haití (esHaiti = true) ---
+        cargarParCuenca('anx/haiti/cuencaARTIBONITO.json', 'anx/haiti/cauceARTIBONITO.json', 'del río Artibonito', true);
+        cargarParCuenca('anx/haiti/cuencaJEANRABEL.json', 'anx/haiti/cauceJEANRABEL.json', 'del río Jean Rabel', true);
+        cargarParCuenca('anx/haiti/cuencaNIPPLES.json', 'anx/haiti/cauceNIPPLES.json', 'del río Nipples', true);
+        cargarParCuenca('anx/haiti/cuencaANGLAIS.json', 'anx/haiti/cauceANGLAIS.json', 'del río Anglais', true);
+        cargarParCuenca('anx/haiti/cuencaMARION.json', 'anx/haiti/cauceMARION.json', 'del río Marion', true);
+        cargarParCuenca('anx/haiti/cuencaBURGO1.json', 'anx/haiti/cauceBURGO1.json', 'del río Peq. Burgo', true);
+        cargarParCuenca('anx/haiti/cuencaLAQUINTE.json', 'anx/haiti/cauceLAQUINTE.json', 'del río La Quinte', true);
+        cargarParCuenca('anx/haiti/cuencaRAVINEdelSUR.json', 'anx/haiti/cauceRAVINEdelSUR.json', 'del río Ravine del Sur', true);
+        cargarParCuenca('anx/haiti/cuencaJACMEL.json', 'anx/haiti/cauceJACMEL.json', 'del río Jacmel', true);
+        cargarParCuenca('anx/haiti/cuencaBAINET.json', 'anx/haiti/cauceBAINET.json', 'del río Bainet', true);
+        cargarParCuenca('anx/haiti/cuencaMOMANCE.json', 'anx/haiti/cauceMOMANCE.json', 'del río Momance', true);
+        cargarParCuenca('anx/haiti/cuencaCOTESdeFER.json', 'anx/haiti/cauceCOTESdeFER.json', 'del río Cotes de Fer (Costa de Hierro)', true);
+        cargarParCuenca('anx/haiti/cuencaGRIS.json', 'anx/haiti/cauceGRIS.json', 'del río Gris', true);
 
         // ═══════════════════════════════════════════════════════════
-        // 10. UTILIDADES DE UI
+        // 11. UTILIDADES DE UI
         // ═══════════════════════════════════════════════════════════
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
