@@ -1,0 +1,13 @@
+{
+"type": "FeatureCollection",
+"name": "cauceRIOBLANCHE",
+"features": [
+{ "type": "Feature", "properties": { "comid": 76003434, "sorder": 2 }, "geometry": { "type": "LineString", "coordinates": [ [ -72.134171443900001, 18.55270986755 ], [ -72.122937678699998, 18.538620060350002 ], [ -72.119700831100005, 18.52605347555 ], [ -72.12, 18.50417 ], [ -72.11667, 18.4925 ], [ -72.12083, 18.48917 ], [ -72.12083, 18.475 ], [ -72.1175, 18.46083 ], [ -72.11083, 18.44917 ], [ -72.0975, 18.44333 ], [ -72.095, 18.43417 ], [ -72.09, 18.43917 ], [ -72.085, 18.43917 ] ] } },
+{ "type": "Feature", "properties": { "comid": 76003418, "sorder": 2 }, "geometry": null },
+{ "type": "Feature", "properties": { "comid": 76003519, "sorder": 1 }, "geometry": null },
+{ "type": "Feature", "properties": { "comid": 76004015, "sorder": 1 }, "geometry": { "type": "LineString", "coordinates": [ [ -72.07583, 18.4375 ], [ -72.0725, 18.44 ] ] } },
+{ "type": "Feature", "properties": { "comid": 76003979, "sorder": 1 }, "geometry": { "type": "LineString", "coordinates": [ [ -72.085, 18.43917 ], [ -72.08583, 18.435 ], [ -72.07917, 18.42667 ], [ -72.08167, 18.42333 ], [ -72.08, 18.41917 ], [ -72.08333, 18.41917 ], [ -72.0875, 18.4125 ], [ -72.08583, 18.405 ] ] } },
+{ "type": "Feature", "properties": { "comid": 76003968, "sorder": 1 }, "geometry": { "type": "LineString", "coordinates": [ [ -72.07583, 18.4375 ], [ -72.07417, 18.4325 ], [ -72.065, 18.43 ], [ -72.065, 18.4175 ], [ -72.06083, 18.4175 ], [ -72.05083, 18.40917 ], [ -72.04833, 18.39667 ], [ -72.0425, 18.39167 ] ] } },
+{ "type": "Feature", "properties": { "comid": 76003816, "sorder": 2 }, "geometry": { "type": "LineString", "coordinates": [ [ -72.085, 18.43917 ], [ -72.07583, 18.4375 ] ] } }
+]
+}
