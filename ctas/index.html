@@ -439,7 +439,7 @@
                     <label class="check-item"><input type="checkbox" id="chkAccHT" checked> <span class="legend-symbol" style="background:#8E44AD;"></span> Accidentes costeros HAITÍ</label>
                     <label class="check-item"><input type="checkbox" id="chkRiosRD" checked> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos RD</label>
                     <label class="check-item"><input type="checkbox" id="chkRiosHT" checked> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos HAITÍ</label>
-                    <label class="check-item"><input type="checkbox" id="chkTur" checked> <span class="symbol-rombo" style="background:#5ABBF5;"></span> Puertos turísticos</label>
+                    <label class="check-item"><input type="checkbox" id="chkTur" checked> <span class="symbol-rombo" style="background:#3964FE;"></span> Puertos turísticos</label>
                     <label class="check-item"><input type="checkbox" id="chkMarina" checked> <span class="symbol-rombo" style="background:#FFFFFF;"></span> Marinas recreativas</label>
                     <label class="check-item"><input type="checkbox" id="chkArmada" checked> <span class="symbol-rombo" style="background:#666666;"></span> Armada (Base naval)</label>
                     <label class="check-item"><input type="checkbox" id="chkCarga" checked> <span class="symbol-rombo" style="background:#5ABBF5; border:1px solid #7F8C8D;"></span> Carga / Combustibles</label>
@@ -716,6 +716,10 @@ const rios = [
         { tipo: "turístico", nombre: "Puerto turístico Casa de Campo", lat: 18.415758134659303, lng: -68.9589774197403, profundidad: null },
         { tipo: "turístico", nombre: "Puerto Plata Taino Bay", lat: 19.801882413335033, lng: -70.70038903592275, profundidad: "9.1 metros" },
         { tipo: "turístico", nombre: "Puerto Turístico Maimón-Amber Cove", lat: 19.833686081020694, lng: -70.77580161587102, profundidad: null },
+        { tipo: "turístico", nombre: "Puerto Turístico Don Diego", lat: 18.475655604626535, lng: -69.88177505904382 , profundidad: null },
+        { tipo: "turístico", nombre: "Puerto Turístico Ferries del Caribe", lat: 18.46914272129233, lng: -69.8826302977981 , profundidad: null },
+        { tipo: "turístico", nombre: "Puerto Turístico Sans Soucí", lat: 18.470718030534712, lng: -69.87701546206662 , profundidad: null },
+        { tipo: "marina", nombre: "Marina Bartolomé COlón", lat: 18.477672727213506, lng: -69.8797977276046 , profundidad: null },
         { tipo: "marina", nombre: "Marina Soco", lat: 18.446045139171, lng: -69.19735424388215, profundidad: null },
         { tipo: "marina", nombre: "Marina La Caleta", lat: 18.401542889357888, lng: -68.99583181639176, profundidad: null },
         { tipo: "marina", nombre: "Marina Capitan Kidd", lat: 18.401939796784347, lng: -68.98910841203757, profundidad: null },
@@ -918,10 +922,10 @@ const rios = [
 
     // NUEVOS MAPAS DE COLOR Y BORDE PARA PUERTOS
     const colorMap = {
-        turístico: "#00BFFF",
+        turístico: "#3964FE",   // Color para turísticos
         marina:    "#FFFFFF",
         armada:    "#666666",
-        carga:     "#0066FF",
+        carga:     "#5ABBF5",   // ← NUEVO COLOR PARA CARGA
         fondeadero:"#F39C12"
     };
     const bordeMap = {
@@ -934,7 +938,7 @@ const rios = [
 
     puertosData.forEach(p => {
         let color = colorMap[p.tipo] || "#5ABBF5";
-        let borde = bordeMap[p.tipo] || "#5ABBF5";
+        let borde = bordeMap[p.tipo] || "#666666";
         let icono = crearIconoRombo(color, borde);
         let tipoTexto = { turístico: "Turístico", marina: "Marina Recreativa", armada: "Base Naval (Armada)", carga: "Carga / Combustibles", fondeadero: "Fondeadero" }[p.tipo];
         let profundidadHtml = p.profundidad ? `<br><span style="font-size:0.75rem;">⚓ Profundidad: ${p.profundidad}</span>` : '';
