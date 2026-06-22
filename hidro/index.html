@@ -32,9 +32,9 @@
         #panel-titulo h1 {
             font-size: 22px;
             color: #1a5276;
-            font-weight: 800;
+            font-weight: 700;
             letter-spacing: 0.5px;
-            text-transform: uppercase;
+/*            text-transform: uppercase; */
             line-height: 1.1;
         }
         #panel-titulo h2 {
@@ -210,8 +210,8 @@
 
     <!-- Título Destacado -->
     <div id="panel-titulo" class="panel">
-        <h1>Hidrografía SD</h1>
-        <h2>Aguas Superficiales de la isla de Santo Domingo</h2>
+        <h1>🗺️ Hidrografía SD</h1>
+        <p>Aguas Superficiales de la isla de Santo Domingo</p>
     </div>
 
     <!-- Controles -->
@@ -274,7 +274,7 @@
     <div id="modal-creditos" class="modal-overlay" onclick="cerrarModalCreditos(event)">
         <div class="modal-content">
             <h3>Créditos</h3>
-            <p>HIDROGRAFÍA DE RD</p>
+            <p>HIDROGRAFÍA DE LA ISLA DE SANTO DOMINGO</p>
             <p>Juan Ernesto De Frías, MSc</p>
             <p>Santo Domingo, República Dominicana</p>
             <p>junio 2026</p>
@@ -426,7 +426,7 @@
         ];
 
         // ═══════════════════════════════════════════════════════════
-        // NUEVO: DATOS DE COMUNIDADES
+        // DATOS DE COMUNIDADES
         // ═══════════════════════════════════════════════════════════
         const ciudadesRD = [
             { nombre: "Santo Domingo Este", pob: "1,029,117", lat: 18.505807230607356, lng: -69.81027716178998 },
@@ -504,7 +504,7 @@
             { nombre: "Cabrera", pob: "N.D.", lat: 19.641519533858574, lng: -69.90557077035564 },
             { nombre: "Sosúa", pob: "N.D.", lat: 19.76854896819534, lng: -70.51180369664951 },
             { nombre: "Sánchez", pob: "N.D.", lat: 19.22984237021509, lng: -69.61310686836826 },
-//            { nombre: "Pendiene", pob: "N.D.", lat: 1 , lng: -7  },
+//            { nombre: "Pendiente", pob: "N.D.", lat: 1 , lng: -7  },
             { nombre: "Monte Cristi", pob: "27,067", lat: 19.84555582940316, lng: -71.64300426707139 }
         ];
 
@@ -544,7 +544,7 @@
             { nombre: "Milot", pob: "31,992", lat: 19.6047, lng: -72.2186 },
             { nombre: "Fort Liberté", pob: "30,110", lat: 19.7344, lng: -71.8397 }
         ];
-        // Fin NUEVO
+        // Fin COMUNIDADES
 
         // ═══════════════════════════════════════════════════════════
         // 6. CREACIÓN DE CAPAS DE PRESAS Y LAGOS (sin cambios)
