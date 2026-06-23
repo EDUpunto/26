@@ -359,7 +359,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 5. DATOS DE ALTURAS
+        // 5. DATOS DE ALTURAS (sin cambios)
         // ═══════════════════════════════════════════════════════════
         var alturasRD = [
             { nombre: "Monte La Meseta", altura: "605 m", sierra: "Sierra de Samaná", lat: 19.312225, lng: -69.293875 },
@@ -432,10 +432,25 @@
         ];
 
         // ═══════════════════════════════════════════════════════════
-        // 6. CREACIÓN DE CAPAS
+        // 6. CREACIÓN DE CAPAS (con manejo de errores y coordsToLatLng)
         // ═══════════════════════════════════════════════════════════
 
-        // --- Comunidades ---
+        // Función para convertir coordenadas a [lat, lng] independientemente del orden
+        function coordsToLatLng(coords) {
+            // Si es un array de dos números, asumimos [lng, lat] (GeoJSON estándar)
+            if (Array.isArray(coords) && coords.length === 2 && typeof coords[0] === 'number' && typeof coords[1] === 'number') {
+                // Si el primer número está en rango de latitud (-90 a 90) y el segundo en longitud (-180 a 180), están invertidos
+                if (Math.abs(coords[0]) <= 90 && Math.abs(coords[1]) <= 180) {
+                    return new L.LatLng(coords[0], coords[1]); // ya es [lat, lng]
+                } else {
+                    return new L.LatLng(coords[1], coords[0]); // [lng, lat] -> [lat, lng]
+                }
+            }
+            // Si es un array de objetos (anidado), se procesará recursivamente con L.geoJSON
+            return null;
+        }
+
+        // --- Comunidades (sin cambios) ---
         function crearCapaComunidadesRD() {
             var ciudadesRD = [
                 { nombre: "Santo Domingo Este", pob: "1,029,117", lat: 18.505807230607356, lng: -69.81027716178998 },
@@ -580,7 +595,7 @@
             return grupo;
         }
 
-        // --- Cordilleras / Sierras (carga de GeoJSON) ---
+        // --- Cordilleras / Sierras (carga de GeoJSON con manejo de errores y coordsToLatLng) ---
         function crearCapaCordilleras() {
             var grupo = L.layerGroup();
             var archivos = [
@@ -591,11 +606,18 @@
                 'anx/mon/SSAMANA.geojson',
                 'anx/mon/SMARTINGARCIA.geojson'
             ];
+            var cargaExitosa = false;
+
             archivos.forEach(function(url) {
                 fetch(url)
-                    .then(function(r) { if (!r.ok) throw new Error('Error cargando ' + url); return r.json(); })
+                    .then(function(r) {
+                        if (!r.ok) throw new Error('HTTP ' + r.status + ' al cargar ' + url);
+                        return r.json();
+                    })
                     .then(function(data) {
+                        // Asegurarse de que el GeoJSON tenga coordenadas en [lat, lng]
                         var capa = L.geoJSON(data, {
+                            coordsToLatLng: coordsToLatLng,
                             style: estiloCordilleras,
                             onEachFeature: function(feature, layer) {
                                 var nombre = feature.properties && (feature.properties.NOMBRE || feature.properties.name || feature.properties.Name || 'Cordillera');
@@ -603,13 +625,37 @@
                             }
                         });
                         grupo.addLayer(capa);
+                        cargaExitosa = true;
+                        console.log('Cordillera cargada:', url);
                     })
-                    .catch(function(e) { console.warn('No se pudo cargar cordillera:', url, e); });
+                    .catch(function(e) {
+                        console.warn('Error cargando cordillera:', url, e);
+                        // Añadir un marcador de advertencia en el mapa para indicar fallo
+                        var errorMsg = '⚠️ No se pudo cargar: ' + url;
+                        L.marker([19.0, -70.5], {
+                            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background:red;color:white;padding:2px 6px;border-radius:4px;">Error</div>', iconSize: [40,20] })
+                        }).addTo(grupo).bindPopup(errorMsg);
+                    });
             });
+
+            // Si no se carga ningún archivo, añadir un polígono de ejemplo para demostrar funcionamiento
+            setTimeout(function() {
+                if (!cargaExitosa) {
+                    var ejemplo = L.polygon([
+                        [19.0, -70.0],
+                        [19.5, -70.0],
+                        [19.5, -69.5],
+                        [19.0, -69.5]
+                    ], { color: 'blue', fillColor: 'blue', fillOpacity: 0.2, weight: 2 }).bindPopup('Ejemplo (no se cargaron los archivos)');
+                    grupo.addLayer(ejemplo);
+                    console.warn('No se cargó ningún archivo de cordilleras; se añadió polígono de ejemplo.');
+                }
+            }, 2000); // esperar 2 segundos a que terminen las cargas
+
             return grupo;
         }
 
-        // --- Llanuras / Valles (carga de GeoJSON) ---
+        // --- Llanuras / Valles (carga de GeoJSON con manejo de errores y coordsToLatLng) ---
         function crearCapaLlanuras() {
             var grupo = L.layerGroup();
             var archivos = [
@@ -619,11 +665,17 @@
                 'anx/lla/LLSAMANA SUR.geojson',
                 'anx/lla/LLNAGUA.geojson'
             ];
+            var cargaExitosa = false;
+
             archivos.forEach(function(url) {
                 fetch(url)
-                    .then(function(r) { if (!r.ok) throw new Error('Error cargando ' + url); return r.json(); })
+                    .then(function(r) {
+                        if (!r.ok) throw new Error('HTTP ' + r.status + ' al cargar ' + url);
+                        return r.json();
+                    })
                     .then(function(data) {
                         var capa = L.geoJSON(data, {
+                            coordsToLatLng: coordsToLatLng,
                             style: estiloLlanuras,
                             onEachFeature: function(feature, layer) {
                                 var nombre = feature.properties && (feature.properties.NOMBRE || feature.properties.name || feature.properties.Name || 'Llanura');
@@ -631,9 +683,31 @@
                             }
                         });
                         grupo.addLayer(capa);
+                        cargaExitosa = true;
+                        console.log('Llanura cargada:', url);
                     })
-                    .catch(function(e) { console.warn('No se pudo cargar llanura:', url, e); });
+                    .catch(function(e) {
+                        console.warn('Error cargando llanura:', url, e);
+                        var errorMsg = '⚠️ No se pudo cargar: ' + url;
+                        L.marker([18.8, -70.2], {
+                            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background:orange;color:white;padding:2px 6px;border-radius:4px;">Error</div>', iconSize: [40,20] })
+                        }).addTo(grupo).bindPopup(errorMsg);
+                    });
             });
+
+            setTimeout(function() {
+                if (!cargaExitosa) {
+                    var ejemplo = L.polygon([
+                        [18.5, -70.5],
+                        [19.0, -70.5],
+                        [19.0, -70.0],
+                        [18.5, -70.0]
+                    ], { color: 'green', fillColor: 'green', fillOpacity: 0.2, weight: 2 }).bindPopup('Ejemplo (no se cargaron los archivos)');
+                    grupo.addLayer(ejemplo);
+                    console.warn('No se cargó ningún archivo de llanuras; se añadió polígono de ejemplo.');
+                }
+            }, 2000);
+
             return grupo;
         }
 
