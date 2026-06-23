@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Relieve SD</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; background-color: #f0f2f5; }
+        #map { width: 100vw; height: 100vh; z-index: 1; }
+        
+        .panel {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        #panel-titulo {
+            top: 20px;
+            left: 20px;
+            padding: 12px 16px;
+            border-left: 5px solid #2980b9;
+            pointer-events: none;
+        }
+        #panel-titulo h1 {
+            font-size: 22px;
+            color: #1a5276;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+        }
+        #panel-titulo p {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        #panel-controles {
+            top: 20px;
+            right: 20px;
+            width: 280px;
+            max-height: 85vh;
+            overflow: hidden;
+        }
+        #panel-controles.collapsed {
+            max-height: 48px;
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 15px;
+            user-select: none;
+        }
+        .panel-header:hover { background: rgba(0,0,0,0.02); }
+        .toggle-icon { transition: transform 0.3s ease; font-size: 12px; }
+        .collapsed .toggle-icon { transform: rotate(-90deg); }
+        .panel-content {
+            padding: 12px 16px 16px 16px;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+            opacity: 1;
+            max-height: 1000px;
+            overflow-y: auto;
+        }
+        .collapsed .panel-content {
+            opacity: 0;
+            max-height: 0;
+            padding: 0 16px;
+            pointer-events: none;
+        }
+
+        .enlaces-discretos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 12px;
+            padding-top: 12px;
+            margin-top: 12px;
+            border-top: 1px solid #eee;
+        }
+        .enlace-texto {
+            font-size: 11px;
+            color: #555;
+            text-decoration: none;
+            transition: color 0.2s, padding-left 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            justify-content: flex-start;
+        }
+        .enlace-texto:hover {
+            color: #2980b9;
+            padding-left: 2px;
+        }
+        .enlace-texto.cursor-pointer { cursor: pointer; }
+
+        .grupo-control { margin-bottom: 12px; }
+        .grupo-control:last-child { margin-bottom: 0; }
+        .grupo-control h4 {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+        .btn-opcion {
+            display: flex; align-items: center; gap: 8px; padding: 6px 10px;
+            border: 1px solid #e0e0e0; border-radius: 6px; background: #E9E9ED;
+            color: #333; font-size: 12px; cursor: pointer; transition: all 0.2s;
+            width: 100%; text-align: left;
+        }
+        .btn-opcion:hover { background: #f8f9fa; border-color: #2980b9; color: #2980b9; }
+        .btn-opcion.active { background: #2980b9; color: white; border-color: #2980b9; }
+        
+        .checkbox-opcion {
+            display: flex; align-items: center; gap: 8px; padding: 3px 0;
+            font-size: 12px; color: #333; cursor: pointer;
+        }
+        .checkbox-opcion input { accent-color: #2980b9; width: 14px; height: 14px; cursor: pointer; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 2000; display: none;
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white; padding: 24px; border-radius: 12px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-width: 250px;
+        }
+        .modal-content h3 { margin: 0 0 12px 0; color: #1a5276; font-size: 18px; }
+        .modal-content p { color: #555; margin-bottom: 20px; font-size: 16px; font-weight: 600; }
+        .btn-cerrar-modal {
+            background: #2980b9; color: white; border: none; padding: 8px 20px;
+            border-radius: 6px; cursor: pointer; font-weight: 600;
+        }
+        .btn-cerrar-modal:hover { background: #1f618d; }
+
+        .leaflet-bottom.leaflet-right {
+            margin-bottom: 10px;
+            margin-right: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+        .leaflet-control-scale {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.1);
+            margin-bottom: 0 !important;
+            order: 1;
+        }
+        .leaflet-control-attribution {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-radius: 4px;
+            padding: 4px 8px !important;
+            font-size: 10px !important;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.1);
+            order: 2;
+        }
+        .leaflet-control-zoom {
+            margin-bottom: 8px !important;
+            order: 0;
+        }
+
+        @media (max-width: 768px) {
+            #panel-titulo { 
+                top: 10px; left: 10px; right: 10px; width: auto; 
+                text-align: center; border-left: none; border-bottom: 3px solid #2980b9;
+            }
+            #panel-controles { 
+                top: 70px; right: 10px; width: 260px; 
+                max-height: 70vh;
+            }
+        }
+        @media (max-width: 480px) {
+            #panel-controles { width: calc(100vw - 20px); right: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <!-- Título -->
+    <div id="panel-titulo" class="panel">
+        <h1>🗺️ Relieve SD</h1>
+        <p>Relieve u orografía de la isla de Santo Domingo</p>
+    </div>
+
+    <!-- Controles -->
+    <div id="panel-controles" class="panel">
+        <div class="panel-header" onclick="togglePanel('panel-controles')">
+            <span>⚙️ CONTROLES</span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="panel-content">
+            <!-- Base -->
+            <div class="grupo-control">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <button class="btn-opcion active" onclick="cambiarBase('mapa', this)">🗺️ Vista Dibujo</button>
+                    <button class="btn-opcion" onclick="cambiarBase('satelite', this)">🛰️ Vista Satélite</button>
+                </div>
+            </div>
+
+            <!-- Relieve: botones toggle -->
+            <div class="grupo-control">
+                <h4>Relieve</h4>
+                <button id="btn-cordilleras" class="btn-opcion" onclick="toggleCordilleras(this)">⛰️ Cordilleras / Sierras</button>
+                <button id="btn-llanuras" class="btn-opcion" onclick="toggleLlanuras(this)">🌾 Llanuras / Valles</button>
+            </div>
+
+            <!-- Reiniciar -->
+            <div class="grupo-control">
+                <button class="btn-opcion active" style="background-color: #4AC58A;" onclick="reiniciarVista()"><strong> ⌂ REINICIAR</strong></button>
+            </div>
+
+            <!-- Capas adicionales -->
+            <div class="grupo-control">
+                <h4>Capas adicionales</h4>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-comunidades-rd" onchange="toggleComunidadesRD()"> ⭐ Comunidades dominicanas
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-comunidades-ht" onchange="toggleComunidadesHT()"> ⭐ Comunidades haitianas
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-alturas-rd" onchange="toggleAlturasRD()"> 📌 Alturas dominicanas
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-alturas-ht" onchange="toggleAlturasHT()"> 📌 Alturas haitianas
+                </label>
+            </div>
+
+            <!-- Enlaces -->
+            <div class="enlaces-discretos">
+                <a href="https://edupunto.com/2022/01/rios-importantes-de-dominicana/" target="_blank" class="enlace-texto">🌐 Artículo WEB</a>
+                <a href="https://drive.google.com/file/d/1kCcGXRuTVtTigYxtQMEITKMT42g8akv5/view?usp=sharing" target="_blank" class="enlace-texto">🖨️ IMPRIMIBLE</a>
+                <span class="enlace-texto cursor-pointer" onclick="abrirModalCreditos()">© CRÉDITOS</span>
+                <a href="https://drive.google.com/file/d/16UP5fYCeAg1RaSXWI9cTsO7FVq6YM0Hf/view?usp=sharing" target="_blank" class="enlace-texto">💡 CONCEPTO</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Créditos -->
+    <div id="modal-creditos" class="modal-overlay" onclick="cerrarModalCreditos(event)">
+        <div class="modal-content">
+            <h3><strong>I S F O D O S U</strong></h3>
+            <p>DIGICON</p>
+            <p><strong>RELIEVE DE LA ISLA DE<br>SANTO DOMINGO</strong></p>
+            <p style="font-size: 12px;">Juan Ernesto De Frías, José Alberto Santos y Carlos Gabriel Tapia</p>
+            <p style="font-size: 12px;">Santo Domingo, República Dominicana</p>
+            <p style="font-size: 12px;">junio.2026</p>
+            <button class="btn-cerrar-modal" onclick="cerrarModalCreditos()">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════
+        // 1. MAPA
+        // ═══════════════════════════════════════════════════════════
+        var map = L.map('map', { 
+            zoomControl: false,
+            attributionControl: false 
+        }).setView([19.03556466237287, -70.89432006796727], 8);
+
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+        L.control.scale({ position: 'bottomright', metric: true, imperial: false }).addTo(map);
+        L.control.attribution({ position: 'bottomright' }).addTo(map);
+
+        // ═══════════════════════════════════════════════════════════
+        // 2. CAPAS BASE
+        // ═══════════════════════════════════════════════════════════
+
+        // --- Capa de relieve sombreado de Maps-for-Free (sin texto) ---
+        // La URL repite el nivel de zoom en la ruta: /z{z}/row{y}/{z}_{x}-{y}.jpg
+        // maxZoom se limita a 11 porque el servidor no ofrece niveles superiores.
+        var capaDibujo = L.tileLayer('https://maps-for-free.com/layer/relief/z{z}/row{y}/{z}_{x}-{y}.jpg', {
+            maxZoom: 11,
+            attribution: 'Map data &copy; Maps-for-Free / NASA'
+        });
+
+        // --- Capa satélite de Esri (opcional) ---
+        var capaSatelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19,
+            attribution: 'Tiles © Esri'
+        });
+
+        // Iniciamos con la capa de relieve
+        capaDibujo.addTo(map);
+
+        window.cambiarBase = function(tipo, btn) {
+            document.querySelectorAll('#panel-controles .grupo-control:first-child .btn-opcion').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            
+            if (tipo === 'satelite') {
+                map.removeLayer(capaDibujo);
+                capaSatelite.addTo(map);
+            } else {
+                map.removeLayer(capaSatelite);
+                capaDibujo.addTo(map);
+            }
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 3. ESTADO GLOBAL
+        // ═══════════════════════════════════════════════════════════
+        var capaCordilleras = null;
+        var capaLlanuras = null;
+        var capaComunidadesRD = null;
+        var capaComunidadesHT = null;
+        var capaAlturasRD = null;
+        var capaAlturasHT = null;
+
+        // Iconos
+        var iconComunidad = L.divIcon({
+            className: 'custom-div-icon',
+            html: '<svg viewBox="0 0 24 24" width="24" height="24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F4B09F" stroke="#666666" stroke-width="2"/></svg>',
+            iconSize: [24, 24], iconAnchor: [12, 12]
+        });
+        var iconAltura = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#e74c3c; width:20px; height:20px; clip-path:polygon(50% 0%, 0% 100%, 100% 100%); border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4);'></div>",
+            iconSize: [20, 20], iconAnchor: [10, 20]
+        });
+
+        // ═══════════════════════════════════════════════════════════
+        // 4. ESTILOS PARA RELIEVE
+        // ═══════════════════════════════════════════════════════════
+        var estiloCordilleras = {
+            color: "#8B4513",
+            weight: 2,
+            fillColor: "#A0522D",
+            fillOpacity: 0.25
+        };
+        var estiloLlanuras = {
+            color: "#228B22",
+            weight: 1.5,
+            fillColor: "#90EE90",
+            fillOpacity: 0.20
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 5. DATOS DE ALTURAS (sin cambios)
+        // ═══════════════════════════════════════════════════════════
+        var alturasRD = [
+            { nombre: "Monte La Meseta", altura: "605 m", sierra: "Sierra de Samaná", lat: 19.312225, lng: -69.293875 },
+            { nombre: "Loma Trillo Valle-Rincon", altura: "532 m", sierra: "Sierra de Samaná", lat: 19.282609, lng: -69.300991 },
+            { nombre: "Loma Atravesada", altura: "500 m", sierra: "Sierra de Samaná", lat: 19.312458, lng: -69.269131 },
+            { nombre: "Loma La Deseada", altura: "465 m", sierra: "Los Haitises", lat: 18.902656, lng: -69.52662 },
+            { nombre: "Loma Bonita", altura: "353 m", sierra: "Los Haitises", lat: 18.936903, lng: -69.480857 },
+            { nombre: "Loma Carmona", altura: "337 m", sierra: "Los Haitises", lat: 18.965588, lng: -69.684183 },
+            { nombre: "Loma Los Siete Picos", altura: "935 m", sierra: "Sierra de Yamasá", lat: 18.735674, lng: -70.16433 },
+            { nombre: "Monte Mogote de Rancho de Yagua", altura: "856 m", sierra: "Sierra de Yamasá", lat: 18.765977, lng: -70.207981 },
+            { nombre: "Alto de la Paloma - Cañada del Mundo", altura: "845 m", sierra: "Sierra de Yamasá", lat: 18.819383, lng: -70.258188 },
+            { nombre: "Loma Vieja", altura: "736 m", sierra: "Cordillera Oriental", lat: 18.788962, lng: -68.809195 },
+            { nombre: "Janabo", altura: "696 m", sierra: "Cordillera Oriental", lat: 18.888501, lng: -68.873518 },
+            { nombre: "Loma Rio Pedra - Rio Guanche", altura: "650 m", sierra: "Cordillera Oriental", lat: 18.833715, lng: -68.809049 },
+            { nombre: "Punta La Guarapa", altura: "634 m", sierra: "Cordillera Oriental", lat: 18.879064, lng: -69.017194 },
+            { nombre: "Loma Higo de La Cruz", altura: "620 m", sierra: "Cordillera Oriental", lat: 18.89881, lng: -69.083113 },
+            { nombre: "Montaña Redonda", altura: "333 m", sierra: "Cordillera Oriental", lat: 18.982129, lng: -68.91697 },
+            { nombre: "Loma Siseviere", altura: "451 m", sierra: "Promontorio de Cabrera", lat: 19.609281, lng: -69.949529 },
+            { nombre: "SN", altura: "398 m", sierra: "Promontorio de Cabrera", lat: 19.624803, lng: -69.994755 },
+            { nombre: "Pico Diego de Ocampo", altura: "1249 m", sierra: "Cordillera Septentrional", lat: 19.579777, lng: -70.745292 },
+            { nombre: "Loma Bocas de Licey", altura: "1079 m", sierra: "Cordillera Septentrional", lat: 19.542563, lng: -70.589084 },
+            { nombre: "Loma El Aguacate", altura: "1076 m", sierra: "Cordillera Septentrional", lat: 19.579492, lng: -70.753596 },
+            { nombre: "Loma El Jamo", altura: "1043 m", sierra: "Cordillera Septentrional", lat: 19.58271, lng: -70.760435 },
+            { nombre: "Loma El Mogote", altura: "967 m", sierra: "Cordillera Septentrional", lat: 19.483889, lng: -70.488889 },
+            { nombre: "Loma El Queso", altura: "897 m", sierra: "Cordillera Septentrional", lat: 19.487219, lng: -70.457352 },
+            { nombre: "Loma Guaconejo, Pico Occidental", altura: "606 m", sierra: "Cordillera Septentrional", lat: 19.315647, lng: -69.991422 },
+            { nombre: "Loma Isabel de Torres", altura: "850 m", sierra: "Cordillera Septentrional", lat: 19.764041, lng: -70.71027 },
+            { nombre: "Loma Quita Espuela", altura: "985 m", sierra: "Cordillera Septentrional", lat: 19.36477, lng: -70.155236 },
+            { nombre: "Loma Gajo en Medio", altura: "2279 m", sierra: "Sierra de Neiba", lat: 18.635685, lng: -71.52169 },
+            { nombre: "Loma La Tasajera del Chivito", altura: "2176 m", sierra: "Sierra de Neiba", lat: 18.666322, lng: -71.68837 },
+            { nombre: "Gajo de los Magueyes", altura: "2070 m", sierra: "Sierra de Neiba", lat: 18.65384, lng: -71.559762 },
+            { nombre: "Loma La Laguna", altura: "1911 m", sierra: "Sierra de Neiba", lat: 18.631927, lng: -71.476378 },
+            { nombre: "Loma Rancho Viejo", altura: "1849 m", sierra: "Sierra de Neiba", lat: 18.628341, lng: -71.453019 },
+            { nombre: "Alto de la Bandera", altura: "1372 m", sierra: "Sierra Martín García", lat: 18.38053, lng: -71.027149 },
+            { nombre: "Loma del Curro", altura: "1317 m", sierra: "Sierra Martín García", lat: 18.378263, lng: -71.038405 },
+            { nombre: "Firme del Aguacate", altura: "1282 m", sierra: "Sierra Martín García", lat: 18.353606, lng: -70.971341 },
+            { nombre: "Monte Vicente", altura: "2368 m", sierra: "Sierra de Bahoruco", lat: 18.285116, lng: -71.70693 },
+            { nombre: "SN", altura: "2291 m", sierra: "Sierra de Bahoruco", lat: 18.245655, lng: -71.644249 },
+            { nombre: "Monte Motrel", altura: "2210 m", sierra: "Sierra de Bahoruco", lat: 18.287944, lng: -71.686441 },
+            { nombre: "El Aceitillar", altura: "2013 m", sierra: "Sierra de Bahoruco", lat: 18.200278, lng: -71.564722 },
+            { nombre: "Postrer Paso", altura: "1945 m", sierra: "Sierra de Bahoruco", lat: 18.175435, lng: -71.47147 },
+            { nombre: "Loma La Manigua", altura: "1779 m", sierra: "Sierra de Bahoruco", lat: 18.257239, lng: -71.728328 },
+            { nombre: "Loma La Jo", altura: "1672 m", sierra: "Sierra de Bahoruco", lat: 18.166934, lng: -71.281729 },
+            { nombre: "Loma José Joaquín (La Ultima Razón)", altura: "1617 m", sierra: "Sierra de Bahoruco", lat: 18.119778, lng: -71.204661 },
+            { nombre: "Pico Duarte", altura: "3101 m", sierra: "Cordillera Central", lat: 19.022777, lng: -70.998263 },
+            { nombre: "La Pelona", altura: "3098 m", sierra: "Cordillera Central", lat: 19.031735, lng: -71.005519 },
+            { nombre: "La Rusilla", altura: "3044 m", sierra: "Cordillera Central", lat: 19.04534, lng: -70.958829 },
+            { nombre: "Alto Bandera", altura: "2856 m", sierra: "Cordillera Central", lat: 18.812209, lng: -70.62614 },
+            { nombre: "Pico de la Viuda", altura: "2801 m", sierra: "Cordillera Central", lat: 19.085559, lng: -71.132666 },
+            { nombre: "Pico Yaque", altura: "2789 m", sierra: "Cordillera Central", lat: 19.031121, lng: -70.931978 },
+            { nombre: "Monte Tina", altura: "2511 m", sierra: "Cordillera Central", lat: 18.767607, lng: -70.69615 },
+            { nombre: "Loma Alta de Mijo", altura: "2342 m", sierra: "Cordillera Central", lat: 18.983564, lng: -71.125441 },
+            { nombre: "Loma Gajo en Medio", altura: "2279 m", sierra: "Cordillera Central", lat: 18.635685, lng: -71.52169 }
+        ];
+
+        var alturasHT = [
+            { nombre: "Station Bonhamme", altura: "1788 m", sierra: "Chaines des Matheux", lat: 19.072445, lng: -72.250785 },
+            { nombre: "Morne Jean Toussaint", altura: "1756 m", sierra: "Chaines des Matheux", lat: 18.700116, lng: -71.824683 },
+            { nombre: "Morne Gros Dos", altura: "1651 m", sierra: "Chaines des Matheux", lat: 18.702114, lng: -71.793944 },
+            { nombre: "Morne Liane Doco", altura: "1613 m", sierra: "Chaines des Matheux", lat: 18.678719, lng: -71.834203 },
+            { nombre: "Morne Calumet", altura: "1500 m", sierra: "Chaines des Matheux", lat: 18.712215, lng: -71.812569 },
+            { nombre: "Morne Boucan Pin", altura: "1426 m", sierra: "Chaines des Matheux", lat: 18.670666, lng: -71.81606 },
+            { nombre: "Morne Chalante", altura: "1291 m", sierra: "Chaines des Matheux", lat: 19.015, lng: -72.649196 },
+            { nombre: "Montagne Terrible", altura: "1260 m", sierra: "Chaines des Matheux", lat: 18.800547, lng: -72.316323 },
+            { nombre: "Morne Ena", altura: "1271 m", sierra: "Chaines des Matheux", lat: 18.820506, lng: -72.344484 },
+            { nombre: "Pic la Selle (Pico de La Selle)", altura: "2680 m", sierra: "Macizo de la Hotte", lat: 18.360045, lng: -71.976845 },
+            { nombre: "Pic Macaya (Pico Macaya)", altura: "2347 m", sierra: "Macizo de la Hotte", lat: 18.382273, lng: -74.025029 },
+            { nombre: "Savane Pistache (Sabana Pistacho)", altura: "2201 m", sierra: "Macizo de la Hotte", lat: 18.362641, lng: -71.918053 },
+            { nombre: "Morne Cavalier", altura: "2184 m", sierra: "Macizo de la Hotte", lat: 18.358611, lng: -74.026111 }
+        ];
+
+        // ═══════════════════════════════════════════════════════════
+        // 6. CREACIÓN DE CAPAS (con manejo de errores y coordsToLatLng)
+        // ═══════════════════════════════════════════════════════════
+
+        // Función para convertir coordenadas a [lat, lng] independientemente del orden
+        function coordsToLatLng(coords) {
+            // Si es un array de dos números, asumimos [lng, lat] (GeoJSON estándar)
+            if (Array.isArray(coords) && coords.length === 2 && typeof coords[0] === 'number' && typeof coords[1] === 'number') {
+                // Si el primer número está en rango de latitud (-90 a 90) y el segundo en longitud (-180 a 180), están invertidos
+                if (Math.abs(coords[0]) <= 90 && Math.abs(coords[1]) <= 180) {
+                    return new L.LatLng(coords[0], coords[1]); // ya es [lat, lng]
+                } else {
+                    return new L.LatLng(coords[1], coords[0]); // [lng, lat] -> [lat, lng]
+                }
+            }
+            // Si es un array de objetos (anidado), se procesará recursivamente con L.geoJSON
+            return null;
+        }
+
+        // --- Comunidades (sin cambios) ---
+        function crearCapaComunidadesRD() {
+            var ciudadesRD = [
+                { nombre: "Santo Domingo Este", pob: "1,029,117", lat: 18.505807230607356, lng: -69.81027716178998 },
+                { nombre: "Distrito Nacional", pob: "1,029,110", lat: 18.480981143961838, lng: -69.9276039587376 },
+                { nombre: "Santiago de los Caballeros", pob: "771,748", lat: 19.4475816098526, lng: -70.6809176146893 },
+                { nombre: "Santo Domingo Norte", pob: "674,274", lat: 18.55782272460283, lng: -69.92100082832336 },
+                { nombre: "Higuey", pob: "415,084", lat: 18.61571273013328, lng: -68.71709959832229 },
+                { nombre: "Santo Domingo Oeste", pob: "410,578", lat: 18.4799149527926, lng: -69.99537103064668 },
+                { nombre: "Los Alcarrizos", pob: "336,307", lat: 18.52522147766707, lng: -70.03272443807157 },
+                { nombre: "La Vega", pob: "282,055", lat: 19.222042406916476, lng: -70.52432690703499 },
+                { nombre: "San Cristóbal", pob: "277,793", lat: 18.410991802635163, lng: -70.1068304787759 },
+                { nombre: "San Pedro de Macorís", pob: "217,523", lat: 18.46562651467003, lng: -69.29404352365783 },
+                { nombre: "San Francisco de Macorís", pob: "202,716", lat: 19.29749691626648, lng: -70.25441780902698 },
+                { nombre: "Boca Chica", pob: "167,040", lat: 18.453688236952395, lng: -69.61241774273653 },
+                { nombre: "Moca", pob: "164,022", lat: 19.392049101526624, lng: -70.5259782043012 },
+                { nombre: "Puerto Plata", pob: "162,093", lat: 19.78873261587668, lng: -70.69218568325925 },
+                { nombre: "Bajos de Haina", pob: "159,888", lat: 18.415315538209175, lng: -70.03229805270976 },
+                { nombre: "Baní", pob: "158,019", lat: 18.277398750111953, lng: -70.32900674820868 },
+                { nombre: "La Romana", pob: "153,241", lat: 18.424855996070605, lng: -68.97115091989247 },
+                { nombre: "Bonao", pob: "144,923", lat: 18.931121714059056, lng: -70.40570175045148 },
+                { nombre: "San Juan de la Maguana", pob: "143,009", lat: 18.80755714971223, lng: -71.22770887883374 },
+                { nombre: "Villa Hermosa de La Romana", pob: "117,445", lat: 18.44512269487311, lng: -69.02401072347244 },
+                { nombre: "Villa Altagracia", pob: "97,620", lat: 18.67559890412883, lng: -70.17064558053625 },
+                { nombre: "Pedro Brand", pob: "92,973", lat: 18.567625145473666, lng: -70.09576064085 },
+                { nombre: "Barahona", pob: "90,166", lat: 18.210393780643546, lng: -71.10125694067193 },
+                { nombre: "Mao", pob: "86,659", lat: 19.550421948908742, lng: -71.08036926699594 },
+                { nombre: "Cotuí", pob: "84,193", lat: 19.05124037187089, lng: -70.1480262741109 },
+                { nombre: "Nagua", pob: "81,424", lat: 19.374916052082312, lng: -69.85356282784771 },
+                { nombre: "El Seibo", pob: "72,775", lat: 18.76448855520233, lng: -69.03845064399758 },
+                { nombre: "Hato Mayor", pob: "70,582", lat: 18.766875762388583, lng: -69.25445947804083 },
+                { nombre: "Esperanza", pob: "69,803", lat: 19.58815364158917, lng: -70.98392380153591 },
+                { nombre: "Constanza", pob: "66,316", lat: 18.91128845922157, lng: -70.74270693156512 },
+                { nombre: "Jarabacoa", pob: "65,059", lat: 19.119521283253878, lng: -70.64164968583951 },
+                { nombre: "Yamasá", pob: "63,989", lat: 18.77289967116212, lng: -70.02628863141685 },
+                { nombre: "Samaná", pob: "60,878", lat: 19.204162149758705, lng: -69.33289197808233 },
+                { nombre: "San Antonio de Guerra", pob: "59,299", lat: 18.558786569843896, lng: -69.70201836558712 },
+                { nombre: "Tamboril", pob: "57,669", lat: 19.488720374189853, lng: -70.61233370916037 },
+                { nombre: "Sosúa", pob: "56,982", lat: 19.77182164779103, lng: -70.50886294354747 },
+                { nombre: "Villa Bisonó", pob: "49,495", lat: 19.563773901118847, lng: -70.87742943422776 },
+                { nombre: "Las Matas de Farfán", pob: "48,179", lat: 18.87510103363932, lng: -71.5176905712073 },
+                { nombre: "Monte Plata", pob: "48,003", lat: 18.81056369810424, lng: -69.7874306234426 },
+                { nombre: "Puñal, SANTIAGO", pob: "46,090", lat: 19.409305676589806, lng: -70.64604864402678 },
+                { nombre: "San José de Ocoa", pob: "43,394", lat: 18.545411326789797, lng: -70.50658453508811 },
+                { nombre: "Villa González", pob: "42,423", lat: 19.543765220455867, lng: -70.78942635172145 },
+                { nombre: "Salcedo", pob: "41,340", lat: 19.37578900811693, lng: -70.41755670985413 },
+                { nombre: "Gaspar Hernández", pob: "40,781", lat: 19.62733165585592, lng: -70.27806717468277 },
+                { nombre: "Neiba", pob: "40,644", lat: 18.486423823575624, lng: -71.41808542796208 },
+                { nombre: "Guayubín", pob: "39,653", lat: 19.66884916163345, lng: -71.3968743887518 },
+                { nombre: "San Ignacio de Sabaneta", pob: "38,798", lat: 19.479458110265337, lng: -71.34029572369833 },
+                { nombre: "La Mata de Cotuí", pob: "38,358", lat: 19.101403261884826, lng: -70.16771285759896 },
+                { nombre: "San José de las Matas", pob: "37,411", lat: 19.340138635438574, lng: -70.93936446620526 },
+                { nombre: "Villa Riva", pob: "36,066", lat: 19.178266582340193, lng: -69.91415982985055 },
+                { nombre: "Dajabón", pob: "35,809", lat: 19.55200248817929, lng: -71.70538155466328 },
+                { nombre: "Bayaguana", pob: "35,435", lat: 18.7550126067243, lng: -69.63868609918546 },
+                { nombre: "Tenares", pob: "28,942", lat: 19.37411939789179, lng: -70.35117560205656 },
+                { nombre: "Pedernales", pob: "28,942", lat: 18.03753501248943, lng: -71.74517328405686 },
+                { nombre: "Jimaní", pob: "19,153", lat: 18.49276133919648, lng: -71.85238107678722 },
+                { nombre: "Bávaro", pob: "N.D.", lat: 18.685703308653277, lng: -68.45684092608708 },
+                { nombre: "Verón", pob: "N.D.", lat: 18.599146001276253, lng: -68.43514992995614 },
+                { nombre: "Punta Cana", pob: "N.D.", lat: 18.552942854505325, lng: -68.37084760868757 },
+                { nombre: "Las Terrenas", pob: "N.D.", lat: 19.30912629589862, lng: -69.54366833947554 },
+                { nombre: "Loma de Cabrera", pob: "N.D.", lat: 19.421393660913196, lng: -71.61459572180556 },
+                { nombre: "Comendador", pob: "N.D.", lat: 18.877355959280756, lng: -71.70420164786368 },
+                { nombre: "Sabana de la Mar", pob: "N.D.", lat: 19.05609630020573, lng: -69.3879528727453 },
+                { nombre: "Miches", pob: "N.D.", lat: 18.9832772626688, lng: -69.04789839180418 },
+                { nombre: "Pepillo Salcedo", pob: "N.D.", lat: 19.700697429089097, lng: -71.75112972865138 },
+                { nombre: "Vicente Noble", pob: "N.D.", lat: 18.387693807674253, lng: -71.17577086627657 },
+                { nombre: "Tamayo", pob: "N.D.", lat: 18.396055023852707, lng: -71.20348531120518 },
+                { nombre: "La Ciénaga", pob: "N.D.", lat: 18.068066800143352, lng: -71.10537393444885 },
+                { nombre: "Paraíso", pob: "N.D.", lat: 17.991702359301748, lng: -71.16612394591112 },
+                { nombre: "Enriquillo", pob: "N.D.", lat: 17.90057935803873, lng: -71.23291787013686 },
+                { nombre: "Polo", pob: "N.D.", lat: 18.09103324170762, lng: -71.2790607845412 },
+                { nombre: "Río San Juan", pob: "N.D.", lat: 19.639878578623392, lng: -70.07562882650254 },
+                { nombre: "Cabrera", pob: "N.D.", lat: 19.641519533858574, lng: -69.90557077035564 },
+                { nombre: "Sánchez", pob: "N.D.", lat: 19.22984237021509, lng: -69.61310686836826 },
+                { nombre: "Boca de Yuma", pob: "N.D.", lat: 18.37903401546551, lng: -68.60861561213028 },
+                { nombre: "Monte Cristi", pob: "27,067", lat: 19.84555582940316, lng: -71.64300426707139 }
+            ];
+            var grupo = L.layerGroup();
+            ciudadesRD.forEach(function(c) {
+                var marker = L.marker([c.lat, c.lng], { icon: iconComunidad });
+                marker.bindPopup("<b>" + c.nombre + "</b><br>Población: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
+                marker.addTo(grupo);
+            });
+            return grupo;
+        }
+
+        function crearCapaComunidadesHT() {
+            var ciudadesHT = [
+                { nombre: "Port-au-Prince", pob: "2,914,190", lat: 18.5469, lng: -72.3403 },
+                { nombre: "Carrefour", pob: "511,345", lat: 18.5333, lng: -72.4 },
+                { nombre: "Pétion-Ville", pob: "376,834", lat: 18.5098, lng: -72.2856 },
+                { nombre: "Gonaïves", pob: "356,324", lat: 19.4456, lng: -72.6883 },
+                { nombre: "Delmas", pob: "284,079", lat: 18.55, lng: -72.3 },
+                { nombre: "Saint-Marc", pob: "266,642", lat: 19.1167, lng: -72.7 },
+                { nombre: "Croix-des-Bouquets", pob: "231,077", lat: 18.5761, lng: -72.2269 },
+                { nombre: "Jacmel", pob: "221,965", lat: 18.2342, lng: -72.5347 },
+                { nombre: "Cap-Haïtien", pob: "190,289", lat: 19.75, lng: -72.2 },
+                { nombre: "Dessalines", pob: "181,903", lat: 19.2611, lng: -72.5192 },
+                { nombre: "Gros Morne", pob: "155,692", lat: 19.6708, lng: -72.6781 },
+                { nombre: "Les Cayes", pob: "151,696", lat: 18.2, lng: -73.75 },
+                { nombre: "Jean-Rabel", pob: "148,416", lat: 19.85, lng: -73.2 },
+                { nombre: "Verrettes", pob: "144,812", lat: 19.05, lng: -72.4667 },
+                { nombre: "Jérémie", pob: "134,317", lat: 18.6472, lng: -74.1139 },
+                { nombre: "Arcahaie", pob: "130,306", lat: 18.7718, lng: -72.5123 },
+                { nombre: "Tabarre", pob: "130,283", lat: 18.5833, lng: -72.2667 },
+                { nombre: "Port-de-Paix", pob: "121,220", lat: 19.95, lng: -72.8333 },
+                { nombre: "Hinche", pob: "120,867", lat: 19.15, lng: -72.0167 },
+                { nombre: "Ouanaminthe", pob: "116,086", lat: 19.55, lng: -71.7333 },
+                { nombre: "Aquin", pob: "104,216", lat: 18.2833, lng: -73.4 },
+                { nombre: "Saint-Michel de l’Atalaye", pob: "95,216", lat: 19.3708, lng: -72.3347 },
+                { nombre: "Léogâne", pob: "90,000", lat: 18.5108, lng: -72.6339 },
+                { nombre: "Saint-Louis du Nord", pob: "69,592", lat: 19.9333, lng: -72.7167 },
+                { nombre: "Limbé", pob: "69,256", lat: 19.706, lng: -72.4034 },
+                { nombre: "Limonade", pob: "69,256", lat: 19.6667, lng: -72.1167 },
+                { nombre: "Miragoâne", pob: "62,528", lat: 18.4458, lng: -73.09 },
+                { nombre: "Cabaret", pob: "62,063", lat: 18.7343, lng: -72.4159 },
+                { nombre: "Anse à Galets", pob: "52,662", lat: 18.8333, lng: -72.8667 },
+                { nombre: "Plaisance", pob: "50,367", lat: 19.6, lng: -72.4667 },
+                { nombre: "Anse d’Hainault", pob: "36,401", lat: 18.485, lng: -74.4517 },
+                { nombre: "Saintard", pob: "32,906", lat: 18.824, lng: -72.55 },
+                { nombre: "Milot", pob: "31,992", lat: 19.6047, lng: -72.2186 },
+                { nombre: "Fort Liberté", pob: "30,110", lat: 19.7344, lng: -71.8397 }
+            ];
+            var grupo = L.layerGroup();
+            ciudadesHT.forEach(function(c) {
+                var marker = L.marker([c.lat, c.lng], { icon: iconComunidad });
+                marker.bindPopup("<b>" + c.nombre + "</b><br>Población: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
+                marker.addTo(grupo);
+            });
+            return grupo;
+        }
+
+        // --- Alturas ---
+        function crearCapaAlturas(datos) {
+            var grupo = L.layerGroup();
+            datos.forEach(function(a) {
+                var marker = L.marker([a.lat, a.lng], { icon: iconAltura });
+                marker.bindPopup("<b>⛰️ " + a.nombre + "</b><br>Altura: " + a.altura + "<br>Sierra: " + a.sierra + "<br>Coordenadas: " + a.lat.toFixed(4) + ", " + a.lng.toFixed(4));
+                marker.addTo(grupo);
+            });
+            return grupo;
+        }
+
+        // --- Cordilleras / Sierras (carga de GeoJSON con manejo de errores y coordsToLatLng) ---
+        function crearCapaCordilleras() {
+            var grupo = L.layerGroup();
+            var archivos = [
+                'anx/mon/HAITISES.geojson',
+                'anx/mon/CORIENTAL.geojson',
+                'anx/mon/CSEPTENTRIONAL.geojson',
+                'anx/mon/SYAMASA.geojson',
+                'anx/mon/SSAMANA.geojson',
+                'anx/mon/SMARTINGARCIA.geojson'
+            ];
+            var cargaExitosa = false;
+
+            archivos.forEach(function(url) {
+                fetch(url)
+                    .then(function(r) {
+                        if (!r.ok) throw new Error('HTTP ' + r.status + ' al cargar ' + url);
+                        return r.json();
+                    })
+                    .then(function(data) {
+                        // Asegurarse de que el GeoJSON tenga coordenadas en [lat, lng]
+                        var capa = L.geoJSON(data, {
+                            coordsToLatLng: coordsToLatLng,
+                            style: estiloCordilleras,
+                            onEachFeature: function(feature, layer) {
+                                var nombre = feature.properties && (feature.properties.NOMBRE || feature.properties.name || feature.properties.Name || 'Cordillera');
+                                layer.bindPopup("<b>⛰️ " + nombre + "</b>");
+                            }
+                        });
+                        grupo.addLayer(capa);
+                        cargaExitosa = true;
+                        console.log('Cordillera cargada:', url);
+                    })
+                    .catch(function(e) {
+                        console.warn('Error cargando cordillera:', url, e);
+                        // Añadir un marcador de advertencia en el mapa para indicar fallo
+                        var errorMsg = '⚠️ No se pudo cargar: ' + url;
+                        L.marker([19.0, -70.5], {
+                            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background:red;color:white;padding:2px 6px;border-radius:4px;">Error</div>', iconSize: [40,20] })
+                        }).addTo(grupo).bindPopup(errorMsg);
+                    });
+            });
+
+            // Si no se carga ningún archivo, añadir un polígono de ejemplo para demostrar funcionamiento
+            setTimeout(function() {
+                if (!cargaExitosa) {
+                    var ejemplo = L.polygon([
+                        [19.0, -70.0],
+                        [19.5, -70.0],
+                        [19.5, -69.5],
+                        [19.0, -69.5]
+                    ], { color: 'blue', fillColor: 'blue', fillOpacity: 0.2, weight: 2 }).bindPopup('Ejemplo (no se cargaron los archivos)');
+                    grupo.addLayer(ejemplo);
+                    console.warn('No se cargó ningún archivo de cordilleras; se añadió polígono de ejemplo.');
+                }
+            }, 2000); // esperar 2 segundos a que terminen las cargas
+
+            return grupo;
+        }
+
+        // --- Llanuras / Valles (carga de GeoJSON con manejo de errores y coordsToLatLng) ---
+        function crearCapaLlanuras() {
+            var grupo = L.layerGroup();
+            var archivos = [
+                'anx/lla/VBONAO.geojson',
+                'anx/lla/VVILLAALT.geojson',
+                'anx/lla/LLSAMANA NORTE.geojson',
+                'anx/lla/LLSAMANA SUR.geojson',
+                'anx/lla/LLNAGUA.geojson'
+            ];
+            var cargaExitosa = false;
+
+            archivos.forEach(function(url) {
+                fetch(url)
+                    .then(function(r) {
+                        if (!r.ok) throw new Error('HTTP ' + r.status + ' al cargar ' + url);
+                        return r.json();
+                    })
+                    .then(function(data) {
+                        var capa = L.geoJSON(data, {
+                            coordsToLatLng: coordsToLatLng,
+                            style: estiloLlanuras,
+                            onEachFeature: function(feature, layer) {
+                                var nombre = feature.properties && (feature.properties.NOMBRE || feature.properties.name || feature.properties.Name || 'Llanura');
+                                layer.bindPopup("<b>🌾 " + nombre + "</b>");
+                            }
+                        });
+                        grupo.addLayer(capa);
+                        cargaExitosa = true;
+                        console.log('Llanura cargada:', url);
+                    })
+                    .catch(function(e) {
+                        console.warn('Error cargando llanura:', url, e);
+                        var errorMsg = '⚠️ No se pudo cargar: ' + url;
+                        L.marker([18.8, -70.2], {
+                            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background:orange;color:white;padding:2px 6px;border-radius:4px;">Error</div>', iconSize: [40,20] })
+                        }).addTo(grupo).bindPopup(errorMsg);
+                    });
+            });
+
+            setTimeout(function() {
+                if (!cargaExitosa) {
+                    var ejemplo = L.polygon([
+                        [18.5, -70.5],
+                        [19.0, -70.5],
+                        [19.0, -70.0],
+                        [18.5, -70.0]
+                    ], { color: 'green', fillColor: 'green', fillOpacity: 0.2, weight: 2 }).bindPopup('Ejemplo (no se cargaron los archivos)');
+                    grupo.addLayer(ejemplo);
+                    console.warn('No se cargó ningún archivo de llanuras; se añadió polígono de ejemplo.');
+                }
+            }, 2000);
+
+            return grupo;
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 7. INSTANCIAR CAPAS Y TOGGLES (botones)
+        // ═══════════════════════════════════════════════════════════
+        capaCordilleras = crearCapaCordilleras();
+        capaLlanuras = crearCapaLlanuras();
+        capaComunidadesRD = crearCapaComunidadesRD();
+        capaComunidadesHT = crearCapaComunidadesHT();
+        capaAlturasRD = crearCapaAlturas(alturasRD);
+        capaAlturasHT = crearCapaAlturas(alturasHT);
+
+        // Funciones para los botones de relieve (toggle)
+        window.toggleCordilleras = function(btn) {
+            btn.classList.toggle('active');
+            if (btn.classList.contains('active')) {
+                map.addLayer(capaCordilleras);
+            } else {
+                map.removeLayer(capaCordilleras);
+            }
+        };
+
+        window.toggleLlanuras = function(btn) {
+            btn.classList.toggle('active');
+            if (btn.classList.contains('active')) {
+                map.addLayer(capaLlanuras);
+            } else {
+                map.removeLayer(capaLlanuras);
+            }
+        };
+
+        // Funciones para checkboxes (sin cambios)
+        window.toggleComunidadesRD = function() {
+            var chk = document.getElementById('chk-comunidades-rd');
+            if (chk.checked) map.addLayer(capaComunidadesRD);
+            else map.removeLayer(capaComunidadesRD);
+        };
+
+        window.toggleComunidadesHT = function() {
+            var chk = document.getElementById('chk-comunidades-ht');
+            if (chk.checked) map.addLayer(capaComunidadesHT);
+            else map.removeLayer(capaComunidadesHT);
+        };
+
+        window.toggleAlturasRD = function() {
+            var chk = document.getElementById('chk-alturas-rd');
+            if (chk.checked) map.addLayer(capaAlturasRD);
+            else map.removeLayer(capaAlturasRD);
+        };
+
+        window.toggleAlturasHT = function() {
+            var chk = document.getElementById('chk-alturas-ht');
+            if (chk.checked) map.addLayer(capaAlturasHT);
+            else map.removeLayer(capaAlturasHT);
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 8. REINICIAR VISTA
+        // ═══════════════════════════════════════════════════════════
+        window.reiniciarVista = function() {
+            map.setView([19.03556466237287, -70.89432006796727], 8);
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 9. UTILIDADES UI
+        // ═══════════════════════════════════════════════════════════
+        window.togglePanel = function(panelId) {
+            document.getElementById(panelId).classList.toggle('collapsed');
+        };
+
+        window.abrirModalCreditos = function() {
+            document.getElementById('modal-creditos').classList.add('active');
+        };
+        
+        window.cerrarModalCreditos = function(e) {
+            if (!e || e.target.id === 'modal-creditos' || e.target.classList.contains('btn-cerrar-modal')) {
+                document.getElementById('modal-creditos').classList.remove('active');
+            }
+        };
+    </script>
+</body>
+</html>
