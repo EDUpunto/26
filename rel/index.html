@@ -291,8 +291,6 @@
         // ═══════════════════════════════════════════════════════════
 
         // --- Capa de relieve sombreado de Maps-for-Free (sin texto) ---
-        // La URL repite el nivel de zoom en la ruta: /z{z}/row{y}/{z}_{x}-{y}.jpg
-        // maxZoom se limita a 11 porque el servidor no ofrece niveles superiores.
         var capaDibujo = L.tileLayer('https://maps-for-free.com/layer/relief/z{z}/row{y}/{z}_{x}-{y}.jpg', {
             maxZoom: 11,
             attribution: 'Map data &copy; Maps-for-Free / NASA'
@@ -432,18 +430,8 @@
         ];
 
         // ═══════════════════════════════════════════════════════════
-        // 6. FUNCIONES DE CONVERSIÓN Y CREACIÓN DE CAPAS
+        // 6. FUNCIONES DE CREACIÓN DE CAPAS
         // ═══════════════════════════════════════════════════════════
-
-        // Función para convertir coordenadas a [lat, lng] (GeoJSON estándar: [lng, lat, alt])
-        function coordsToLatLng(coords) {
-            if (!Array.isArray(coords) || coords.length < 2) {
-                console.warn('Coordenada inválida:', coords);
-                return new L.LatLng(0, 0); // fallback para evitar error
-            }
-            // Asumimos que es [lng, lat, ...] porque es GeoJSON
-            return new L.LatLng(coords[1], coords[0]);
-        }
 
         // --- Comunidades ---
         function crearCapaComunidadesRD() {
@@ -606,13 +594,15 @@
             archivos.forEach(function(url) {
                 fetch(url)
                     .then(function(r) {
-                        if (!r.ok) throw new Error('HTTP ' + r.status + ' al cargar ' + url);
+                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
                         return r.json();
                     })
                     .then(function(data) {
-                        if (!data) throw new Error('Datos vacíos para ' + url);
+                        if (!data || !data.features || data.features.length === 0) {
+                            throw new Error('GeoJSON vacío o sin features: ' + url);
+                        }
+                        console.log('📦 Cordillera cargada:', url, 'features:', data.features.length);
                         var capa = L.geoJSON(data, {
-                            coordsToLatLng: coordsToLatLng,
                             style: estiloCordilleras,
                             onEachFeature: function(feature, layer) {
                                 var nombre = feature.properties && (feature.properties.NOMBRE || feature.properties.name || feature.properties.Name || 'Cordillera');
@@ -621,18 +611,17 @@
                         });
                         grupo.addLayer(capa);
                         cargaExitosa = true;
-                        console.log('✅ Cordillera cargada:', url);
                     })
                     .catch(function(e) {
-                        console.warn('❌ Error cargando cordillera:', url, e);
+                        console.warn('❌ Error cargando cordillera:', url, e.message);
                         var errorMsg = '⚠️ No se pudo cargar: ' + url;
-                        L.marker([19.0, -70.5], {
-                            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background:red;color:white;padding:2px 6px;border-radius:4px;">Error</div>', iconSize: [40,20] })
+                        L.marker([19.0, -70.5 + (archivos.indexOf(url) * 0.3)], {
+                            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background:red;color:white;padding:2px 6px;border-radius:4px;font-size:10px;">Error</div>', iconSize: [40,20] })
                         }).addTo(grupo).bindPopup(errorMsg);
                     });
             });
 
-            // Si no se carga ningún archivo, añadir un polígono de ejemplo
+            // Fallback si no se carga ningún archivo
             setTimeout(function() {
                 if (!cargaExitosa) {
                     var ejemplo = L.polygon([
@@ -640,11 +629,11 @@
                         [19.5, -70.0],
                         [19.5, -69.5],
                         [19.0, -69.5]
-                    ], { color: 'blue', fillColor: 'blue', fillOpacity: 0.2, weight: 2 }).bindPopup('Ejemplo (no se cargaron los archivos)');
+                    ], { color: 'blue', fillColor: 'blue', fillOpacity: 0.3, weight: 2 }).bindPopup('⚠️ Ejemplo (no se cargaron los archivos)');
                     grupo.addLayer(ejemplo);
                     console.warn('⚠️ No se cargó ningún archivo de cordilleras; se añadió polígono de ejemplo.');
                 }
-            }, 2000);
+            }, 3000);
 
             return grupo;
         }
@@ -658,20 +647,22 @@
                 'anx/lla/LLSAMANA NORTE.geojson',
                 'anx/lla/LLSAMANA SUR.geojson',
                 'anx/lla/LLNAGUA.geojson',
-                'anx/lla/LLORIENTAL.geojson'  // AÑADIDO
+                'anx/lla/LLORIENTAL.geojson'   // Añadido según tu ejemplo
             ];
             var cargaExitosa = false;
 
             archivos.forEach(function(url) {
                 fetch(url)
                     .then(function(r) {
-                        if (!r.ok) throw new Error('HTTP ' + r.status + ' al cargar ' + url);
+                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
                         return r.json();
                     })
                     .then(function(data) {
-                        if (!data) throw new Error('Datos vacíos para ' + url);
+                        if (!data || !data.features || data.features.length === 0) {
+                            throw new Error('GeoJSON vacío o sin features: ' + url);
+                        }
+                        console.log('📦 Llanura cargada:', url, 'features:', data.features.length);
                         var capa = L.geoJSON(data, {
-                            coordsToLatLng: coordsToLatLng,
                             style: estiloLlanuras,
                             onEachFeature: function(feature, layer) {
                                 var nombre = feature.properties && (feature.properties.NOMBRE || feature.properties.name || feature.properties.Name || 'Llanura');
@@ -680,13 +671,12 @@
                         });
                         grupo.addLayer(capa);
                         cargaExitosa = true;
-                        console.log('✅ Llanura cargada:', url);
                     })
                     .catch(function(e) {
-                        console.warn('❌ Error cargando llanura:', url, e);
+                        console.warn('❌ Error cargando llanura:', url, e.message);
                         var errorMsg = '⚠️ No se pudo cargar: ' + url;
-                        L.marker([18.8, -70.2], {
-                            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background:orange;color:white;padding:2px 6px;border-radius:4px;">Error</div>', iconSize: [40,20] })
+                        L.marker([18.8, -70.2 + (archivos.indexOf(url) * 0.2)], {
+                            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background:orange;color:white;padding:2px 6px;border-radius:4px;font-size:10px;">Error</div>', iconSize: [40,20] })
                         }).addTo(grupo).bindPopup(errorMsg);
                     });
             });
@@ -698,17 +688,17 @@
                         [19.0, -70.5],
                         [19.0, -70.0],
                         [18.5, -70.0]
-                    ], { color: 'green', fillColor: 'green', fillOpacity: 0.2, weight: 2 }).bindPopup('Ejemplo (no se cargaron los archivos)');
+                    ], { color: 'green', fillColor: 'green', fillOpacity: 0.3, weight: 2 }).bindPopup('⚠️ Ejemplo (no se cargaron los archivos)');
                     grupo.addLayer(ejemplo);
                     console.warn('⚠️ No se cargó ningún archivo de llanuras; se añadió polígono de ejemplo.');
                 }
-            }, 2000);
+            }, 3000);
 
             return grupo;
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 7. INSTANCIAR CAPAS Y TOGGLES (botones)
+        // 7. INSTANCIAR CAPAS Y TOGGLES
         // ═══════════════════════════════════════════════════════════
         capaCordilleras = crearCapaCordilleras();
         capaLlanuras = crearCapaLlanuras();
@@ -717,7 +707,6 @@
         capaAlturasRD = crearCapaAlturas(alturasRD);
         capaAlturasHT = crearCapaAlturas(alturasHT);
 
-        // Funciones para los botones de relieve (toggle)
         window.toggleCordilleras = function(btn) {
             btn.classList.toggle('active');
             if (btn.classList.contains('active')) {
@@ -736,7 +725,6 @@
             }
         };
 
-        // Funciones para checkboxes (sin cambios)
         window.toggleComunidadesRD = function() {
             var chk = document.getElementById('chk-comunidades-rd');
             if (chk.checked) map.addLayer(capaComunidadesRD);
