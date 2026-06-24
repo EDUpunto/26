@@ -676,14 +676,15 @@
         // --- Cordilleras / Sierras (carga de GeoJSON) ---
         function crearCapaCordilleras() {
             var grupo = L.layerGroup();
+            // Todos los archivos ahora dentro de la carpeta anx/
             var archivos = [
-                'HAITISES.geojson',
+                'anx/HAITISES.geojson',
                 'anx/CORIENTAL.geojson',
                 'anx/CSEPTENTRIONAL.geojson',
                 'anx/SYAMASA.geojson',
                 'anx/SSAMANA.geojson',
                 'anx/SMARTINGARCIA.geojson',
-                'CMASSIFNORD_CENTRAL.geojson',
+                'anx/CMASSIFNORD_CENTRAL.geojson',
                 'anx/SLASELLE_BAHORUCO.geojson',
                 'anx/SMASSIFLAHOTTE.geojson',
                 'anx/SMATHEUX_NEIBA.geojson',
@@ -691,9 +692,7 @@
             ];
 
             archivos.forEach(function(url) {
-                // FIX: Codificar la URL para manejar espacios y caracteres especiales en GitHub Pages
-                var urlCodificada = encodeURI(url);
-                fetch(urlCodificada)
+                fetch(encodeURI(url))
                     .then(function(r) {
                         if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
                         return r.json();
@@ -730,13 +729,14 @@
         // --- Llanuras / Valles (carga de GeoJSON) ---
         function crearCapaLlanuras() {
             var grupo = L.layerGroup();
+            // Todos los archivos ahora dentro de la carpeta anx/
             var archivos = [
                 'anx/VBONAO.geojson',
                 'anx/VVILLAALT.geojson',
                 'anx/LLSAMANA NORTE.geojson',
                 'anx/LLSAMANA SUR.geojson',
                 'anx/LLNAGUA.geojson',
-                'LLORIENTAL.geojson',
+                'anx/LLORIENTAL.geojson',
                 'anx/LLAZUA.geojson',
                 'anx/LLBAJABONICO.geojson',
                 'anx/LLCABARETE.geojson',
@@ -754,9 +754,7 @@
             ];
 
             archivos.forEach(function(url) {
-                // FIX: Codificar la URL para manejar espacios y caracteres especiales en GitHub Pages
-                var urlCodificada = encodeURI(url);
-                fetch(urlCodificada)
+                fetch(encodeURI(url))
                     .then(function(r) {
                         if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
                         return r.json();
@@ -935,14 +933,13 @@
         // 10. CAPA DE FRONTERA (ACTIVA)
         // ═══════════════════════════════════════════════════════════
 
-        // Carga de la frontera RD-Haití (archivo FRONTERA RD_HAI.geojson)
+        // Carga de la frontera RD-Haití (archivo dentro de anx/)
         var capaFrontera = null;
         var fronteraCargada = false;
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            // FIX: Codificar la URL para manejar espacios en GitHub Pages
-            fetch(encodeURI('FRONTERA RD_HAI.geojson'))
+            fetch(encodeURI('anx/FRONTERA RD_HAI.geojson'))
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
@@ -992,4 +989,3 @@
     </script>
 </body>
 </html>
-
