@@ -124,6 +124,14 @@
         .btn-opcion:hover { background: #f8f9fa; border-color: #2980b9; color: #2980b9; }
         .btn-opcion.active { background: #2980b9; color: white; border-color: #2980b9; }
         
+        /* Separación de 4px entre botones de relieve */
+        .btn-relieve {
+            margin-bottom: 4px;
+        }
+        .btn-relieve:last-child {
+            margin-bottom: 0;
+        }
+
         .checkbox-opcion {
             display: flex; align-items: center; gap: 8px; padding: 3px 0;
             font-size: 12px; color: #333; cursor: pointer;
@@ -221,11 +229,11 @@
                 </div>
             </div>
 
-            <!-- Relieve: botones toggle -->
+            <!-- Relieve: botones toggle con separación de 4px -->
             <div class="grupo-control">
                 <h4>Relieve</h4>
-                <button id="btn-cordilleras" class="btn-opcion" onclick="toggleCordilleras(this)">⛰️ Cordilleras / Sierras</button>
-                <button id="btn-llanuras" class="btn-opcion" onclick="toggleLlanuras(this)">🌾 Llanuras / Valles</button>
+                <button id="btn-cordilleras" class="btn-opcion btn-relieve" onclick="toggleCordilleras(this)">⛰️ Cordilleras / Sierras</button>
+                <button id="btn-llanuras" class="btn-opcion btn-relieve" onclick="toggleLlanuras(this)">🌾 Llanuras / Valles</button>
             </div>
 
             <!-- Reiniciar -->
@@ -248,7 +256,7 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-alturas-ht" onchange="toggleAlturasHT()"> 📌 Alturas haitianas
                 </label>
-                <!-- NUEVO: Checkbox para la frontera, activado por defecto -->
+                <!-- Checkbox para la frontera, activado por defecto -->
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🌍 Frontera RD-Haití
                 </label>
@@ -850,15 +858,51 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 8. REINICIAR VISTA
+        // 8. REINICIAR VISTA (mejorado)
         // ═══════════════════════════════════════════════════════════
         window.reiniciarVista = function() {
+            // 1. Restablecer zoom al nivel inicial
             map.setView([19.03556466237287, -70.89432006796727], 8);
-            // Limpiar selección
+            
+            // 2. Limpiar selección de polígono
             if (capaSeleccionada) {
                 capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
                 capaSeleccionada = null;
             }
+
+            // 3. Apagar capa de cordilleras (si está activa)
+            var btnCordilleras = document.getElementById('btn-cordilleras');
+            if (btnCordilleras && btnCordilleras.classList.contains('active')) {
+                btnCordilleras.classList.remove('active');
+                map.removeLayer(capaCordilleras);
+            }
+
+            // 4. Apagar capa de llanuras (si está activa)
+            var btnLlanuras = document.getElementById('btn-llanuras');
+            if (btnLlanuras && btnLlanuras.classList.contains('active')) {
+                btnLlanuras.classList.remove('active');
+                map.removeLayer(capaLlanuras);
+            }
+
+            // 5. Desmarcar y apagar TODOS los checkboxes (excepto frontera)
+            var checkboxes = [
+                'chk-comunidades-rd',
+                'chk-comunidades-ht',
+                'chk-alturas-rd',
+                'chk-alturas-ht'
+            ];
+            checkboxes.forEach(function(id) {
+                var chk = document.getElementById(id);
+                if (chk) {
+                    chk.checked = false;
+                    // Disparar el evento onchange para que se actualice la capa
+                    var evt = new Event('change');
+                    chk.dispatchEvent(evt);
+                }
+            });
+
+            // NOTA: El checkbox de frontera (chk-frontera) se mantiene como está
+            // (por defecto checked) y su capa permanece visible.
         };
 
         // ═══════════════════════════════════════════════════════════
@@ -878,14 +922,11 @@
             }
         };
 
-// ***********************************************************
         // ═══════════════════════════════════════════════════════════
-        // 10. CAPA DE FRONTERA (comentada) y función toggle
+        // 10. CAPA DE FRONTERA (ACTIVA)
         // ═══════════════════════════════════════════════════════════
 
         // Carga de la frontera RD-Haití (archivo FRONTERA RD_HAI.geojson)
-        // Esta sección está comentada a propósito. Para habilitar la capa,
-        // descomenta el siguiente bloque y la función toggleFrontera().
         var capaFrontera = null;
         var fronteraCargada = false;
 
@@ -938,14 +979,6 @@
         if (document.getElementById('chk-frontera').checked) {
             cargarFrontera();
         }
-// ***********************************************************
-
-        // Función toggleFrontera vacía (porque el código está comentado)
-        // pero se mantiene para evitar errores si el checkbox llama a la función.
-        window.toggleFrontera = function() {
-            console.log('La capa de frontera está deshabilitada (código comentado).');
-            // Si se desea habilitar, descomentar el bloque anterior.
-        };
     </script>
 </body>
 </html>
