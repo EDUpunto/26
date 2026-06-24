@@ -203,8 +203,6 @@
             #panel-titulo p  { font-size: 12px; margin-top: 2px; }
 
             #panel-controles {
-                /* Se posiciona justo debajo del título.
-                   El título ocupa ~10px top + ~62px alto + 8px gap = 80px */
                 top: 80px;
                 right: 10px;
                 left: 10px;
@@ -599,7 +597,7 @@
                 { nombre: "Hinche", pob: "120,867", lat: 19.15, lng: -72.0167 },
                 { nombre: "Ouanaminthe", pob: "116,086", lat: 19.55, lng: -71.7333 },
                 { nombre: "Aquin", pob: "104,216", lat: 18.2833, lng: -73.4 },
-                { nombre: "Saint-Michel de l’Atalaye", pob: "95,216", lat: 19.3708, lng: -72.3347 },
+                { nombre: "Saint-Michel de l'Atalaye", pob: "95,216", lat: 19.3708, lng: -72.3347 },
                 { nombre: "Léogâne", pob: "90,000", lat: 18.5108, lng: -72.6339 },
                 { nombre: "Saint-Louis du Nord", pob: "69,592", lat: 19.9333, lng: -72.7167 },
                 { nombre: "Limbé", pob: "69,256", lat: 19.706, lng: -72.4034 },
@@ -608,7 +606,7 @@
                 { nombre: "Cabaret", pob: "62,063", lat: 18.7343, lng: -72.4159 },
                 { nombre: "Anse à Galets", pob: "52,662", lat: 18.8333, lng: -72.8667 },
                 { nombre: "Plaisance", pob: "50,367", lat: 19.6, lng: -72.4667 },
-                { nombre: "Anse d’Hainault", pob: "36,401", lat: 18.485, lng: -74.4517 },
+                { nombre: "Anse d'Hainault", pob: "36,401", lat: 18.485, lng: -74.4517 },
                 { nombre: "Saintard", pob: "32,906", lat: 18.824, lng: -72.55 },
                 { nombre: "Milot", pob: "31,992", lat: 19.6047, lng: -72.2186 },
                 { nombre: "Fort Liberté", pob: "30,110", lat: 19.7344, lng: -71.8397 }
@@ -693,7 +691,9 @@
             ];
 
             archivos.forEach(function(url) {
-                fetch(url)
+                // FIX: Codificar la URL para manejar espacios y caracteres especiales en GitHub Pages
+                var urlCodificada = encodeURI(url);
+                fetch(urlCodificada)
                     .then(function(r) {
                         if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
                         return r.json();
@@ -754,7 +754,9 @@
             ];
 
             archivos.forEach(function(url) {
-                fetch(url)
+                // FIX: Codificar la URL para manejar espacios y caracteres especiales en GitHub Pages
+                var urlCodificada = encodeURI(url);
+                fetch(urlCodificada)
                     .then(function(r) {
                         if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
                         return r.json();
@@ -939,7 +941,8 @@
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch('FRONTERA RD_HAI.geojson')
+            // FIX: Codificar la URL para manejar espacios en GitHub Pages
+            fetch(encodeURI('FRONTERA RD_HAI.geojson'))
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
@@ -989,3 +992,4 @@
     </script>
 </body>
 </html>
+
