@@ -78,7 +78,6 @@
         .checkbox-opcion { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 12px; color: #333; cursor: pointer; }
         .checkbox-opcion input { accent-color: #2980b9; width: 14px; height: 14px; cursor: pointer; }
 
-        /* Indicador de carga */
         #loader-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.4); z-index: 3000; display: none;
@@ -168,7 +167,6 @@
 
     <div id="map"></div>
 
-    <!-- Loader -->
     <div id="loader-overlay">
         <div id="loader-box">
             <h4 id="loader-title">Cargando...</h4>
@@ -178,13 +176,11 @@
         </div>
     </div>
 
-    <!-- Título -->
     <div id="panel-titulo" class="panel">
         <h1>🗺️ Relieve SD</h1>
         <p>Relieve u orografía de la isla de Santo Domingo</p>
     </div>
 
-    <!-- Controles -->
     <div id="panel-controles" class="panel">
         <div class="panel-header" onclick="togglePanel('panel-controles')">
             <span>⚙️ CONTROLES</span>
@@ -236,7 +232,6 @@
         </div>
     </div>
 
-    <!-- Modal Créditos -->
     <div id="modal-creditos" class="modal-overlay" onclick="cerrarModalCreditos(event)">
         <div class="modal-content">
             <h3><strong>I S F O D O S U</strong></h3>
@@ -282,16 +277,13 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 3. SISTEMA DE CARGA OPTIMIZADO (NUEVO)
+        // 3. SISTEMA DE CARGA OPTIMIZADO
         // ═══════════════════════════════════════════════════════════
-        
-        // Caché global para evitar recargas
         var cacheGeoJSON = {};
         
-        // Carga un archivo con caché y reintentos automáticos
-        function cargarGeoJSON(url, intentos = 3) {
+        function cargarGeoJSON(url, intentos) {
+            intentos = intentos || 3;
             if (cacheGeoJSON[url]) {
-                console.log('📦 Cache hit:', url);
                 return Promise.resolve(cacheGeoJSON[url]);
             }
             
@@ -306,7 +298,7 @@
                 })
                 .catch(function(error) {
                     if (intentos > 1) {
-                        console.warn(`⚠️ Reintentando ${url} (${intentos - 1} intentos restantes)...`);
+                        console.warn('Reintentando ' + url + ' (' + (intentos - 1) + ' intentos)...');
                         return new Promise(function(resolve) {
                             setTimeout(function() {
                                 resolve(cargarGeoJSON(url, intentos - 1));
@@ -317,34 +309,25 @@
                 });
         }
         
-        // Carga múltiples archivos en paralelo con barra de progreso
-        function cargarMultiplesGeoJSON(archivos, titulo, onProgreso) {
+        function cargarMultiplesGeoJSON(archivos, titulo) {
             var total = archivos.length;
             var completados = 0;
-            var resultados = new Array(total);
-            var errores = [];
             
             mostrarLoader(titulo, 'Iniciando carga de ' + total + ' archivos...');
             
-            // Carga paralela con Promise.allSettled para no fallar si uno falla
-            var promesas = archivos.map(function(url, index) {
+            var promesas = archivos.map(function(url) {
                 return cargarGeoJSON(url)
-                    .then(function(data) {
+                    .then(function() {
                         completados++;
-                        resultados[index] = data;
                         var porcentaje = Math.round((completados / total) * 100);
                         actualizarProgreso(porcentaje, completados + ' / ' + total + ' archivos');
-                        if (onProgreso) onProgreso(porcentaje, completados, total);
                     })
                     .catch(function(error) {
-                        errores.push({ url: url, error: error.message });
-                        console.warn('❌ Error en:', url, error.message);
+                        console.warn('Error en: ' + url, error.message);
                     });
             });
             
-            return Promise.all(promesas).then(function() {
-                return { resultados: resultados, errores: errores, total: total };
-            });
+            return Promise.all(promesas);
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -378,7 +361,6 @@
         var capaAlturasHT = null;
         var capaSeleccionada = null;
         
-        // Control de estado de carga (lazy loading)
         var estadoCarga = {
             cordilleras: { cargando: false, cargada: false },
             llanuras:    { cargando: false, cargada: false },
@@ -406,7 +388,60 @@
         var estiloSeleccion = { weight: 5, color: '#FF0000', fillOpacity: 0.6 };
 
         // ═══════════════════════════════════════════════════════════
-        // 7. DATOS DE ALTURAS
+        // 7. LISTA ÚNICA DE ARCHIVOS GEOJSON (con prefijo numérico)
+        //    Prefijo "1" = Montañas / Cordilleras
+        //    Prefijo "2" = Llanuras / Valles
+        // ═══════════════════════════════════════════════════════════
+        var TODOS_LOS_ARCHIVOS_RELIEVE = [
+            // --- MONTAÑAS (prefijo 1) ---
+            'anx/1_HAITISES.geojson',
+            'anx/1_CORIENTAL.geojson',
+            'anx/1_CSEPTENTRIONAL.geojson',
+            'anx/1_SYAMASA.geojson',
+            'anx/1_SSAMANA.geojson',
+            'anx/1_SMARTINGARCIA.geojson',
+            'anx/1_CMASSIFNORD_CENTRAL.geojson',
+            'anx/1_SLASELLE_BAHORUCO.geojson',
+            'anx/1_SMASSIFLAHOTTE.geojson',
+            'anx/1_SMATHEUX_NEIBA.geojson',
+            'anx/1_SMONTNOIRES.geojson',
+            // --- LLANURAS (prefijo 2) ---
+            'anx/2_VBONAO.geojson',
+            'anx/2_VVILLAALT.geojson',
+            'anx/2_LLSAMANA NORTE.geojson',
+            'anx/2_LLSAMANA SUR.geojson',
+            'anx/2_LLNAGUA.geojson',
+            'anx/2_LLORIENTAL.geojson',
+            'anx/2_LLAZUA.geojson',
+            'anx/2_LLBAJABONICO.geojson',
+            'anx/2_LLCABARETE.geojson',
+            'anx/2_LLELVALLE.geojson',
+            'anx/2_LLERMIANO.geojson',
+            'anx/2_LLGINA.geojson',
+            'anx/2_LLLUPERON.geojson',
+            'anx/2_LLMAIMON.geojson',
+            'anx/2_LLMICHES.geojson',
+            'anx/2_LLNISIBON.geojson',
+            'anx/2_LLOVIEDOPED.geojson',
+            'anx/2_LLPERAVIA.geojson',
+            'anx/2_LLPUERTOPLATA.geojson',
+            'anx/2_LLSABMAR.geojson'
+        ];
+
+        // ═══════════════════════════════════════════════════════════
+        // 8. FUNCIÓN PARA FILTRAR ARCHIVOS POR PREFIJO
+        // ═══════════════════════════════════════════════════════════
+        function filtrarArchivosPorPrefijo(prefijo) {
+            return TODOS_LOS_ARCHIVOS_RELIEVE.filter(function(url) {
+                // Extraer solo el nombre del archivo (sin la ruta)
+                var nombreArchivo = url.split('/').pop();
+                // Verificar si empieza con el prefijo seguido de guión bajo o directamente
+                return nombreArchivo.charAt(0) === String(prefijo);
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 9. DATOS DE ALTURAS
         // ═══════════════════════════════════════════════════════════
         var alturasRD = [
             { nombre: "Monte La Meseta", altura: "605 m", sierra: "Sierra de Samaná", lat: 19.312225, lng: -69.293875 },
@@ -479,7 +514,7 @@
         ];
 
         // ═══════════════════════════════════════════════════════════
-        // 8. FUNCIONES AUXILIARES DE CAPAS
+        // 10. FUNCIONES AUXILIARES DE CAPAS
         // ═══════════════════════════════════════════════════════════
         
         function agregarEventosPoligono(layer, estiloBase) {
@@ -508,10 +543,10 @@
             });
         }
 
-        // Función genérica para construir capa desde archivos GeoJSON
+        // Construir capa desde archivos ya en caché, filtrados por prefijo
         function construirCapaGeoJSON(archivos, estilo, tipoNombre) {
             var grupo = L.featureGroup();
-            archivos.forEach(function(url, index) {
+            archivos.forEach(function(url) {
                 var data = cacheGeoJSON[url];
                 if (!data || !data.features || data.features.length === 0) return;
                 
@@ -529,7 +564,7 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 9. COMUNIDADES Y ALTURAS
+        // 11. COMUNIDADES Y ALTURAS
         // ═══════════════════════════════════════════════════════════
         function crearCapaComunidadesRD() {
             var ciudadesRD = [
@@ -680,77 +715,62 @@
         capaAlturasHT = crearCapaAlturas(alturasHT);
 
         // ═══════════════════════════════════════════════════════════
-        // 10. CARGA LAZY DE CORDILLERAS Y LLANURAS (MEJORADO)
+        // 12. CARGA LAZY CON FILTRADO POR PREFIJO (NUEVA LÓGICA)
         // ═══════════════════════════════════════════════════════════
         
-        var ARCHIVOS_CORDILLERAS = [
-            'anx/HAITISES.geojson', 'anx/CORIENTAL.geojson', 'anx/CSEPTENTRIONAL.geojson',
-            'anx/SYAMASA.geojson', 'anx/SSAMANA.geojson', 'anx/SMARTINGARCIA.geojson',
-            'anx/CMASSIFNORD_CENTRAL.geojson', 'anx/SLASELLE_BAHORUCO.geojson',
-            'anx/SMASSIFLAHOTTE.geojson', 'anx/SMATHEUX_NEIBA.geojson', 'anx/SMONTNOIRES.geojson'
-        ];
-        
-        var ARCHIVOS_LLANURAS = [
-            'anx/VBONAO.geojson', 'anx/VVILLAALT.geojson', 'anx/LLSAMANA NORTE.geojson',
-            'anx/LLSAMANA SUR.geojson', 'anx/LLNAGUA.geojson', 'anx/LLORIENTAL.geojson',
-            'anx/LLAZUA.geojson', 'anx/LLBAJABONICO.geojson', 'anx/LLCABARETE.geojson',
-            'anx/LLELVALLE.geojson', 'anx/LLERMIANO.geojson', 'anx/LLGINA.geojson',
-            'anx/LLLUPERON.geojson', 'anx/LLMAIMON.geojson', 'anx/LLMICHES.geojson',
-            'anx/LLNISIBON.geojson', 'anx/LLOVIEDOPED.geojson', 'anx/LLPERAVIA.geojson',
-            'anx/LLPUERTOPLATA.geojson', 'anx/LLSABMAR.geojson'
-        ];
-
-        // Carga asíncrona con feedback visual
-        function cargarCapaAsync(archivos, estilo, tipoNombre, claveEstado, btn) {
+        function cargarCapaAsync(prefijo, estilo, tipoNombre, claveEstado, btn) {
             if (estadoCarga[claveEstado].cargada) {
-                // Ya está cargada, solo mostrar/ocultar
                 return Promise.resolve();
             }
             if (estadoCarga[claveEstado].cargando) {
-                // Ya se está cargando, esperar
                 return Promise.resolve();
             }
+            
+            // Filtrar archivos por prefijo (1 = montañas, 2 = llanuras)
+            var archivosFiltrados = filtrarArchivosPorPrefijo(prefijo);
+            
+            if (archivosFiltrados.length === 0) {
+                console.warn('No se encontraron archivos con prefijo ' + prefijo);
+                return Promise.resolve();
+            }
+            
+            console.log('Cargando ' + tipoNombre + ': ' + archivosFiltrados.length + ' archivos (prefijo ' + prefijo + ')');
             
             estadoCarga[claveEstado].cargando = true;
             btn.classList.add('cargando');
             btn.disabled = true;
             
-            return cargarMultiplesGeoJSON(archivos, 'Cargando ' + tipoNombre, function(pct) {
-                // Progreso en tiempo real
-            }).then(function(resultado) {
-                // Construir capa con los datos ya en caché
-                if (claveEstado === 'cordilleras') {
-                    capaCordilleras = construirCapaGeoJSON(archivos, estilo, tipoNombre);
-                } else if (claveEstado === 'llanuras') {
-                    capaLlanuras = construirCapaGeoJSON(archivos, estilo, tipoNombre);
-                }
-                
-                estadoCarga[claveEstado].cargada = true;
-                estadoCarga[claveEstado].cargando = false;
-                btn.classList.remove('cargando');
-                btn.disabled = false;
-                
-                // Reporte final
-                console.log('✅ ' + tipoNombre + ': ' + (resultado.total - resultado.errores.length) + '/' + resultado.total + ' archivos cargados');
-                if (resultado.errores.length > 0) {
-                    console.warn('⚠️ Errores:', resultado.errores);
-                }
-                
-                ocultarLoader();
-            }).catch(function(error) {
-                console.error('❌ Error crítico:', error);
-                estadoCarga[claveEstado].cargando = false;
-                btn.classList.remove('cargando');
-                btn.disabled = false;
-                ocultarLoader();
-            });
+            return cargarMultiplesGeoJSON(archivosFiltrados, 'Cargando ' + tipoNombre)
+                .then(function() {
+                    // Construir capa con los datos ya en caché
+                    if (claveEstado === 'cordilleras') {
+                        capaCordilleras = construirCapaGeoJSON(archivosFiltrados, estilo, tipoNombre);
+                    } else if (claveEstado === 'llanuras') {
+                        capaLlanuras = construirCapaGeoJSON(archivosFiltrados, estilo, tipoNombre);
+                    }
+                    
+                    estadoCarga[claveEstado].cargada = true;
+                    estadoCarga[claveEstado].cargando = false;
+                    btn.classList.remove('cargando');
+                    btn.disabled = false;
+                    
+                    console.log('✅ ' + tipoNombre + ' cargadas correctamente');
+                    ocultarLoader();
+                }).catch(function(error) {
+                    console.error('Error crítico:', error);
+                    estadoCarga[claveEstado].cargando = false;
+                    btn.classList.remove('cargando');
+                    btn.disabled = false;
+                    ocultarLoader();
+                });
         }
 
         window.toggleCordilleras = function(btn) {
             btn.classList.toggle('active');
             if (btn.classList.contains('active')) {
                 if (!estadoCarga.cordilleras.cargada) {
-                    cargarCapaAsync(ARCHIVOS_CORDILLERAS, estiloCordilleras, 'Cordilleras', 'cordilleras', btn)
+                    // Prefijo "1" = Montañas
+                    cargarCapaAsync('1', estiloCordilleras, 'Cordilleras', 'cordilleras', btn)
                         .then(function() {
                             if (capaCordilleras && btn.classList.contains('active')) {
                                 map.addLayer(capaCordilleras);
@@ -760,7 +780,7 @@
                     map.addLayer(capaCordilleras);
                 }
             } else {
-                map.removeLayer(capaCordilleras);
+                if (capaCordilleras) map.removeLayer(capaCordilleras);
                 if (capaSeleccionada && capaCordilleras && capaCordilleras.hasLayer(capaSeleccionada)) {
                     capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
                     capaSeleccionada = null;
@@ -772,7 +792,8 @@
             btn.classList.toggle('active');
             if (btn.classList.contains('active')) {
                 if (!estadoCarga.llanuras.cargada) {
-                    cargarCapaAsync(ARCHIVOS_LLANURAS, estiloLlanuras, 'Llanuras', 'llanuras', btn)
+                    // Prefijo "2" = Llanuras
+                    cargarCapaAsync('2', estiloLlanuras, 'Llanuras', 'llanuras', btn)
                         .then(function() {
                             if (capaLlanuras && btn.classList.contains('active')) {
                                 map.addLayer(capaLlanuras);
@@ -782,7 +803,7 @@
                     map.addLayer(capaLlanuras);
                 }
             } else {
-                map.removeLayer(capaLlanuras);
+                if (capaLlanuras) map.removeLayer(capaLlanuras);
                 if (capaSeleccionada && capaLlanuras && capaLlanuras.hasLayer(capaSeleccionada)) {
                     capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
                     capaSeleccionada = null;
@@ -812,7 +833,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 11. REINICIAR VISTA
+        // 13. REINICIAR VISTA
         // ═══════════════════════════════════════════════════════════
         window.reiniciarVista = function() {
             map.setView([19.03556466237287, -70.89432006796727], 8);
@@ -844,7 +865,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 12. UTILIDADES UI
+        // 14. UTILIDADES UI
         // ═══════════════════════════════════════════════════════════
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
@@ -873,7 +894,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 13. FRONTERA (con caché y lazy loading)
+        // 15. FRONTERA
         // ═══════════════════════════════════════════════════════════
         var capaFrontera = null;
 
@@ -881,7 +902,6 @@
             if (estadoCarga.frontera.cargada) return Promise.resolve();
             if (estadoCarga.frontera.cargando) return Promise.resolve();
             
-            estadoCrontera = estadoCarga.frontera;
             estadoCarga.frontera.cargando = true;
             
             return cargarGeoJSON('anx/FRONTERA RD_HAI.geojson')
@@ -895,13 +915,13 @@
                     });
                     estadoCarga.frontera.cargada = true;
                     estadoCarga.frontera.cargando = false;
-                    console.log('✅ Frontera cargada');
+                    console.log('Frontera cargada');
                     if (document.getElementById('chk-frontera').checked) {
                         map.addLayer(capaFrontera);
                     }
                 })
                 .catch(function(error) {
-                    console.warn('❌ Error cargando frontera:', error.message);
+                    console.warn('Error cargando frontera:', error.message);
                     estadoCarga.frontera.cargando = false;
                 });
         }
