@@ -327,6 +327,8 @@
         var capaComunidadesHT = null;
         var capaAlturasRD = null;
         var capaAlturasHT = null;
+        // Variable para controlar la capa seleccionada (polígono)
+        var capaSeleccionada = null;
 
         // Iconos
         var iconComunidad = L.divIcon({
@@ -334,14 +336,16 @@
             html: '<svg viewBox="0 0 24 24" width="24" height="24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F4B09F" stroke="#666666" stroke-width="2"/></svg>',
             iconSize: [24, 24], iconAnchor: [12, 12]
         });
+
+        // Icono de alturas actualizado: tamaño reducido 20% (16px), color #016FC1, borde blanco
         var iconAltura = L.divIcon({
             className: 'custom-div-icon',
-            html: "<div style='background-color:#e74c3c; width:20px; height:20px; clip-path:polygon(50% 0%, 0% 100%, 100% 100%); border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4);'></div>",
-            iconSize: [20, 20], iconAnchor: [10, 20]
+            html: "<div style='background-color:#016FC1; width:16px; height:16px; clip-path:polygon(50% 0%, 0% 100%, 100% 100%); border:2px solid #ffffff; box-shadow:0 2px 6px rgba(0,0,0,0.4);'></div>",
+            iconSize: [16, 16], iconAnchor: [8, 16]
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 4. ESTILOS PARA RELIEVE
+        // 4. ESTILOS PARA RELIEVE (con colores base)
         // ═══════════════════════════════════════════════════════════
         var estiloCordilleras = {
             color: "#8B4513",
@@ -354,6 +358,18 @@
             weight: 1.5,
             fillColor: "#90EE90",
             fillOpacity: 0.20
+        };
+
+        // Estilos de resaltado (hover y selección)
+        var estiloHover = {
+            weight: 4,
+            color: '#FFD700',
+            fillOpacity: 0.5
+        };
+        var estiloSeleccion = {
+            weight: 5,
+            color: '#FF0000',
+            fillOpacity: 0.6
         };
 
         // ═══════════════════════════════════════════════════════════
@@ -578,6 +594,48 @@
             return grupo;
         }
 
+        // --- Función auxiliar para agregar eventos a capas geoJSON ---
+        function agregarEventosPoligono(layer, estiloBase) {
+            // Guardamos el estilo original en una propiedad
+            layer.originalStyle = estiloBase;
+
+            // Evento mouseover: resaltar (si no está seleccionado)
+            layer.on('mouseover', function(e) {
+                var capa = e.target;
+                if (capaSeleccionada !== capa) {
+                    capa.setStyle(estiloHover);
+                    capa.bringToFront();
+                }
+            });
+
+            // Evento mouseout: restaurar si no está seleccionado
+            layer.on('mouseout', function(e) {
+                var capa = e.target;
+                if (capaSeleccionada !== capa) {
+                    capa.setStyle(capa.originalStyle);
+                }
+            });
+
+            // Evento click: seleccionar, hacer zoom, resaltar y abrir popup
+            layer.on('click', function(e) {
+                var capa = e.target;
+                // Restaurar la selección anterior
+                if (capaSeleccionada && capaSeleccionada !== capa) {
+                    capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
+                }
+                // Establecer nueva selección
+                capaSeleccionada = capa;
+                capa.setStyle(estiloSeleccion);
+                capa.bringToFront();
+                // Zoom al polígono
+                map.fitBounds(capa.getBounds());
+                // Abrir popup
+                if (capa.getPopup()) {
+                    capa.openPopup();
+                }
+            });
+        }
+
         // --- Cordilleras / Sierras (carga de GeoJSON) ---
         function crearCapaCordilleras() {
             var grupo = L.layerGroup();
@@ -593,7 +651,6 @@
                 'anx/mon/SMASSIFLAHOTTE.geojson',
                 'anx/mon/SMATHEUX_NEIBA.geojson',
                 'anx/mon/SMONTNOIRES.geojson'
-
             ];
             var cargaExitosa = false;
 
@@ -611,8 +668,12 @@
                         var capa = L.geoJSON(data, {
                             style: estiloCordilleras,
                             onEachFeature: function(feature, layer) {
-                                var nombre = feature.properties && (feature.properties.NOMBRE || feature.properties.name || feature.properties.Name || 'Cordillera');
-                                layer.bindPopup("<b>⛰️ " + nombre + "</b>");
+                                // Popup con NAME y NAME2
+                                var nombre = feature.properties.NAME || feature.properties.NOMBRE || feature.properties.name || 'Cordillera';
+                                var descripcion = feature.properties.NAME2 || feature.properties.DESCRIPCION || '';
+                                layer.bindPopup("<b>" + nombre + "</b><br>" + descripcion);
+                                // Agregar eventos de interacción
+                                agregarEventosPoligono(layer, estiloCordilleras);
                             }
                         });
                         grupo.addLayer(capa);
@@ -636,6 +697,8 @@
                         [19.5, -69.5],
                         [19.0, -69.5]
                     ], { color: 'blue', fillColor: 'blue', fillOpacity: 0.3, weight: 2 }).bindPopup('⚠️ Ejemplo (no se cargaron los archivos)');
+                    // Aplicar eventos al fallback
+                    agregarEventosPoligono(ejemplo, { color: 'blue', fillColor: 'blue', fillOpacity: 0.3, weight: 2 });
                     grupo.addLayer(ejemplo);
                     console.warn('⚠️ No se cargó ningún archivo de cordilleras; se añadió polígono de ejemplo.');
                 }
@@ -669,7 +732,6 @@
                 'anx/lla/LLPERAVIA.geojson',
                 'anx/lla/LLPUERTOPLATA.geojson',
                 'anx/lla/LLSABMAR.geojson'
-
             ];
             var cargaExitosa = false;
 
@@ -687,8 +749,10 @@
                         var capa = L.geoJSON(data, {
                             style: estiloLlanuras,
                             onEachFeature: function(feature, layer) {
-                                var nombre = feature.properties && (feature.properties.NOMBRE || feature.properties.name || feature.properties.Name || 'Llanura');
-                                layer.bindPopup("<b>🌾 " + nombre + "</b>");
+                                var nombre = feature.properties.NAME || feature.properties.NOMBRE || feature.properties.name || 'Llanura';
+                                var descripcion = feature.properties.NAME2 || feature.properties.DESCRIPCION || '';
+                                layer.bindPopup("<b>" + nombre + "</b><br>" + descripcion);
+                                agregarEventosPoligono(layer, estiloLlanuras);
                             }
                         });
                         grupo.addLayer(capa);
@@ -711,6 +775,7 @@
                         [19.0, -70.0],
                         [18.5, -70.0]
                     ], { color: 'green', fillColor: 'green', fillOpacity: 0.3, weight: 2 }).bindPopup('⚠️ Ejemplo (no se cargaron los archivos)');
+                    agregarEventosPoligono(ejemplo, { color: 'green', fillColor: 'green', fillOpacity: 0.3, weight: 2 });
                     grupo.addLayer(ejemplo);
                     console.warn('⚠️ No se cargó ningún archivo de llanuras; se añadió polígono de ejemplo.');
                 }
@@ -735,6 +800,11 @@
                 map.addLayer(capaCordilleras);
             } else {
                 map.removeLayer(capaCordilleras);
+                // Si hay una selección de esta capa, limpiarla
+                if (capaSeleccionada && capaCordilleras.hasLayer(capaSeleccionada)) {
+                    capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
+                    capaSeleccionada = null;
+                }
             }
         };
 
@@ -744,6 +814,10 @@
                 map.addLayer(capaLlanuras);
             } else {
                 map.removeLayer(capaLlanuras);
+                if (capaSeleccionada && capaLlanuras.hasLayer(capaSeleccionada)) {
+                    capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
+                    capaSeleccionada = null;
+                }
             }
         };
 
@@ -776,6 +850,11 @@
         // ═══════════════════════════════════════════════════════════
         window.reiniciarVista = function() {
             map.setView([19.03556466237287, -70.89432006796727], 8);
+            // Limpiar selección
+            if (capaSeleccionada) {
+                capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
+                capaSeleccionada = null;
+            }
         };
 
         // ═══════════════════════════════════════════════════════════
@@ -794,6 +873,38 @@
                 document.getElementById('modal-creditos').classList.remove('active');
             }
         };
+
+        // ═══════════════════════════════════════════════════════════
+        // 10. CAPA DE FRONTERA (comentada)
+        // ═══════════════════════════════════════════════════════════
+        /*
+        // Carga de la frontera RD-Haití (archivo FRONTERA RD_HAI.geojson)
+        var capaFrontera = null;
+        fetch('FRONTERA RD_HAI.geojson')
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function(data) {
+                capaFrontera = L.geoJSON(data, {
+                    style: {
+                        color: '#FF0000',
+                        weight: 3,
+                        fill: false
+                    },
+                    onEachFeature: function(feature, layer) {
+                        // Popup opcional
+                        var nombre = feature.properties.NAME || 'Frontera';
+                        layer.bindPopup("<b>" + nombre + "</b>");
+                    }
+                });
+                // Puedes agregar la capa al mapa con: map.addLayer(capaFrontera);
+                console.log('Frontera cargada correctamente.');
+            })
+            .catch(function(error) {
+                console.warn('Error cargando frontera:', error.message);
+            });
+        */
     </script>
 </body>
 </html>
