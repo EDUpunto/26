@@ -349,10 +349,10 @@
             iconSize: [24, 24], iconAnchor: [12, 12]
         });
 
-        // Icono de alturas: tamaño reducido 20% (16px), color #016FC1, borde #333333
+        // Icono de alturas: tamaño reducido 20% (16px), color #FFFFFF, borde #333333
         var iconAltura = L.divIcon({
             className: 'custom-div-icon',
-            html: "<div style='background-color:#016FC1; width:16px; height:16px; clip-path:polygon(50% 0%, 0% 100%, 100% 100%); border:2px solid #333333; box-shadow:0 2px 6px rgba(0,0,0,0.4);'></div>",
+            html: "<div style='background-color:#FFFFFF; width:16px; height:16px; clip-path:polygon(50% 0%, 0% 100%, 100% 100%); border:2px solid #333333; box-shadow:0 2px 6px rgba(0,0,0,0.4);'></div>",
             iconSize: [16, 16], iconAnchor: [8, 16]
         });
 
@@ -679,6 +679,9 @@
                         console.log('📦 Cordillera cargada:', url, 'features:', data.features.length);
                         var capa = L.geoJSON(data, {
                             style: estiloCordilleras,
+                            coordsToLatLng: function(coords) {
+                                return L.latLng(coords[1], coords[0]);
+                            },
                             onEachFeature: function(feature, layer) {
                                 // Popup con NAME y NAME2
                                 var nombre = feature.properties.NAME || feature.properties.NOMBRE || feature.properties.name || 'Cordillera';
@@ -760,6 +763,9 @@
                         console.log('📦 Llanura cargada:', url, 'features:', data.features.length);
                         var capa = L.geoJSON(data, {
                             style: estiloLlanuras,
+                            coordsToLatLng: function(coords) {
+                                return L.latLng(coords[1], coords[0]);
+                            },
                             onEachFeature: function(feature, layer) {
                                 var nombre = feature.properties.NAME || feature.properties.NOMBRE || feature.properties.name || 'Llanura';
                                 var descripcion = feature.properties.NAME2 || feature.properties.DESCRIPCION || '';
