@@ -62,13 +62,6 @@
             color: #0b3b4f;
         }
 
-/*        .map-title p {
-            margin: 4px 0 0;
-            font-size: 0.75rem;
-            opacity: 0.75;
-            color: #2c3e44;
-        } */
-        
         /* === PANEL DE CONTROL EXPANDIBLE (ESQUINA SUPERIOR DERECHA) === */
         .controls-panel {
             position: absolute;
@@ -87,7 +80,6 @@
             pointer-events: auto;
         }
 
-        /* summary estilo premium */
         .controls-panel details summary {
             font-weight: 700;
             font-size: 0.9rem;
@@ -113,14 +105,12 @@
             display: none;
         }
 
-        /* contenido interior */
         .panel-content {
             margin-top: 14px;
             border-top: 1px solid #e2e8f0;
             padding-top: 14px;
         }
 
-        /* Lista de checkboxes */
         .check-group {
             display: flex;
             flex-direction: column;
@@ -163,9 +153,8 @@
             height: 14px;
             transform: rotate(45deg);
             flex-shrink: 0;
-            border: 1px solid #666666; /* borde icono */
+            border: 1px solid #666666;
         }
-        /* símbolo estrella para ciudades (más visible) */
         .symbol-star {
             width: 22px;
             height: 22px;
@@ -175,12 +164,19 @@
             justify-content: center;
             font-size: 20px;
             line-height: 1;
-            color: #D35400;  /* naranja oscuro para mejor contraste */
+            color: #D35400;
             text-shadow: 0 1px 3px rgba(0,0,0,0.3);
             font-weight: bold;
         }
+        /* Símbolo para la frontera: línea roja */
+        .symbol-line {
+            width: 20px;
+            height: 4px;
+            background: #FF0000;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
 
-        /* Botón reinicio */
         .btn-reset {
             background-color: #4AC58A;
             color: white;
@@ -200,7 +196,6 @@
             transform: translateY(-1px);
         }
 
-        /* Sub-grid 2x2 (solo dos botones, el resto textos) */
         .sub-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -297,7 +292,6 @@
         }
 
         /* ========== ESQUINA INFERIOR DERECHA: ZOOM, ESCALA, CRÉDITOS ========== */
-        /* Contenedor personalizado para la pila vertical */
         .bottom-right-stack {
             position: absolute;
             bottom: 20px;
@@ -309,11 +303,9 @@
             gap: 8px;
             pointer-events: none;
         }
-        /* Cada elemento de la pila permite interacción */
         .stack-item {
             pointer-events: auto;
         }
-        /* Zoom: reposicionamos el control nativo de leaflet dentro de este stack */
         .leaflet-control-zoom {
             position: relative !important;
             bottom: auto !important;
@@ -334,7 +326,6 @@
             line-height: 36px !important;
             font-weight: bold;
         }
-        /* Escala */
         .leaflet-control-scale {
             background: rgba(255,255,255,0.9) !important;
             padding: 4px 8px;
@@ -348,7 +339,6 @@
             color: #1e293b !important;
             border-color: #334155 !important;
         }
-        /* Atribución (créditos Leaflet) pegada al borde inferior */
         .leaflet-control-attribution {
             background: rgba(255,255,255,0.85) !important;
             padding: 5px 12px !important;
@@ -360,21 +350,10 @@
             box-shadow: 0 1px 4px rgba(0,0,0,0.05);
             border: 1px solid rgba(0,0,0,0.05);
         }
-        /* Ocultamos el zoom nativo de leaflet de su posición original */
-        .leaflet-control-zoom {
-            position: relative;
-        }
-        /* Ajuste para que los controles de leaflet se integren bien */
         .leaflet-bottom.leaflet-right {
-            display: none !important;  /* Escondemos el contenedor original para usar nuestro stack personalizado */
-        }
-        /* Pero la atribución original también la moveremos */
-        /* Aseguramos que la escala no flote mal */
-        .leaflet-control-container .leaflet-bottom.leaflet-right {
-            display: none;
+            display: none !important;
         }
 
-        /* Popups fondo claro */
         .leaflet-popup-content-wrapper {
             background: white;
             border-radius: 16px;
@@ -385,7 +364,6 @@
             color: #1e2a36;
         }
 
-        /* Responsive */
         @media (max-width: 720px) {
             .controls-panel {
                 top: 10px;
@@ -435,6 +413,7 @@
             <summary>⚙️ CONTROLES</summary>
             <div class="panel-content">
                 <div class="check-group">
+                    <!-- Capas existentes -->
                     <label class="check-item"><input type="checkbox" id="chkAccRD" checked> <span class="legend-symbol" style="background:#8E44AD;"></span> Accidentes costeros RD</label>
                     <label class="check-item"><input type="checkbox" id="chkAccHT" checked> <span class="legend-symbol" style="background:#8E44AD;"></span> Accidentes costeros HAITÍ</label>
                     <label class="check-item"><input type="checkbox" id="chkRiosRD" checked> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos RD</label>
@@ -444,15 +423,17 @@
                     <label class="check-item"><input type="checkbox" id="chkArmada" checked> <span class="symbol-rombo" style="background:#666666;"></span> Armada (Base naval)</label>
                     <label class="check-item"><input type="checkbox" id="chkCarga" checked> <span class="symbol-rombo" style="background:#5ABBF5; border:1px solid #7F8C8D;"></span> Carga / Combustibles</label>
                     <label class="check-item"><input type="checkbox" id="chkFondeadero" checked> <span class="symbol-rombo" style="background:#F39C12;"></span> Fondeaderos</label>
-                    <!-- Nuevas ciudades (desactivadas por defecto) -->
                     <label class="check-item"><input type="checkbox" id="chkCiudadesRD"> <span class="symbol-star">★</span> Comunidades dominicanas</label>
                     <label class="check-item"><input type="checkbox" id="chkCiudadesHT"> <span class="symbol-star">★</span> Comunidades haitianas</label>
+                    
+                    <!-- NUEVO: checkbox para la frontera RD-Haití (marcado por defecto) -->
+                    <label class="check-item"><input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> <span class="symbol-line"></span> Frontera RD-Haití</label>
                 </div>
 
-                <!-- Botón REINICIAR -->
+                <!-- Botón REINICIAR (modificado) -->
                 <button id="resetMapBtn" class="btn-reset">⟳ REINICIAR</button>
 
-                <!-- Sub-bloque 2x2: solo dos botones activos (Vista Dibujo, Vista Satélite), el resto texto con links -->
+                <!-- Sub-bloque 2x2 -->
                 <div class="sub-grid">
                     <div id="vistaDibujoBtn" class="grid-item vista-btn active">🗺️ Vista Dibujo</div>
                     <div id="vistaSateliteBtn" class="grid-item vista-btn">🛰️ Vista Satélite</div>
@@ -473,7 +454,7 @@
         </div>
     </div>
 
-    <!-- Contenedor personalizado para la esquina inferior derecha: Zoom, Escala, Créditos Leaflet -->
+    <!-- Contenedor personalizado para la esquina inferior derecha -->
     <div class="bottom-right-stack" id="bottomRightStack">
         <div class="stack-item" id="zoomContainer"></div>
         <div class="stack-item" id="scaleContainer"></div>
@@ -495,23 +476,19 @@
     let capaBaseActual = capaCalles;
     capaCalles.addTo(map);
 
-    // === CONTROLES PERSONALIZADOS UBICADOS EN STACK ===
-    // 1. Zoom: lo creamos y lo movemos al contenedor zoomContainer
+    // === CONTROLES PERSONALIZADOS ===
     const zoomControl = L.control.zoom({ position: 'bottomright' });
     zoomControl.addTo(map);
-    // Reposicionar el elemento DOM del zoom dentro de nuestro stack
     const moveZoomToStack = () => {
         const zoomElement = document.querySelector('.leaflet-control-zoom');
         const zoomContainer = document.getElementById('zoomContainer');
         if (zoomElement && zoomContainer && !zoomContainer.contains(zoomElement)) {
             zoomContainer.appendChild(zoomElement);
-            // Ajustar estilos inline si es necesario
             zoomElement.style.position = 'relative';
             zoomElement.style.margin = '0';
         }
     };
     
-    // 2. Escala: crear y mover
     const scaleControl = L.control.scale({ imperial: false, metric: true, position: 'bottomright' });
     scaleControl.addTo(map);
     const moveScaleToStack = () => {
@@ -523,7 +500,6 @@
         }
     };
     
-    // 3. Atribución: mover al contenedor inferior (créditos Leaflet y mapa)
     const moveAttributionToStack = () => {
         const attributionElement = document.querySelector('.leaflet-control-attribution');
         const attrContainer = document.getElementById('attributionContainer');
@@ -536,7 +512,6 @@
         }
     };
     
-    // Ejecutar después de carga y también cuando se agreguen dinámicamente
     window.addEventListener('load', () => {
         setTimeout(() => {
             moveZoomToStack();
@@ -544,7 +519,6 @@
             moveAttributionToStack();
         }, 100);
     });
-    // Observar cambios por si Leaflet regenera elementos
     const observer = new MutationObserver(() => {
         moveZoomToStack();
         moveScaleToStack();
@@ -552,7 +526,7 @@
     });
     observer.observe(document.body, { childList: true, subtree: true });
     
-    // ========== DATOS ORIGINALES (COMPLETOS) ==========
+    // ========== DATOS ORIGINALES ==========
     const puntos = [
 { lat: 18.401415971261315, lng: -69.63189544985755, titulo: "Cabo Caucedo", comentario: "Lugar del puerto principal de la RD.  Amplio movimiento de entrada y salida de contenedores.<br>18.40141, -69.63189" },
 { lat: 19.898697175303738, lng: -71.65371073936308, titulo: "Cabo del Morro", comentario: "Acantilado y vista al océano Atlántico.<br>19.89869, -71.65371" },
@@ -880,7 +854,8 @@ const rios = [
             { nombre: "Anse d’Hainault", pob: "36,401", lat: 18.485, lng: -74.4517 },
             { nombre: "Saintard", pob: "32,906", lat: 18.824, lng: -72.55 },
             { nombre: "Milot", pob: "31,992", lat: 19.6047, lng: -72.2186 },
-            { nombre: "Fort Liberté", pob: "30,110", lat: 19.7344, lng: -71.8397 }
+            // CORRECCIÓN: Fort Liberté (coordenada ajustada)
+            { nombre: "Fort Liberté", pob: "30,110", lat: 19.6647, lng: -71.8386 }
         ];
         // Fin COMUNIDADES
 
@@ -896,7 +871,6 @@ const rios = [
     const layerPuertosArmada = L.layerGroup().addTo(map);
     const layerPuertosCarga = L.layerGroup().addTo(map);
     const layerPuertosFondeaderos = L.layerGroup().addTo(map);
-    // Nuevas capas para ciudades (no añadidas al mapa por defecto)
     const layerCiudadesRD = L.layerGroup();
     const layerCiudadesHT = L.layerGroup();
 
@@ -908,7 +882,6 @@ const rios = [
         return ["Río Artibonito","Río Mapou","Río Grande del norte","Río Momance","Río Ravine"].includes(nombre);
     }
 
-    // Iconos actualizados con nuevos colores
     function crearApuntadorSVG(colorHex) {
         return L.divIcon({ className: 'custom-svg-marker', html: `<svg width="20" height="30" viewBox="0 0 24 30" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.35));"><path d="M12 0C5.37 0 0 5.37 0 12c0 8.25 10.5 16.5 11.13 17.13a1.23 1.23 0 0 0 1.74 0C13.5 28.5 24 20.25 24 12c0-6.63-5.37-12-12-12zm0 16.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z" fill="${colorHex}"/><circle cx="12" cy="12" r="4.5" fill="#FFFFFF"/></svg>`, iconSize: [26, 36], iconAnchor: [13, 36], popupAnchor: [0, -32] });
     }
@@ -928,38 +901,35 @@ const rios = [
         const esH = esRioHaiti(rio.nombre);
         const colorRío = esH ? '#00BFFF' : '#00BFFF';
         const capaDestino = esH ? layerRiosHAITI : layerRiosRD;
-        // Borde oscuro (color #666666) y grosor 2
         const circulo = L.circleMarker(rio.coordenadas, { 
             radius: calcularRadioRios(map.getZoom()), 
-            color: '#666666',           // Borde oscuro
+            color: '#666666',
             fillColor: colorRío, 
             fillOpacity: 0.85, 
-            weight: 2                   // Línea más gruesa para mejor visibilidad
+            weight: 2
         })
             .bindPopup(`<div><strong>🌊 ${rio.nombre}</strong><br>${rio.comentario}</div>`).addTo(capaDestino);
         listaCirculosRios.push({ marker: circulo });
     });
     map.on('zoomend', () => { let nr = calcularRadioRios(map.getZoom()); listaCirculosRios.forEach(i => i.marker.setRadius(nr)); });
 
-    // Iconos para puertos con colores mejorados
     function crearIconoRombo(colorHex, bordeColor = '#5ABBF5') {
         return L.divIcon({ className: 'custom-rombo-marker', html: `<div style="width: 14px; height: 14px; background-color: ${colorHex}; transform: rotate(45deg); border: 1px solid ${bordeColor}; box-shadow: 0 1px 3px rgba(0,0,0,0.3);"></div>`, iconSize: [14, 14], iconAnchor: [7, 7], popupAnchor: [0, -10] });
     }
 
-    // NUEVOS MAPAS DE COLOR Y BORDE PARA PUERTOS
     const colorMap = {
-        turístico: "#3964FE",   // Color para turísticos
+        turístico: "#3964FE",
         marina:    "#FFFFFF",
         armada:    "#666666",
-        carga:     "#5ABBF5",   // ← NUEVO COLOR PARA CARGA
+        carga:     "#5ABBF5",
         fondeadero:"#F39C12"
     };
     const bordeMap = {
         turístico: "#666666",
         marina:    "#666666",
-        armada:    "#FFFFFF",   // se mantiene el borde claro para Armada
+        armada:    "#FFFFFF",
         carga:     "#666666",
-        fondeadero:"#666666"    // se mantiene el borde claro para Fondeadero
+        fondeadero:"#666666"
     };
 
     puertosData.forEach(p => {
@@ -977,17 +947,15 @@ const rios = [
         else if (p.tipo === "fondeadero") marker.addTo(layerPuertosFondeaderos);
     });
 
-    // ========== NUEVO: MARCADOR ESTRELLA PARA CIUDADES (tamaño y contraste mejorados) ==========
     function crearIconoEstrella(colorHex = '#F4B09F') {
-        // SVG más grande y con borde oscuro grueso para visibilidad
         const svg = `<svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.5));">
             <path d="M12 2L15 9L22 9L17 14L19 21L12 17L5 21L7 14L2 9L9 9Z" fill="${colorHex}" stroke="#333333" stroke-width="1.2"/>
         </svg>`;
         return L.divIcon({
             className: 'custom-star-marker',
             html: svg,
-            iconSize: [30, 30],     // ← Ancho y alto del icono en píxeles
-            iconAnchor: [18, 18],    // ← Punto de anclaje (centro)z
+            iconSize: [30, 30],
+            iconAnchor: [18, 18],
             popupAnchor: [0, -20]
         });
     }
@@ -1013,8 +981,6 @@ const rios = [
     document.getElementById('chkArmada').addEventListener('change', e => e.target.checked ? map.addLayer(layerPuertosArmada) : map.removeLayer(layerPuertosArmada));
     document.getElementById('chkCarga').addEventListener('change', e => e.target.checked ? map.addLayer(layerPuertosCarga) : map.removeLayer(layerPuertosCarga));
     document.getElementById('chkFondeadero').addEventListener('change', e => e.target.checked ? map.addLayer(layerPuertosFondeaderos) : map.removeLayer(layerPuertosFondeaderos));
-
-    // Nuevos controles para ciudades (desactivados por defecto)
     document.getElementById('chkCiudadesRD').addEventListener('change', e => e.target.checked ? map.addLayer(layerCiudadesRD) : map.removeLayer(layerCiudadesRD));
     document.getElementById('chkCiudadesHT').addEventListener('change', e => e.target.checked ? map.addLayer(layerCiudadesHT) : map.removeLayer(layerCiudadesHT));
 
@@ -1033,8 +999,83 @@ const rios = [
     }
     document.getElementById('vistaDibujoBtn').addEventListener('click', () => cambiarVista('calles'));
     document.getElementById('vistaSateliteBtn').addEventListener('click', () => cambiarVista('satelite'));
-    document.getElementById('resetMapBtn').addEventListener('click', () => { map.setView(initialCenter, initialZoom); });
-    
+
+    // ========== NUEVO COMPORTAMIENTO DEL BOTÓN REINICIAR ==========
+    document.getElementById('resetMapBtn').addEventListener('click', function() {
+        // 1. Restablecer vista
+        map.setView(initialCenter, initialZoom);
+
+        // 2. Obtener todos los checkboxes del grupo (excluyendo el de frontera)
+        const checkboxes = document.querySelectorAll('.check-group input[type="checkbox"]');
+        checkboxes.forEach(chk => {
+            if (chk.id !== 'chk-frontera') {
+                if (chk.checked) {
+                    chk.checked = false;
+                    chk.dispatchEvent(new Event('change'));
+                }
+            } else {
+                if (!chk.checked) {
+                    chk.checked = true;
+                    chk.dispatchEvent(new Event('change'));
+                }
+            }
+        });
+    });
+
+    // ========== CAPA DE FRONTERA RD-HAITÍ ==========
+    var capaFrontera = null;
+    var fronteraCargada = false;
+
+    function cargarFrontera() {
+        if (fronteraCargada) return;
+        fetch('FRONTERA RD_HAI.geojson')
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function(data) {
+                capaFrontera = L.geoJSON(data, {
+                    style: {
+                        color: '#FF0000',
+                        weight: 3,
+                        fill: false
+                    },
+                    onEachFeature: function(feature, layer) {
+                        var nombre = feature.properties.NAME || 'Frontera';
+                        layer.bindPopup("<b>" + nombre + "</b>");
+                    }
+                });
+                fronteraCargada = true;
+                if (document.getElementById('chk-frontera').checked) {
+                    map.addLayer(capaFrontera);
+                }
+                console.log('Frontera cargada correctamente.');
+            })
+            .catch(function(error) {
+                console.warn('Error cargando frontera:', error.message);
+            });
+    }
+
+    window.toggleFrontera = function() {
+        var chk = document.getElementById('chk-frontera');
+        if (chk.checked) {
+            if (!fronteraCargada) {
+                cargarFrontera();
+            } else if (capaFrontera) {
+                map.addLayer(capaFrontera);
+            }
+        } else {
+            if (capaFrontera) {
+                map.removeLayer(capaFrontera);
+            }
+        }
+    };
+
+    if (document.getElementById('chk-frontera').checked) {
+        cargarFrontera();
+    }
+
+    // === Créditos (modal) ===
     const modal = document.getElementById('modalCredit');
     document.getElementById('creditosBtn').addEventListener('click', () => modal.classList.add('open'));
     document.getElementById('closeModalBtn').addEventListener('click', () => modal.classList.remove('open'));
