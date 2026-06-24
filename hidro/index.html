@@ -34,7 +34,6 @@
             color: #1a5276;
             font-weight: 700;
             letter-spacing: 0.5px;
-/*            text-transform: uppercase; */
             line-height: 1.1;
         }
         #panel-titulo h2 {
@@ -250,14 +249,16 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-lagos" onchange="toggleLagos()"> 🔵 Lagos / Lagunas
                 </label>
-                <!-- NUEVO: Controles para comunidades -->
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-comunidades-rd" onchange="toggleComunidadesRD()"> ⭐ Comunidades dominicanas
                 </label>
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-comunidades-ht" onchange="toggleComunidadesHT()"> ⭐ Comunidades haitianas
                 </label>
-                <!-- Fin NUEVO -->
+                <!-- NUEVA: Frontera RD-Haití (activada por defecto) -->
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🔴 Frontera RD‑Haití
+                </label>
             </div>
 
             <!-- Enlaces discretos -->
@@ -270,11 +271,9 @@
         </div>
     </div>
 
-
- 
-   <div id="modal-creditos" class="modal-overlay" onclick="cerrarModalCreditos(event)">
+    <!-- Modal Créditos -->
+    <div id="modal-creditos" class="modal-overlay" onclick="cerrarModalCreditos(event)">
         <div class="modal-content">
-<!--            <h3>Créditos</h3>  -->
             <h3><strong>I S F O D O S U</strong></h3>
             <p>DIGICON</p>
             <p><strong>HIDROGRAFÍA DE LA ISLA DE<br>SANTO DOMINGO</strong></p>
@@ -284,8 +283,6 @@
             <button class="btn-cerrar-modal" onclick="cerrarModalCreditos()">Cerrar</button>
         </div>
     </div>
-
-
 
     <script>
         // ═══════════════════════════════════════════════════════════
@@ -336,7 +333,7 @@
         var capaLagos = null;
 
         // ═══════════════════════════════════════════════════════════
-        // 4. ESTILOS E ICONOS
+        // 4. ESTILOS E ICONOS (con tamaños reducidos al 30%)
         // ═══════════════════════════════════════════════════════════
         // Estilos para República Dominicana
         var estiloCuencaNormal = { color: "#27ae60", weight: 1.5, fillColor: "#2ecc71", fillOpacity: 0.18, opacity: 0.8 };
@@ -350,31 +347,30 @@
         var estiloCauceHaiti = { color: "#2980b9", weight: 3, opacity: 0.85, lineCap: 'round' };
         var estiloCauceHaitiOculta = { color: "#2980b9", weight: 1.5, opacity: 0.12, lineCap: 'round' };
 
-        // Estilos comunes para destacado y hover (se usan igual para ambos países)
         var estiloCuencaDestacada = { color: "#f39c12", weight: 2.5, fillColor: "#f1c40f", fillOpacity: 0.35, opacity: 1 };
         var estiloCuencaHover = { color: "#f1c40f", weight: 2.5, fillColor: "#f39c12", fillOpacity: 0.4, opacity: 1 };
         var estiloCauceDestacado = { color: "#3498db", weight: 4.5, opacity: 1, lineCap: 'round' };
         var estiloCauceHover = { color: "#2980b9", weight: 5, opacity: 1, lineCap: 'round' };
 
+        // ICONOS REDUCIDOS en un 30% (de 24px a 17px)
         var iconPresa = L.divIcon({
             className: 'custom-div-icon',
-            html: "<div style='background-color:#e74c3c; width:24px; height:24px; border-radius:50%; border:2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; font-size:12px;'>🛑</div>",
-            iconSize: [24, 24], iconAnchor: [12, 12]
+            html: "<div style='background-color:#e74c3c; width:17px; height:17px; border-radius:50%; border:2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; font-size:10px;'>🛑</div>",
+            iconSize: [17, 17], iconAnchor: [8.5, 8.5]
         });
         var iconLago = L.divIcon({
             className: 'custom-div-icon',
-            html: "<div style='background-color:#3498db; width:24px; height:24px; border-radius:50%; border:2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; font-size:12px;'>💧</div>",
-            iconSize: [24, 24], iconAnchor: [12, 12]
+            html: "<div style='background-color:#3498db; width:17px; height:17px; border-radius:50%; border:2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; font-size:10px;'>💧</div>",
+            iconSize: [17, 17], iconAnchor: [8.5, 8.5]
         });
 
-        // NUEVO: Icono de estrella para comunidades
+        // Icono de comunidad (sin cambios)
         var iconComunidad = L.divIcon({
             className: 'custom-div-icon',
-            html: '<svg viewBox="0 0 24 24" width="24" height="24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F4B09F" stroke="#666666" stroke-width="2"/></svg>',
-            iconSize: [24, 24],
-            iconAnchor: [12, 12]
+            html: '<svg viewBox="0 0 24 24" width="20" height="20"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F4B09F" stroke="#666666" stroke-width="2"/></svg>',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
         });
-        // Fin NUEVO
 
         // ═══════════════════════════════════════════════════════════
         // 5. DATOS DE PRESAS Y LAGOS (sin cambios)
@@ -510,7 +506,6 @@
             { nombre: "Sosúa", pob: "N.D.", lat: 19.76854896819534, lng: -70.51180369664951 },
             { nombre: "Sánchez", pob: "N.D.", lat: 19.22984237021509, lng: -69.61310686836826 },
             { nombre: "Boca de Yuma", pob: "N.D.", lat: 18.37903401546551, lng: -68.60861561213028 },
-//            { nombre: "Pendiente", pob: "N.D.", lat: 1 , lng: -7  },
             { nombre: "Monte Cristi", pob: "27,067", lat: 19.84555582940316, lng: -71.64300426707139 }
         ];
 
@@ -550,10 +545,9 @@
             { nombre: "Milot", pob: "31,992", lat: 19.6047, lng: -72.2186 },
             { nombre: "Fort Liberté", pob: "30,110", lat: 19.7344, lng: -71.8397 }
         ];
-        // Fin COMUNIDADES
 
         // ═══════════════════════════════════════════════════════════
-        // 6. CREACIÓN DE CAPAS DE PRESAS Y LAGOS (sin cambios)
+        // 6. CREACIÓN DE CAPAS DE PRESAS Y LAGOS (con iconos reducidos)
         // ═══════════════════════════════════════════════════════════
         function crearCapaPresas() {
             var grupo = L.layerGroup();
@@ -603,7 +597,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // NUEVO: CREACIÓN DE CAPAS DE COMUNIDADES Y FUNCIONES TOGGLE
+        // CREACIÓN DE CAPAS DE COMUNIDADES
         // ═══════════════════════════════════════════════════════════
         var capaComunidadesRD = L.layerGroup();
         var capaComunidadesHT = L.layerGroup();
@@ -631,10 +625,9 @@
             if (chk.checked) map.addLayer(capaComunidadesHT);
             else map.removeLayer(capaComunidadesHT);
         };
-        // Fin NUEVO
 
         // ═══════════════════════════════════════════════════════════
-        // 7. POPUP PARA CUENCAS Y CAUCES (sin cambios)
+        // 7. POPUP PARA CUENCAS Y CAUCES
         // ═══════════════════════════════════════════════════════════
         function construirPopup(properties, nombreCapa, tipo) {
             var html = '<div style="font-family:\'Segoe UI\',sans-serif; min-width:200px;">';
@@ -682,7 +675,6 @@
                 var mostrarCuenca = (modo === 'cuenca' || modo === 'ambos');
                 var mostrarCauce  = (modo === 'cauce'  || modo === 'ambos');
 
-                // Elegir estilos según país
                 var estiloCuencaBase = c.esHaiti ? estiloCuencaHaiti : estiloCuencaNormal;
                 var estiloCauceBase  = c.esHaiti ? estiloCauceHaiti : estiloCauceNormal;
                 var estiloCuencaOculto = c.esHaiti ? estiloCuencaHaitiOculta : estiloCuencaOculta;
@@ -731,9 +723,13 @@
             }
         }
 
+        // ═══════════════════════════════════════════════════════════
+        // 10. FUNCIÓN REINICIAR (modificada)
+        // ═══════════════════════════════════════════════════════════
         window.mostrarTodas = function() {
             cuencaActiva = null;
 
+            // Restaurar estilos de cuencas y cauces
             todasLasCuencas.forEach(function(c) {
                 var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
                 var mostrarCauce  = (capaVisible === 'cauce'  || capaVisible === 'ambos');
@@ -747,11 +743,28 @@
                 if (mostrarCauce) { c.layerCauce.addTo(map); c.layerCauce.setStyle(estiloCauceBase); }
                 else { if (map.hasLayer(c.layerCauce)) map.removeLayer(c.layerCauce); }
             });
+
+            // Desmarcar TODOS los checkboxes EXCEPTO el de frontera
+            ['chk-presas', 'chk-lagos', 'chk-comunidades-rd', 'chk-comunidades-ht'].forEach(function(id) {
+                document.getElementById(id).checked = false;
+            });
+            // Llamar a los toggles para ocultar esas capas
+            togglePresas();
+            toggleLagos();
+            toggleComunidadesRD();
+            toggleComunidadesHT();
+
+            // Asegurar que la frontera esté visible (si el checkbox está marcado)
+            if (document.getElementById('chk-frontera').checked && capaFrontera && !map.hasLayer(capaFrontera)) {
+                map.addLayer(capaFrontera);
+            }
+
+            // Restablecer zoom y vista inicial
             map.setView([19.03556466237287, -70.89432006796727], 8);
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 10. CARGA DE CUENCAS Y CAUCES (con flag esHaiti)
+        // 11. CARGA DE CUENCAS Y CAUCES (con flag esHaiti)
         // ═══════════════════════════════════════════════════════════
         function coordToLatLng(coords) {
             if (Math.abs(coords[0]) <= 90 && (coords[1] < -180 || coords[1] > 180 || Math.abs(coords[1]) > 90)) {
@@ -837,7 +850,7 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 11. CARGA MASIVA DE CUENCAS Y CAUCES (RD y Haití)
+        // 12. CARGA MASIVA DE CUENCAS Y CAUCES (RD y Haití)
         // ═══════════════════════════════════════════════════════════
 
         // --- República Dominicana (esHaiti = false) ---
@@ -904,7 +917,65 @@
         cargarParCuenca('anx/haiti/cuencaBLANCHE.json', 'anx/haiti/cauceBLANCHE.json', 'del río Blanco (Blanche)', true);
 
         // ═══════════════════════════════════════════════════════════
-        // 12. UTILIDADES DE UI
+        // 13. CAPA DE FRONTERA (ACTIVA)
+        // ═══════════════════════════════════════════════════════════
+
+        // Carga de la frontera RD-Haití (archivo FRONTERA RD_HAI.geojson)
+        var capaFrontera = null;
+        var fronteraCargada = false;
+
+        function cargarFrontera() {
+            if (fronteraCargada) return;
+            fetch('FRONTERA RD_HAI.geojson')
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    capaFrontera = L.geoJSON(data, {
+                        style: {
+                            color: '#FF0000',
+                            weight: 3,
+                            fill: false
+                        },
+                        onEachFeature: function(feature, layer) {
+                            var nombre = feature.properties.NAME || 'Frontera';
+                            layer.bindPopup("<b>" + nombre + "</b>");
+                        }
+                    });
+                    fronteraCargada = true;
+                    if (document.getElementById('chk-frontera').checked) {
+                        map.addLayer(capaFrontera);
+                    }
+                    console.log('Frontera cargada correctamente.');
+                })
+                .catch(function(error) {
+                    console.warn('Error cargando frontera:', error.message);
+                });
+        }
+
+        window.toggleFrontera = function() {
+            var chk = document.getElementById('chk-frontera');
+            if (chk.checked) {
+                if (!fronteraCargada) {
+                    cargarFrontera();
+                } else if (capaFrontera) {
+                    map.addLayer(capaFrontera);
+                }
+            } else {
+                if (capaFrontera) {
+                    map.removeLayer(capaFrontera);
+                }
+            }
+        };
+
+        // Inicialmente cargar la frontera si el checkbox está marcado (por defecto)
+        if (document.getElementById('chk-frontera').checked) {
+            cargarFrontera();
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 14. UTILIDADES DE UI
         // ═══════════════════════════════════════════════════════════
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
