@@ -190,17 +190,44 @@
         }
 
         @media (max-width: 768px) {
-            #panel-titulo { 
-                top: 10px; left: 10px; right: 10px; width: auto; 
-                text-align: center; border-left: none; border-bottom: 3px solid #2980b9;
+            #panel-titulo {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                width: auto;
+                text-align: center;
+                border-left: none;
+                border-bottom: 3px solid #2980b9;
             }
-            #panel-controles { 
-                top: 70px; right: 10px; width: 260px; 
-                max-height: 70vh;
+            #panel-titulo h1 { font-size: 18px; }
+            #panel-titulo p  { font-size: 12px; margin-top: 2px; }
+
+            #panel-controles {
+                /* Se posiciona justo debajo del título.
+                   El título ocupa ~10px top + ~62px alto + 8px gap = 80px */
+                top: 80px;
+                right: 10px;
+                left: 10px;
+                width: auto;
+                max-height: calc(100vh - 100px);
             }
         }
         @media (max-width: 480px) {
-            #panel-controles { width: calc(100vw - 20px); right: 10px; }
+            #panel-titulo {
+                top: 8px;
+                left: 8px;
+                right: 8px;
+            }
+            #panel-titulo h1 { font-size: 16px; }
+            #panel-titulo p  { font-size: 11px; }
+
+            #panel-controles {
+                top: 76px;
+                right: 8px;
+                left: 8px;
+                width: auto;
+                max-height: calc(100vh - 94px);
+            }
         }
     </style>
 </head>
@@ -664,7 +691,6 @@
                 'anx/mon/SMATHEUX_NEIBA.geojson',
                 'anx/mon/SMONTNOIRES.geojson'
             ];
-            var cargaExitosa = false;
 
             archivos.forEach(function(url) {
                 fetch(url)
@@ -679,45 +705,24 @@
                         console.log('📦 Cordillera cargada:', url, 'features:', data.features.length);
                         var capa = L.geoJSON(data, {
                             style: estiloCordilleras,
-                            coordsToLatLng: function(coords) {
-                                return L.latLng(coords[1], coords[0]);
-                            },
                             onEachFeature: function(feature, layer) {
-                                // Popup con NAME y NAME2
                                 var nombre = feature.properties.NAME || feature.properties.NOMBRE || feature.properties.name || 'Cordillera';
                                 var descripcion = feature.properties.NAME2 || feature.properties.DESCRIPCION || '';
                                 layer.bindPopup("<b>" + nombre + "</b><br>" + descripcion);
-                                // Agregar eventos de interacción
                                 agregarEventosPoligono(layer, estiloCordilleras);
                             }
                         });
                         grupo.addLayer(capa);
-                        cargaExitosa = true;
+                        // Si el botón está activo, refrescar la capa en el mapa
+                        var btn = document.getElementById('btn-cordilleras');
+                        if (btn && btn.classList.contains('active')) {
+                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                        }
                     })
                     .catch(function(e) {
                         console.warn('❌ Error cargando cordillera:', url, e.message);
-                        var errorMsg = '⚠️ No se pudo cargar: ' + url;
-                        L.marker([19.0, -70.5 + (archivos.indexOf(url) * 0.3)], {
-                            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background:red;color:white;padding:2px 6px;border-radius:4px;font-size:10px;">Error</div>', iconSize: [40,20] })
-                        }).addTo(grupo).bindPopup(errorMsg);
                     });
             });
-
-            // Fallback si no se carga ningún archivo
-            setTimeout(function() {
-                if (!cargaExitosa) {
-                    var ejemplo = L.polygon([
-                        [19.0, -70.0],
-                        [19.5, -70.0],
-                        [19.5, -69.5],
-                        [19.0, -69.5]
-                    ], { color: 'blue', fillColor: 'blue', fillOpacity: 0.3, weight: 2 }).bindPopup('⚠️ Ejemplo (no se cargaron los archivos)');
-                    // Aplicar eventos al fallback
-                    agregarEventosPoligono(ejemplo, { color: 'blue', fillColor: 'blue', fillOpacity: 0.3, weight: 2 });
-                    grupo.addLayer(ejemplo);
-                    console.warn('⚠️ No se cargó ningún archivo de cordilleras; se añadió polígono de ejemplo.');
-                }
-            }, 3000);
 
             return grupo;
         }
@@ -741,14 +746,12 @@
                 'anx/lla/LLLUPERON.geojson',
                 'anx/lla/LLMAIMON.geojson',
                 'anx/lla/LLMICHES.geojson',
-                'anx/lla/LLNAGUA.geojson',
                 'anx/lla/LLNISIBON.geojson',
                 'anx/lla/LLOVIEDOPED.geojson',
                 'anx/lla/LLPERAVIA.geojson',
                 'anx/lla/LLPUERTOPLATA.geojson',
                 'anx/lla/LLSABMAR.geojson'
             ];
-            var cargaExitosa = false;
 
             archivos.forEach(function(url) {
                 fetch(url)
@@ -763,9 +766,6 @@
                         console.log('📦 Llanura cargada:', url, 'features:', data.features.length);
                         var capa = L.geoJSON(data, {
                             style: estiloLlanuras,
-                            coordsToLatLng: function(coords) {
-                                return L.latLng(coords[1], coords[0]);
-                            },
                             onEachFeature: function(feature, layer) {
                                 var nombre = feature.properties.NAME || feature.properties.NOMBRE || feature.properties.name || 'Llanura';
                                 var descripcion = feature.properties.NAME2 || feature.properties.DESCRIPCION || '';
@@ -774,30 +774,16 @@
                             }
                         });
                         grupo.addLayer(capa);
-                        cargaExitosa = true;
+                        // Si el botón está activo, refrescar la capa en el mapa
+                        var btn = document.getElementById('btn-llanuras');
+                        if (btn && btn.classList.contains('active')) {
+                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                        }
                     })
                     .catch(function(e) {
                         console.warn('❌ Error cargando llanura:', url, e.message);
-                        var errorMsg = '⚠️ No se pudo cargar: ' + url;
-                        L.marker([18.8, -70.2 + (archivos.indexOf(url) * 0.2)], {
-                            icon: L.divIcon({ className: 'custom-div-icon', html: '<div style="background:orange;color:white;padding:2px 6px;border-radius:4px;font-size:10px;">Error</div>', iconSize: [40,20] })
-                        }).addTo(grupo).bindPopup(errorMsg);
                     });
             });
-
-            setTimeout(function() {
-                if (!cargaExitosa) {
-                    var ejemplo = L.polygon([
-                        [18.5, -70.5],
-                        [19.0, -70.5],
-                        [19.0, -70.0],
-                        [18.5, -70.0]
-                    ], { color: 'green', fillColor: 'green', fillOpacity: 0.3, weight: 2 }).bindPopup('⚠️ Ejemplo (no se cargaron los archivos)');
-                    agregarEventosPoligono(ejemplo, { color: 'green', fillColor: 'green', fillOpacity: 0.3, weight: 2 });
-                    grupo.addLayer(ejemplo);
-                    console.warn('⚠️ No se cargó ningún archivo de llanuras; se añadió polígono de ejemplo.');
-                }
-            }, 3000);
 
             return grupo;
         }
@@ -917,6 +903,21 @@
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
         };
+
+        // Ajuste dinámico: en móvil, panel-controles se posiciona debajo del título real
+        function ajustarPanelMobil() {
+            if (window.innerWidth <= 768) {
+                var titulo = document.getElementById('panel-titulo');
+                var controles = document.getElementById('panel-controles');
+                var rect = titulo.getBoundingClientRect();
+                var nuevoTop = rect.bottom + 8;
+                controles.style.top = nuevoTop + 'px';
+            } else {
+                document.getElementById('panel-controles').style.top = '';
+            }
+        }
+        window.addEventListener('resize', ajustarPanelMobil);
+        ajustarPanelMobil();
 
         window.abrirModalCreditos = function() {
             document.getElementById('modal-creditos').classList.add('active');
