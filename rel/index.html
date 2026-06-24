@@ -248,6 +248,10 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-alturas-ht" onchange="toggleAlturasHT()"> 📌 Alturas haitianas
                 </label>
+                <!-- NUEVO: Checkbox para la frontera, activado por defecto -->
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🌍 Frontera RD-Haití
+                </label>
             </div>
 
             <!-- Enlaces -->
@@ -337,10 +341,10 @@
             iconSize: [24, 24], iconAnchor: [12, 12]
         });
 
-        // Icono de alturas actualizado: tamaño reducido 20% (16px), color #016FC1, borde blanco
+        // Icono de alturas: tamaño reducido 20% (16px), color #016FC1, borde #333333
         var iconAltura = L.divIcon({
             className: 'custom-div-icon',
-            html: "<div style='background-color:#016FC1; width:16px; height:16px; clip-path:polygon(50% 0%, 0% 100%, 100% 100%); border:2px solid #ffffff; box-shadow:0 2px 6px rgba(0,0,0,0.4);'></div>",
+            html: "<div style='background-color:#016FC1; width:16px; height:16px; clip-path:polygon(50% 0%, 0% 100%, 100% 100%); border:2px solid #333333; box-shadow:0 2px 6px rgba(0,0,0,0.4);'></div>",
             iconSize: [16, 16], iconAnchor: [8, 16]
         });
 
@@ -874,37 +878,74 @@
             }
         };
 
+// ***********************************************************
         // ═══════════════════════════════════════════════════════════
-        // 10. CAPA DE FRONTERA (comentada)
+        // 10. CAPA DE FRONTERA (comentada) y función toggle
         // ═══════════════════════════════════════════════════════════
-        /*
+
         // Carga de la frontera RD-Haití (archivo FRONTERA RD_HAI.geojson)
+        // Esta sección está comentada a propósito. Para habilitar la capa,
+        // descomenta el siguiente bloque y la función toggleFrontera().
         var capaFrontera = null;
-        fetch('FRONTERA RD_HAI.geojson')
-            .then(function(response) {
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                return response.json();
-            })
-            .then(function(data) {
-                capaFrontera = L.geoJSON(data, {
-                    style: {
-                        color: '#FF0000',
-                        weight: 3,
-                        fill: false
-                    },
-                    onEachFeature: function(feature, layer) {
-                        // Popup opcional
-                        var nombre = feature.properties.NAME || 'Frontera';
-                        layer.bindPopup("<b>" + nombre + "</b>");
+        var fronteraCargada = false;
+
+        function cargarFrontera() {
+            if (fronteraCargada) return;
+            fetch('FRONTERA RD_HAI.geojson')
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    capaFrontera = L.geoJSON(data, {
+                        style: {
+                            color: '#FF0000',
+                            weight: 3,
+                            fill: false
+                        },
+                        onEachFeature: function(feature, layer) {
+                            var nombre = feature.properties.NAME || 'Frontera';
+                            layer.bindPopup("<b>" + nombre + "</b>");
+                        }
+                    });
+                    fronteraCargada = true;
+                    if (document.getElementById('chk-frontera').checked) {
+                        map.addLayer(capaFrontera);
                     }
+                    console.log('Frontera cargada correctamente.');
+                })
+                .catch(function(error) {
+                    console.warn('Error cargando frontera:', error.message);
                 });
-                // Puedes agregar la capa al mapa con: map.addLayer(capaFrontera);
-                console.log('Frontera cargada correctamente.');
-            })
-            .catch(function(error) {
-                console.warn('Error cargando frontera:', error.message);
-            });
-        */
+        }
+
+        window.toggleFrontera = function() {
+            var chk = document.getElementById('chk-frontera');
+            if (chk.checked) {
+                if (!fronteraCargada) {
+                    cargarFrontera();
+                } else if (capaFrontera) {
+                    map.addLayer(capaFrontera);
+                }
+            } else {
+                if (capaFrontera) {
+                    map.removeLayer(capaFrontera);
+                }
+            }
+        };
+
+        // Inicialmente cargar la frontera si el checkbox está marcado (por defecto)
+        if (document.getElementById('chk-frontera').checked) {
+            cargarFrontera();
+        }
+// ***********************************************************
+
+        // Función toggleFrontera vacía (porque el código está comentado)
+        // pero se mantiene para evitar errores si el checkbox llama a la función.
+        window.toggleFrontera = function() {
+            console.log('La capa de frontera está deshabilitada (código comentado).');
+            // Si se desea habilitar, descomentar el bloque anterior.
+        };
     </script>
 </body>
 </html>
