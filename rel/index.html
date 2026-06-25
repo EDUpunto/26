@@ -22,45 +22,98 @@
         }
 
         #panel-titulo {
-            top: 20px; left: 20px; padding: 12px 16px;
-            border-left: 5px solid #2980b9; pointer-events: none;
+            top: 20px;
+            left: 20px;
+            padding: 12px 16px;
+            border-left: 5px solid #2980b9;
+            pointer-events: none;
         }
-        #panel-titulo h1 { font-size: 22px; color: #1a5276; font-weight: 700; letter-spacing: 0.5px; line-height: 1.1; }
-        #panel-titulo p { font-size: 14px; color: #2c3e50; font-weight: 500; margin-top: 4px; }
+        #panel-titulo h1 {
+            font-size: 22px;
+            color: #1a5276;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+        }
+        #panel-titulo p {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+            margin-top: 4px;
+        }
 
-        #panel-controles { top: 20px; right: 20px; width: 280px; max-height: 85vh; overflow: hidden; }
-        #panel-controles.collapsed { max-height: 48px; }
+        #panel-controles {
+            top: 20px;
+            right: 20px;
+            width: 280px;
+            max-height: 85vh;
+            overflow: hidden;
+        }
+        #panel-controles.collapsed {
+            max-height: 48px;
+        }
         .panel-header {
-            display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-            padding: 12px 16px; border-bottom: 1px solid #eee; font-weight: 700;
-            color: #2c3e50; font-size: 15px; user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 15px;
+            user-select: none;
         }
         .panel-header:hover { background: rgba(0,0,0,0.02); }
         .toggle-icon { transition: transform 0.3s ease; font-size: 12px; }
         .collapsed .toggle-icon { transform: rotate(-90deg); }
         .panel-content {
-            padding: 12px 16px 16px 16px; transition: opacity 0.3s ease, max-height 0.3s ease;
-            opacity: 1; max-height: 1000px; overflow-y: auto;
+            padding: 12px 16px 16px 16px;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+            opacity: 1;
+            max-height: 1000px;
+            overflow-y: auto;
         }
-        .collapsed .panel-content { opacity: 0; max-height: 0; padding: 0 16px; pointer-events: none; }
+        .collapsed .panel-content {
+            opacity: 0;
+            max-height: 0;
+            padding: 0 16px;
+            pointer-events: none;
+        }
 
         .enlaces-discretos {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px;
-            padding-top: 12px; margin-top: 12px; border-top: 1px solid #eee;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 12px;
+            padding-top: 12px;
+            margin-top: 12px;
+            border-top: 1px solid #eee;
         }
         .enlace-texto {
-            font-size: 11px; color: #555; text-decoration: none;
+            font-size: 11px;
+            color: #555;
+            text-decoration: none;
             transition: color 0.2s, padding-left 0.2s;
-            display: inline-flex; align-items: center; gap: 4px; justify-content: flex-start;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            justify-content: flex-start;
         }
-        .enlace-texto:hover { color: #2980b9; padding-left: 2px; }
+        .enlace-texto:hover {
+            color: #2980b9;
+            padding-left: 2px;
+        }
         .enlace-texto.cursor-pointer { cursor: pointer; }
 
         .grupo-control { margin-bottom: 12px; }
         .grupo-control:last-child { margin-bottom: 0; }
         .grupo-control h4 {
-            font-size: 10px; text-transform: uppercase; color: #7f8c8d;
-            margin-bottom: 6px; letter-spacing: 0.5px; font-weight: 700;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            font-weight: 700;
         }
         .btn-opcion {
             display: flex; align-items: center; gap: 8px; padding: 6px 10px;
@@ -70,41 +123,20 @@
         }
         .btn-opcion:hover { background: #f8f9fa; border-color: #2980b9; color: #2980b9; }
         .btn-opcion.active { background: #2980b9; color: white; border-color: #2980b9; }
-        .btn-opcion.cargando { background: #f39c12; color: white; border-color: #e67e22; cursor: wait; }
         
-        .btn-relieve { margin-bottom: 4px; }
-        .btn-relieve:last-child { margin-bottom: 0; }
+        /* Separación de 4px entre botones de relieve (opcional) */
+        .btn-relieve {
+            margin-bottom: 4px;
+        }
+        .btn-relieve:last-child {
+            margin-bottom: 0;
+        }
 
-        .checkbox-opcion { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 12px; color: #333; cursor: pointer; }
+        .checkbox-opcion {
+            display: flex; align-items: center; gap: 8px; padding: 3px 0;
+            font-size: 12px; color: #333; cursor: pointer;
+        }
         .checkbox-opcion input { accent-color: #2980b9; width: 14px; height: 14px; cursor: pointer; }
-
-        #loader-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); z-index: 3000; display: none;
-            align-items: center; justify-content: center;
-        }
-        #loader-overlay.active { display: flex; }
-        #loader-box {
-            background: white; padding: 24px 32px; border-radius: 12px;
-            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            min-width: 220px;
-        }
-        #loader-box h4 { color: #1a5276; margin-bottom: 12px; font-size: 15px; }
-        #loader-box p { color: #555; font-size: 12px; margin-bottom: 8px; }
-        .spinner {
-            width: 36px; height: 36px; border: 4px solid #e0e0e0;
-            border-top: 4px solid #2980b9; border-radius: 50%;
-            animation: spin 1s linear infinite; margin: 10px auto 0 auto;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #progress-bar {
-            width: 100%; height: 6px; background: #e0e0e0; border-radius: 3px;
-            margin-top: 10px; overflow: hidden;
-        }
-        #progress-fill {
-            height: 100%; background: #2980b9; width: 0%;
-            transition: width 0.3s ease;
-        }
 
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -114,7 +146,8 @@
         .modal-overlay.active { display: flex; }
         .modal-content {
             background: white; padding: 24px; border-radius: 12px;
-            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); min-width: 250px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-width: 250px;
         }
         .modal-content h3 { margin: 0 0 12px 0; color: #1a5276; font-size: 18px; }
         .modal-content p { color: #555; margin-bottom: 20px; font-size: 16px; font-weight: 600; }
@@ -125,39 +158,72 @@
         .btn-cerrar-modal:hover { background: #1f618d; }
 
         .leaflet-bottom.leaflet-right {
-            margin-bottom: 10px; margin-right: 10px;
-            display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+            margin-bottom: 10px;
+            margin-right: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
         }
         .leaflet-control-scale {
-            background: rgba(255, 255, 255, 0.9); border-radius: 4px; padding: 4px 8px;
-            font-size: 11px; box-shadow: 0 1px 5px rgba(0,0,0,0.2);
-            border: 1px solid rgba(0,0,0,0.1); margin-bottom: 0 !important; order: 1;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.1);
+            margin-bottom: 0 !important;
+            order: 1;
         }
         .leaflet-control-attribution {
-            background: rgba(255, 255, 255, 0.9) !important; border-radius: 4px;
-            padding: 4px 8px !important; font-size: 10px !important;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,0.1); order: 2;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-radius: 4px;
+            padding: 4px 8px !important;
+            font-size: 10px !important;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.1);
+            order: 2;
         }
-        .leaflet-control-zoom { margin-bottom: 8px !important; order: 0; }
+        .leaflet-control-zoom {
+            margin-bottom: 8px !important;
+            order: 0;
+        }
 
         @media (max-width: 768px) {
             #panel-titulo {
-                top: 10px; left: 10px; right: 10px; width: auto; text-align: center;
-                border-left: none; border-bottom: 3px solid #2980b9;
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                width: auto;
+                text-align: center;
+                border-left: none;
+                border-bottom: 3px solid #2980b9;
             }
             #panel-titulo h1 { font-size: 18px; }
             #panel-titulo p  { font-size: 12px; margin-top: 2px; }
+
             #panel-controles {
-                top: 80px; right: 10px; left: 10px; width: auto;
+                top: 80px;
+                right: 10px;
+                left: 10px;
+                width: auto;
                 max-height: calc(100vh - 100px);
             }
         }
         @media (max-width: 480px) {
-            #panel-titulo { top: 8px; left: 8px; right: 8px; }
+            #panel-titulo {
+                top: 8px;
+                left: 8px;
+                right: 8px;
+            }
             #panel-titulo h1 { font-size: 16px; }
             #panel-titulo p  { font-size: 11px; }
+
             #panel-controles {
-                top: 76px; right: 8px; left: 8px; width: auto;
+                top: 76px;
+                right: 8px;
+                left: 8px;
+                width: auto;
                 max-height: calc(100vh - 94px);
             }
         }
@@ -167,26 +233,20 @@
 
     <div id="map"></div>
 
-    <div id="loader-overlay">
-        <div id="loader-box">
-            <h4 id="loader-title">Cargando...</h4>
-            <p id="loader-text">Preparando capas</p>
-            <div class="spinner"></div>
-            <div id="progress-bar"><div id="progress-fill"></div></div>
-        </div>
-    </div>
-
+    <!-- Título -->
     <div id="panel-titulo" class="panel">
         <h1>🗺️ Relieve SD</h1>
         <p>Relieve u orografía de la isla de Santo Domingo</p>
     </div>
 
+    <!-- Controles -->
     <div id="panel-controles" class="panel">
         <div class="panel-header" onclick="togglePanel('panel-controles')">
             <span>⚙️ CONTROLES</span>
             <span class="toggle-icon">▼</span>
         </div>
         <div class="panel-content">
+            <!-- Base -->
             <div class="grupo-control">
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <button class="btn-opcion active" onclick="cambiarBase('mapa', this)">🗺️ Vista Dibujo</button>
@@ -194,16 +254,19 @@
                 </div>
             </div>
 
+            <!-- Relieve: botones toggle con separación de 4px -->
             <div class="grupo-control">
                 <h4>Relieve</h4>
                 <button id="btn-cordilleras" class="btn-opcion btn-relieve" onclick="toggleCordilleras(this)">⛰️ Cordilleras / Sierras</button>
                 <button id="btn-llanuras" class="btn-opcion btn-relieve" onclick="toggleLlanuras(this)">🌾 Llanuras / Valles</button>
             </div>
 
+            <!-- Reiniciar -->
             <div class="grupo-control">
                 <button class="btn-opcion active" style="background-color: #4AC58A;" onclick="reiniciarVista()"><strong> ⌂ REINICIAR</strong></button>
             </div>
 
+            <!-- Capas adicionales -->
             <div class="grupo-control">
                 <h4>Capas adicionales</h4>
                 <label class="checkbox-opcion">
@@ -218,11 +281,13 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-alturas-ht" onchange="toggleAlturasHT()"> 📌 Alturas haitianas
                 </label>
+                <!-- Checkbox para la frontera, activado por defecto -->
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🌍 Frontera RD-Haití
                 </label>
             </div>
 
+            <!-- Enlaces -->
             <div class="enlaces-discretos">
                 <a href="https://edupunto.com/2022/01/rios-importantes-de-dominicana/" target="_blank" class="enlace-texto">🌐 Artículo WEB</a>
                 <a href="https://drive.google.com/file/d/1kCcGXRuTVtTigYxtQMEITKMT42g8akv5/view?usp=sharing" target="_blank" class="enlace-texto">🖨️ IMPRIMIBLE</a>
@@ -232,6 +297,7 @@
         </div>
     </div>
 
+    <!-- Modal Créditos -->
     <div id="modal-creditos" class="modal-overlay" onclick="cerrarModalCreditos(event)">
         <div class="modal-content">
             <h3><strong>I S F O D O S U</strong></h3>
@@ -248,8 +314,10 @@
         // ═══════════════════════════════════════════════════════════
         // 1. MAPA
         // ═══════════════════════════════════════════════════════════
-        var map = L.map('map', { zoomControl: false, attributionControl: false })
-            .setView([19.03556466237287, -70.89432006796727], 8);
+        var map = L.map('map', { 
+            zoomControl: false,
+            attributionControl: false 
+        }).setView([19.03556466237287, -70.89432006796727], 8);
 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         L.control.scale({ position: 'bottomright', metric: true, imperial: false }).addTo(map);
@@ -258,100 +326,37 @@
         // ═══════════════════════════════════════════════════════════
         // 2. CAPAS BASE
         // ═══════════════════════════════════════════════════════════
+
+        // --- Capa de relieve sombreado de Maps-for-Free (sin texto) ---
         var capaDibujo = L.tileLayer('https://maps-for-free.com/layer/relief/z{z}/row{y}/{z}_{x}-{y}.jpg', {
-            maxZoom: 11, attribution: 'Map data &copy; Maps-for-Free / NASA'
+            maxZoom: 11,
+            attribution: 'Map data &copy; Maps-for-Free / NASA'
         });
+
+        // --- Capa satélite de Esri (opcional) ---
         var capaSatelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            maxZoom: 19, attribution: 'Tiles © Esri'
+            maxZoom: 19,
+            attribution: 'Tiles © Esri'
         });
+
+        // Iniciamos con la capa de relieve
         capaDibujo.addTo(map);
 
         window.cambiarBase = function(tipo, btn) {
             document.querySelectorAll('#panel-controles .grupo-control:first-child .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
+            
             if (tipo === 'satelite') {
-                map.removeLayer(capaDibujo); capaSatelite.addTo(map);
+                map.removeLayer(capaDibujo);
+                capaSatelite.addTo(map);
             } else {
-                map.removeLayer(capaSatelite); capaDibujo.addTo(map);
+                map.removeLayer(capaSatelite);
+                capaDibujo.addTo(map);
             }
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 3. SISTEMA DE CARGA OPTIMIZADO
-        // ═══════════════════════════════════════════════════════════
-        var cacheGeoJSON = {};
-        
-        function cargarGeoJSON(url, intentos) {
-            intentos = intentos || 3;
-            if (cacheGeoJSON[url]) {
-                return Promise.resolve(cacheGeoJSON[url]);
-            }
-            
-            return fetch(encodeURI(url))
-                .then(function(r) {
-                    if (!r.ok) throw new Error('HTTP ' + r.status);
-                    return r.json();
-                })
-                .then(function(data) {
-                    cacheGeoJSON[url] = data;
-                    return data;
-                })
-                .catch(function(error) {
-                    if (intentos > 1) {
-                        console.warn('Reintentando ' + url + ' (' + (intentos - 1) + ' intentos)...');
-                        return new Promise(function(resolve) {
-                            setTimeout(function() {
-                                resolve(cargarGeoJSON(url, intentos - 1));
-                            }, 800);
-                        });
-                    }
-                    throw error;
-                });
-        }
-        
-        function cargarMultiplesGeoJSON(archivos, titulo) {
-            var total = archivos.length;
-            var completados = 0;
-            
-            mostrarLoader(titulo, 'Iniciando carga de ' + total + ' archivos...');
-            
-            var promesas = archivos.map(function(url) {
-                return cargarGeoJSON(url)
-                    .then(function() {
-                        completados++;
-                        var porcentaje = Math.round((completados / total) * 100);
-                        actualizarProgreso(porcentaje, completados + ' / ' + total + ' archivos');
-                    })
-                    .catch(function(error) {
-                        console.warn('Error en: ' + url, error.message);
-                    });
-            });
-            
-            return Promise.all(promesas);
-        }
-
-        // ═══════════════════════════════════════════════════════════
-        // 4. LOADER / PROGRESO
-        // ═══════════════════════════════════════════════════════════
-        function mostrarLoader(titulo, texto) {
-            document.getElementById('loader-title').textContent = titulo;
-            document.getElementById('loader-text').textContent = texto || '';
-            document.getElementById('progress-fill').style.width = '0%';
-            document.getElementById('loader-overlay').classList.add('active');
-        }
-        function actualizarProgreso(porcentaje, texto) {
-            document.getElementById('progress-fill').style.width = porcentaje + '%';
-            if (texto) document.getElementById('loader-text').textContent = texto;
-        }
-        function ocultarLoader() {
-            document.getElementById('progress-fill').style.width = '100%';
-            setTimeout(function() {
-                document.getElementById('loader-overlay').classList.remove('active');
-            }, 300);
-        }
-
-        // ═══════════════════════════════════════════════════════════
-        // 5. ESTADO GLOBAL
+        // 3. ESTADO GLOBAL
         // ═══════════════════════════════════════════════════════════
         var capaCordilleras = null;
         var capaLlanuras = null;
@@ -359,20 +364,17 @@
         var capaComunidadesHT = null;
         var capaAlturasRD = null;
         var capaAlturasHT = null;
+        // Variable para controlar la capa seleccionada (polígono)
         var capaSeleccionada = null;
-        
-        var estadoCarga = {
-            cordilleras: { cargando: false, cargada: false },
-            llanuras:    { cargando: false, cargada: false },
-            frontera:    { cargando: false, cargada: false }
-        };
 
+        // Iconos
         var iconComunidad = L.divIcon({
             className: 'custom-div-icon',
             html: '<svg viewBox="0 0 24 24" width="24" height="24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F4B09F" stroke="#666666" stroke-width="2"/></svg>',
             iconSize: [24, 24], iconAnchor: [12, 12]
         });
 
+        // Icono de alturas: tamaño reducido 20% (16px), color #FFFFFF, borde #333333
         var iconAltura = L.divIcon({
             className: 'custom-div-icon',
             html: "<div style='background-color:#FFFFFF; width:16px; height:16px; clip-path:polygon(50% 0%, 0% 100%, 100% 100%); border:2px solid #333333; box-shadow:0 2px 6px rgba(0,0,0,0.4);'></div>",
@@ -380,68 +382,35 @@
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 6. ESTILOS
+        // 4. ESTILOS PARA RELIEVE (con colores base)
         // ═══════════════════════════════════════════════════════════
-        var estiloCordilleras = { color: "#8B4513", weight: 2, fillColor: "#A0522D", fillOpacity: 0.25 };
-        var estiloLlanuras = { color: "#228B22", weight: 1.5, fillColor: "#90EE90", fillOpacity: 0.20 };
-        var estiloHover = { weight: 4, color: '#FFD700', fillOpacity: 0.5 };
-        var estiloSeleccion = { weight: 5, color: '#FF0000', fillOpacity: 0.6 };
+        var estiloCordilleras = {
+            color: "#8B4513",
+            weight: 2,
+            fillColor: "#A0522D",
+            fillOpacity: 0.25
+        };
+        var estiloLlanuras = {
+            color: "#228B22",
+            weight: 1.5,
+            fillColor: "#90EE90",
+            fillOpacity: 0.20
+        };
+
+        // Estilos de resaltado (hover y selección)
+        var estiloHover = {
+            weight: 4,
+            color: '#FFD700',
+            fillOpacity: 0.5
+        };
+        var estiloSeleccion = {
+            weight: 5,
+            color: '#FF0000',
+            fillOpacity: 0.6
+        };
 
         // ═══════════════════════════════════════════════════════════
-        // 7. LISTA ÚNICA DE ARCHIVOS GEOJSON (con prefijo numérico)
-        //    Prefijo "1" = Montañas / Cordilleras
-        //    Prefijo "2" = Llanuras / Valles
-        // ═══════════════════════════════════════════════════════════
-        var TODOS_LOS_ARCHIVOS_RELIEVE = [
-            // --- MONTAÑAS (prefijo 1) ---
-            'anx/1_HAITISES.geojson',
-            'anx/1_CORIENTAL.geojson',
-            'anx/1_CSEPTENTRIONAL.geojson',
-            'anx/1_SYAMASA.geojson',
-            'anx/1_SSAMANA.geojson',
-            'anx/1_SMARTINGARCIA.geojson',
-            'anx/1_CMASSIFNORD_CENTRAL.geojson',
-            'anx/1_SLASELLE_BAHORUCO.geojson',
-            'anx/1_SMASSIFLAHOTTE.geojson',
-            'anx/1_SMATHEUX_NEIBA.geojson',
-            'anx/1_SMONTNOIRES.geojson',
-            // --- LLANURAS (prefijo 2) ---
-            'anx/2_VBONAO.geojson',
-            'anx/2_VVILLAALT.geojson',
-            'anx/2_LLSAMANA NORTE.geojson',
-            'anx/2_LLSAMANA SUR.geojson',
-            'anx/2_LLNAGUA.geojson',
-            'anx/2_LLORIENTAL.geojson',
-            'anx/2_LLAZUA.geojson',
-            'anx/2_LLBAJABONICO.geojson',
-            'anx/2_LLCABARETE.geojson',
-            'anx/2_LLELVALLE.geojson',
-            'anx/2_LLERMIANO.geojson',
-            'anx/2_LLGINA.geojson',
-            'anx/2_LLLUPERON.geojson',
-            'anx/2_LLMAIMON.geojson',
-            'anx/2_LLMICHES.geojson',
-            'anx/2_LLNISIBON.geojson',
-            'anx/2_LLOVIEDOPED.geojson',
-            'anx/2_LLPERAVIA.geojson',
-            'anx/2_LLPUERTOPLATA.geojson',
-            'anx/2_LLSABMAR.geojson'
-        ];
-
-        // ═══════════════════════════════════════════════════════════
-        // 8. FUNCIÓN PARA FILTRAR ARCHIVOS POR PREFIJO
-        // ═══════════════════════════════════════════════════════════
-        function filtrarArchivosPorPrefijo(prefijo) {
-            return TODOS_LOS_ARCHIVOS_RELIEVE.filter(function(url) {
-                // Extraer solo el nombre del archivo (sin la ruta)
-                var nombreArchivo = url.split('/').pop();
-                // Verificar si empieza con el prefijo seguido de guión bajo o directamente
-                return nombreArchivo.charAt(0) === String(prefijo);
-            });
-        }
-
-        // ═══════════════════════════════════════════════════════════
-        // 9. DATOS DE ALTURAS
+        // 5. DATOS DE ALTURAS (sin cambios)
         // ═══════════════════════════════════════════════════════════
         var alturasRD = [
             { nombre: "Monte La Meseta", altura: "605 m", sierra: "Sierra de Samaná", lat: 19.312225, lng: -69.293875 },
@@ -514,58 +483,10 @@
         ];
 
         // ═══════════════════════════════════════════════════════════
-        // 10. FUNCIONES AUXILIARES DE CAPAS
+        // 6. FUNCIONES DE CREACIÓN DE CAPAS
         // ═══════════════════════════════════════════════════════════
-        
-        function agregarEventosPoligono(layer, estiloBase) {
-            layer.originalStyle = estiloBase;
-            layer.on('mouseover', function(e) {
-                var capa = e.target;
-                if (capaSeleccionada !== capa) {
-                    capa.setStyle(estiloHover);
-                    capa.bringToFront();
-                }
-            });
-            layer.on('mouseout', function(e) {
-                var capa = e.target;
-                if (capaSeleccionada !== capa) capa.setStyle(capa.originalStyle);
-            });
-            layer.on('click', function(e) {
-                var capa = e.target;
-                if (capaSeleccionada && capaSeleccionada !== capa) {
-                    capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
-                }
-                capaSeleccionada = capa;
-                capa.setStyle(estiloSeleccion);
-                capa.bringToFront();
-                map.fitBounds(capa.getBounds());
-                if (capa.getPopup()) capa.openPopup();
-            });
-        }
 
-        // Construir capa desde archivos ya en caché, filtrados por prefijo
-        function construirCapaGeoJSON(archivos, estilo, tipoNombre) {
-            var grupo = L.featureGroup();
-            archivos.forEach(function(url) {
-                var data = cacheGeoJSON[url];
-                if (!data || !data.features || data.features.length === 0) return;
-                
-                L.geoJSON(data, {
-                    style: estilo,
-                    onEachFeature: function(feature, layer) {
-                        var nombre = feature.properties.NAME || feature.properties.NOMBRE || feature.properties.name || tipoNombre;
-                        var descripcion = feature.properties.NAME2 || feature.properties.DESCRIPCION || '';
-                        layer.bindPopup("<b>" + nombre + "</b><br>" + descripcion);
-                        agregarEventosPoligono(layer, estilo);
-                    }
-                }).addTo(grupo);
-            });
-            return grupo;
-        }
-
-        // ═══════════════════════════════════════════════════════════
-        // 11. COMUNIDADES Y ALTURAS
-        // ═══════════════════════════════════════════════════════════
+        // --- Comunidades ---
         function crearCapaComunidadesRD() {
             var ciudadesRD = [
                 { nombre: "Santo Domingo Este", pob: "1,029,117", lat: 18.505807230607356, lng: -69.81027716178998 },
@@ -699,6 +620,7 @@
             return grupo;
         }
 
+        // --- Alturas ---
         function crearCapaAlturas(datos) {
             var grupo = L.layerGroup();
             datos.forEach(function(a) {
@@ -709,79 +631,181 @@
             return grupo;
         }
 
+        // --- Función auxiliar para agregar eventos a capas geoJSON ---
+        function agregarEventosPoligono(layer, estiloBase) {
+            // Guardamos el estilo original en una propiedad
+            layer.originalStyle = estiloBase;
+
+            // Evento mouseover: resaltar (si no está seleccionado)
+            layer.on('mouseover', function(e) {
+                var capa = e.target;
+                if (capaSeleccionada !== capa) {
+                    capa.setStyle(estiloHover);
+                    capa.bringToFront();
+                }
+            });
+
+            // Evento mouseout: restaurar si no está seleccionado
+            layer.on('mouseout', function(e) {
+                var capa = e.target;
+                if (capaSeleccionada !== capa) {
+                    capa.setStyle(capa.originalStyle);
+                }
+            });
+
+            // Evento click: seleccionar, hacer zoom, resaltar y abrir popup
+            layer.on('click', function(e) {
+                var capa = e.target;
+                // Restaurar la selección anterior
+                if (capaSeleccionada && capaSeleccionada !== capa) {
+                    capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
+                }
+                // Establecer nueva selección
+                capaSeleccionada = capa;
+                capa.setStyle(estiloSeleccion);
+                capa.bringToFront();
+                // Zoom al polígono
+                map.fitBounds(capa.getBounds());
+                // Abrir popup
+                if (capa.getPopup()) {
+                    capa.openPopup();
+                }
+            });
+        }
+
+        // --- Cordilleras / Sierras (carga de GeoJSON con prefijo 1_) ---
+        function crearCapaCordilleras() {
+            var grupo = L.layerGroup();
+            // Todos los archivos ahora dentro de la carpeta anx/ con prefijo 1_
+            var archivos = [
+                'anx/1_HAITISES.geojson',
+                'anx/1_CORIENTAL.geojson',
+                'anx/1_CSEPTENTRIONAL.geojson',
+                'anx/1_SYAMASA.geojson',
+                'anx/1_SSAMANA.geojson',
+                'anx/1_SMARTINGARCIA.geojson',
+                'anx/1_CMASSIFNORD_CENTRAL.geojson',
+                'anx/1_SLASELLE_BAHORUCO.geojson',
+                'anx/1_SMASSIFLAHOTTE.geojson',
+                'anx/1_SMATHEUX_NEIBA.geojson',
+                'anx/1_SMONTNOIRES.geojson'
+            ];
+
+            archivos.forEach(function(url) {
+                fetch(encodeURI(url))
+                    .then(function(r) {
+                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                        return r.json();
+                    })
+                    .then(function(data) {
+                        if (!data || !data.features || data.features.length === 0) {
+                            throw new Error('GeoJSON vacío o sin features: ' + url);
+                        }
+                        console.log('📦 Cordillera cargada:', url, 'features:', data.features.length);
+                        var capa = L.geoJSON(data, {
+                            style: estiloCordilleras,
+                            onEachFeature: function(feature, layer) {
+                                var nombre = feature.properties.NAME || feature.properties.NOMBRE || feature.properties.name || 'Cordillera';
+                                var descripcion = feature.properties.NAME2 || feature.properties.DESCRIPCION || '';
+                                layer.bindPopup("<b>" + nombre + "</b><br>" + descripcion);
+                                agregarEventosPoligono(layer, estiloCordilleras);
+                            }
+                        });
+                        grupo.addLayer(capa);
+                        // Si el botón está activo, refrescar la capa en el mapa
+                        var btn = document.getElementById('btn-cordilleras');
+                        if (btn && btn.classList.contains('active')) {
+                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                        }
+                    })
+                    .catch(function(e) {
+                        console.warn('❌ Error cargando cordillera:', url, e.message);
+                    });
+            });
+
+            return grupo;
+        }
+
+        // --- Llanuras / Valles (carga de GeoJSON con prefijo 2_) ---
+        function crearCapaLlanuras() {
+            var grupo = L.layerGroup();
+            // Todos los archivos ahora dentro de la carpeta anx/ con prefijo 2_
+            var archivos = [
+                'anx/2_VBONAO.geojson',
+                'anx/2_VVILLAALT.geojson',
+                'anx/2_LLSAMANA NORTE.geojson',
+                'anx/2_LLSAMANA SUR.geojson',
+                'anx/2_LLNAGUA.geojson',
+                'anx/2_LLORIENTAL.geojson',
+                'anx/2_LLAZUA.geojson',
+                'anx/2_LLBAJABONICO.geojson',
+                'anx/2_LLCABARETE.geojson',
+                'anx/2_LLELVALLE.geojson',
+                'anx/2_LLERMIANO.geojson',
+                'anx/2_LLGINA.geojson',
+                'anx/2_LLLUPERON.geojson',
+                'anx/2_LLMAIMON.geojson',
+                'anx/2_LLMICHES.geojson',
+                'anx/2_LLNISIBON.geojson',
+                'anx/2_LLOVIEDOPED.geojson',
+                'anx/2_LLPERAVIA.geojson',
+                'anx/2_LLPUERTOPLATA.geojson',
+                'anx/2_LLSABMAR.geojson'
+            ];
+
+            archivos.forEach(function(url) {
+                fetch(encodeURI(url))
+                    .then(function(r) {
+                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                        return r.json();
+                    })
+                    .then(function(data) {
+                        if (!data || !data.features || data.features.length === 0) {
+                            throw new Error('GeoJSON vacío o sin features: ' + url);
+                        }
+                        console.log('📦 Llanura cargada:', url, 'features:', data.features.length);
+                        var capa = L.geoJSON(data, {
+                            style: estiloLlanuras,
+                            onEachFeature: function(feature, layer) {
+                                var nombre = feature.properties.NAME || feature.properties.NOMBRE || feature.properties.name || 'Llanura';
+                                var descripcion = feature.properties.NAME2 || feature.properties.DESCRIPCION || '';
+                                layer.bindPopup("<b>" + nombre + "</b><br>" + descripcion);
+                                agregarEventosPoligono(layer, estiloLlanuras);
+                            }
+                        });
+                        grupo.addLayer(capa);
+                        // Si el botón está activo, refrescar la capa en el mapa
+                        var btn = document.getElementById('btn-llanuras');
+                        if (btn && btn.classList.contains('active')) {
+                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                        }
+                    })
+                    .catch(function(e) {
+                        console.warn('❌ Error cargando llanura:', url, e.message);
+                    });
+            });
+
+            return grupo;
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 7. INSTANCIAR CAPAS Y TOGGLES
+        // ═══════════════════════════════════════════════════════════
+        capaCordilleras = crearCapaCordilleras();
+        capaLlanuras = crearCapaLlanuras();
         capaComunidadesRD = crearCapaComunidadesRD();
         capaComunidadesHT = crearCapaComunidadesHT();
         capaAlturasRD = crearCapaAlturas(alturasRD);
         capaAlturasHT = crearCapaAlturas(alturasHT);
 
-        // ═══════════════════════════════════════════════════════════
-        // 12. CARGA LAZY CON FILTRADO POR PREFIJO (NUEVA LÓGICA)
-        // ═══════════════════════════════════════════════════════════
-        
-        function cargarCapaAsync(prefijo, estilo, tipoNombre, claveEstado, btn) {
-            if (estadoCarga[claveEstado].cargada) {
-                return Promise.resolve();
-            }
-            if (estadoCarga[claveEstado].cargando) {
-                return Promise.resolve();
-            }
-            
-            // Filtrar archivos por prefijo (1 = montañas, 2 = llanuras)
-            var archivosFiltrados = filtrarArchivosPorPrefijo(prefijo);
-            
-            if (archivosFiltrados.length === 0) {
-                console.warn('No se encontraron archivos con prefijo ' + prefijo);
-                return Promise.resolve();
-            }
-            
-            console.log('Cargando ' + tipoNombre + ': ' + archivosFiltrados.length + ' archivos (prefijo ' + prefijo + ')');
-            
-            estadoCarga[claveEstado].cargando = true;
-            btn.classList.add('cargando');
-            btn.disabled = true;
-            
-            return cargarMultiplesGeoJSON(archivosFiltrados, 'Cargando ' + tipoNombre)
-                .then(function() {
-                    // Construir capa con los datos ya en caché
-                    if (claveEstado === 'cordilleras') {
-                        capaCordilleras = construirCapaGeoJSON(archivosFiltrados, estilo, tipoNombre);
-                    } else if (claveEstado === 'llanuras') {
-                        capaLlanuras = construirCapaGeoJSON(archivosFiltrados, estilo, tipoNombre);
-                    }
-                    
-                    estadoCarga[claveEstado].cargada = true;
-                    estadoCarga[claveEstado].cargando = false;
-                    btn.classList.remove('cargando');
-                    btn.disabled = false;
-                    
-                    console.log('✅ ' + tipoNombre + ' cargadas correctamente');
-                    ocultarLoader();
-                }).catch(function(error) {
-                    console.error('Error crítico:', error);
-                    estadoCarga[claveEstado].cargando = false;
-                    btn.classList.remove('cargando');
-                    btn.disabled = false;
-                    ocultarLoader();
-                });
-        }
-
         window.toggleCordilleras = function(btn) {
             btn.classList.toggle('active');
             if (btn.classList.contains('active')) {
-                if (!estadoCarga.cordilleras.cargada) {
-                    // Prefijo "1" = Montañas
-                    cargarCapaAsync('1', estiloCordilleras, 'Cordilleras', 'cordilleras', btn)
-                        .then(function() {
-                            if (capaCordilleras && btn.classList.contains('active')) {
-                                map.addLayer(capaCordilleras);
-                            }
-                        });
-                } else if (capaCordilleras) {
-                    map.addLayer(capaCordilleras);
-                }
+                map.addLayer(capaCordilleras);
             } else {
-                if (capaCordilleras) map.removeLayer(capaCordilleras);
-                if (capaSeleccionada && capaCordilleras && capaCordilleras.hasLayer(capaSeleccionada)) {
+                map.removeLayer(capaCordilleras);
+                // Si hay una selección de esta capa, limpiarla
+                if (capaSeleccionada && capaCordilleras.hasLayer(capaSeleccionada)) {
                     capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
                     capaSeleccionada = null;
                 }
@@ -791,20 +815,10 @@
         window.toggleLlanuras = function(btn) {
             btn.classList.toggle('active');
             if (btn.classList.contains('active')) {
-                if (!estadoCarga.llanuras.cargada) {
-                    // Prefijo "2" = Llanuras
-                    cargarCapaAsync('2', estiloLlanuras, 'Llanuras', 'llanuras', btn)
-                        .then(function() {
-                            if (capaLlanuras && btn.classList.contains('active')) {
-                                map.addLayer(capaLlanuras);
-                            }
-                        });
-                } else if (capaLlanuras) {
-                    map.addLayer(capaLlanuras);
-                }
+                map.addLayer(capaLlanuras);
             } else {
-                if (capaLlanuras) map.removeLayer(capaLlanuras);
-                if (capaSeleccionada && capaLlanuras && capaLlanuras.hasLayer(capaSeleccionada)) {
+                map.removeLayer(capaLlanuras);
+                if (capaSeleccionada && capaLlanuras.hasLayer(capaSeleccionada)) {
                     capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
                     capaSeleccionada = null;
                 }
@@ -816,16 +830,19 @@
             if (chk.checked) map.addLayer(capaComunidadesRD);
             else map.removeLayer(capaComunidadesRD);
         };
+
         window.toggleComunidadesHT = function() {
             var chk = document.getElementById('chk-comunidades-ht');
             if (chk.checked) map.addLayer(capaComunidadesHT);
             else map.removeLayer(capaComunidadesHT);
         };
+
         window.toggleAlturasRD = function() {
             var chk = document.getElementById('chk-alturas-rd');
             if (chk.checked) map.addLayer(capaAlturasRD);
             else map.removeLayer(capaAlturasRD);
         };
+
         window.toggleAlturasHT = function() {
             var chk = document.getElementById('chk-alturas-ht');
             if (chk.checked) map.addLayer(capaAlturasHT);
@@ -833,50 +850,68 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 13. REINICIAR VISTA
+        // 8. REINICIAR VISTA (mejorado)
         // ═══════════════════════════════════════════════════════════
         window.reiniciarVista = function() {
+            // 1. Restablecer zoom al nivel inicial
             map.setView([19.03556466237287, -70.89432006796727], 8);
             
+            // 2. Limpiar selección de polígono
             if (capaSeleccionada) {
                 capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
                 capaSeleccionada = null;
             }
 
+            // 3. Apagar capa de cordilleras (si está activa)
             var btnCordilleras = document.getElementById('btn-cordilleras');
             if (btnCordilleras && btnCordilleras.classList.contains('active')) {
                 btnCordilleras.classList.remove('active');
-                if (capaCordilleras) map.removeLayer(capaCordilleras);
+                map.removeLayer(capaCordilleras);
             }
 
+            // 4. Apagar capa de llanuras (si está activa)
             var btnLlanuras = document.getElementById('btn-llanuras');
             if (btnLlanuras && btnLlanuras.classList.contains('active')) {
                 btnLlanuras.classList.remove('active');
-                if (capaLlanuras) map.removeLayer(capaLlanuras);
+                map.removeLayer(capaLlanuras);
             }
 
-            ['chk-comunidades-rd', 'chk-comunidades-ht', 'chk-alturas-rd', 'chk-alturas-ht'].forEach(function(id) {
+            // 5. Desmarcar y apagar TODOS los checkboxes (excepto frontera)
+            var checkboxes = [
+                'chk-comunidades-rd',
+                'chk-comunidades-ht',
+                'chk-alturas-rd',
+                'chk-alturas-ht'
+            ];
+            checkboxes.forEach(function(id) {
                 var chk = document.getElementById(id);
                 if (chk) {
                     chk.checked = false;
-                    chk.dispatchEvent(new Event('change'));
+                    // Disparar el evento onchange para que se actualice la capa
+                    var evt = new Event('change');
+                    chk.dispatchEvent(evt);
                 }
             });
+
+            // NOTA: El checkbox de frontera (chk-frontera) se mantiene como está
+            // (por defecto checked) y su capa permanece visible.
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 14. UTILIDADES UI
+        // 9. UTILIDADES UI
         // ═══════════════════════════════════════════════════════════
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
         };
 
+        // Ajuste dinámico: en móvil, panel-controles se posiciona debajo del título real
         function ajustarPanelMobil() {
             if (window.innerWidth <= 768) {
                 var titulo = document.getElementById('panel-titulo');
                 var controles = document.getElementById('panel-controles');
                 var rect = titulo.getBoundingClientRect();
-                controles.style.top = (rect.bottom + 8) + 'px';
+                var nuevoTop = rect.bottom + 8;
+                controles.style.top = nuevoTop + 'px';
             } else {
                 document.getElementById('panel-controles').style.top = '';
             }
@@ -887,6 +922,7 @@
         window.abrirModalCreditos = function() {
             document.getElementById('modal-creditos').classList.add('active');
         };
+        
         window.cerrarModalCreditos = function(e) {
             if (!e || e.target.id === 'modal-creditos' || e.target.classList.contains('btn-cerrar-modal')) {
                 document.getElementById('modal-creditos').classList.remove('active');
@@ -894,51 +930,59 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 15. FRONTERA
+        // 10. CAPA DE FRONTERA (ACTIVA)
         // ═══════════════════════════════════════════════════════════
+
+        // Carga de la frontera RD-Haití (archivo dentro de anx/)
         var capaFrontera = null;
+        var fronteraCargada = false;
 
         function cargarFrontera() {
-            if (estadoCarga.frontera.cargada) return Promise.resolve();
-            if (estadoCarga.frontera.cargando) return Promise.resolve();
-            
-            estadoCarga.frontera.cargando = true;
-            
-            return cargarGeoJSON('anx/FRONTERA RD_HAI.geojson')
+            if (fronteraCargada) return;
+            fetch(encodeURI('anx/FRONTERA RD_HAI.geojson'))
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
                 .then(function(data) {
                     capaFrontera = L.geoJSON(data, {
-                        style: { color: '#FF0000', weight: 3, fill: false },
+                        style: {
+                            color: '#FF0000',
+                            weight: 3,
+                            fill: false
+                        },
                         onEachFeature: function(feature, layer) {
                             var nombre = feature.properties.NAME || 'Frontera';
                             layer.bindPopup("<b>" + nombre + "</b>");
                         }
                     });
-                    estadoCarga.frontera.cargada = true;
-                    estadoCarga.frontera.cargando = false;
-                    console.log('Frontera cargada');
+                    fronteraCargada = true;
                     if (document.getElementById('chk-frontera').checked) {
                         map.addLayer(capaFrontera);
                     }
+                    console.log('Frontera cargada correctamente.');
                 })
                 .catch(function(error) {
                     console.warn('Error cargando frontera:', error.message);
-                    estadoCarga.frontera.cargando = false;
                 });
         }
 
         window.toggleFrontera = function() {
             var chk = document.getElementById('chk-frontera');
             if (chk.checked) {
-                if (!estadoCarga.frontera.cargada) {
+                if (!fronteraCargada) {
                     cargarFrontera();
                 } else if (capaFrontera) {
                     map.addLayer(capaFrontera);
                 }
-            } else if (capaFrontera) {
-                map.removeLayer(capaFrontera);
+            } else {
+                if (capaFrontera) {
+                    map.removeLayer(capaFrontera);
+                }
             }
         };
 
+        // Inicialmente cargar la frontera si el checkbox está marcado (por defecto)
         if (document.getElementById('chk-frontera').checked) {
             cargarFrontera();
         }
