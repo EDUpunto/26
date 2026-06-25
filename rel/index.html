@@ -310,6 +310,21 @@
 
     <script>
         // ═══════════════════════════════════════════════════════════
+        // 0. FUNCIÓN AUXILIAR PARA OBTENER PROPIEDADES (más robusta)
+        // ═══════════════════════════════════════════════════════════
+        function getProperty(feature, keys) {
+            if (!feature || !feature.properties) return null;
+            for (var i = 0; i < keys.length; i++) {
+                var key = keys[i];
+                var val = feature.properties[key];
+                if (val !== undefined && val !== null && val !== '') {
+                    return val;
+                }
+            }
+            return null;
+        }
+
+        // ═══════════════════════════════════════════════════════════
         // 1. MAPA
         // ═══════════════════════════════════════════════════════════
         var map = L.map('map', { 
@@ -391,17 +406,15 @@
         };
 
         var estiloHover = {
-            weight: 3,
-          //  color: '#FFD700',
+            weight: 2,
             color: '#FFFFFF',
             fillOpacity: 0.5
         };
 
-        // ✅ Color de selección ahora es #FFFFFF (blanco)
         var estiloSeleccion = {
-            weight: 4,
+            weight: 3,
             color: '#FFFFFF',
-            fillOpacity: 0.6
+            fillOpacity: 0.5
         };
 
         // ═══════════════════════════════════════════════════════════
@@ -624,6 +637,7 @@
             return grupo;
         }
 
+        // Función para agregar eventos a los polígonos
         function agregarEventosPoligono(layer, estiloBase) {
             layer.originalStyle = estiloBase;
 
@@ -657,7 +671,7 @@
             });
         }
 
-        // --- Cordilleras / Sierras ---
+        // --- Cordilleras / Sierras (con búsqueda mejorada de propiedades) ---
         function crearCapaCordilleras() {
             var grupo = L.layerGroup();
             var archivos = [
@@ -688,10 +702,14 @@
                         var capa = L.geoJSON(data, {
                             style: estiloCordilleras,
                             onEachFeature: function(feature, layer) {
-                                // Título: NAME, descripción: NAME2 (según lo solicitado)
-                                var nombre = feature.properties.NAME || feature.properties.NOMBRE || feature.properties.name || 'Cordillera';
-                                var descripcion = feature.properties.NAME2 || feature.properties.DESCRIPCION || '';
-                                layer.bindPopup("<b>" + nombre + "</b><br>" + descripcion);
+                                // Búsqueda de título y descripción con múltiples posibles nombres
+                                var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name']) || 'Sin nombre';
+                                var descripcion = getProperty(feature, ['NAME2', 'DESCRIPCION', 'Descripcion', 'description', 'DESC']) || '';
+                                var popupContent = "<b>" + nombre + "</b>";
+                                if (descripcion) {
+                                    popupContent += "<br>" + descripcion;
+                                }
+                                layer.bindPopup(popupContent);
                                 agregarEventosPoligono(layer, estiloCordilleras);
                             }
                         });
@@ -709,7 +727,7 @@
             return grupo;
         }
 
-        // --- Llanuras / Valles ---
+        // --- Llanuras / Valles (con búsqueda mejorada) ---
         function crearCapaLlanuras() {
             var grupo = L.layerGroup();
             var archivos = [
@@ -749,9 +767,13 @@
                         var capa = L.geoJSON(data, {
                             style: estiloLlanuras,
                             onEachFeature: function(feature, layer) {
-                                var nombre = feature.properties.NAME || feature.properties.NOMBRE || feature.properties.name || 'Llanura';
-                                var descripcion = feature.properties.NAME2 || feature.properties.DESCRIPCION || '';
-                                layer.bindPopup("<b>" + nombre + "</b><br>" + descripcion);
+                                var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name']) || 'Sin nombre';
+                                var descripcion = getProperty(feature, ['NAME2', 'DESCRIPCION', 'Descripcion', 'description', 'DESC']) || '';
+                                var popupContent = "<b>" + nombre + "</b>";
+                                if (descripcion) {
+                                    popupContent += "<br>" + descripcion;
+                                }
+                                layer.bindPopup(popupContent);
                                 agregarEventosPoligono(layer, estiloLlanuras);
                             }
                         });
