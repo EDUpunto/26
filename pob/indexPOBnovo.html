@@ -361,8 +361,8 @@
                         },
                         onEachFeature: function(feature, layer) {
                             var dn = feature.properties.DN;
-                            var contenido = '<b>Población RD 2020</b><br>';
-                            contenido += 'Población (DN): ' + (dn !== undefined ? dn : 'N/D');
+                            var contenido = '<b>Densidad poblacional RD 2020</b><br>';
+                            contenido += 'Población x km²: ' + (dn !== undefined ? dn : 'N/D');
                             layer.bindPopup(contenido);
                         }
                     });
@@ -401,8 +401,8 @@
                         },
                         onEachFeature: function(feature, layer) {
                             var dn = feature.properties.DN;
-                            var contenido = '<b>Población Haití 2020</b><br>';
-                            contenido += 'Población (DN): ' + (dn !== undefined ? dn : 'N/D');
+                            var contenido = '<b>Densidad poblacional HAI 2020</b><br>';
+                            contenido += 'Población x km²: ' + (dn !== undefined ? dn : 'N/D');
                             layer.bindPopup(contenido);
                         }
                     });
