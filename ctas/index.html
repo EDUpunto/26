@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Costas SD</title>
+    <title>Hidrografía SD</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
@@ -21,6 +21,7 @@
             transition: all 0.3s ease;
         }
 
+        /* Título Destacado */
         #panel-titulo {
             top: 20px;
             left: 20px;
@@ -35,13 +36,14 @@
             letter-spacing: 0.5px;
             line-height: 1.1;
         }
-        #panel-titulo p {
+        #panel-titulo h2 {
             font-size: 14px;
             color: #2c3e50;
             font-weight: 500;
             margin-top: 4px;
         }
 
+        /* Controles Desplegables */
         #panel-controles {
             top: 20px;
             right: 20px;
@@ -81,6 +83,7 @@
             pointer-events: none;
         }
 
+        /* Enlaces Discretos en cuadrícula 2x2 */
         .enlaces-discretos {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -105,6 +108,7 @@
         }
         .enlace-texto.cursor-pointer { cursor: pointer; }
 
+        /* Estilos de controles internos */
         .grupo-control { margin-bottom: 12px; }
         .grupo-control:last-child { margin-bottom: 0; }
         .grupo-control h4 {
@@ -115,7 +119,6 @@
             letter-spacing: 0.5px;
             font-weight: 700;
         }
-
         .btn-opcion {
             display: flex; align-items: center; gap: 8px; padding: 6px 10px;
             border: 1px solid #e0e0e0; border-radius: 6px; background: #E9E9ED;
@@ -124,56 +127,14 @@
         }
         .btn-opcion:hover { background: #f8f9fa; border-color: #2980b9; color: #2980b9; }
         .btn-opcion.active { background: #2980b9; color: white; border-color: #2980b9; }
-
-        .btn-relieve {
-            margin-bottom: 4px;
-        }
-        .btn-relieve:last-child {
-            margin-bottom: 0;
-        }
-
+        
         .checkbox-opcion {
             display: flex; align-items: center; gap: 8px; padding: 3px 0;
             font-size: 12px; color: #333; cursor: pointer;
         }
         .checkbox-opcion input { accent-color: #2980b9; width: 14px; height: 14px; cursor: pointer; }
 
-        .legend-symbol {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            display: inline-block;
-        }
-        .symbol-rombo {
-            width: 12px;
-            height: 12px;
-            transform: rotate(45deg);
-            flex-shrink: 0;
-            display: inline-block;
-            border: 1px solid #666;
-        }
-        .symbol-star {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            line-height: 1;
-            color: #D35400;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            font-weight: bold;
-            width: 16px;
-            flex-shrink: 0;
-        }
-        .symbol-line {
-            width: 18px;
-            height: 3px;
-            background: #FF0000;
-            flex-shrink: 0;
-            border-radius: 2px;
-            display: inline-block;
-        }
-
+        /* Modal */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 2000; display: none;
@@ -193,6 +154,7 @@
         }
         .btn-cerrar-modal:hover { background: #1f618d; }
 
+        /* Leaflet Controls Positioning */
         .leaflet-bottom.leaflet-right {
             margin-bottom: 10px;
             margin-right: 10px;
@@ -225,43 +187,19 @@
             order: 0;
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
-            #panel-titulo {
-                top: 10px;
-                left: 10px;
-                right: 10px;
-                width: auto;
-                text-align: center;
-                border-left: none;
-                border-bottom: 3px solid #2980b9;
+            #panel-titulo { 
+                top: 10px; left: 10px; right: 10px; width: auto; 
+                text-align: center; border-left: none; border-bottom: 3px solid #2980b9;
             }
-            #panel-titulo h1 { font-size: 18px; }
-            #panel-titulo p  { font-size: 12px; margin-top: 2px; }
-
-            #panel-controles {
-                top: 80px;
-                right: 10px;
-                left: 10px;
-                width: auto;
-                max-height: calc(100vh - 100px);
+            #panel-controles { 
+                top: 70px; right: 10px; width: 260px; 
+                max-height: 70vh;
             }
         }
         @media (max-width: 480px) {
-            #panel-titulo {
-                top: 8px;
-                left: 8px;
-                right: 8px;
-            }
-            #panel-titulo h1 { font-size: 16px; }
-            #panel-titulo p  { font-size: 11px; }
-
-            #panel-controles {
-                top: 76px;
-                right: 8px;
-                left: 8px;
-                width: auto;
-                max-height: calc(100vh - 94px);
-            }
+            #panel-controles { width: calc(100vw - 20px); right: 10px; }
         }
     </style>
 </head>
@@ -269,10 +207,10 @@
 
     <div id="map"></div>
 
-    <!-- Título -->
+    <!-- Título Destacado -->
     <div id="panel-titulo" class="panel">
-        <h1>🗺️ Costas SD</h1>
-        <p>Accidentes costeros, ríos y puertos de la isla de Santo Domingo</p>
+        <h1>🗺️ Hidrografía SD</h1>
+        <p>Aguas Superficiales de la isla de Santo Domingo</p>
     </div>
 
     <!-- Controles -->
@@ -282,76 +220,53 @@
             <span class="toggle-icon">▼</span>
         </div>
         <div class="panel-content">
-            <!-- Base -->
             <div class="grupo-control">
                 <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <button id="vistaDibujoBtn" class="btn-opcion active" onclick="cambiarBase('mapa', this)">🗺️ Vista Dibujo</button>
-                    <button id="vistaSateliteBtn" class="btn-opcion" onclick="cambiarBase('satelite', this)">🛰️ Vista Satélite</button>
+                    <button class="btn-opcion active" onclick="cambiarBase('mapa', this)">🗺️ Vista Dibujo</button>
+                    <button class="btn-opcion" onclick="cambiarBase('satelite', this)">🛰️ Vista Satélite</button>
                 </div>
             </div>
 
-            <!-- Capas principales -->
             <div class="grupo-control">
-                <h4>Capas costeras</h4>
+                <h4>Capa hidrográfica</h4>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <button id="btn-capa-cauce" class="btn-opcion" onclick="cambiarCapas('cauce', this)">〰️ Cauce</button>
+                    <button id="btn-capa-cuenca" class="btn-opcion" onclick="cambiarCapas('cuenca', this)">🟩 Cuenca</button>
+                    <button id="btn-capa-ambos" class="btn-opcion active" onclick="cambiarCapas('ambos', this)">🗂️ Ambos</button>
+                </div>
+            </div>
+
+            <!-- Botón Mostrar todas (estilo consistente) -->
+            <div class="grupo-control">
+                <button class="btn-opcion active" style="background-color: #4AC58A;" onclick="mostrarTodas()"><strong> ⌂ REINICIAR</strong></button>
+            </div>
+
+            <div class="grupo-control">
+                <h4>Capas adicionales</h4>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkAccRD" checked> <span class="legend-symbol" style="background:#8E44AD;"></span> Accidentes costeros RD
+                    <input type="checkbox" id="chk-presas" onchange="togglePresas()"> 🟠 Presas
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkAccHT" checked> <span class="legend-symbol" style="background:#8E44AD;"></span> Accidentes costeros HAITÍ
+                    <input type="checkbox" id="chk-lagos" onchange="toggleLagos()"> 🔵 Lagos / Lagunas
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkRiosRD" checked> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos RD
+                    <input type="checkbox" id="chk-comunidades-rd" onchange="toggleComunidadesRD()"> ⭐ Comunidades dominicanas
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkRiosHT" checked> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos HAITÍ
+                    <input type="checkbox" id="chk-comunidades-ht" onchange="toggleComunidadesHT()"> ⭐ Comunidades haitianas
+                </label>
+                <!-- NUEVA: Frontera RD-Haití (activada por defecto) -->
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🔴 Frontera RD‑Haití
                 </label>
             </div>
 
-            <!-- Puertos -->
-            <div class="grupo-control">
-                <h4>Puertos / Marinas</h4>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkTur" checked> <span class="symbol-rombo" style="background:#3964FE;"></span> Puertos turísticos
-                </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkMarina" checked> <span class="symbol-rombo" style="background:#FFFFFF;"></span> Marinas recreativas
-                </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkArmada" checked> <span class="symbol-rombo" style="background:#666666;"></span> Armada (Base naval)
-                </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkCarga" checked> <span class="symbol-rombo" style="background:#5ABBF5;"></span> Carga / Combustibles
-                </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkFondeadero" checked> <span class="symbol-rombo" style="background:#F39C12;"></span> Fondeaderos
-                </label>
-            </div>
-
-            <!-- Comunidades y frontera -->
-            <div class="grupo-control">
-                <h4>Comunidades</h4>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkCiudadesRD"> <span class="symbol-star">★</span> Comunidades dominicanas
-                </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkCiudadesHT"> <span class="symbol-star">★</span> Comunidades haitianas
-                </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> <span class="symbol-line"></span> Frontera RD-Haití
-                </label>
-            </div>
-
-            <!-- Reiniciar -->
-            <div class="grupo-control">
-                <button id="resetMapBtn" class="btn-opcion active" style="background-color: #4AC58A;"><strong> ⌂ REINICIAR</strong></button>
-            </div>
-
-            <!-- Enlaces -->
+            <!-- Enlaces discretos -->
             <div class="enlaces-discretos">
-                <a href="https://edupunto.com/2013/02/geografia-y-puertos-de-las-costas/" target="_blank" class="enlace-texto">🌐 Artículo WEB</a>
-                <a href="https://drive.google.com/file/d/1tEOywwmhP8szzzAjPrb3vaRNwAhWzSFN/view" target="_blank" class="enlace-texto">🖨️ IMPRIMIBLE</a>
+                <a href="https://edupunto.com/2022/01/rios-importantes-de-dominicana/" target="_blank" class="enlace-texto">🌐 Artículo WEB</a>
+                <a href="https://drive.google.com/file/d/1kCcGXRuTVtTigYxtQMEITKMT42g8akv5/view?usp=sharing" target="_blank" class="enlace-texto">🖨️ IMPRIMIBLE</a>
                 <span class="enlace-texto cursor-pointer" onclick="abrirModalCreditos()">© CRÉDITOS</span>
-                <a href="https://isfodosu.edu.do/" target="_blank" class="enlace-texto">🎓 ISFODOSU</a>
+                <a href="https://drive.google.com/file/d/16UP5fYCeAg1RaSXWI9cTsO7FVq6YM0Hf/view?usp=sharing" target="_blank" class="enlace-texto">💡 CONCEPTO</a>
             </div>
         </div>
     </div>
@@ -361,12 +276,12 @@
         <div class="modal-content">
             <h3><strong>I S F O D O S U</strong></h3>
             <p>DIGICON</p>
-            <p><strong>COSTAS DE LA ISLA DE<br>SANTO DOMINGO</strong></p>
+            <p><strong>HIDROGRAFÍA DE LA ISLA DE<br>SANTO DOMINGO</strong></p>
             <p style="font-size: 12px;">Juan Ernesto De Frías,<br>José Alberto Santos y Carlos Gabriel Tapia<br>
             Santo Domingo, República Dominicana<br>
-            <p style="font-size: 12px;">Inicio de maquetación 16.mayo.2026</p>
+            <p style="font-size: 12px;">Inicio de maquetación 25.mayo.2026</p>
             <p style="font-size: 10px;">Detrás de este recurso hay varios meses de investigación y trabajo.<br>Tu opinión es fundamental: si ves algún punto que se pueda mejorar, ¡no dudes en escribirme!<br>edefrias@gmail.com</p>
-        
+
             <h3>FUENTES</h3>
             <p style="font-size: 10px;">Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022.<br> https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de-poblacion-y-vivienda-2022/.</p>
             <br>
@@ -376,11 +291,11 @@
 
     <script>
         // ═══════════════════════════════════════════════════════════
-        // 1. MAPA
+        // 1. INICIALIZAR EL MAPA
         // ═══════════════════════════════════════════════════════════
-        var map = L.map('map', {
+        var map = L.map('map', { 
             zoomControl: false,
-            attributionControl: false
+            attributionControl: false 
         }).setView([19.03556466237287, -70.89432006796727], 8);
 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -390,243 +305,134 @@
         // ═══════════════════════════════════════════════════════════
         // 2. CAPAS BASE
         // ═══════════════════════════════════════════════════════════
-
-        var capaCalles = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: 'CyclOSM | Mapa base'
+        var capaDibujo = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 12,
+            attribution: '© OpenStreetMap'
         });
-
         var capaSatelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            maxZoom: 19,
-            attribution: 'Esri World Imagery'
+            maxZoom: 12,
+            attribution: 'Tiles © Esri'
         });
-
-        var capaBaseActual = capaCalles;
-        capaCalles.addTo(map);
+        capaDibujo.addTo(map);
 
         window.cambiarBase = function(tipo, btn) {
             document.querySelectorAll('#panel-controles .grupo-control:first-child .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
-
-            map.removeLayer(capaBaseActual);
+            
             if (tipo === 'satelite') {
-                capaBaseActual = capaSatelite;
+                map.removeLayer(capaDibujo);
+                capaSatelite.addTo(map);
             } else {
-                capaBaseActual = capaCalles;
+                map.removeLayer(capaSatelite);
+                capaDibujo.addTo(map);
             }
-            capaBaseActual.addTo(map);
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 3. DATOS
+        // 3. ESTADO GLOBAL
         // ═══════════════════════════════════════════════════════════
+        var todasLasCuencas = [];
+        var cuencaActiva = null;
+        var capaVisible = 'ambos';
+        var capaPresas = null;
+        var capaLagos = null;
 
-        var puntos = [
-{ lat: 18.401415971261315, lng: -69.63189544985755, titulo: "Cabo Caucedo", comentario: "Lugar del puerto principal de la RD.  Amplio movimiento de entrada y salida de contenedores.<br>18.40141, -69.63189" },
-{ lat: 19.898697175303738, lng: -71.65371073936308, titulo: "Cabo del Morro", comentario: "Acantilado y vista al océano Atlántico.<br>19.89869, -71.65371" },
-{ lat: 19.889945596166736, lng: -71.6492172103686, titulo: "Morro de Montecristi", comentario: "Formación rocosa costera con valor ecológico.  Descubierto por Colón en su 1er viaje.<br>19.88994, -71.64921" },
-{ lat: 19.88777180811018, lng: -71.66861300383222, titulo: "Isla Cabra", comentario: "Pequeña isla de manglares y aves marinas.<br>19.88777, -71.66861" },
-{ lat: 19.745761510527092, lng: -71.75456754175141, titulo: "Bahía de Manzanillo", comentario: "Bahía cerrada con flecha litoral, humedales de manglares y la mayor promesa portuaria de carga de RD.<br>19.74576, -71.75456" },
-{ lat: 19.778491397418147, lng: -71.77724800174117, titulo: "Punta Manzanillo", comentario: "Punta de la flecha litoral que completa la bahía.<br>19.77849, -71.77724" },
-{ lat: 19.655129312685947, lng: -71.71171631945401, titulo: "Laguna Saladilla", comentario: "Laguna costera hipersalina con avifauna diversa.<br>19.65512, -71.71171" },
-{ lat: 19.88360908322702, lng: -71.78553218538097, titulo: "Cayo Monte Grande", comentario: "Cayo arenoso con vegetación costera y playa.<br>19.88360, -71.78553" },
-{ lat: 19.862771650559143, lng: -71.76645989115852, titulo: "Cayo Monte Chico", comentario: "Pequeño cayo rodeado de aguas cristalinas.<br>19.86277, -71.76645" },
-{ lat: 19.827700880159668, lng: -71.79613807326433, titulo: "Cayo Terrero", comentario: "Cayo de arena blanca y aguas someras.<br>19.82770, -71.79613" },
-{ lat: 19.853315915771, lng: -71.81852565750556, titulo: "Cayo Muertos", comentario: "Cayo con historia de naufragios y arrecifes.<br>19.85331, -71.81852" },
-{ lat: 19.875950918369615, lng: -71.81788943930438, titulo: "Cayo Ratas/Pablillo", comentario: "Cayo pequeño usado por pescadores locales.<br>19.87595, -71.81788" },
-{ lat: 19.89460600405907, lng: -71.81229917525489, titulo: "Cayo Tororú", comentario: "Cayo rodeado de praderas de pastos marinos.<br>19.89460, -71.81229" },
-{ lat: 19.869925154384998, lng: -71.86395913912352, titulo: "Cayo Arenas", comentario: "Cayo de arena rodeado de arrecifes.<br>19.86992, -71.86395" },
-{ lat: 19.87012919244153, lng: -71.30557395163945, titulo: "Cayo Arena", comentario: "Banco de arena blanca en medio del mar. No es un cayo.<br>19.87012, -71.30557" },
-{ lat: 19.869935349250476, lng: -71.21171195703263, titulo: "Punta Rusia", comentario: "Punta rocosa en el norte de la isla de SD.<br>19.86993, -71.21171" },
-{ lat: 19.849205348531424, lng: -71.17269594730766, titulo: "Estero Hondo", comentario: "Ecosistema de humedales y manglar con manatíes.<br>19.84920, -71.17269" },
-{ lat: 19.931324644015668, lng: -70.99806277941562, titulo: "Cabo Isabela", comentario: "Sitio histórico del primer asentamiento europeo. Un lugar semiárido.<br>19.93132, -70.99806" },
-{ lat: 19.904922451353624, lng: -70.83843515828855, titulo: "Punta de Patilla", comentario: "Punta con acantilados y vista panorámica.<br>19.90492, -70.83843" },
-{ lat: 19.900659645556697, lng: -70.94753922732326, titulo: "Bahía de Luperón", comentario: "Bahía resguardada con humedales y manglares.<br>19.90065, -70.94753" },
-{ lat: 19.83393880041659, lng: -70.77910151998599, titulo: "Bahía de Maimón", comentario: "Pequeña bahía con playa y legado histórico.<br>19.83393, -70.77910" },
-{ lat: 19.821721953437343, lng: -70.72732798590087, titulo: "Bahía de Cofresí", comentario: "Bahía nombrada por el pirata Cofresí.<br>19.82172, -70.72732" },
-{ lat: 19.80275635707941, lng: -70.70221393389002, titulo: "Bahía de Puerto Plata", comentario: "Bahía urbana con puerto turístico y de carga.<br>19.80275, -70.70221" },
-{ lat: 19.7522428101026, lng: -70.40173463631227, titulo: "Punta Cabarete", comentario: "Punta famosa por deportes acuáticos de surf.<br>19.75224, -70.40173" },
-{ lat: 19.66668837196901, lng: -69.93681029312651, titulo: "Cabo Francés Viejo", comentario: "Cabo que destaca por su impresionante acantilado, las ruinas de su faro histórico y la vecina playa El Bretón.<br>19.66668, -69.93681" },
-{ lat: 19.50831731813077, lng: -69.8694070167175, titulo: "Punta Laguna Grande", comentario: "Punta frente a Bahía Escocesa en el Atlántico.<br>19.50831, -69.86940" },
-{ lat: 19.38500258110248, lng: -69.76198244607639, titulo: "Bahía Escosesa", comentario: "Bahía abierta al Atlántico noreste.<br>19.38500, -69.76198" },
-{ lat: 19.26318454383689, lng: -69.50717975124323, titulo: "Península de Samaná", comentario: "Península con relieve montañoso y de mucha vegetación y clima muy húmedo. <br>19.26318, -69.50717" },
-{ lat: 19.32933957871744, lng: -69.42384017017027, titulo: "Cayo Limón", comentario: "Cayo ubicado en la costa Atlántica frente a la desembocadura del río Limón.<br>19.32933, -69.42384" },
-{ lat: 19.355239356355614, lng: -69.2279235683259, titulo: "Cabo Cabrón", comentario: "Cabo con acantilado situado al noreste del país con extremo oleaje y fuertes corrientes.<br>19.35523, -69.22792" },
-{ lat: 19.306253430663016, lng: -69.22494107965022, titulo: "Bahía Rincón", comentario: "Bahía limitada por cabos Cabrón y Samaná.<br>19.30625, -69.22494" },
-{ lat: 19.29889265602067, lng: -69.15759239449994, titulo: "Cabo Samaná", comentario: "Cabo oriental de la península de Samaná.<br>19.29889, -69.15759" },
-{ lat: 19.166648707768736, lng: -69.2755119339007, titulo: "Cayo Levantado", comentario: "Cayo turístico dentro de la bahía de Samaná y operado por un hotel. Rodeada de playas, arrecifes de coral y acantilados rocosos.  Se extiende por 215 mil m² (0.215 km²).  Su playa pública es demandada por turistas que visitan Samaná.<br>19.16664, -69.27551" },
-{ lat: 19.16914170233084, lng: -69.27019623338307, titulo: "Cayo La Farola", comentario: "Cayo deshabitado cercano a cayo Levantado.  Se extiende por 26 mil m². <br>19.16914, -69.27019" },
-{ lat: 19.156847881454176, lng: -69.54679192132382, titulo: "Bahía de Samaná", comentario: "La bahía es un importante destino turístico y pesquero. Tiene una forma aproximadamente rectangular con 65 km de este a oeste y 25 km de norte a sur. Ocupa unos 625 km² aproximadamente.  Limitada por la península de Samaná al norte y el parque nacional de los Haitises al sur.  Posee aguas profundas, convirtiéndola en uno de los mejores puertos naturales del Caribe.<br>19.15684, -69.54679" },
-{ lat: 19.099921118749645, lng: -69.74729821208554, titulo: "Laguna Cristalina", comentario: "Laguna en el límite norte de los Haitises de aguas cristalinas.<br>19.09992, -69.74729" },
-{ lat: 19.09758762688157, lng: -69.73196109760362, titulo: "Laguna Cristal", comentario: "Laguna en el límite norte de los Haitises de aguas profundas.<br>19.09758, -69.73196" },
-{ lat: 19.085368769407342, lng: -69.45219792686838, titulo: "Bahía de San Lorenzo", comentario: "Bahía cerrada con flecha litoral dentro de la bahía de Samaná. Posee importantes manglares y entrada al parque Los Haitises.<br>19.08536, -69.45219" },
-{ lat: 19.023514779239836, lng: -69.1455251448014, titulo: "Bahía de La Gina", comentario: "Pequeña bahía con flecha litoral. Casi en la entrada de la bahía de Samaná.<br>19.02351, -69.14552" },
-{ lat: 19.041967028785454, lng: -69.13559241429748, titulo: "Punta Mangles", comentario: "Punta con extensos manglares.<br>19.04196, -69.13559" },
-{ lat: 19.01368023582993, lng: -68.93922228473721, titulo: "Laguna Redonda", comentario: "Laguna costera de forma circular.<br>19.01368, -68.93922" },
-{ lat: 18.9792850619904, lng: -68.84980200842959, titulo: "Laguna del Limón", comentario: "Laguna costera de aguas salobres.<br>18.97928, -68.84980" },
-{ lat: 18.97395623165452, lng: -68.77597515880271, titulo: "Punta Nisibón", comentario: "Punta con playa rodeada de humedales y manglares.<br>18.97395, -68.77597" },
-{ lat: 18.897348393448915, lng: -68.66550477348369, titulo: "Punta Puerto Escondido", comentario: "Punta arenosa cercana a arrecifes de coral.<br>18.89734, -68.66550" },
-{ lat: 18.779398628458928, lng: -68.52739802435059, titulo: "Punta Macao", comentario: "Punta rocosa, acantilado, playa cercana y fuerte oleaje.<br>18.77939, -68.52739" },
-{ lat: 18.66510896958193, lng: -68.3803872581835, titulo: "Punta Cabeza de Toro", comentario: "Punta arenosa rodeada de arrecifes de coral, cercana a laguna Bávaro.<br>18.66510, -68.38038" },
-{ lat: 18.646583732035133, lng: -68.3741838558596, titulo: "Laguna de Bávaro", comentario: "Laguna natural de aguas salobres en peligro de extinción.<br>18.64658, -68.37418" },
-{ lat: 18.616826598604707, lng: -68.32514736697995, titulo: "Cabo Engaño", comentario: "Cabo rocoso en el extremo este de la isla. Existe un monumento o hito.<br>18.61682, -68.32514" },
-{ lat: 18.348163794270047, lng: -68.4685534525929, titulo: "Cabo San Rafael", comentario: "Cabo rocoso al sureste.<br>18.34816, -68.46855" },
-{ lat: 18.362153526738698, lng: -68.59699247250697, titulo: "Bahía de Yuma", comentario: "Bahía en la desembocadura del río Yuma.<br>18.36215, -68.59699" },
-{ lat: 18.21319388996826, lng: -68.64606962526226, titulo: "Punta El Algibe", comentario: "Punta rocosa en la Isla Saona.<br>18.21319, -68.64606" },
-{ lat: 18.19524900032121, lng: -68.6378344380777, titulo: "Isla Catalinita", comentario: "Pequeña isla deshabitada conformada por rocas y rodeada de arrecifes. Cercana a la isla Saona.<br>18.19524, -68.63783" },
-{ lat: 18.205898029181704, lng: -68.73471794373677, titulo: "Isla María", comentario: "Islote de manglares al norte de Saona.<br>18.20589, -68.73471" },
-{ lat: 18.15047240579683, lng: -68.70425645730123, titulo: "Isla Saona", comentario: "Isla al sureste rodeada de playas de arena blanca, arrecifes de coral, lagunas costeras y cocotales.  Se extiende por unos 110 km² aproximadamente<br>18.15047, -68.70425" },
-{ lat: 18.208995883298837, lng: -68.74976896713544, titulo: "Punta Catuano", comentario: "Punta con canal de acceso a Isla Saona.<br>18.20899, -68.74976" },
-{ lat: 18.406436824199496, lng: -68.94775432831271, titulo: "Punta Águila del este", comentario: "Punta rocosa con vista al mar Caribe.<br>18.40643, -68.94775" },
-{ lat: 18.359648082761627, lng: -69.00855679720497, titulo: "Isla Catalina", comentario: "Isla situada frente a la costa de La Romana.  Ocupa 9 km² Sus costas mixtas de playas, arrecifes de coral y acantilados rocosos.<br>18.35964, -69.00855" },
-{ lat: 18.430212915226395, lng: -69.32156770291772, titulo: "Cabo Macorís", comentario: "Cabo cercano a San Pedro de Macorís.<br>18.43021, -69.32156" },
-{ lat: 18.428303077375407, lng: -74.47954967222906, titulo: "Cabo Irois (Cap des lrois)", comentario: "Cabo rocoso más al oeste de Haití.<br>18.42830, -74.47954" },
-{ lat: 18.031940054249684, lng: -73.78866797037658, titulo: "Punta Abaco (Pointe L’Abacou)", comentario: "Punta rocosa en la costa sur de Haití.<br>18.03194, -73.78866" },
-{ lat: 18.57841172264001, lng: -73.60430040834693, titulo: "Península de Baraderes (Presqu’ile de Baraderes)", comentario: "Península desierta dentro del golfo de Gonave.<br>18.57841, -73.60430" },
-{ lat: 19.063050954507887, lng: -72.81933374614087, titulo: "Cabo San Marcos (Cap Saint Marc)", comentario: "Cabo rocoso frente al golfo de Gonave.<br>19.06305, -72.81933" },
-{ lat: 20.08761149075324, lng: -72.8575801686309, titulo: "Cabo Binquette (Cap Binquette)", comentario: "Cabo al norte de la isla Tortuga.<br>20.08761, -72.85758" },
-{ lat: 18.43126462935202, lng: -69.60799795394897, titulo: "Bahía de Andrés", comentario: "Bahía con puerto deportivo y playas.<br>18.43126, -69.60799" },
-{ lat: 18.2238636606466, lng: -70.23729951762026, titulo: "Punta Catalina", comentario: "Punta al sur con importante generadora eléctrica.<br>18.22386, -70.23729" },
-{ lat: 18.20929459584414, lng: -70.5664762247784, titulo: "Punta Salinas", comentario: "Punta con salinas y playas.<br>18.20929, -70.56647" },
-{ lat: 18.22349023877843, lng: -70.53289854153572, titulo: "Bahía de Las Calderas", comentario: "Bahía profunda, cerrada con flecha litoral, base naval y actividades deportivas.<br>18.22349, -70.53289" },
-{ lat: 18.377871154697694, lng: -70.64099620816235, titulo: "Bahía de Ocoa", comentario: "Bahía abierta, amplia y profunda con algunas playas.<br>18.37787, -70.64099" },
-{ lat: 18.34962869037077, lng: -70.80272569529228, titulo: "Bahía de Jura", comentario: "Pequeña bahía con playa y poca vegetación. Desembocadura del río Tábara.<br>18.34962, -70.80272" },
-{ lat: 18.337241556112684, lng: -70.82070601300842, titulo: "Cayo Boca Chica", comentario: "Cayo pequeño que protege ecosistema de manatíes, estuario, humedal y manglar.<br>18.33724, -70.82070" },
-{ lat: 18.3421826444704, lng: -70.83599747226957, titulo: "Bahía Puerto Viejo", comentario: "Bahía con puerto industrial de combustibles y generadoras de eléctricidad.<br>18.34218, -70.83599" },
-{ lat: 18.24908516490826, lng: -70.9579016730816, titulo: "Punta Martín García", comentario: "Punta rocosa con acantilados.<br>18.24908, -70.95790" },
-{ lat: 18.271278364953535, lng: -71.06011134547535, titulo: "Bahía de Neiba", comentario: "Bahía amplia, profunda desembocadura del río Yaque del Sur.<br>18.27127, -71.06011" },
-{ lat: 17.773215659073358, lng: -71.36570983268444, titulo: "Laguna de Oviedo", comentario: "Laguna de aguas salobres en peligro de extinción.<br>17.77321, -71.36570" },
-{ lat: 17.748434020500113, lng: -71.34749345493938, titulo: "Cayo Mondesí", comentario: "Cayo situado entre la laguna de Oviedo y el mar Caribe.<br>17.74843, -71.34749" },
-{ lat: 17.84217314280853, lng: -71.28103256295232, titulo: "Cayo Pisaje", comentario: "Cayo de arena blanca que protege ecosistema de humedales y manglar.<br>17.84217, -71.28103" },
-{ lat: 17.60934727008468, lng: -71.42395075157987, titulo: "Cabo Beata", comentario: "Punto más meridional (al sur) de la isla de Santo Domingo. Su clima es de bosque seco y su paisaje kárstico.<br>17.60934, -71.42395" },
-{ lat: 17.58054411334642, lng: -71.51519990025173, titulo: "Isla Beata", comentario: "Isla deshabitada de 43 km² al suroeste de Cabo Beata.  Llegó a funcionar como una temida cárcel durante la dictadura de Trujillo<br>17.58054, -71.51519" },
-{ lat: 17.617810551285572, lng: -71.5215108871001, titulo: "Punta Beata", comentario: "Punto más septentrional (al norte) de la isla Beata.<br>17.61781, -71.52151" },
-{ lat: 17.47673010733354, lng: -71.64310048712883, titulo: "Isla Alto Velo", comentario: "Islote de 0.9 km² y con faro abandonado. Lugar más al sur de la RD.  En febrero de 1860, piratas estadounidenses se apoderaron de la isla oara aprovecharse del guano, en octubre fueron apresados por la marina dominicana.<br>17.47673, -71.64310" },
-{ lat: 17.4905282366067, lng: -71.64163117307348, titulo: "Cayo Los Frailes", comentario: "Islote de 20 mil m² (0.02 km²) al norte de isla Alto Velo.<br>17.49052, -71.64163" },
-{ lat: 17.770161361705018, lng: -71.68837748932467, titulo: "Cabo Falso / Punta Águilas", comentario: "Cabo rocoso y poca vegetación, con acantilados.<br>17.77016, -71.68837" },
-{ lat: 17.810781382495712, lng: -71.65318854393053, titulo: "Punta Chimanche", comentario: "Punta de acantilados rocosos y agrestes.<br>17.81078, -71.65318" },
-{ lat: 17.90507251288631, lng: -71.67203813986372, titulo: "Cabo Rojo", comentario: "Cabo rocoso y acantilado.<br>17.90507, -71.67203" },
-{ lat: 17.840256274199824, lng: -71.63372213599197, titulo: "Bahía de Las Águilas", comentario: "Bahía con playa de arena blanca y aguas prístinas.<br>17.84025, -71.63372" },
-{ lat: 18.178501710547327, lng: -72.54537471811965, titulo: "Cabo Jacmel", comentario: "Cabo cerca de la ciudad de Jacmel.<br>18.17850, -72.54537" },
-{ lat: 18.39189119735582, lng: -73.3416776906585, titulo: "Península de Tiburón", comentario: "Península occidental de Haití. Conjuntamente con península de San Nicolás limitan el golfo de Gonave.<br>18.39189, -73.34167" },
-{ lat: 18.078632835421335, lng: -73.62325703844466, titulo: "Isla de la Vaca (Île-à-Vache)", comentario: "Isla turística haitiana con poca vegetación y playas.  Se extiende por 45km².<br>18.07863, -73.62325" },
+        // ═══════════════════════════════════════════════════════════
+        // 4. ESTILOS E ICONOS (con tamaños reducidos al 30%)
+        // ═══════════════════════════════════════════════════════════
+        // Estilos para República Dominicana
+        var estiloCuencaNormal = { color: "#27ae60", weight: 1.5, fillColor: "#2ecc71", fillOpacity: 0.18, opacity: 0.8 };
+        var estiloCuencaOculta = { color: "#27ae60", weight: 1, fillColor: "#2ecc71", fillOpacity: 0.04, opacity: 0.15 };
+        var estiloCauceNormal = { color: "#2980b9", weight: 3, opacity: 0.85, lineCap: 'round' };
+        var estiloCauceOculta = { color: "#2980b9", weight: 1.5, opacity: 0.12, lineCap: 'round' };
 
-{ lat: 18.215230853802794, lng: -73.53603260122556, titulo: "Cayo Orange", comentario: "Cayo haitiano habitada a pocos km de la costa.  Se extiende por 155 mil m² (0.155 km²).  Rodeada de playas y arrecifes de coral.<br>8.21523, -73.53603" },
-{ lat: 18.213162717302545, lng: -73.51632139879462, titulo: "Isla Moustique (Mosquito)", comentario: "Isla haitiana deshabitada a pocos km de la costa.  Se extiende por 295 mil m² (0.295 km²) y esta rodeada de playas.<br>18.21316, -73.51632" },
+        // Estilos para Haití
+        var estiloCuencaHaiti = { color: "#e67e22", weight: 1.5, fillColor: "#f39c12", fillOpacity: 0.18, opacity: 0.8 };
+        var estiloCuencaHaitiOculta = { color: "#e67e22", weight: 1, fillColor: "#f39c12", fillOpacity: 0.04, opacity: 0.15 };
+        var estiloCauceHaiti = { color: "#2980b9", weight: 3, opacity: 0.85, lineCap: 'round' };
+        var estiloCauceHaitiOculta = { color: "#2980b9", weight: 1.5, opacity: 0.12, lineCap: 'round' };
 
-{ lat: 18.217399862251668, lng: -73.46400365689595, titulo: "Isla Audén", comentario: "Isla haitiana habitada a pocos km de la costa.  Se extiende por 120 mil m² (0.12 km²) y esta rodeada de playas y arrecifes de coral. <br>18.21739, -73.46400" },
+        var estiloCuencaDestacada = { color: "#f39c12", weight: 2.5, fillColor: "#f1c40f", fillOpacity: 0.35, opacity: 1 };
+        var estiloCuencaHover = { color: "#f1c40f", weight: 2.5, fillColor: "#f39c12", fillOpacity: 0.4, opacity: 1 };
+        var estiloCauceDestacado = { color: "#3498db", weight: 4.5, opacity: 1, lineCap: 'round' };
+        var estiloCauceHover = { color: "#2980b9", weight: 5, opacity: 1, lineCap: 'round' };
 
-{ lat: 18.224615461150048, lng: -73.40606394462283, titulo: "Cayo Grueso (Île Grosse Caye)", comentario: "Pequeña isla haitiana a escasos km de la costa. Posee 3.5 km². <br>18.22461, -73.40606" },
-{ lat: 18.618622987637483, lng: -73.73570091926777, titulo: "Isla Gran Cayemite (Île GrandeCayemite)", comentario: "Isla haitiana con manglares dentro del golfo de Gonave. Se extiende por 50 km². <br>18.61862, -73.73570" },
-{ lat: 18.61035826269783, lng: -73.80919168849435, titulo: "Isla Pequeña Cayemite (Île Petite Cayemite)", comentario: "Isla haitiana ubicada dentro del golfo de Gonave. Se extiende por 1.1 km². <br>18.61035, -73.80919" },
-{ lat: 18.83630504530466, lng: -73.0118022199312, titulo: "Isla de Gonave", comentario: "Isla en el golfo de Gonave de clima semiárido, escasa vegetación. Posee 690 km². <br>18.83630, -73.01180" },
-{ lat: 19.163115128402698, lng: -73.05940870692616, titulo: "Golfo de Gonave", comentario: "Golfo haitiano orientado al oeste, al Canal de los Vientos.<br>19.16311, -73.05940" },
-{ lat: 20.04580561027507, lng: -72.76411223048235, titulo: "Isla de La Tortuga", comentario: "Isla al norte de la isla de Santo Domingo histórica por las incursiones de piratas y contrabandistas del s17.  Posee una extensión de 180 km². <br>20.04580, -72.76411" },
-{ lat: 18.40384906773233, lng: -75.01368694612037, titulo: "Isla Navasse (Île de la Navasse)", comentario: "La isla de Navassa es el punto estratégico más al oeste de Haití. Se extiende por 4.7 km².  La isla está rodeada por acantilados blancos verticales. Actualmente se encuentra ocupada por EEUU.<br>18.40384, -75.01368" },
-{ lat: 19.828431275039282, lng: -73.42094628876438, titulo: "Cabo Môle-Saint-Nicolas", comentario: "Cabo más estratégico al oeste de Haití.<br>19.82843, -73.42094" },
-{ lat: 19.681199070393557, lng: -71.84854563483924, titulo: "Bahía del Fuerte Libertad", comentario: "Bahía cerrada y profunda al norte de Haití.<br>19.68119, -71.84854" },
-{ lat: 18.22985799131059, lng: -70.15892961940402, titulo: "Punta Palenque", comentario: "Punta con playa cercana a San Cristóbal.<br>18.22985, -70.15892" },
-{ lat: 19.80713370508267, lng: -73.17169502428142, titulo: "Península de San Nicolás/Noroeste (Presqu’ile de Saint Nicolas)", comentario: "Península noroeste de Haití que -conjuntamente con península de Tiburón- limita el Golfo de Gonave al norte.<br>19.80713, -73.17169" },
+        // ICONOS REDUCIDOS en un 30% (de 24px a 17px)
+        var iconPresa = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#e74c3c; width:17px; height:17px; border-radius:50%; border:2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; font-size:10px;'>🛑</div>",
+            iconSize: [17, 17], iconAnchor: [8.5, 8.5]
+        });
+        var iconLago = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#3498db; width:17px; height:17px; border-radius:50%; border:2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; font-size:10px;'>💧</div>",
+            iconSize: [17, 17], iconAnchor: [8.5, 8.5]
+        });
+
+        // Icono de comunidad (sin cambios)
+        var iconComunidad = L.divIcon({
+            className: 'custom-div-icon',
+            html: '<svg viewBox="0 0 24 24" width="20" height="20"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F4B09F" stroke="#666666" stroke-width="2"/></svg>',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+        });
+
+        // ═══════════════════════════════════════════════════════════
+        // 5. DATOS DE PRESAS Y LAGOS (sin cambios)
+        // ═══════════════════════════════════════════════════════════
+        var presasData = [
+            { nombre: "Presa de Hatillo", lat: 19.024801, lng: -70.200628, desc: "Construida en 1984, muro de Tierra. Cuenca del río Yuna." },
+            { nombre: "Presa de Rincón", lat: 19.102286, lng: -70.407949, desc: "Construida en 1978, muro de Concreto armado. Cuenca del río Yuna." },
+            { nombre: "Presa de Tavera", lat: 19.284084, lng: -70.722309, desc: "Construida en 1973, muro de Concreto armado. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Bao", lat: 19.308470, lng: -70.748341, desc: "Construida en 1984, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Monción", lat: 19.392822, lng: -71.121913, desc: "Construida en 2001, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Monción (contraembalse)", lat: 19.464737, lng: -71.079913, desc: "Construida en 2001, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Maguaca", lat: 19.615541, lng: -71.511149, desc: "Construida en 1978, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Chacuey", lat: 19.620177, lng: -71.545628, desc: "Construida en 1979, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de Blanco", lat: 18.886897, lng: -70.561065, desc: "Construida en 1996, muro de Concreto armado. Cuenca del río Yuna." },
+            { nombre: "Presa de Tireo", lat: 18.860600, lng: -70.522066, desc: "Construida en 1996, muro de Concreto armado. Cuenca del río Yuna." },
+            { nombre: "Presa Samaná-El Valle", lat: 19.235003, lng: -69.332373, desc: "Cuenca desconocida." },
+            { nombre: "Presa Luisa Blanca", lat: 18.763942, lng: -69.883949, desc: "Cuenca del río Ozama." },
+            { nombre: "Presa Las Barías", lat: 18.362193, lng: -70.267723, desc: "Construida en 1976, muro de Concreto Armado. Cuenca del río Nizao." },
+            { nombre: "Presa de Valdesia", lat: 18.401510, lng: -70.279075, desc: "Construida en 1975, muro de Concreto armado. Cuenca del río Nizao." },
+            { nombre: "Presa de Jiguey", lat: 18.547538, lng: -70.379179, desc: "Construida en 1992, muro de Concreto Armado. Cuenca del río Nizao." },
+            { nombre: "Presa de Aguacate", lat: 18.496620, lng: -70.322808, desc: "Construida en 1992, muro de Concreto Armado. Cuenca del río Nizao." },
+            { nombre: "Presa de Sabana Yegua", lat: 18.715224, lng: -71.041243, desc: "Construida en 1979, muro de Tierra. Cuenca del río Yaque del Sur." },
+            { nombre: "Presa de Monte Grande", lat: 18.504773, lng: -71.010660, desc: "Muro de tierra. Cuenca Yaque del Sur." },
+            { nombre: "Presa de Sabaneta", lat: 18.986858, lng: -71.291282, desc: "Construida en 1981, muro de Tierra. Cuenca del río Yaque del Sur." },
+            { nombre: "Presa Las Damas-Puerto Escondido", lat: 18.319457, lng: -71.571287, desc: "Construida en 1967, muro de Concreto Armado. Cuenca del Lago Enriquillo, río Las Damas." },
+            { nombre: "Presa de Palomino", lat: 18.923768, lng: -71.009013, desc: "Cuenca del río Yaque del Sur." },
+            { nombre: "Presa La Piña", lat: 19.506136, lng: -71.671220, desc: "Cuenca del río Dajabón." },
+            { nombre: "Presa de Guanajuma", lat: 19.480583, lng: -70.998746, desc: "Construida en 2001, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa de López-Angostura", lat: 19.335398, lng: -70.722213, desc: "Construida en 1987, muro de Tierra. Cuenca del río Yaque del Norte." },
+            { nombre: "Presa Boba", lat: 19.434081, lng: -70.097214, desc: "Cuenca del río Boba." }
+        ];
+        var lagosData = [
+            { nombre: "Lago Enriquillo", lat: 18.519991, lng: -71.659824, desc: "Aguas hipersalinas." },
+            { nombre: "Laguna de Cabral/Rincón", lat: 18.292675, lng: -71.245599, desc: "Aguas salobres. En peligro de extinción." },
+            { nombre: "Laguna de Oviedo", lat: 17.767176, lng: -71.365520, desc: "Aguas salobres." },
+            { nombre: "Laguna Redonda", lat: 19.012761, lng: -68.940378, desc: "Aguas salobres, conexión directa con el mar y alimentada por el río Cuarón." },
+            { nombre: "Laguna del Limón", lat: 18.979081, lng: -68.852763, desc: "Agua dulce, posee conexión directa con el mar." },
+            { nombre: "Laguna Saladilla / La Jagua", lat: 19.654734, lng: -71.712007, desc: "Aguas salobres." },
+            { nombre: "Laguna de Bávaro", lat: 18.646376, lng: -68.374650, desc: "Aguas salobres. En peligro de extinción." },
+            { nombre: "Laguna Cristal", lat: 19.097546, lng: -69.731941, desc: "Aguas profundas." },
+            { nombre: "Laguna Cristalina", lat: 19.099945, lng: -69.747275, desc: "" },
+            { nombre: "Laguna Gri-Gri", lat: 19.646925, lng: -70.077835, desc: "Agua dulce, posee conexión directa con el mar." }
+        ];
+        var presasDataHAI = [
+            { nombre: "Presa de Peligre", lat: 18.900954889270775, lng: -72.02954584261569, desc: "Construida en 1956, muro de Concreto. Cuenca del río Artibonito." },
+            { nombre: "Presa de Marión", lat: 19.54059115586982, lng: -71.89181643201364, desc: "Muro de Tierra. Cuenca del río Marión." }
+        ];
+        var lagosDataHAI = [
+            { nombre: "Lago Saumatre (Haití)", lat: 18.576581, lng: -72.011842, desc: "Aguas hipersalinas." },
+            { nombre: "Laguna Trou Caiman (Haití)", lat: 18.644187, lng: -72.149183, desc: "En peligro de extinción." },
+            { nombre: "Lago Miragoane (Haití)", lat: 18.399820, lng: -73.047475, desc: "En peligro de extinción." },
+            { nombre: "Lago pequeño Miragoane (Haití)", lat: 18.406977, lng: -72.993924, desc: "" }
         ];
 
-        var rios = [
-{ nombre: "Río Haina", coordenadas: [18.418738687509286, -70.01889335090772], comentario: "Cuenca influenciada por actividad industrial y portuaria.<br>18.41873, -70.01889" },
-{ nombre: "Río Ozama", coordenadas: [18.47100959803709, -69.87952116396366], comentario: "Principal río del Gran Santo Domingo, con alta presión urbana.<br>18.47100, -69.87952" },
-{ nombre: "Río Higuamo", coordenadas: [18.441846417578624, -69.31513488241391], comentario: "Importante ecosistema estuarino asociado a manglares en su cauce bajo.<br>18.44184, -69.31513" },
-{ nombre: "Río Yuma", coordenadas: [18.380289609312758, -68.60400614146857], comentario: "Posee un ecosistema asociado a manglares.<br>18.38028, -68.60400" },
-{ nombre: "Río Soco", coordenadas: [18.45284572589469, -69.20459530053246], comentario: "Su cuenca está vinculada a actividades agrícolas y su desembocadura a turísticas.<br>18.45284, -69.20459" },
-{ nombre: "Río Cumayasa", coordenadas: [18.395102801632156, -69.08395288246885], comentario: "Su estuario está recibiendo un impulso en el desarrollo turístico.<br>18.39510, -69.08395" },
-{ nombre: "Río Nisibón", coordenadas: [18.97387961910136, -68.77546337921993], comentario: "Su desembocadura está influenciada por humedales y manglares.<br>18.97387, -68.77546" },
-{ nombre: "Río Romana", coordenadas: [18.41560433561995, -68.95970149415454], comentario: "Su desembocadura se encuentra influenciada por actividades urbanas e industriales.<br>18.41560, -68.95970" },
-{ nombre: "Río Chavón", coordenadas: [18.399030088932445, -68.89712791805705], comentario: "Su desembocadura posee una de las marinas (puerto deportivo) más importantes del país.<br>18.39903, -68.89712" },
-{ nombre: "Río Yubazo", coordenadas: [18.371511601407573, -70.0509985058354], comentario: "Desemboca cerca a comunidad de Nigua y parque industrial ITABO.<br>18.37151, -70.05099" },
-{ nombre: "Río Nizao", coordenadas: [18.23396719498754, -70.18001230198149], comentario: "Desemboca cercano a punta Palenque.<br>18.23396, -70.18001" },
-{ nombre: "Río Baní", coordenadas: [18.23071602357976, -70.3027528988861], comentario: "Desemboca al sur de la ciudad de Baní.<br>18.23071, -70.30275" },
-{ nombre: "Río Ocoa", coordenadas: [18.27826401773125, -70.57991107214782], comentario: "Aporta mucho material suelto y forma una pequeña marisma en su desembocadura.<br>18.27826, -70.57991" },
-{ nombre: "Río Tábara", coordenadas: [18.354562720666255, -70.80392322281966], comentario: "Río con influencia agrícola en su cauce bajo.<br>18.35456, -70.80392" },
-{ nombre: "Río Yaque del Sur", coordenadas: [18.262474362655073, -71.1109932741054], comentario: "Principal e importante río de la macroregión suroeste.<br>18.26247, -71.11099" },
-{ nombre: "Río Nizaito", coordenadas: [17.99148451984096, -71.16008625766224], comentario: "Pequeño río costero que arrastra mucho sedimento y material erosionado.<br>17.99148, -71.16008" },
-{ nombre: "Laguna de Oviedo", coordenadas: [17.75911317457582, -71.37095253492022], comentario: "Laguna costera de aguas salobres y turbias con alta biodiversidad.<br>17.75911, -71.37095" },
-{ nombre: "Río Pedernales", coordenadas: [18.038173652593677, -71.7567698006091], comentario: "Río estacional y fronterizo con Haití en el sur.<br>18.03817, -71.75676" },
-{ nombre: "Río Dajabón o Masacre", coordenadas: [19.701825740555492, -71.75873977757455], comentario: "Río fronterizo con Haití en el norte, al lado de la comunidad de Pepillo Salcedo.<br>19.70182, -71.75873" },
-{ nombre: "Río Yaque del Norte", coordenadas: [19.839728113279044, -71.6833011411709], comentario: "Río más largo de República Dominicana.<br>19.83972, -71.68330" },
-{ nombre: "Río Bajabonico", coordenadas: [19.877177210364582, -71.08394427799524], comentario: "Desemboca en el Atlántico y su curso bajo está influenciado por las actividades agrícolas.<br>19.87717, -71.08394" },
-{ nombre: "Río San Marcos", coordenadas: [19.803169435257498, -70.70666907380173], comentario: "Desemboca en el Atlántico y está muy influenciado por las actividades humanas en sus riberas.<br>19.80316, -70.70666" },
-{ nombre: "Río Muñoz", coordenadas: [19.763551680325218, -70.63127045711931], comentario: "Desemboca en el Atlántico cerca de complejos hoteleros.<br>19.76355, -70.63127" },
-{ nombre: "Río Camú", coordenadas: [19.755242034291847, -70.58817358306204], comentario: "Desemboca en el Atlántico al lado del aeropuerto internacional Gregorio Luperón en Puerto Plata.<br>19.75524, -70.58817" },
-{ nombre: "Río Sosúa", coordenadas: [19.752416772245034, -70.52628495123976], comentario: "Pequeño arroyo con corriente casi nula en algunas temporadas.<br>19.75241, -70.52628" },
-{ nombre: "Río Yásica", coordenadas: [19.710754583135678, -70.3705538568525], comentario: "Río con actividad agrícola en su curso bajo.<br>19.71075, -70.37055" },
-{ nombre: "Río Joba", coordenadas: [19.641075657346235, -70.26967742017386], comentario: "Río con importante humedal costero y manglares en su desembocadura.<br>19.64107, -70.26967" },
-{ nombre: "Río Piedras", coordenadas: [19.63137155685492, -70.20180275820229], comentario: "Río con manglar y cocotal en su desembocadura.<br>19.63137, -70.20180" },
-{ nombre: "Río San Juan norte", coordenadas: [19.637957644129028, -70.0833650099482], comentario: "Desemboca al lado de la comunidad de San Juan en la costa norte o Atlántica.<br>19.63795, -70.08336" },
-{ nombre: "Río Bacuí", coordenadas: [19.494020637625383, -69.87282836124481], comentario: "Río costero que desemboca en la bahía Escosesa. Sus aguas están influenciadas por la agricultura.<br>19.49402, -69.87282" },
-{ nombre: "Río Boba", coordenadas: [19.462499346539776, -69.87371580465476], comentario: "Río costero que desemboca en la bahía Escosesa.<br>19.46249, -69.87371" },
-{ nombre: "Río Nagua", coordenadas: [19.368009107884223, -69.83949802376445], comentario: "Río costero de corriente débil que desemboca en la bahía Escosesa.<br>19.36800, -69.83949" },
-{ nombre: "Río El Limón", coordenadas: [19.313967555485515, -69.42645661389766], comentario: "Río más importante de la península de Samaná. Forma la famosa cascada El Limón.<br>19.31396, -69.42645" },
-{ nombre: "Río Yuna", coordenadas: [19.19776839638988, -69.624894713641], comentario: "Es el segundo río más importante de RD por su valle de producción agropecuaria.<br>19.19776, -69.62489" },
-{ nombre: "Río Barracote", coordenadas: [19.109655656984792, -69.62632893868452], comentario: "Río derivado natural del río Yuna.<br>19.10965, -69.62632" },
-{ nombre: "Río Yabón", coordenadas: [19.07601717661294, -69.38636398028599], comentario: "Río que desemboca en la bahía de Samaná, al lado de Sabana de la Mar.<br>19.07601, -69.38636" },
-{ nombre: "Río Catalina", coordenadas: [19.021369574525398, -69.24625615262343], comentario: "Pequeño río costero del norte que desemboca en la bahía de Samaná.<br>19.02136, -69.24625" },
-{ nombre: "Río Maguá", coordenadas: [19.01337578031481, -69.20699964521685], comentario: "Desemboca que desemboca en el Atlántico cerca de la bahía La Gina.<br>19.01337, -69.20699" },
-{ nombre: "Río Yeguada", coordenadas: [18.987512439217085, -69.04063479419878], comentario: "Río que desemboca en el Atlántico, frente a Miches.<br>18.98751, -69.04063" },
-{ nombre: "Río Jobero", coordenadas: [18.986207125476977, -69.01985989369223], comentario: "Pequeño río que desemboca en el Atlántico. Posee humedales costeros en su desembocadura.<br>18.98620, -69.01985" },
-{ nombre: "Río Maimón este", coordenadas: [18.844461209964066, -68.62188989028091], comentario: "Pequeño río que desemboca en el Atlántico. Posee importantes humedales costeros.<br>18.84446, -68.62188" },
-{ nombre: "Río Anamuya", coordenadas: [18.78340222462785, -68.55207686614445], comentario: "Pequeño río que desemboca en el Atlántico. Posee humedales costeros frente a la barrera coralina.<br>18.78340, -68.55207" },
-{ nombre: "Río Artibonito", coordenadas: [19.238217604861383, -72.78031967248685], comentario: "Río más importante y largo de Haití. Desemboca en el Golfo de Gonave.<br>19.23821, -72.78031" },
-{ nombre: "Río Mapou", coordenadas: [19.755103625864546, -72.20088615984051], comentario: "Desemboca en la costa norte de Haití.<br>19.75510, -72.20088" },
-{ nombre: "Río Grande del norte", coordenadas: [19.751717929564453, -72.13422759279226], comentario: "Río importante del norte haitiano.<br>19.75171, -72.13422" },
-{ nombre: "Río Momance", coordenadas: [18.563783573425873, -72.55963317764082], comentario: "Desemboca cerca de Léogâne, Haití.<br>18.56378, -72.55963" },
-{ nombre: "Río Ravine", coordenadas: [18.180231613120736, -73.76102779475907], comentario: "Pequeño río costero del sur de Haití.<br>18.18023, -73.76102" },
-        ];
-
-        var puertosData = [
-        { tipo: "turístico", nombre: "Puerto turístico Cabo Rojo", lat: 17.925237701801414, lng: -71.66036845323396, profundidad: "10.9 metros" },
-        { tipo: "turístico", nombre: "Puerto turístico Casa de Campo", lat: 18.415758134659303, lng: -68.9589774197403, profundidad: null },
-        { tipo: "turístico", nombre: "Puerto Plata Taino Bay", lat: 19.801882413335033, lng: -70.70038903592275, profundidad: "9.1 metros" },
-        { tipo: "turístico", nombre: "Puerto Turístico Maimón-Amber Cove", lat: 19.833686081020694, lng: -70.77580161587102, profundidad: null },
-        { tipo: "turístico", nombre: "Puerto Turístico Don Diego", lat: 18.475655604626535, lng: -69.88177505904382 , profundidad: null },
-        { tipo: "turístico", nombre: "Puerto Turístico Ferries del Caribe", lat: 18.46914272129233, lng: -69.8826302977981 , profundidad: null },
-        { tipo: "turístico", nombre: "Puerto Turístico Sans Soucí", lat: 18.470718030534712, lng: -69.87701546206662 , profundidad: null },
-        { tipo: "marina", nombre: "Marina Bartolomé COlón", lat: 18.477672727213506, lng: -69.8797977276046 , profundidad: null },
-        { tipo: "marina", nombre: "Marina Soco", lat: 18.446045139171, lng: -69.19735424388215, profundidad: null },
-        { tipo: "marina", nombre: "Marina La Caleta", lat: 18.401542889357888, lng: -68.99583181639176, profundidad: null },
-        { tipo: "marina", nombre: "Marina Capitan Kidd", lat: 18.401939796784347, lng: -68.98910841203757, profundidad: null },
-        { tipo: "marina", nombre: "Marina Las Calderas", lat: 18.217693004657335, lng: -70.51170268633982, profundidad: null },
-        { tipo: "marina", nombre: "Marina Bahía Samaná", lat: 19.194213358429096, lng: -69.35559633644706, profundidad: null },
-        { tipo: "marina", nombre: "Marina fondeadero Samaná", lat: 19.201951321088686, lng: -69.33142652209001, profundidad: null },
-        { tipo: "marina", nombre: "Marina Salinas", lat: 18.21336910504091, lng: -70.54397834321536, profundidad: null },
-        { tipo: "marina", nombre: "Marina Boca Chica", lat: 18.44444867888889, lng: -69.6260080193129, profundidad: null },
-        { tipo: "marina", nombre: "Marina La Ciénaga", lat: 18.066650419254294, lng: -71.0976988246961, profundidad: null },
-        { tipo: "marina", nombre: "Marina Barahona", lat: 18.213292070623513, lng: -71.08781173631682, profundidad: null },
-        { tipo: "marina", nombre: "Marina La Romana", lat: 18.421850913489223, lng: -68.96205520241152, profundidad: null },
-        { tipo: "marina", nombre: "Marina Casa de Campo", lat: 18.399320147767455, lng: -68.90016972070073, profundidad: null },
-        { tipo: "marina", nombre: "Marina Bayahibe", lat: 18.37015058333116, lng: -68.84114501626321, profundidad: null },
-        { tipo: "marina", nombre: "Marina Cap Cana", lat: 18.50362479760481, lng: -68.37955951330221, profundidad: null },
-        { tipo: "marina", nombre: "Marina Cabrera", lat: 19.647989765235593, lng: -69.9142555139017, profundidad: null },
-        { tipo: "marina", nombre: "Marina Ocean World", lat: 19.827692085023227, lng: -70.73245614000295, profundidad: null },
-        { tipo: "marina", nombre: "Marina Río San Juan", lat: 19.64126937770025, lng: -70.08279742884481, profundidad: null },
-        { tipo: "marina", nombre: "Marina Montecristi", lat: 19.86710938295587, lng: -71.65347015930327, profundidad: null },
-        { tipo: "marina", nombre: "Marina fondeadero Bahía Luperón", lat: 19.898285726570478, lng: -70.95598026732219, profundidad: null },
-        { tipo: "armada", nombre: "Puerto Las Calderas Armada", lat: 18.215844664195334, lng: -70.51601943976067, profundidad: null },
-        { tipo: "armada", nombre: "Puerto Santo Domingo Armada", lat: 18.467915227042464, lng: -69.87892256307819, profundidad: "10 metros" },
-        { tipo: "carga", nombre: "Puerto Viejo Azua de combustibles", lat: 18.34546345310926, lng: -70.83641866067394, profundidad: "9.14 metros" },
-        { tipo: "carga", nombre: "Puerto de carga Haina", lat: 18.416922722794126, lng: -70.01822176982856, profundidad: "10 metros" },
-        { tipo: "carga", nombre: "Puerto de carga Santo Domingo", lat: 18.472928089799606, lng: -69.87995226857417, profundidad: "10 metros" },
-        { tipo: "carga", nombre: "Puerto carga Barahona", lat: 18.21488479459011, lng: -71.08714265549924, profundidad: "10 metros" },
-        { tipo: "carga", nombre: "Puerto Turístico Barahona", lat: 18.214311408032536, lng: -71.08937726159067, profundidad: "10 metros" },
-        { tipo: "carga", nombre: "Puerto de carga Caucedo", lat: 18.424634963951057, lng: -69.62947414256703, profundidad: "13.5 metros" },
-        { tipo: "carga", nombre: "Puerto de carga Boca Chica", lat: 18.441360909886395, lng: -69.63090562459392, profundidad: "7.6 metros" },
-        { tipo: "carga", nombre: "Puerto de carga San Pedro de Macorís", lat: 18.445569775018836, lng: -69.3113957368044, profundidad: "8.9 metros" },
-        { tipo: "carga", nombre: "Puerto de carga La Romana", lat: 18.417390765014908, lng: -68.96061698857922, profundidad: "7.9 metros" },
-        { tipo: "carga", nombre: "Puerto de carga Arroyo Barril", lat: 19.198828998150777, lng: -69.4474023631398, profundidad: "11 metros" },
-        { tipo: "carga", nombre: "Puerto de carga Manzanillo", lat: 19.708465405310296, lng: -71.74291712863356, profundidad: "14.6 metros" },
-        { tipo: "carga", nombre: "Puerto Plata carga", lat: 19.799578958886208, lng: -70.70371218451689, profundidad: "9.1 metros" },
-        { tipo: "fondeadero", nombre: "Fondeadero Punta Catalina combustibles", lat: 18.21799735047322, lng: -70.23075290638988, profundidad: null },
-        { tipo: "fondeadero", nombre: "Fondeadero SPM COASTAL combustibles", lat: 18.43976796588472, lng: -69.2530412561037, profundidad: null },
-        { tipo: "fondeadero", nombre: "Fondeadero Punta Caucedo combustibles", lat: 18.407518323779605, lng: -69.62575744662446, profundidad: null },
-        { tipo: "fondeadero", nombre: "Fondeadero REFIDOMSA combustibles", lat: 18.407094622041942, lng: -70.02242250849139, profundidad: null }
-        ];
-
+        // ═══════════════════════════════════════════════════════════
+        // DATOS DE COMUNIDADES
+        // ═══════════════════════════════════════════════════════════
 const ciudadesRD = [
   { nombre: "Santo Domingo Este", pob: "1,029,117", lat: 18.50418063560038, lng: -69.81371132455324 },
   { nombre: "Santo Domingo Oeste", pob: "410,578", lat: 18.478751774824087, lng: -70.00106449952185 },
@@ -790,7 +596,7 @@ const ciudadesRD = [
   { nombre: "El Valle", pob: "9,890", lat: 18.97833368279181, lng: -69.37851857650571 }
 ];
 
-        var ciudadesHT = [
+        const ciudadesHT = [
             { nombre: "Port-au-Prince", pob: "2,914,190", lat: 18.5469, lng: -72.3403 },
             { nombre: "Carrefour", pob: "511,345", lat: 18.5333, lng: -72.4 },
             { nombre: "Pétion-Ville", pob: "376,834", lat: 18.5098, lng: -72.2856 },
@@ -824,229 +630,384 @@ const ciudadesRD = [
             { nombre: "Anse d’Hainault", pob: "36,401", lat: 18.485, lng: -74.4517 },
             { nombre: "Saintard", pob: "32,906", lat: 18.824, lng: -72.55 },
             { nombre: "Milot", pob: "31,992", lat: 19.6047, lng: -72.2186 },
-            { nombre: "Fort Liberté", pob: "30,110", lat: 19.6647, lng: -71.8386 }
+            { nombre: "Fort Liberté", pob: "30,110", lat: 19.7344, lng: -71.8397 }
         ];
 
         // ═══════════════════════════════════════════════════════════
-        // 4. CREACIÓN DE CAPAS
+        // 6. CREACIÓN DE CAPAS DE PRESAS Y LAGOS (con iconos reducidos)
         // ═══════════════════════════════════════════════════════════
-
-        // Iconos
-        function crearApuntadorSVG(colorHex) {
-            return L.divIcon({
-                className: 'custom-svg-marker',
-                html: `<svg width="20" height="30" viewBox="0 0 24 30" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.35));"><path d="M12 0C5.37 0 0 5.37 0 12c0 8.25 10.5 16.5 11.13 17.13a1.23 1.23 0 0 0 1.74 0C13.5 28.5 24 20.25 24 12c0-6.63-5.37-12-12-12zm0 16.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z" fill="${colorHex}"/><circle cx="12" cy="12" r="4.5" fill="#FFFFFF"/></svg>`,
-                iconSize: [26, 36],
-                iconAnchor: [13, 36],
-                popupAnchor: [0, -32]
+        function crearCapaPresas() {
+            var grupo = L.layerGroup();
+            presasData.forEach(function(p) {
+                var marker = L.marker([p.lat, p.lng], { icon: iconPresa });
+                marker.bindPopup("<b>🟠 " + p.nombre + "</b><br>" + p.desc);
+                marker.addTo(grupo);
             });
-        }
-
-        function crearIconoRombo(colorHex, bordeColor) {
-            bordeColor = bordeColor || '#5ABBF5';
-            return L.divIcon({
-                className: 'custom-rombo-marker',
-                html: `<div style="width: 14px; height: 14px; background-color: ${colorHex}; transform: rotate(45deg); border: 1px solid ${bordeColor}; box-shadow: 0 1px 3px rgba(0,0,0,0.3);"></div>`,
-                iconSize: [14, 14],
-                iconAnchor: [7, 7],
-                popupAnchor: [0, -10]
+            presasDataHAI.forEach(function(p) {
+                var marker = L.marker([p.lat, p.lng], { icon: iconPresa });
+                marker.bindPopup("<b>🟠 " + p.nombre + "</b><br>" + p.desc);
+                marker.addTo(grupo);
             });
+            return grupo;
         }
 
-        function crearIconoEstrella(colorHex) {
-            colorHex = colorHex || '#F4B09F';
-            const svg = `<svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.5));">
-                <path d="M12 2L15 9L22 9L17 14L19 21L12 17L5 21L7 14L2 9L9 9Z" fill="${colorHex}" stroke="#333333" stroke-width="1.2"/>
-            </svg>`;
-            return L.divIcon({
-                className: 'custom-star-marker',
-                html: svg,
-                iconSize: [30, 30],
-                iconAnchor: [18, 18],
-                popupAnchor: [0, -20]
+        function crearCapaLagos() {
+            var grupo = L.layerGroup();
+            lagosData.forEach(function(l) {
+                var marker = L.marker([l.lat, l.lng], { icon: iconLago });
+                var descHtml = l.desc ? "<br>" + l.desc : "";
+                marker.bindPopup("<b>🔵 " + l.nombre + "</b>" + descHtml);
+                marker.addTo(grupo);
             });
+            lagosDataHAI.forEach(function(l) {
+                var marker = L.marker([l.lat, l.lng], { icon: iconLago });
+                var descHtml = l.desc ? "<br>" + l.desc : "";
+                marker.bindPopup("<b>🔵 " + l.nombre + "</b>" + descHtml);
+                marker.addTo(grupo);
+            });
+            return grupo;
         }
 
-        var iconoRD = crearApuntadorSVG('#8E44AD');
-        var iconoHaiti = crearApuntadorSVG('#8E44AD');
-        var iconoEstrellaRD = crearIconoEstrella('#F4B09F');
-        var iconoEstrellaHT = crearIconoEstrella('#F4B09F');
+        capaPresas = crearCapaPresas();
+        capaLagos = crearCapaLagos();
 
-        function esHaiti(lng, titulo) {
-            var haitiTitles = ["Cabo Jacmel","Península de Tiburón","Isla de la Vaca","Isla de Cayemite","Isla de Gonave","Golfo de Gonave","Isla de La Tortuga","Isla de Navassa","Bahía del Fuerte Libertad","Península del Noroeste","Cabo Irois","Punta Abaco","Península de Baraderes","Cabo San Marcos","Cabo Binquette","Cayo Orange","Isla Moustique","Isla Audén","Cayo Grueso","Isla Gran Cayemite","Isla Pequeña Cayemite","Isla de Gonave","Golfo de Gonave","Isla de La Tortuga","Isla Navasse","Cabo Môle-Saint-Nicolas","Península de San Nicolás"];
-            return haitiTitles.indexOf(titulo) !== -1 || lng < -71.84;
-        }
-
-        function esRioHaiti(nombre) {
-            var nombres = ["Río Artibonito","Río Mapou","Río Grande del norte","Río Momance","Río Ravine"];
-            return nombres.indexOf(nombre) !== -1;
-        }
-
-        var layerAccidentesRD = L.layerGroup().addTo(map);
-        var layerAccidentesHAITI = L.layerGroup().addTo(map);
-        var layerRiosRD = L.layerGroup().addTo(map);
-        var layerRiosHAITI = L.layerGroup().addTo(map);
-        var layerPuertosTuristicos = L.layerGroup().addTo(map);
-        var layerPuertosMarinas = L.layerGroup().addTo(map);
-        var layerPuertosArmada = L.layerGroup().addTo(map);
-        var layerPuertosCarga = L.layerGroup().addTo(map);
-        var layerPuertosFondeaderos = L.layerGroup().addTo(map);
-        var layerCiudadesRD = L.layerGroup();
-        var layerCiudadesHT = L.layerGroup();
-
-        // Accidentes costeros
-        puntos.forEach(function(p) {
-            var popup = '<div style="text-align:center;"><strong>📍 ' + p.titulo + '</strong><br><span style="color:#4a5568;">' + p.comentario + '</span></div>';
-            if (esHaiti(p.lng, p.titulo)) {
-                L.marker([p.lat, p.lng], { icon: iconoHaiti }).bindPopup(popup).addTo(layerAccidentesHAITI);
-            } else {
-                L.marker([p.lat, p.lng], { icon: iconoRD }).bindPopup(popup).addTo(layerAccidentesRD);
-            }
-        });
-
-        // Ríos
-        function calcularRadioRios(zoom) {
-            if (zoom <= 7) return 3;
-            if (zoom <= 9) return 5;
-            if (zoom <= 11) return 7;
-            if (zoom <= 13) return 13;
-            return 18;
-        }
-
-        var listaCirculosRios = [];
-        rios.forEach(function(rio) {
-            var esH = esRioHaiti(rio.nombre);
-            var capaDestino = esH ? layerRiosHAITI : layerRiosRD;
-            var circulo = L.circleMarker(rio.coordenadas, {
-                radius: calcularRadioRios(map.getZoom()),
-                color: '#666666',
-                fillColor: '#00BFFF',
-                fillOpacity: 0.85,
-                weight: 2
-            })
-            .bindPopup('<div><strong>🌊 ' + rio.nombre + '</strong><br>' + rio.comentario + '</div>')
-            .addTo(capaDestino);
-            listaCirculosRios.push({ marker: circulo });
-        });
-
-        map.on('zoomend', function() {
-            var nr = calcularRadioRios(map.getZoom());
-            listaCirculosRios.forEach(function(i) { i.marker.setRadius(nr); });
-        });
-
-        // Puertos
-        var colorMap = {
-            turístico: "#3964FE",
-            marina:    "#FFFFFF",
-            armada:    "#666666",
-            carga:     "#5ABBF5",
-            fondeadero:"#F39C12"
-        };
-        var bordeMap = {
-            turístico: "#666666",
-            marina:    "#666666",
-            armada:    "#FFFFFF",
-            carga:     "#666666",
-            fondeadero:"#666666"
-        };
-        var tipoTextoMap = {
-            turístico: "Turístico",
-            marina: "Marina Recreativa",
-            armada: "Base Naval (Armada)",
-            carga: "Carga / Combustibles",
-            fondeadero: "Fondeadero"
+        window.togglePresas = function() {
+            var chk = document.getElementById('chk-presas');
+            if (chk.checked) map.addLayer(capaPresas);
+            else map.removeLayer(capaPresas);
         };
 
-        puertosData.forEach(function(p) {
-            var color = colorMap[p.tipo] || "#5ABBF5";
-            var borde = bordeMap[p.tipo] || "#666666";
-            var icono = crearIconoRombo(color, borde);
-            var tipoTexto = tipoTextoMap[p.tipo] || p.tipo;
-            var profundidadHtml = p.profundidad ? '<br><span style="font-size:0.75rem;">⚓ Profundidad: ' + p.profundidad + '</span>' : '';
-            var popup = '<div style="text-align:center;"><strong>⚓ ' + p.nombre + '</strong><br><span>' + tipoTexto + '</span>' + profundidadHtml + '<br><span style="font-size:0.7rem;">' + p.lat.toFixed(4) + ', ' + p.lng.toFixed(4) + '</span></div>';
-            var marker = L.marker([p.lat, p.lng], { icon: icono }).bindPopup(popup);
+        window.toggleLagos = function() {
+            var chk = document.getElementById('chk-lagos');
+            if (chk.checked) map.addLayer(capaLagos);
+            else map.removeLayer(capaLagos);
+        };
 
-            if (p.tipo === "turístico") marker.addTo(layerPuertosTuristicos);
-            else if (p.tipo === "marina") marker.addTo(layerPuertosMarinas);
-            else if (p.tipo === "armada") marker.addTo(layerPuertosArmada);
-            else if (p.tipo === "carga") marker.addTo(layerPuertosCarga);
-            else if (p.tipo === "fondeadero") marker.addTo(layerPuertosFondeaderos);
-        });
+        // ═══════════════════════════════════════════════════════════
+        // CREACIÓN DE CAPAS DE COMUNIDADES
+        // ═══════════════════════════════════════════════════════════
+        var capaComunidadesRD = L.layerGroup();
+        var capaComunidadesHT = L.layerGroup();
 
-        // Comunidades
         ciudadesRD.forEach(function(c) {
-            var popup = '<div style="text-align:center;"><strong>🏙️ ' + c.nombre + '</strong><br>👥 ' + c.pob + ' hab.<br><span style="font-size:0.7rem;">' + c.lat.toFixed(4) + ', ' + c.lng.toFixed(4) + '</span></div>';
-            L.marker([c.lat, c.lng], { icon: iconoEstrellaRD }).bindPopup(popup).addTo(layerCiudadesRD);
+            var marker = L.marker([c.lat, c.lng], { icon: iconComunidad });
+            marker.bindPopup("<b>" + c.nombre + "</b><br>Población: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
+            marker.addTo(capaComunidadesRD);
         });
 
         ciudadesHT.forEach(function(c) {
-            var popup = '<div style="text-align:center;"><strong>🏙️ ' + c.nombre + '</strong><br>👥 ' + c.pob + ' hab.<br><span style="font-size:0.7rem;">' + c.lat.toFixed(4) + ', ' + c.lng.toFixed(4) + '</span></div>';
-            L.marker([c.lat, c.lng], { icon: iconoEstrellaHT }).bindPopup(popup).addTo(layerCiudadesHT);
+            var marker = L.marker([c.lat, c.lng], { icon: iconComunidad });
+            marker.bindPopup("<b>" + c.nombre + "</b><br>Población: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
+            marker.addTo(capaComunidadesHT);
         });
+
+        window.toggleComunidadesRD = function() {
+            var chk = document.getElementById('chk-comunidades-rd');
+            if (chk.checked) map.addLayer(capaComunidadesRD);
+            else map.removeLayer(capaComunidadesRD);
+        };
+
+        window.toggleComunidadesHT = function() {
+            var chk = document.getElementById('chk-comunidades-ht');
+            if (chk.checked) map.addLayer(capaComunidadesHT);
+            else map.removeLayer(capaComunidadesHT);
+        };
 
         // ═══════════════════════════════════════════════════════════
-        // 5. CONTROLES UI
+        // 7. POPUP PARA CUENCAS Y CAUCES
         // ═══════════════════════════════════════════════════════════
-
-        // Checkboxes existentes
-        document.getElementById('chkAccRD').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerAccidentesRD) : map.removeLayer(layerAccidentesRD);
-        });
-        document.getElementById('chkAccHT').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerAccidentesHAITI) : map.removeLayer(layerAccidentesHAITI);
-        });
-        document.getElementById('chkRiosRD').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerRiosRD) : map.removeLayer(layerRiosRD);
-        });
-        document.getElementById('chkRiosHT').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerRiosHAITI) : map.removeLayer(layerRiosHAITI);
-        });
-        document.getElementById('chkTur').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerPuertosTuristicos) : map.removeLayer(layerPuertosTuristicos);
-        });
-        document.getElementById('chkMarina').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerPuertosMarinas) : map.removeLayer(layerPuertosMarinas);
-        });
-        document.getElementById('chkArmada').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerPuertosArmada) : map.removeLayer(layerPuertosArmada);
-        });
-        document.getElementById('chkCarga').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerPuertosCarga) : map.removeLayer(layerPuertosCarga);
-        });
-        document.getElementById('chkFondeadero').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerPuertosFondeaderos) : map.removeLayer(layerPuertosFondeaderos);
-        });
-        document.getElementById('chkCiudadesRD').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerCiudadesRD) : map.removeLayer(layerCiudadesRD);
-        });
-        document.getElementById('chkCiudadesHT').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerCiudadesHT) : map.removeLayer(layerCiudadesHT);
-        });
-
-        // Reiniciar
-        document.getElementById('resetMapBtn').addEventListener('click', function() {
-            map.setView([19.03556466237287, -70.89432006796727], 8);
-
-            var checkboxes = document.querySelectorAll('.checkbox-opcion input[type="checkbox"]');
-            checkboxes.forEach(function(chk) {
-                if (chk.id !== 'chk-frontera') {
-                    if (chk.checked) {
-                        chk.checked = false;
-                        chk.dispatchEvent(new Event('change'));
-                    }
+        function construirPopup(properties, nombreCapa, tipo) {
+            var html = '<div style="font-family:\'Segoe UI\',sans-serif; min-width:200px;">';
+            if (tipo === 'cauce') {
+                html += '<div style="font-weight:700; font-size:14px; color:#1a5276; margin-bottom:6px; border-bottom:2px solid #2980b9; padding-bottom:4px;">〰️ Cauce ' + nombreCapa + '</div>';
+                var desc = properties ? (properties['descripcion'] || properties['Description'] || properties['DESCRIPCION']) : null;
+                if (desc && String(desc).trim() !== '') {
+                    html += '<div style="font-size:13px; color:#333; line-height:1.4;">' + desc + '</div>';
                 } else {
-                    if (!chk.checked) {
-                        chk.checked = true;
-                        chk.dispatchEvent(new Event('change'));
+                    html += '<div style="font-size:12px; color:#888; font-style:italic;">  </div>';
+                }
+            } else if (tipo === 'cuenca') {
+                html += '<div style="font-weight:700; font-size:14px; color:#1a5276; margin-bottom:6px; border-bottom:2px solid #27ae60; padding-bottom:4px;">🟩 Cuenca ' + nombreCapa + '</div>';
+                var desc = null;
+                if (properties) {
+                    desc = properties['descripcion'] || properties['Description'] || properties['DESCRIPCION'];
+                    if (!desc) {
+                        Object.keys(properties).forEach(function(key) {
+                            if (key.toLowerCase() === 'name' && String(properties[key]).trim() !== '' && String(properties[key]).trim().toLowerCase() !== nombreCapa.toLowerCase()) {
+                                desc = properties[key];
+                            }
+                        });
                     }
                 }
+                if (desc && String(desc).trim() !== '' && String(desc).trim().toLowerCase() !== nombreCapa.toLowerCase()) {
+                    html += '<div style="font-size:13px; color:#333; line-height:1.4;">' + desc + '</div>';
+                } else {
+                    html += '<div style="font-size:12px; color:#888; font-style:italic;">Sin descripción adicional.</div>';
+                }
+            }
+            html += '</div>';
+            return html;
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 8. CAMBIAR VISIBILIDAD DE CAPAS HIDROGRÁFICAS
+        // ═══════════════════════════════════════════════════════════
+        window.cambiarCapas = function(modo, btn) {
+            capaVisible = modo;
+            document.querySelectorAll('#panel-controles .grupo-control:nth-child(2) .btn-opcion').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            todasLasCuencas.forEach(function(c) {
+                var estaActiva = (c === cuencaActiva);
+                var mostrarCuenca = (modo === 'cuenca' || modo === 'ambos');
+                var mostrarCauce  = (modo === 'cauce'  || modo === 'ambos');
+
+                var estiloCuencaBase = c.esHaiti ? estiloCuencaHaiti : estiloCuencaNormal;
+                var estiloCauceBase  = c.esHaiti ? estiloCauceHaiti : estiloCauceNormal;
+                var estiloCuencaOculto = c.esHaiti ? estiloCuencaHaitiOculta : estiloCuencaOculta;
+                var estiloCauceOculto  = c.esHaiti ? estiloCauceHaitiOculta : estiloCauceOculta;
+
+                if (mostrarCuenca) {
+                    if (!map.hasLayer(c.layerCuenca)) c.layerCuenca.addTo(map);
+                    c.layerCuenca.setStyle(estaActiva ? estiloCuencaDestacada : (cuencaActiva ? estiloCuencaOculto : estiloCuencaBase));
+                } else {
+                    if (map.hasLayer(c.layerCuenca)) map.removeLayer(c.layerCuenca);
+                }
+
+                if (mostrarCauce) {
+                    if (!map.hasLayer(c.layerCauce)) c.layerCauce.addTo(map);
+                    c.layerCauce.setStyle(estaActiva ? estiloCauceDestacado : (cuencaActiva ? estiloCauceOculto : estiloCauceBase));
+                } else {
+                    if (map.hasLayer(c.layerCauce)) map.removeLayer(c.layerCauce);
+                }
             });
-        });
+        };
 
         // ═══════════════════════════════════════════════════════════
-        // 6. FRONTERA
+        // 9. SELECCIÓN DE CUENCA
+        // ═══════════════════════════════════════════════════════════
+        function seleccionarCuenca(entrada) {
+            cuencaActiva = entrada;
+
+            todasLasCuencas.forEach(function(c) {
+                var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
+                var mostrarCauce  = (capaVisible === 'cauce'  || capaVisible === 'ambos');
+
+                var estiloCuencaOculto = c.esHaiti ? estiloCuencaHaitiOculta : estiloCuencaOculta;
+                var estiloCauceOculto  = c.esHaiti ? estiloCauceHaitiOculta : estiloCauceOculta;
+
+                if (c === entrada) {
+                    if (mostrarCuenca) { c.layerCuenca.addTo(map); c.layerCuenca.setStyle(estiloCuencaDestacada); c.layerCuenca.bringToFront(); }
+                    if (mostrarCauce)  { c.layerCauce.addTo(map); c.layerCauce.setStyle(estiloCauceDestacado); c.layerCauce.bringToFront(); }
+                } else {
+                    if (mostrarCuenca) c.layerCuenca.setStyle(estiloCuencaOculto);
+                    if (mostrarCauce)  c.layerCauce.setStyle(estiloCauceOculto);
+                }
+            });
+
+            if (entrada.bounds && entrada.bounds.isValid()) {
+                map.fitBounds(entrada.bounds, { padding: [50, 50] });
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 10. FUNCIÓN REINICIAR (modificada)
+        // ═══════════════════════════════════════════════════════════
+        window.mostrarTodas = function() {
+            cuencaActiva = null;
+
+            // Restaurar estilos de cuencas y cauces
+            todasLasCuencas.forEach(function(c) {
+                var mostrarCuenca = (capaVisible === 'cuenca' || capaVisible === 'ambos');
+                var mostrarCauce  = (capaVisible === 'cauce'  || capaVisible === 'ambos');
+
+                var estiloCuencaBase = c.esHaiti ? estiloCuencaHaiti : estiloCuencaNormal;
+                var estiloCauceBase  = c.esHaiti ? estiloCauceHaiti : estiloCauceNormal;
+
+                if (mostrarCuenca) { c.layerCuenca.addTo(map); c.layerCuenca.setStyle(estiloCuencaBase); }
+                else { if (map.hasLayer(c.layerCuenca)) map.removeLayer(c.layerCuenca); }
+                
+                if (mostrarCauce) { c.layerCauce.addTo(map); c.layerCauce.setStyle(estiloCauceBase); }
+                else { if (map.hasLayer(c.layerCauce)) map.removeLayer(c.layerCauce); }
+            });
+
+            // Desmarcar TODOS los checkboxes EXCEPTO el de frontera
+            ['chk-presas', 'chk-lagos', 'chk-comunidades-rd', 'chk-comunidades-ht'].forEach(function(id) {
+                document.getElementById(id).checked = false;
+            });
+            // Llamar a los toggles para ocultar esas capas
+            togglePresas();
+            toggleLagos();
+            toggleComunidadesRD();
+            toggleComunidadesHT();
+
+            // Asegurar que la frontera esté visible (si el checkbox está marcado)
+            if (document.getElementById('chk-frontera').checked && capaFrontera && !map.hasLayer(capaFrontera)) {
+                map.addLayer(capaFrontera);
+            }
+
+            // Restablecer zoom y vista inicial
+            map.setView([19.03556466237287, -70.89432006796727], 8);
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 11. CARGA DE CUENCAS Y CAUCES (con flag esHaiti)
+        // ═══════════════════════════════════════════════════════════
+        function coordToLatLng(coords) {
+            if (Math.abs(coords[0]) <= 90 && (coords[1] < -180 || coords[1] > 180 || Math.abs(coords[1]) > 90)) {
+                return new L.LatLng(coords[0], coords[1]);
+            }
+            return new L.LatLng(coords[1], coords[0]);
+        }
+
+        function cargarParCuenca(urlCuenca, urlCauce, nombreCapa, esHaiti) {
+            esHaiti = esHaiti || false;
+            var entrada = { 
+                nombre: nombreCapa, 
+                layerCuenca: null, 
+                layerCauce: null, 
+                bounds: null,
+                esHaiti: esHaiti
+            };
+            var cargados = 0;
+
+            function checkAndAdd() {
+                if (cargados === 2) {
+                    todasLasCuencas.push(entrada);
+                    if (capaVisible === 'cuenca' || capaVisible === 'ambos') entrada.layerCuenca.addTo(map);
+                    if (capaVisible === 'cauce' || capaVisible === 'ambos') entrada.layerCauce.addTo(map);
+                }
+            }
+
+            var estiloCuenca = esHaiti ? estiloCuencaHaiti : estiloCuencaNormal;
+            var estiloCauce  = esHaiti ? estiloCauceHaiti : estiloCauceNormal;
+
+            fetch(urlCuenca)
+                .then(function(r) { if (!r.ok) throw new Error('Error ' + urlCuenca); return r.json(); })
+                .then(function(data) {
+                    entrada.layerCuenca = L.geoJSON(data, {
+                        coordsToLatLng: coordToLatLng,
+                        style: estiloCuenca,
+                        onEachFeature: function(feature, layer) {
+                            layer.bindPopup(construirPopup(feature.properties, nombreCapa, 'cuenca'));
+                            layer.on('click', function() { seleccionarCuenca(entrada); });
+                            layer.on('mouseover', function() { 
+                                if (cuencaActiva === null) { 
+                                    this.setStyle(estiloCuencaHover); 
+                                    this.bringToFront(); 
+                                } 
+                            });
+                            layer.on('mouseout', function() { 
+                                if (cuencaActiva === null) { 
+                                    this.setStyle(estiloCuenca); 
+                                } 
+                            });
+                        }
+                    });
+                    entrada.bounds = entrada.layerCuenca.getBounds();
+                    cargados++; checkAndAdd();
+                })
+                .catch(function(e) { console.warn('Cuenca no cargada:', nombreCapa, e); });
+
+            fetch(urlCauce)
+                .then(function(r) { if (!r.ok) throw new Error('Error ' + urlCauce); return r.json(); })
+                .then(function(data) {
+                    entrada.layerCauce = L.geoJSON(data, {
+                        coordsToLatLng: coordToLatLng,
+                        style: estiloCauce,
+                        onEachFeature: function(feature, layer) {
+                            layer.bindPopup(construirPopup(feature.properties, nombreCapa, 'cauce'));
+                            layer.on('click', function() { seleccionarCuenca(entrada); });
+                            layer.on('mouseover', function() { 
+                                if (cuencaActiva === null) { 
+                                    this.setStyle(estiloCauceHover); 
+                                    this.bringToFront(); 
+                                } 
+                            });
+                            layer.on('mouseout', function() { 
+                                if (cuencaActiva === null) { 
+                                    this.setStyle(estiloCauce); 
+                                } 
+                            });
+                        }
+                    });
+                    cargados++; checkAndAdd();
+                })
+                .catch(function(e) { console.warn('Cauce no cargado:', nombreCapa, e); });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 12. CARGA MASIVA DE CUENCAS Y CAUCES (RD y Haití)
         // ═══════════════════════════════════════════════════════════
 
+        // --- República Dominicana (esHaiti = false) ---
+        cargarParCuenca('anx/cuencaOZAMA.json', 'anx/cauceOZAMA.json', 'del río Ozama', false);
+        cargarParCuenca('anx/cuencaYUMA.json', 'anx/cauceYUMA.json', 'del río Yuma', false);
+        cargarParCuenca('anx/cuencaMAIMONESTE.json', 'anx/cauceMAIMONESTE.json', 'del río Maimón del Este', false);
+        cargarParCuenca('anx/cuencaANAMUYA.json', 'anx/cauceANAMUYA.json', 'del río Anamuya', false);
+        cargarParCuenca('anx/cuencaBRUJUELAS.json', 'anx/cauceBRUJUELAS.json', 'del río Brujuelas o Tosa', false);
+        cargarParCuenca('anx/cuencaHIGUAMO.json', 'anx/cauceHIGUAMO.json', 'del río Higuamo', false);
+        cargarParCuenca('anx/cuencaSOCO.json', 'anx/cauceSOCO.json', 'del río Soco', false);
+        cargarParCuenca('anx/cuencaCUMAYASA.json', 'anx/cauceCUMAYASA.json', 'del río Cumayasa', false);
+        cargarParCuenca('anx/cuencaROMANA.json', 'anx/cauceROMANA.json', 'del río Romana, Dulce o Salado', false);
+        cargarParCuenca('anx/cuencaCHAVON.json', 'anx/cauceCHAVON.json', 'del río Chavón', false);
+        cargarParCuenca('anx/cuencaYABON.json', 'anx/cauceYABON.json', 'del río Yabón', false);
+        cargarParCuenca('anx/cuencaMAGUA.json', 'anx/cauceMAGUA.json', 'del río Maguá', false);
+        cargarParCuenca('anx/cuencaCUARON.json', 'anx/cauceCUARON.json', 'del río Cuarón', false);
+        cargarParCuenca('anx/cuencaJOVERO.json', 'anx/cauceJOVERO.json', 'del río Jovero', false);
+        cargarParCuenca('anx/cuencaYEGUADA.json', 'anx/cauceYEGUADA.json', 'del río Yeguada', false);
+        cargarParCuenca('anx/cuencaYUNA.json', 'anx/cauceYUNA.json', 'del río Yuna', false);
+        cargarParCuenca('anx/cuencaYNORTE.json', 'anx/cauceYNORTE.json', 'del río Yaque del Norte', false);
+        cargarParCuenca('anx/cuencaBACUI.json', 'anx/cauceBACUI.json', 'del río Bacuí', false);
+        cargarParCuenca('anx/cuencaBAJABONICO.json', 'anx/cauceBAJABONICO.json', 'del río Bajabonico', false);
+        cargarParCuenca('anx/cuencaBOBA.json', 'anx/cauceBOBA.json', 'del río Boba', false);
+        cargarParCuenca('anx/cuencaELLIMON.json', 'anx/cauceELLIMON.json', 'del río El Limón', false);
+        cargarParCuenca('anx/cuencaJOBA.json', 'anx/cauceJOBA.json', 'del río Joba', false);
+        cargarParCuenca('anx/cuencaMAIMONCIBAO.json', 'anx/cauceMAIMONCIBAO.json', 'del río Maimón del norte', false);
+        cargarParCuenca('anx/cuencaSMARCOS.json', 'anx/cauceSMARCOS.json', 'del río San Marcos', false);
+        cargarParCuenca('anx/cuencaNAGUA.json', 'anx/cauceNAGUA.json', 'del río Nagua', false);
+        cargarParCuenca('anx/cuencaSJUANCIBAO.json', 'anx/cauceSJUANCIBAO.json', 'del río San Juan del Cibao', false);
+        cargarParCuenca('anx/cuencaYASICA.json', 'anx/cauceYASICA.json', 'del río Yásica', false);
+        cargarParCuenca('anx/cuencaCAMU.json', 'anx/cauceCAMU.json', 'del río Camú del norte', false);
+        cargarParCuenca('anx/cuencaMASACRE.json', 'anx/cauceMASACRE.json', 'del río Dajabón o Masacre', false);
+        cargarParCuenca('anx/cuencaCHACUEY.json', 'anx/cauceCHACUEY.json', 'del río Chacuey', false);
+        cargarParCuenca('anx/cuencaHAINA.json', 'anx/cauceHAINA.json', 'del río Haina', false);
+        cargarParCuenca('anx/cuencaNIGUA.json', 'anx/cauceNIGUA.json', 'del río Nigua', false);
+        cargarParCuenca('anx/cuencaNIZAO.json', 'anx/cauceNIZAO.json', 'del río Nizao', false);
+        cargarParCuenca('anx/cuencaOCOA.json', 'anx/cauceOCOA.json', 'del río Ocoa', false);
+        cargarParCuenca('anx/cuencaJURA.json', 'anx/cauceJURA.json', 'del río Jura', false);
+        cargarParCuenca('anx/cuencaTABARA.json', 'anx/cauceTABARA.json', 'del río Tábara', false);
+        cargarParCuenca('anx/cuencaYSUR.json', 'anx/cauceYSUR.json', 'del río Yaque del Sur', false);
+        cargarParCuenca('anx/cuencaNIZAITO.json', 'anx/cauceNIZAITO.json', 'del río Nizaito', false);
+        cargarParCuenca('anx/cuencaPEDERNALES.json', 'anx/caucePEDERNALES.json', 'del río Pedernales', false);
+        cargarParCuenca('anx/cuencaVIA.json', 'anx/cauceVIA.json', 'del río Vía', false);
+        cargarParCuenca('anx/cuencaBANI.json', 'anx/cauceBANI.json', 'del río Baní / Banilejo', false);
+        cargarParCuenca('anx/cuencaELVALLE.json', 'anx/cauceELVALLE.json', 'del río El Valle', false);
+        cargarParCuenca('anx/cuencaLASDAMAS.json', 'anx/cauceLASDAMAS.json', 'del río Las Damas', false);
+
+        // --- Haití (esHaiti = true) ---
+        cargarParCuenca('anx/haiti/cuencaARTIBONITO.json', 'anx/haiti/cauceARTIBONITO.json', 'del río Artibonito', true);
+        cargarParCuenca('anx/haiti/cuencaJEANRABEL.json', 'anx/haiti/cauceJEANRABEL.json', 'del río Jean Rabel', true);
+        cargarParCuenca('anx/haiti/cuencaNIPPLES.json', 'anx/haiti/cauceNIPPLES.json', 'del río Nipples', true);
+        cargarParCuenca('anx/haiti/cuencaANGLAIS.json', 'anx/haiti/cauceANGLAIS.json', 'del río Anglais', true);
+        cargarParCuenca('anx/haiti/cuencaMARION.json', 'anx/haiti/cauceMARION.json', 'del río Marion', true);
+        cargarParCuenca('anx/haiti/cuencaBURGO1.json', 'anx/haiti/cauceBURGO1.json', 'del río Peq. Burgo', true);
+        cargarParCuenca('anx/haiti/cuencaLAQUINTE.json', 'anx/haiti/cauceLAQUINTE.json', 'del río La Quinte', true);
+        cargarParCuenca('anx/haiti/cuencaRAVINEdelSUR.json', 'anx/haiti/cauceRAVINEdelSUR.json', 'del río Ravine del Sur', true);
+        cargarParCuenca('anx/haiti/cuencaJACMEL.json', 'anx/haiti/cauceJACMEL.json', 'del río Jacmel', true);
+        cargarParCuenca('anx/haiti/cuencaBAINET.json', 'anx/haiti/cauceBAINET.json', 'del río Bainet', true);
+        cargarParCuenca('anx/haiti/cuencaMOMANCE.json', 'anx/haiti/cauceMOMANCE.json', 'del río Momance', true);
+        cargarParCuenca('anx/haiti/cuencaCOTESdeFER.json', 'anx/haiti/cauceCOTESdeFER.json', 'del río Cotes de Fer (Costa de Hierro)', true);
+        cargarParCuenca('anx/haiti/cuencaGRIS.json', 'anx/haiti/cauceGRIS.json', 'del río Gris', true);
+        cargarParCuenca('anx/haiti/cuencaGRANRIONORTE.json', 'anx/haiti/cauceGRANRIONORTE.json', 'del Gran Río del Norte', true);
+        cargarParCuenca('anx/haiti/cuencaTROUDUNORD.json', 'anx/haiti/cauceTROUDUNORD.json', 'del río Trou du Nord (Hoyo del Norte)', true);
+        cargarParCuenca('anx/haiti/cuencaBLANCHE.json', 'anx/haiti/cauceBLANCHE.json', 'del río Blanco (Blanche)', true);
+
+        // ═══════════════════════════════════════════════════════════
+        // 13. CAPA DE FRONTERA (ACTIVA)
+        // ═══════════════════════════════════════════════════════════
+
+        // Carga de la frontera RD-Haití (archivo FRONTERA RD_HAI.geojson)
         var capaFrontera = null;
         var fronteraCargada = false;
 
@@ -1066,7 +1027,7 @@ const ciudadesRD = [
                         },
                         onEachFeature: function(feature, layer) {
                             var nombre = feature.properties.NAME || 'Frontera';
-                            layer.bindPopup('<b>' + nombre + '</b>');
+                            layer.bindPopup("<b>" + nombre + "</b>");
                         }
                     });
                     fronteraCargada = true;
@@ -1095,14 +1056,14 @@ const ciudadesRD = [
             }
         };
 
+        // Inicialmente cargar la frontera si el checkbox está marcado (por defecto)
         if (document.getElementById('chk-frontera').checked) {
             cargarFrontera();
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 7. UTILIDADES
+        // 14. UTILIDADES DE UI
         // ═══════════════════════════════════════════════════════════
-
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
         };
@@ -1110,27 +1071,12 @@ const ciudadesRD = [
         window.abrirModalCreditos = function() {
             document.getElementById('modal-creditos').classList.add('active');
         };
-
+        
         window.cerrarModalCreditos = function(e) {
             if (!e || e.target.id === 'modal-creditos' || e.target.classList.contains('btn-cerrar-modal')) {
                 document.getElementById('modal-creditos').classList.remove('active');
             }
         };
-
-        // Ajuste móvil: panel-controles debajo del título
-        function ajustarPanelMobil() {
-            if (window.innerWidth <= 768) {
-                var titulo = document.getElementById('panel-titulo');
-                var controles = document.getElementById('panel-controles');
-                var rect = titulo.getBoundingClientRect();
-                var nuevoTop = rect.bottom + 8;
-                controles.style.top = nuevoTop + 'px';
-            } else {
-                document.getElementById('panel-controles').style.top = '';
-            }
-        }
-        window.addEventListener('resize', ajustarPanelMobil);
-        ajustarPanelMobil();
     </script>
 </body>
 </html>
