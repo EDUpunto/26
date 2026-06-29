@@ -354,7 +354,7 @@ NER<!DOCTYPE html>
 
         function cargarPoblacionRD() {
             if (pobRDCargada) return;
-            fetch('anx/POBRD2020.geojson')
+            fetch('anx/pobRD2022_1km.geojson')
                 .then(response => {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
@@ -378,7 +378,7 @@ NER<!DOCTYPE html>
                         },
                         onEachFeature: function(feature, layer) {
                             var dn = feature.properties.DN;
-                            var contenido = '<b>Densidad poblacional RD 2020</b><br>';
+                            var contenido = '<b>Densidad poblacional RD 2022</b><br>';
                             contenido += 'Población x km²: ' + (dn !== undefined ? dn : 'N/D');
                             layer.bindPopup(contenido);
                         }
@@ -389,12 +389,12 @@ NER<!DOCTYPE html>
                     }
                     console.log('Población RD cargada (minDN=' + minDN + ', maxDN=' + maxDN + ').');
                 })
-                .catch(error => console.warn('Error cargando POBRD2020.geojson:', error.message));
+                .catch(error => console.warn('Error cargando pobRD2022_1km.geojson:', error.message));
         }
 
         function cargarPoblacionHT() {
             if (pobHTCargada) return;
-            fetch('anx/POBHAI2020.geojson')
+            fetch('anx/pobHAI2022_1km.geojson')
                 .then(response => {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
@@ -418,7 +418,7 @@ NER<!DOCTYPE html>
                         },
                         onEachFeature: function(feature, layer) {
                             var dn = feature.properties.DN;
-                            var contenido = '<b>Densidad poblacional HAI 2020</b><br>';
+                            var contenido = '<b>Densidad poblacional HAI 2022</b><br>';
                             contenido += 'Población x km²: ' + (dn !== undefined ? dn : 'N/D');
                             layer.bindPopup(contenido);
                         }
@@ -429,7 +429,7 @@ NER<!DOCTYPE html>
                     }
                     console.log('Población Haití cargada (minDN=' + minDN + ', maxDN=' + maxDN + ').');
                 })
-                .catch(error => console.warn('Error cargando POBHAI2020.geojson:', error.message));
+                .catch(error => console.warn('Error cargando pobHAI2022_1km.geojson:', error.message));
         }
 
         // Cambio de capa de población
