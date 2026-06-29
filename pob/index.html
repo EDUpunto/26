@@ -266,14 +266,14 @@
             <h3><strong>I S F O D O S U</strong></h3>
             <p>DIGICON</p>
             <p><strong>POBLACIÓN DE LA ISLA DE<br>SANTO DOMINGO</strong></p>
-            <p style="font-size: 12px;">Juan Ernesto De Frías, José Alberto Santos y Carlos Gabriel Tapia</p>
+            <p style="font-size: 12px;">Juan Ernesto De Frías,<br>José Alberto Santos y Carlos Gabriel Tapia</p>
             <p style="font-size: 12px;">Santo Domingo, República Dominicana</p>
             <p style="font-size: 12px;">junio.2026</p>
             <h3>CONSIDERACIONES</h3>
             <p style="font-size: 10px;">Este mapa es una estimación generada mediante modelos espaciales.  El error estadístico depende del tipo de dato,<br>la zona y la escala de análisis.  La resolución típica es cercana a 1000 × 1000 metros, es decir, cada píxel<br>
             representa una estimación de población dentro de una celda aproximadamente de 1000 × 1000 m (30 arco-segundos en el ecuador)<br>
             <br>
-            <h3>Fuente</h3>
+            <h3>FUENTE</h3>
             <p style="font-size: 10px;">Bondarenko M., Priyatikanto R., Tejedor-Garavito N., Zhang W., McKeen T., Cunningham A., Woods T., Hilton J., Cihan<br>
             D., Nosatiuk B., Brinkhoff T., Tatem A., Sorichetta A.. 2025 Constrained estimates of 2015-2030 total number of people<br>
             per grid square at a resolution of 30 arc (approximately 1000m at the equator) R2025A version v1. Global Demographic Data<br>
@@ -286,11 +286,12 @@
 
     <script>
         // ═══════════════════════════════════════════════════════════
-        // 1. INICIALIZAR MAPA
+        // 1. INICIALIZAR MAPA con maxZoom = 10 (~5 km de escala)
         // ═══════════════════════════════════════════════════════════
         var map = L.map('map', { 
             zoomControl: false,
-            attributionControl: false 
+            attributionControl: false,
+            maxZoom: 12          // Limita el acercamiento a ~5 km
         }).setView([19.03556466237287, -70.89432006796727], 8);
 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
