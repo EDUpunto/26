@@ -301,11 +301,11 @@
         // 2. CAPAS BASE
         // ═══════════════════════════════════════════════════════════
         var capaDibujo = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
+            maxZoom: 12,
             attribution: '© OpenStreetMap'
         });
         var capaSatelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            maxZoom: 19,
+            maxZoom: 12,
             attribution: 'Tiles © Esri'
         });
         capaDibujo.addTo(map);
