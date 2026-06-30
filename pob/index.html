@@ -181,42 +181,6 @@
             order: 0;
         }
 
-        /* Estilo para la leyenda personalizada */
-        .legend-control {
-            background: rgba(255,255,255,0.9);
-            border-radius: 6px;
-            padding: 10px 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            border: 1px solid rgba(0,0,0,0.1);
-            font-size: 12px;
-            line-height: 1.4;
-            min-width: 130px;
-        }
-        .legend-control h4 {
-            margin: 0 0 4px 0;
-            font-size: 11px;
-            text-transform: uppercase;
-            color: #555;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 2px 0;
-        }
-        .legend-color {
-            width: 20px;
-            height: 12px;
-            border-radius: 2px;
-            flex-shrink: 0;
-        }
-        .legend-label {
-            font-size: 11px;
-            color: #333;
-        }
-
         @media (max-width: 768px) {
             #panel-titulo { 
                 top: 10px; left: 10px; right: 10px; width: auto; 
@@ -369,14 +333,13 @@
         // 3. CAPAS DE POBLACIÓN (GEOJSON) con color DINÁMICO por DN
         // ═══════════════════════════════════════════════════════════
         // *** UMBRAL DENSIDAD POBLACIONAL para ocultar celdas con densidad <= X hab/km² ***
-        var UMBRAL = 500;  // hab/km²
+        var UMBRAL = 300;  // hab/km²
 
         var capaPobRD = null;
         var capaPobHT = null;
         var pobRDCargada = false;
         var pobHTCargada = false;
         var capaActiva = 'ambos';  // 'rd', 'ht', 'ambos'
-        var leyendaControl = null;
 
         // Paleta de colores mejorada: gradiente amarillo -> naranja -> rojo
         function getColor(dn, minDN, maxDN) {
@@ -400,74 +363,6 @@
                 b = Math.round(60 + (28 - 60) * v);
             }
             return `rgb(${r}, ${g}, ${b})`;
-        }
-
-        // Función para crear la leyenda
-        function crearLeyenda(minVal, maxVal, titulo) {
-            if (leyendaControl) {
-                map.removeControl(leyendaControl);
-                leyendaControl = null;
-            }
-            if (minVal === undefined || maxVal === undefined || minVal === maxVal) return;
-
-            // Generar 6 intervalos
-            var steps = 6;
-            var step = (maxVal - minVal) / steps;
-            var items = [];
-            for (var i = 0; i <= steps; i++) {
-                var val = minVal + i * step;
-                var color = getColor(val, minVal, maxVal);
-                items.push({ value: Math.round(val), color: color });
-            }
-
-            var legendHtml = '<div class="legend-control"><h4>' + titulo + '</h4>';
-            for (var j = 0; j < items.length; j++) {
-                var label = items[j].value;
-                if (j === 0) label = '< ' + items[1].value;
-                else if (j === items.length - 1) label = '> ' + items[items.length-2].value;
-                else label = items[j].value;
-                legendHtml += '<div class="legend-item"><span class="legend-color" style="background:' + items[j].color + ';"></span><span class="legend-label">' + label + '</span></div>';
-            }
-            legendHtml += '</div>';
-
-            leyendaControl = L.control({ position: 'bottomleft' });
-            leyendaControl.onAdd = function() {
-                var div = L.DomUtil.create('div', '');
-                div.innerHTML = legendHtml;
-                return div;
-            };
-            leyendaControl.addTo(map);
-        }
-
-        // Actualizar leyenda según la capa activa
-        function actualizarLeyenda() {
-            var titulo = 'Densidad (hab/km²)';
-            var minVal, maxVal;
-            if (capaActiva === 'rd' && capaPobRD) {
-                minVal = capaPobRD.options.minDN;
-                maxVal = capaPobRD.options.maxDN;
-                titulo = 'Densidad RD (hab/km²)';
-            } else if (capaActiva === 'ht' && capaPobHT) {
-                minVal = capaPobHT.options.minDN;
-                maxVal = capaPobHT.options.maxDN;
-                titulo = 'Densidad HT (hab/km²)';
-            } else if (capaActiva === 'ambos') {
-                var min1 = capaPobRD ? capaPobRD.options.minDN : Infinity;
-                var max1 = capaPobRD ? capaPobRD.options.maxDN : -Infinity;
-                var min2 = capaPobHT ? capaPobHT.options.minDN : Infinity;
-                var max2 = capaPobHT ? capaPobHT.options.maxDN : -Infinity;
-                minVal = Math.min(min1, min2);
-                maxVal = Math.max(max1, max2);
-                titulo = 'Densidad combinada (hab/km²)';
-            }
-            if (minVal !== undefined && maxVal !== undefined && minVal < maxVal) {
-                crearLeyenda(minVal, maxVal, titulo);
-            } else {
-                if (leyendaControl) {
-                    map.removeControl(leyendaControl);
-                    leyendaControl = null;
-                }
-            }
         }
 
         // *** FUNCIONES MODIFICADAS: ocultan celdas con DN <= UMBRAL ***
@@ -512,7 +407,6 @@
                     if (capaActiva === 'rd' || capaActiva === 'ambos') {
                         map.addLayer(capaPobRD);
                     }
-                    actualizarLeyenda();
                     console.log('Población RD cargada (minDN=' + minDN + ', maxDN=' + maxDN + ').');
                 })
                 .catch(error => console.warn('Error cargando pobRD2022_1km.geojson:', error.message));
@@ -558,13 +452,12 @@
                     if (capaActiva === 'ht' || capaActiva === 'ambos') {
                         map.addLayer(capaPobHT);
                     }
-                    actualizarLeyenda();
                     console.log('Población Haití cargada (minDN=' + minDN + ', maxDN=' + maxDN + ').');
                 })
                 .catch(error => console.warn('Error cargando pobHAI2022_1km.geojson:', error.message));
         }
 
-        // Cambio de capa de población (sin cambios, solo llamada a actualizarLeyenda)
+        // Cambio de capa de población
         window.cambiarCapas = function(tipo, btn) {
             document.querySelectorAll('#panel-controles .grupo-control:nth-child(2) .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
@@ -582,7 +475,6 @@
                 if (!pobHTCargada) cargarPoblacionHT();
                 else if (capaPobHT) map.addLayer(capaPobHT);
             }
-            actualizarLeyenda();
         };
 
         // ═══════════════════════════════════════════════════════════
@@ -899,7 +791,6 @@
             }
 
             map.setView([19.03556466237287, -70.89432006796727], 8);
-            actualizarLeyenda();
         };
 
         // ═══════════════════════════════════════════════════════════
