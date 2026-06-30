@@ -368,8 +368,7 @@
         // ═══════════════════════════════════════════════════════════
         // 3. CAPAS DE POBLACIÓN (GEOJSON) con color DINÁMICO por DN
         // ═══════════════════════════════════════════════════════════
-        // *** UMBRAL DENSIDAD para ocultar celdas con densidad <= 800 ***
-        var UMBRAL = 800;  // hab/km²
+        var UMBRAL DENSIDAD POBLACIONAL = 500;  // hab/km² - oculta celdas con densidad <= este valor
 
         var capaPobRD = null;
         var capaPobHT = null;
@@ -384,17 +383,14 @@
                 return '#cccccc';
             }
             var t = (dn - minDN) / (maxDN - minDN); // 0 a 1
-            // Interpolación entre tres colores: #ffffcc (amarillo claro), #fd8d3c (naranja), #e31a1c (rojo)
             var r, g, b;
             if (t < 0.5) {
                 var u = t / 0.5;
-                // #ffffcc -> #fd8d3c
                 r = Math.round(255 + (253 - 255) * u);
                 g = Math.round(255 + (141 - 255) * u);
                 b = Math.round(204 + (60 - 204) * u);
             } else {
                 var v = (t - 0.5) / 0.5;
-                // #fd8d3c -> #e31a1c
                 r = Math.round(253 + (227 - 253) * v);
                 g = Math.round(141 + (26 - 141) * v);
                 b = Math.round(60 + (28 - 60) * v);
@@ -402,7 +398,7 @@
             return `rgb(${r}, ${g}, ${b})`;
         }
 
-        // Función para crear la leyenda
+        // Función para crear la leyenda (solo para una capa individual)
         function crearLeyenda(minVal, maxVal, titulo) {
             if (leyendaControl) {
                 map.removeControl(leyendaControl);
@@ -410,7 +406,6 @@
             }
             if (minVal === undefined || maxVal === undefined || minVal === maxVal) return;
 
-            // Generar 6 intervalos
             var steps = 6;
             var step = (maxVal - minVal) / steps;
             var items = [];
@@ -440,37 +435,33 @@
         }
 
         // Actualizar leyenda según la capa activa
+        // *** MODIFICADO: ya no muestra leyenda para 'ambos' ***
         function actualizarLeyenda() {
-            var titulo = 'Densidad (hab/km²)';
-            var minVal, maxVal;
-            if (capaActiva === 'rd' && capaPobRD) {
-                minVal = capaPobRD.options.minDN;
-                maxVal = capaPobRD.options.maxDN;
-                titulo = 'Densidad RD (hab/km²)';
-            } else if (capaActiva === 'ht' && capaPobHT) {
-                minVal = capaPobHT.options.minDN;
-                maxVal = capaPobHT.options.maxDN;
-                titulo = 'Densidad HT (hab/km²)';
-            } else if (capaActiva === 'ambos') {
-                var min1 = capaPobRD ? capaPobRD.options.minDN : Infinity;
-                var max1 = capaPobRD ? capaPobRD.options.maxDN : -Infinity;
-                var min2 = capaPobHT ? capaPobHT.options.minDN : Infinity;
-                var max2 = capaPobHT ? capaPobHT.options.maxDN : -Infinity;
-                minVal = Math.min(min1, min2);
-                maxVal = Math.max(max1, max2);
-                titulo = 'Densidad combinada (hab/km²)';
+            // Primero eliminar cualquier leyenda existente
+            if (leyendaControl) {
+                map.removeControl(leyendaControl);
+                leyendaControl = null;
             }
-            if (minVal !== undefined && maxVal !== undefined && minVal < maxVal) {
-                crearLeyenda(minVal, maxVal, titulo);
-            } else {
-                if (leyendaControl) {
-                    map.removeControl(leyendaControl);
-                    leyendaControl = null;
+
+            if (capaActiva === 'rd' && capaPobRD) {
+                var minVal = capaPobRD.options.minDN;
+                var maxVal = capaPobRD.options.maxDN;
+                if (minVal !== undefined && maxVal !== undefined && minVal < maxVal) {
+                    crearLeyenda(minVal, maxVal, 'Densidad RD (hab/km²)');
                 }
+            } else if (capaActiva === 'ht' && capaPobHT) {
+                var minVal = capaPobHT.options.minDN;
+                var maxVal = capaPobHT.options.maxDN;
+                if (minVal !== undefined && maxVal !== undefined && minVal < maxVal) {
+                    crearLeyenda(minVal, maxVal, 'Densidad HT (hab/km²)');
+                }
+            } else if (capaActiva === 'ambos') {
+                // *** NO se crea ninguna leyenda en modo combinado ***
+                // Simplemente no hacemos nada (ya se eliminó al inicio)
             }
         }
 
-        // *** FUNCIONES MODIFICADAS: ocultan celdas con DN <= UMBRAL ***
+        // Carga de población RD (con umbral)
         function cargarPoblacionRD() {
             if (pobRDCargada) return;
             fetch('anx/pobRD2022_1km.geojson')
@@ -479,7 +470,6 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Filtrar solo valores > UMBRAL para el cálculo de min/max
                     var dns = data.features.map(f => f.properties.DN)
                                  .filter(v => v !== null && v !== undefined && v > UMBRAL);
                     var minDN = dns.length ? Math.min(...dns) : 0;
@@ -518,6 +508,7 @@
                 .catch(error => console.warn('Error cargando pobRD2022_1km.geojson:', error.message));
         }
 
+        // Carga de población HT (con umbral)
         function cargarPoblacionHT() {
             if (pobHTCargada) return;
             fetch('anx/pobHAI2022_1km.geojson')
@@ -564,7 +555,7 @@
                 .catch(error => console.warn('Error cargando pobHAI2022_1km.geojson:', error.message));
         }
 
-        // Cambio de capa de población (sin cambios, solo llamada a actualizarLeyenda)
+        // Cambio de capa de población
         window.cambiarCapas = function(tipo, btn) {
             document.querySelectorAll('#panel-controles .grupo-control:nth-child(2) .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
@@ -586,7 +577,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 4. COMUNIDADES (puntos)
+        // 4. COMUNIDADES (puntos) - SIN CAMBIOS
         // ═══════════════════════════════════════════════════════════
         var iconComunidad = L.divIcon({
             className: 'custom-div-icon',
