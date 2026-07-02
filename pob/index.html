@@ -246,9 +246,16 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-comunidades-ht" onchange="toggleComunidadesHT()"> ⭐ Comunidades haitianas
                 </label>
-                artículo<label class="checkbox-opcion">
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-vias-rd" onchange="toggleViasRD()"> 🛣️ Vías dominicanas
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-vias-ht" onchange="toggleViasHT()"> 🛣️ Vías haitianas
+                </label>
+                <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🔴 Frontera RD‑Haití
                 </label>
+
             </div>
 
             <!-- Enlaces -->
@@ -274,13 +281,13 @@
             <p style="font-size: 10px;">Detrás de este recurso hay varios meses de investigación y trabajo.<br>Tu opinión es fundamental: si ves algún punto que se pueda mejorar, ¡no dudes en escribirme!<br>edefrias@gmail.com</p>
 
             <h3>CONSIDERACIONES</h3>
-            <p style="font-size: 10px;">Este mapa es una estimación generada mediante modelos espaciales.  El error estadístico depende del tipo de dato,<br>la zona y la escala de análisis.  La resolución típica es cercana a 1000 × 1000 metros, es decir, cada píxel<br>
-            representa una estimación de población dentro de una celda aproximadamente de 1000 × 1000 m (30 arco-segundos en el ecuador).</p>
+            <p style="font-size: 9px;">Este mapa es una estimación generada mediante modelos espaciales.  El error estadístico depende del tipo de dato,<br>la zona y la escala de análisis.  La resolución típica es cercana a 1000 × 1000 metros, es decir, cada píxel<br>
+            representa una estimación de población dentro de una celda aproximadamente de 1000 × 1000 m (30 arco-segundos en el ecuador).  Solo se visualizan pixeles con valor de 300 hab/km² o más</p>
 
             <h3>FUENTES</h3>
-            <p style="font-size: 10px;">Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022.<br> https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de-poblacion-y-vivienda-2022/.</p>
-
-            <p style="font-size: 10px;">Bondarenko M., Priyatikanto R., Tejedor-Garavito N., Zhang W., McKeen T., Cunningham A., Woods T., Hilton J., Cihan<br>
+            <p style="font-size: 9px;">Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022.<br> https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de-poblacion-y-vivienda-2022/.</p>
+            <p style="font-size: 9px;">Raifer, M. (s. f.). Overpass Turbo [Aplicación web]. https://overpass-turbo.eu/</p>
+            <p style="font-size: 9px;">Bondarenko M., Priyatikanto R., Tejedor-Garavito N., Zhang W., McKeen T., Cunningham A., Woods T., Hilton J., Cihan<br>
             D., Nosatiuk B., Brinkhoff T., Tatem A., Sorichetta A.. 2025 Constrained estimates of 2015-2030 total number of people<br>
             per grid square at a resolution of 30 arc (approximately 1000m at the equator) R2025A version v1. Global Demographic Data<br>
             Project - Funded by The Bill and Melinda Gates Foundation (INV-045237). WorldPop - School of Geography and Environmental<br>
@@ -333,7 +340,6 @@
         // ═══════════════════════════════════════════════════════════
         // 3. CAPAS DE POBLACIÓN (GEOJSON) con color DINÁMICO por DN
         // ═══════════════════════════════════════════════════════════
-        // *** UMBRAL DENSIDAD POBLACIONAL para ocultar celdas con densidad <= X hab/km² ***
         var UMBRAL = 300;  // hab/km²
 
         var capaPobRD = null;
@@ -342,23 +348,19 @@
         var pobHTCargada = false;
         var capaActiva = 'ambos';  // 'rd', 'ht', 'ambos'
 
-        // Paleta de colores mejorada: gradiente amarillo -> naranja -> rojo
         function getColor(dn, minDN, maxDN) {
             if (dn === null || dn === undefined || maxDN === minDN) {
                 return '#cccccc';
             }
-            var t = (dn - minDN) / (maxDN - minDN); // 0 a 1
-            // Interpolación entre tres colores: #ffffcc (amarillo claro), #fd8d3c (naranja), #e31a1c (rojo)
+            var t = (dn - minDN) / (maxDN - minDN);
             var r, g, b;
             if (t < 0.5) {
                 var u = t / 0.5;
-                // #ffffcc -> #fd8d3c
                 r = Math.round(255 + (253 - 255) * u);
                 g = Math.round(255 + (141 - 255) * u);
                 b = Math.round(204 + (60 - 204) * u);
             } else {
                 var v = (t - 0.5) / 0.5;
-                // #fd8d3c -> #e31a1c
                 r = Math.round(253 + (227 - 253) * v);
                 g = Math.round(141 + (26 - 141) * v);
                 b = Math.round(60 + (28 - 60) * v);
@@ -366,7 +368,6 @@
             return `rgb(${r}, ${g}, ${b})`;
         }
 
-        // *** FUNCIONES MODIFICADAS: ocultan celdas con DN <= UMBRAL ***
         function cargarPoblacionRD() {
             if (pobRDCargada) return;
             fetch('anx/pobRD2022_1km.geojson')
@@ -375,7 +376,6 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Filtrar solo valores > UMBRAL para el cálculo de min/max
                     var dns = data.features.map(f => f.properties.DN)
                                  .filter(v => v !== null && v !== undefined && v > UMBRAL);
                     var minDN = dns.length ? Math.min(...dns) : 0;
@@ -458,7 +458,6 @@
                 .catch(error => console.warn('Error cargando pobHAI2022_1km.geojson:', error.message));
         }
 
-        // Cambio de capa de población
         window.cambiarCapas = function(tipo, btn) {
             document.querySelectorAll('#panel-controles .grupo-control:nth-child(2) .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
@@ -772,30 +771,152 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 6. REINICIAR
+        // 6. NUEVAS CAPAS DE VÍAS (naranja con borde negro)
+        // ═══════════════════════════════════════════════════════════
+        // Variables para las capas de vías
+        var capaViasRDBase = null;   // capa negra (borde)
+        var capaViasRDNaranja = null; // capa naranja (interior)
+        var capaViasHTBase = null;
+        var capaViasHTNaranja = null;
+        var viasRDCargada = false;
+        var viasHTCargada = false;
+
+        function cargarViasRD() {
+            if (viasRDCargada) return;
+            fetch('anx/viasRD.geojson')
+                .then(response => {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    // Capa base negra (borde) más gruesa
+                    capaViasRDBase = L.geoJSON(data, {
+                        style: {
+                            color: 'black',
+                            weight: 5,
+                            opacity: 0.6
+                        }
+                    });
+                    // Capa superior naranja más fina
+                    capaViasRDNaranja = L.geoJSON(data, {
+                        style: {
+                            color: 'orange',
+                            weight: 3,
+                            opacity: 0.9
+                        }
+                    });
+                    viasRDCargada = true;
+                    // Si el checkbox está activo, añadimos ambas capas
+                    if (document.getElementById('chk-vias-rd').checked) {
+                        map.addLayer(capaViasRDBase);
+                        map.addLayer(capaViasRDNaranja);
+                    }
+                    console.log('Vías RD cargadas correctamente.');
+                })
+                .catch(error => console.warn('Error cargando vías RD:', error.message));
+        }
+
+        function cargarViasHT() {
+            if (viasHTCargada) return;
+            fetch('anx/viasHAI.geojson')
+                .then(response => {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    capaViasHTBase = L.geoJSON(data, {
+                        style: {
+                            color: 'black',
+                            weight: 5,
+                            opacity: 0.6
+                        }
+                    });
+                    capaViasHTNaranja = L.geoJSON(data, {
+                        style: {
+                            color: 'orange',
+                            weight: 3,
+                            opacity: 0.9
+                        }
+                    });
+                    viasHTCargada = true;
+                    if (document.getElementById('chk-vias-ht').checked) {
+                        map.addLayer(capaViasHTBase);
+                        map.addLayer(capaViasHTNaranja);
+                    }
+                    console.log('Vías Haití cargadas correctamente.');
+                })
+                .catch(error => console.warn('Error cargando vías Haití:', error.message));
+        }
+
+        window.toggleViasRD = function() {
+            var chk = document.getElementById('chk-vias-rd');
+            if (chk.checked) {
+                if (!viasRDCargada) {
+                    cargarViasRD();
+                } else {
+                    if (capaViasRDBase) map.addLayer(capaViasRDBase);
+                    if (capaViasRDNaranja) map.addLayer(capaViasRDNaranja);
+                }
+            } else {
+                if (capaViasRDBase) map.removeLayer(capaViasRDBase);
+                if (capaViasRDNaranja) map.removeLayer(capaViasRDNaranja);
+            }
+        };
+
+        window.toggleViasHT = function() {
+            var chk = document.getElementById('chk-vias-ht');
+            if (chk.checked) {
+                if (!viasHTCargada) {
+                    cargarViasHT();
+                } else {
+                    if (capaViasHTBase) map.addLayer(capaViasHTBase);
+                    if (capaViasHTNaranja) map.addLayer(capaViasHTNaranja);
+                }
+            } else {
+                if (capaViasHTBase) map.removeLayer(capaViasHTBase);
+                if (capaViasHTNaranja) map.removeLayer(capaViasHTNaranja);
+            }
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 7. REINICIAR
         // ═══════════════════════════════════════════════════════════
         window.mostrarTodas = function() {
+            // Población
             if (capaPobRD && map.hasLayer(capaPobRD)) map.removeLayer(capaPobRD);
             if (capaPobHT && map.hasLayer(capaPobHT)) map.removeLayer(capaPobHT);
             capaActiva = 'ambos';
             document.querySelectorAll('#panel-controles .grupo-control:nth-child(2) .btn-opcion').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-pob-ambos').classList.add('active');
 
+            // Comunidades
             ['chk-comunidades-rd', 'chk-comunidades-ht'].forEach(function(id) {
                 document.getElementById(id).checked = false;
             });
             toggleComunidadesRD();
             toggleComunidadesHT();
 
+            // Frontera (dejamos activa)
             if (document.getElementById('chk-frontera').checked && capaFrontera && !map.hasLayer(capaFrontera)) {
                 map.addLayer(capaFrontera);
             }
 
+            // Vías: desactivar checkboxes y remover capas
+            ['chk-vias-rd', 'chk-vias-ht'].forEach(function(id) {
+                document.getElementById(id).checked = false;
+            });
+            // Remover capas de vías si existen
+            if (capaViasRDBase && map.hasLayer(capaViasRDBase)) map.removeLayer(capaViasRDBase);
+            if (capaViasRDNaranja && map.hasLayer(capaViasRDNaranja)) map.removeLayer(capaViasRDNaranja);
+            if (capaViasHTBase && map.hasLayer(capaViasHTBase)) map.removeLayer(capaViasHTBase);
+            if (capaViasHTNaranja && map.hasLayer(capaViasHTNaranja)) map.removeLayer(capaViasHTNaranja);
+
+            // Vista
             map.setView([19.03556466237287, -70.89432006796727], 8);
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 7. UTILIDADES UI
+        // 8. UTILIDADES UI
         // ═══════════════════════════════════════════════════════════
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
@@ -812,11 +933,12 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 8. CARGA INICIAL DE POBLACIÓN (por defecto "Ambas")
+        // 9. CARGA INICIAL DE POBLACIÓN (por defecto "Ambas")
         // ═══════════════════════════════════════════════════════════
         window.addEventListener('load', function() {
             cargarPoblacionRD();
             cargarPoblacionHT();
+            // Las vías se cargarán solo cuando se activen los checkboxes
         });
     </script>
 </body>
