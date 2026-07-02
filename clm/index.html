@@ -35,7 +35,7 @@
             letter-spacing: 0.5px;
             line-height: 1.1;
         }
-        #panel-titulo h2 {
+        #panel-titulo p {
             font-size: 14px;
             color: #2c3e50;
             font-weight: 500;
@@ -129,6 +129,17 @@
             font-size: 12px; color: #333; cursor: pointer;
         }
         .checkbox-opcion input { accent-color: #2980b9; width: 14px; height: 14px; cursor: pointer; }
+
+        /* Estilo para las etiquetas de clima sobre los polígonos */
+        .clima-label {
+            font-weight: bold;
+            font-size: 10px;
+            color: white;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            background: none;
+            border: none;
+            box-shadow: none;
+        }
 
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -224,7 +235,7 @@
             <!-- Capa población 2020 -->
             <div class="grupo-control">
                 <h4>Capa población 2020</h4>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
                     <p style="font-size: 10px; text-align: center;">Cada cuadrícula del mapa representa 1 km²</p>
                     <button id="btn-pob-rd" class="btn-opcion" onclick="cambiarCapas('rd', this)">👥 Distribución población dominicana</button>
                     <button id="btn-pob-ht" class="btn-opcion" onclick="cambiarCapas('ht', this)">👥 Distribución población haitiana</button>
@@ -280,8 +291,9 @@
             <p style="font-size: 10px;">Detrás de este recurso hay varios meses de investigación y trabajo.<br>Tu opinión es fundamental: si ves algún punto que se pueda mejorar, ¡no dudes en escribirme!<br>edefrias@gmail.com</p>
 
             <h3>CONSIDERACIONES</h3>
-            <p style="font-size: 9px;">Este es un mapa interactivo realizado con visión y propósitos educativos.<br>
-            El sistema de Köppen, es considerado el más difundido a nivel mundial por su simplicidad y su estrecha<br>
+            <p style="font-size: 9px;">El sistema de Köppen, es considerado el más difundido a nivel mundial<br>
+            por su simplicidad y su estrecha relación entre clima y vegetación.<br>
+            Este es un mapa realizado con visión y propósitos educativos.<br>
             Cada cuadrado de la "celda o cuadrícula" tiene un tamaño de 9 kilómetros de lado, aproximadamente.<br>
             El mapa posee una escala macro simplificada, asume que no hay variaciones dentro de cada zona.<br>
             Si te enfocas en un valle dentro de esas cuadrículas, el mapa no lo va a reflejar.</p>
@@ -297,7 +309,7 @@
 
     <script>
         // ═══════════════════════════════════════════════════════════
-        // 1. INICIALIZAR MAPA con maxZoom = 10 (~5 km de escala)
+        // 1. INICIALIZAR MAPA con maxZoom = 12
         // ═══════════════════════════════════════════════════════════
         var map = L.map('map', { 
             zoomControl: false,
@@ -346,6 +358,7 @@
         var pobHTCargada = false;
         var capaActiva = 'ambos';  // 'rd', 'ht', 'ambos'
 
+        // Función de color para población (escala de rojos)
         function getColor(dn, minDN, maxDN) {
             if (dn === null || dn === undefined || maxDN === minDN) {
                 return '#cccccc';
@@ -769,44 +782,34 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 6. CAPA CLIMÁTICA KOPPEN
+        // 6. CAPA CLIMÁTICA KOPPEN (usando campos KOPPEN y NAME2)
         // ═══════════════════════════════════════════════════════════
         var capaClima = null;
         var climaCargado = false;
         var climaVisible = false;
 
-        // Paleta de colores para los tipos de clima Köppen (ejemplos)
+        // ---------------------------------------------------------------
+        // CONFIGURACIÓN DE COLORES PARA CLASES CLIMÁTICAS
+        // ---------------------------------------------------------------
+        // Se establece un orden de humedad de más húmedo a más seco.
+        // Cada clase se asigna a un tono de azul: el más oscuro para la más húmeda,
+        // el más claro para la más seca.
+        // Para añadir o modificar clases, editar los arreglos 'ordenHumedad' y 'coloresAzul'.
+        // La opacidad de relleno se fija en 0.7 (70%) y puede ajustarse en la función 'style'.
+        // ---------------------------------------------------------------
+        var ordenHumedad = ['Af', 'Am', 'Aw', 'Cfb', 'Cwb', 'BSh'];
+        var coloresAzul = [
+            '#0a2f5a', // Af  (más húmedo)
+            '#1a4a7a', // Am
+            '#2a659a', // Aw
+            '#4a8aba', // Cfb
+            '#6aaad0', // Cwb
+            '#7bb8e0'  // BSh (más seco)
+        ];
+
         function getColorKoppen(tipo) {
-            var colores = {
-                'Af': '#00a0a0', // Tropical lluvioso
-                'Am': '#00b0b0',
-                'Aw': '#80c0a0',
-                'BSh': '#f0c040', // Estepario cálido
-                'BWh': '#f0a030', // Desértico cálido
-                'BSk': '#d0c070', // Estepario frío
-                'BWk': '#b0a060', // Desértico frío
-                'Cfa': '#60c060', // Templado sin estación seca
-                'Cfb': '#70b070',
-                'Csa': '#c0c060', // Mediterráneo
-                'Csb': '#b0b060',
-                'Cwa': '#80c080', // Templado con invierno seco
-                'Cwb': '#90b080',
-                'Cwc': '#a0a080',
-                'Dfa': '#6060c0', // Continental
-                'Dfb': '#7070b0',
-                'Dfc': '#8080a0',
-                'Dfd': '#909090',
-                'Dsa': '#c06060',
-                'Dsb': '#b07070',
-                'Dsc': '#a08080',
-                'Dwa': '#6060a0',
-                'Dwb': '#707090',
-                'Dwc': '#808080',
-                'Dwd': '#909090',
-                'EF': '#ffffff', // Hielo
-                'ET': '#c0c0c0'  // Tundra
-            };
-            return colores[tipo] || '#cccccc';
+            var idx = ordenHumedad.indexOf(tipo);
+            return idx !== -1 ? coloresAzul[idx] : '#cccccc';
         }
 
         function cargarClima() {
@@ -817,40 +820,31 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Determinar qué propiedad usar para el tipo de clima
-                    var primera = data.features[0];
-                    var propClima = null;
-                    if (primera) {
-                        var props = Object.keys(primera.properties);
-                        // Buscar propiedades comunes: 'clima', 'tipo', 'Koppen', 'class'
-                        var candidatas = ['clima', 'tipo', 'koppen', 'class', 'Clase'];
-                        for (var i = 0; i < candidatas.length; i++) {
-                            if (props.includes(candidatas[i])) {
-                                propClima = candidatas[i];
-                                break;
-                            }
-                        }
-                        if (!propClima && props.length > 0) {
-                            propClima = props[0]; // usar la primera
-                        }
-                    }
-                    if (!propClima) propClima = 'clima';
-                    console.log('Usando propiedad "' + propClima + '" para el tipo de clima.');
-
                     capaClima = L.geoJSON(data, {
                         style: function(feature) {
-                            var tipo = feature.properties[propClima];
+                            var tipo = feature.properties.KOPPEN;
                             var color = getColorKoppen(tipo);
                             return {
                                 fillColor: color,
-                                fillOpacity: 0.7,
+                                fillOpacity: 0.7,   // 70% de opacidad
                                 color: 'black',
                                 weight: 0.5
                             };
                         },
                         onEachFeature: function(feature, layer) {
-                            var tipo = feature.properties[propClima] || 'Desconocido';
-                            layer.bindPopup('<b>Clima Koppen:</b> ' + tipo);
+                            var koppen = feature.properties.KOPPEN || 'N/D';
+                            var name2 = feature.properties.NAME2 || 'Sin descripción';
+                            // Etiqueta permanente sobre el polígono (campo KOPPEN)
+                            layer.bindTooltip(koppen, {
+                                permanent: true,
+                                direction: 'center',
+                                className: 'clima-label'
+                            });
+                            // Popup al hacer clic: muestra KOPPEN y NAME2
+                            layer.bindPopup(
+                                '<b>Clase climática Koppen:</b> ' + koppen + '<br>' +
+                                '<b>Descripción:</b> ' + name2
+                            );
                         }
                     });
                     climaCargado = true;
@@ -934,7 +928,6 @@
                 document.getElementById('modal-creditos').classList.remove('active');
             }
         };
-
     </script>
 </body>
 </html>
