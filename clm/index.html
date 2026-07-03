@@ -10,7 +10,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; background-color: #f0f2f5; }
         #map { width: 100vw; height: 100vh; z-index: 1; }
-        
+
         .panel {
             position: absolute;
             background: rgba(255, 255, 255, 0.95);
@@ -123,7 +123,7 @@
         }
         .btn-opcion:hover { background: #f8f9fa; border-color: #2980b9; color: #2980b9; }
         .btn-opcion.active { background: #2980b9; color: white; border-color: #2980b9; }
-        
+
         .checkbox-opcion {
             display: flex; align-items: center; gap: 8px; padding: 3px 0;
             font-size: 12px; color: #333; cursor: pointer;
@@ -193,12 +193,12 @@
         }
 
         @media (max-width: 768px) {
-            #panel-titulo { 
-                top: 10px; left: 10px; right: 10px; width: auto; 
+            #panel-titulo {
+                top: 10px; left: 10px; right: 10px; width: auto;
                 text-align: center; border-left: none; border-bottom: 3px solid #2980b9;
             }
-            #panel-controles { 
-                top: 70px; right: 10px; width: 260px; 
+            #panel-controles {
+                top: 70px; right: 10px; width: 260px;
                 max-height: 70vh;
             }
         }
@@ -300,7 +300,7 @@
         // ═══════════════════════════════════════════════════════════
         // 1. INICIALIZAR MAPA con maxZoom = 12
         // ═══════════════════════════════════════════════════════════
-        var map = L.map('map', { 
+        var map = L.map('map', {
             zoomControl: false,
             attributionControl: false,
             maxZoom: 12
@@ -326,7 +326,7 @@
         window.cambiarBase = function(tipo, btn) {
             document.querySelectorAll('#panel-controles .grupo-control:first-child .btn-opcion').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
-            
+
             if (tipo === 'satelite') {
                 map.removeLayer(capaDibujo);
                 capaSatelite.addTo(map);
@@ -337,148 +337,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 3. CAPAS DE POBLACIÓN (GEOJSON) con color DINÁMICO por DN
-        // ═══════════════════════════════════════════════════════════
-        var UMBRAL = 300;  // hab/km²
-
-        var capaPobRD = null;
-        var capaPobHT = null;
-        var pobRDCargada = false;
-        var pobHTCargada = false;
-        var capaActiva = 'ambos';  // 'rd', 'ht', 'ambos'
-
-        // Función de color para población (escala de rojos)
-        function getColor(dn, minDN, maxDN) {
-            if (dn === null || dn === undefined || maxDN === minDN) {
-                return '#cccccc';
-            }
-            var t = (dn - minDN) / (maxDN - minDN);
-            var r, g, b;
-            if (t < 0.5) {
-                var u = t / 0.5;
-                r = Math.round(255 + (253 - 255) * u);
-                g = Math.round(255 + (141 - 255) * u);
-                b = Math.round(204 + (60 - 204) * u);
-            } else {
-                var v = (t - 0.5) / 0.5;
-                r = Math.round(253 + (227 - 253) * v);
-                g = Math.round(141 + (26 - 141) * v);
-                b = Math.round(60 + (28 - 60) * v);
-            }
-            return `rgb(${r}, ${g}, ${b})`;
-        }
-
-        function cargarPoblacionRD() {
-            if (pobRDCargada) return;
-            fetch('anx/pobRD2022_1km.geojson')
-                .then(response => {
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    return response.json();
-                })
-                .then(data => {
-                    var dns = data.features.map(f => f.properties.DN)
-                                 .filter(v => v !== null && v !== undefined && v > UMBRAL);
-                    var minDN = dns.length ? Math.min(...dns) : 0;
-                    var maxDN = dns.length ? Math.max(...dns) : 1;
-
-                    capaPobRD = L.geoJSON(data, {
-                        style: function(feature) {
-                            var dn = feature.properties.DN;
-                            if (dn === null || dn === undefined || dn <= UMBRAL) {
-                                return { fillOpacity: 0, weight: 0, color: 'transparent' };
-                            }
-                            var color = getColor(dn, minDN, maxDN);
-                            return {
-                                color: '#1a5276',
-                                weight: 0.5,
-                                fillColor: color,
-                                fillOpacity: 0.7
-                            };
-                        },
-                        onEachFeature: function(feature, layer) {
-                            var dn = feature.properties.DN;
-                            var contenido = '<b>Densidad poblacional RD 2022</b><br>';
-                            contenido += 'Población x km²: ' + (dn !== undefined ? dn : 'N/D');
-                            layer.bindPopup(contenido);
-                        }
-                    });
-                    capaPobRD.options.minDN = minDN;
-                    capaPobRD.options.maxDN = maxDN;
-                    pobRDCargada = true;
-                    if (capaActiva === 'rd' || capaActiva === 'ambos') {
-                        map.addLayer(capaPobRD);
-                    }
-                    console.log('Población RD cargada (minDN=' + minDN + ', maxDN=' + maxDN + ').');
-                })
-                .catch(error => console.warn('Error cargando pobRD2022_1km.geojson:', error.message));
-        }
-
-        function cargarPoblacionHT() {
-            if (pobHTCargada) return;
-            fetch('anx/pobHAI2022_1km.geojson')
-                .then(response => {
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    return response.json();
-                })
-                .then(data => {
-                    var dns = data.features.map(f => f.properties.DN)
-                                 .filter(v => v !== null && v !== undefined && v > UMBRAL);
-                    var minDN = dns.length ? Math.min(...dns) : 0;
-                    var maxDN = dns.length ? Math.max(...dns) : 1;
-
-                    capaPobHT = L.geoJSON(data, {
-                        style: function(feature) {
-                            var dn = feature.properties.DN;
-                            if (dn === null || dn === undefined || dn <= UMBRAL) {
-                                return { fillOpacity: 0, weight: 0, color: 'transparent' };
-                            }
-                            var color = getColor(dn, minDN, maxDN);
-                            return {
-                                color: '#7e5109',
-                                weight: 0.5,
-                                fillColor: color,
-                                fillOpacity: 0.7
-                            };
-                        },
-                        onEachFeature: function(feature, layer) {
-                            var dn = feature.properties.DN;
-                            var contenido = '<b>Densidad poblacional HAI 2022</b><br>';
-                            contenido += 'Población x km²: ' + (dn !== undefined ? dn : 'N/D');
-                            layer.bindPopup(contenido);
-                        }
-                    });
-                    capaPobHT.options.minDN = minDN;
-                    capaPobHT.options.maxDN = maxDN;
-                    pobHTCargada = true;
-                    if (capaActiva === 'ht' || capaActiva === 'ambos') {
-                        map.addLayer(capaPobHT);
-                    }
-                    console.log('Población Haití cargada (minDN=' + minDN + ', maxDN=' + maxDN + ').');
-                })
-                .catch(error => console.warn('Error cargando pobHAI2022_1km.geojson:', error.message));
-        }
-
-        window.cambiarCapas = function(tipo, btn) {
-            document.querySelectorAll('#panel-controles .grupo-control:nth-child(2) .btn-opcion').forEach(b => b.classList.remove('active'));
-            if (btn) btn.classList.add('active');
-
-            capaActiva = tipo;
-
-            if (capaPobRD && map.hasLayer(capaPobRD)) map.removeLayer(capaPobRD);
-            if (capaPobHT && map.hasLayer(capaPobHT)) map.removeLayer(capaPobHT);
-
-            if (tipo === 'rd' || tipo === 'ambos') {
-                if (!pobRDCargada) cargarPoblacionRD();
-                else if (capaPobRD) map.addLayer(capaPobRD);
-            }
-            if (tipo === 'ht' || tipo === 'ambos') {
-                if (!pobHTCargada) cargarPoblacionHT();
-                else if (capaPobHT) map.addLayer(capaPobHT);
-            }
-        };
-
-        // ═══════════════════════════════════════════════════════════
-        // 4. COMUNIDADES (puntos)
+        // 3. COMUNIDADES (puntos)
         // ═══════════════════════════════════════════════════════════
         var iconComunidad = L.divIcon({
             className: 'custom-div-icon',
@@ -715,7 +574,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 5. FRONTERA
+        // 4. FRONTERA
         // ═══════════════════════════════════════════════════════════
         var capaFrontera = null;
         var fronteraCargada = false;
@@ -771,34 +630,37 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 6. CAPA CLIMÁTICA KOPPEN (usando campos KOPPEN y NAME2)
+        // 5. CAPA CLIMÁTICA KOPPEN
+        //    - Lee los campos "Koppen" y "Name2" del GeoJSON.
+        //    - Asigna colores fijos según la tabla:
+        //        Cfb  → #0033CC
+        //        Cwb  → #2F97FF
+        //        Af   → #2F97FF
+        //        Am   → #62B0FF
+        //        Aw   → #B7DBFF
+        //        BSh  → #FFFF99
+        //    - Opacidad de relleno: 0.7 (70%)
+        //    - Tooltip permanente: muestra la abreviatura (Koppen)
+        //    - Popup al hacer clic: muestra Koppen y Name2
         // ═══════════════════════════════════════════════════════════
         var capaClima = null;
         var climaCargado = false;
         var climaVisible = false;
 
         // ---------------------------------------------------------------
-        // CONFIGURACIÓN DE COLORES PARA CLASES CLIMÁTICAS
+        // MAPA DE COLORES (puedes editar aquí para cambiar colores)
         // ---------------------------------------------------------------
-        // Se establece un orden de humedad de más húmedo a más seco.
-        // Cada clase se asigna a un tono de azul: el más oscuro para la más húmeda,
-        // el más claro para la más seca.
-        // Para añadir o modificar clases, editar los arreglos 'ordenHumedad' y 'coloresAzul'.
-        // La opacidad de relleno se fija en 0.7 (70%) y puede ajustarse en la función 'style'.
-        // ---------------------------------------------------------------
-        var ordenHumedad = ['Af', 'Am', 'Aw', 'Cfb', 'Cwb', 'BSh'];
-        var coloresAzul = [
-            '#0a2f5a', // Af  (más húmedo)
-            '#1a4a7a', // Am
-            '#2a659a', // Aw
-            '#4a8aba', // Cfb
-            '#6aaad0', // Cwb
-            '#7bb8e0'  // BSh (más seco)
-        ];
+        var coloresClima = {
+            'Cfb': '#0033CC',
+            'Cwb': '#2F97FF',
+            'Af':  '#2F97FF',
+            'Am':  '#62B0FF',
+            'Aw':  '#B7DBFF',
+            'BSh': '#FFFF99'
+        };
 
         function getColorKoppen(tipo) {
-            var idx = ordenHumedad.indexOf(tipo);
-            return idx !== -1 ? coloresAzul[idx] : '#cccccc';
+            return coloresClima[tipo] || '#cccccc';  // color gris por defecto si no está en la lista
         }
 
         function cargarClima() {
@@ -811,25 +673,25 @@
                 .then(data => {
                     capaClima = L.geoJSON(data, {
                         style: function(feature) {
-                            var tipo = feature.properties.KOPPEN;
+                            var tipo = feature.properties.Koppen;   // ← campo correcto (con 'Koppen')
                             var color = getColorKoppen(tipo);
                             return {
                                 fillColor: color,
-                                fillOpacity: 0.7,   // 70% de opacidad
+                                fillOpacity: 0.7,   // 70% de opacidad (ajustable)
                                 color: 'black',
                                 weight: 0.5
                             };
                         },
                         onEachFeature: function(feature, layer) {
-                            var koppen = feature.properties.KOPPEN || 'N/D';
-                            var name2 = feature.properties.NAME2 || 'Sin descripción';
-                            // Etiqueta permanente sobre el polígono (campo KOPPEN)
+                            var koppen = feature.properties.Koppen || 'N/D';
+                            var name2 = feature.properties.Name2 || 'Sin descripción';
+                            // Etiqueta permanente (tooltip) con la abreviatura
                             layer.bindTooltip(koppen, {
                                 permanent: true,
                                 direction: 'center',
                                 className: 'clima-label'
                             });
-                            // Popup al hacer clic: muestra KOPPEN y NAME2
+                            // Popup al hacer clic
                             layer.bindPopup(
                                 '<b>Clase climática Koppen:</b> ' + koppen + '<br>' +
                                 '<b>Descripción:</b> ' + name2
@@ -868,24 +730,16 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 7. REINICIAR
+        // 6. REINICIAR
         // ═══════════════════════════════════════════════════════════
         window.mostrarTodas = function() {
-            // Población
-            if (capaPobRD && map.hasLayer(capaPobRD)) map.removeLayer(capaPobRD);
-            if (capaPobHT && map.hasLayer(capaPobHT)) map.removeLayer(capaPobHT);
-            capaActiva = 'ambos';
-            document.querySelectorAll('#panel-controles .grupo-control:nth-child(2) .btn-opcion').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-pob-ambos').classList.add('active');
-
-            // Comunidades
-            ['chk-comunidades-rd', 'chk-comunidades-ht'].forEach(function(id) {
-                document.getElementById(id).checked = false;
-            });
+            // Comunidades: apagar ambas
+            document.getElementById('chk-comunidades-rd').checked = false;
+            document.getElementById('chk-comunidades-ht').checked = false;
             toggleComunidadesRD();
             toggleComunidadesHT();
 
-            // Frontera (dejamos activa)
+            // Frontera: asegurar que esté activa (si el checkbox está marcado)
             if (document.getElementById('chk-frontera').checked && capaFrontera && !map.hasLayer(capaFrontera)) {
                 map.addLayer(capaFrontera);
             }
@@ -902,7 +756,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 8. UTILIDADES UI
+        // 7. UTILIDADES UI
         // ═══════════════════════════════════════════════════════════
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
@@ -911,7 +765,7 @@
         window.abrirModalCreditos = function() {
             document.getElementById('modal-creditos').classList.add('active');
         };
-        
+
         window.cerrarModalCreditos = function(e) {
             if (!e || e.target.id === 'modal-creditos' || e.target.classList.contains('btn-cerrar-modal')) {
                 document.getElementById('modal-creditos').classList.remove('active');
