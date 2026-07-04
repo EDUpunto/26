@@ -289,7 +289,9 @@
             <p style="font-size: 10px;">Batista, J. L. (2016). Recursos hidrográficos superficiales de la República Dominicana. IPGH.</p>
             <p style="font-size: 10px;">Heberger, M. (2022). Global Watersheds [Aplicación web]. https://mghydro.com/watersheds</p>
             <p style="font-size: 10px;">Raifer, M. (s. f.). Overpass turbo: A web-based data filtering tool for OpenStreetMap [Aplicación web].https://overpass-turbo.eu/</p>
-            <p style="font-size: 10px;">Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022.<br> https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de-poblacion-y-vivienda-2022/.</p>
+            <p style="font-size: 10px;">Oficina Nacional de Estadística. (2024). Informe general del X Censo<br>
+            Nacional de Población y Vivienda 2022.<br>
+            https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de-poblacion-y-vivienda-2022/.</p>
             <br>
             <button class="btn-cerrar-modal" onclick="cerrarModalCreditos()">Cerrar</button>
         </div>
@@ -1019,7 +1021,7 @@ const ciudadesRD = [
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch('FRONTERA RD_HAI.geojson')
+            fetch('anx/FRONTERA RD_HAI.geojson')
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
