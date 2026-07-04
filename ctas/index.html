@@ -1058,7 +1058,7 @@ const ciudadesRD = [
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch('anx/FRONTERA RD_HAI.geojson')
+            fetch('FRONTERA RD_HAI.geojson')
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
