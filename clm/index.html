@@ -284,13 +284,15 @@
             por su simplicidad y su estrecha relación entre clima y vegetación.<br>
             Este es un mapa realizado con visión y propósitos educativos.<br>
             Cada cuadrado de la "celda o cuadrícula" tiene un tamaño de 9 kilómetros de lado, aproximadamente.<br>
-            El mapa posee una escala macro simplificada, asume que no hay variaciones dentro de cada zona.<br>
-            Si te enfocas en un valle dentro de esas cuadrículas, el mapa no lo va a reflejar.</p>
+            El mapa posee una escala macro simplificada, suministrando un clima general, asume que no hay variaciones<br>
+            dentro de cada zona.  Si te enfocas en un valle dentro de esas cuadrículas, el mapa no lo va a reflejar.</p>
 
             <h3>FUENTES</h3>
+            <p style="font-size: 9px;">Del Rosario, P. J., Morrobel, J., & Escarramán, A. (2013). Territorios rurales y adaptación al cambio climático en República Dominicana. Instituto Dominicano de Investigaciones Agropecuarias y Forestales (IDIAF).</p>
+            <p style="font-size: 9px;">Jury, M. R., & Chiao, S. (2011). Mesocirculation Associated with Summer Convection over the Central Antilles. Earth Interactions, 15(25), 1-19. https://doi.org/10.1175/2011EI391.1</p>
             <p style="font-size: 9px;">Peel, M. C., Finlayson, B. L., & McMahon, T. A. (2007). Updated World Map of the Köppen-Geiger Climate Classification. Hydrology and Earth System Sciences</p>
             <p style="font-size: 9px;">Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022.<br> https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de-poblacion-y-vivienda-2022/.</p>
-            <p style="font-size: 9px;">PENDIENTE</p>
+            
 
             <button class="btn-cerrar-modal" onclick="cerrarModalCreditos()">Cerrar</button>
         </div>
@@ -309,6 +311,11 @@
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         L.control.scale({ position: 'bottomright', metric: true, imperial: false }).addTo(map);
         L.control.attribution({ position: 'bottomright' }).addTo(map);
+
+        // Crear un panel personalizado para la capa climática con z-index elevado
+        // para que los bordes de los polígonos estén siempre por encima de otras capas.
+        map.createPane('climaPane');
+        map.getPane('climaPane').style.zIndex = 600;  // por encima de overlayPane (400) y shadowPane (500)
 
         // ═══════════════════════════════════════════════════════════
         // 2. CAPAS BASE
@@ -630,28 +637,14 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 5. CAPA CLIMÁTICA KOPPEN
-        //    - Lee los campos "Koppen" y "Name2" del GeoJSON.
-        //    - Asigna colores fijos según la tabla:
-        //        Cfb  → #0033CC
-        //        Cwb  → #2F97FF
-        //        Af   → #2F97FF
-        //        Am   → #62B0FF
-        //        Aw   → #B7DBFF
-        //        BSh  → #FFFF99
-        //    - Opacidad de relleno: 0.7 (70%)
-        //    - Borde: color negro, grosor 1.5, opacidad 0.9
-        //      (mejora la visualización de los perímetros)
-        //    - Tooltip permanente: muestra la abreviatura (Koppen)
-        //    - Popup al hacer clic: muestra Koppen y Name2
+        // 5. CAPA CLIMÁTICA KOPPEN con resaltado de grupos
         // ═══════════════════════════════════════════════════════════
         var capaClima = null;
         var climaCargado = false;
         var climaVisible = false;
+        var selectedKoppen = null;
 
-        // ---------------------------------------------------------------
-        // MAPA DE COLORES (puedes editar aquí para cambiar colores)
-        // ---------------------------------------------------------------
+        // Mapa de colores (editable)
         var coloresClima = {
             'Cfb': '#0033CC',
             'Cwb': '#2F97FF',
@@ -662,9 +655,33 @@
         };
 
         function getColorKoppen(tipo) {
-            return coloresClima[tipo] || '#cccccc';  // color gris por defecto si no está en la lista
+            return coloresClima[tipo] || '#cccccc';
         }
 
+        // Función que actualiza los estilos de todos los polígonos según selectedKoppen
+        function actualizarEstilosClima() {
+            if (!capaClima) return;
+            capaClima.eachLayer(function(layer) {
+                var props = layer.feature && layer.feature.properties;
+                if (!props) return;
+                var koppen = props.Koppen;
+                var color = getColorKoppen(koppen);
+                var isSelected = (selectedKoppen === koppen);
+
+                // --- AQUÍ PUEDES CAMBIAR EL COLOR Y EL GROSOR DEL CONTORNO ---
+                // Color del borde normal: 'black'  |  Grosor normal: 1.5
+                // Color del borde seleccionado: 'white'  |  Grosor seleccionado: 4
+                layer.setStyle({
+                    fillColor: color,
+                    fillOpacity: 0.6,
+                    color: isSelected ? 'white' : 'black',   // <-- Cambia el color del contorno aquí
+                    weight: isSelected ? 4 : 1.5,            // <-- Cambia el grosor del contorno aquí
+                    opacity: 1
+                });
+            });
+        }
+
+        // Carga el GeoJSON y crea la capa
         function cargarClima() {
             if (climaCargado) return;
             fetch('anx/climaKPSD.geojson')
@@ -674,33 +691,49 @@
                 })
                 .then(data => {
                     capaClima = L.geoJSON(data, {
+                        pane: 'climaPane',  // usa el panel personalizado para estar en primer plano
                         style: function(feature) {
-                            var tipo = feature.properties.Koppen;   // ← campo correcto (con 'Koppen')
+                            var tipo = feature.properties.Koppen;
                             var color = getColorKoppen(tipo);
                             return {
                                 fillColor: color,
-                                fillOpacity: 0.7,        // 70% de opacidad (ajustable)
-                                color: 'black',          // color del borde
-                                weight: 1.5,             // grosor del borde (aumentado para visibilidad)
-                                opacity: 0.9             // opacidad del borde
+                                fillOpacity: 0.6,
+                                color: 'black',    // <-- Cambia el color del contorno aquí (normal)
+                                weight: 1.5,       // <-- Cambia el grosor del contorno aquí (normal)
+                                opacity: 1
                             };
                         },
                         onEachFeature: function(feature, layer) {
                             var koppen = feature.properties.Koppen || 'N/D';
                             var name2 = feature.properties.Name2 || 'Sin descripción';
-                            // Etiqueta permanente (tooltip) con la abreviatura
+
+                            // Tooltip permanente con la abreviatura
                             layer.bindTooltip(koppen, {
                                 permanent: true,
                                 direction: 'center',
                                 className: 'clima-label'
                             });
+
                             // Popup al hacer clic
                             layer.bindPopup(
                                 '<b>Clase climática Koppen:</b> ' + koppen + '<br>' +
                                 '<b>Descripción:</b> ' + name2
                             );
+
+                            // Evento click para resaltar grupos
+                            layer.on('click', function(e) {
+                                L.DomEvent.stopPropagation(e);
+                                var clickedKoppen = feature.properties.Koppen;
+                                if (selectedKoppen === clickedKoppen) {
+                                    selectedKoppen = null;
+                                } else {
+                                    selectedKoppen = clickedKoppen;
+                                }
+                                actualizarEstilosClima();
+                            });
                         }
                     });
+
                     climaCargado = true;
                     if (climaVisible) {
                         map.addLayer(capaClima);
@@ -711,26 +744,38 @@
                 .catch(error => console.warn('Error cargando climaKPSD.geojson:', error.message));
         }
 
+        // Alternar visibilidad de la capa climática
         window.toggleClima = function() {
             var btn = document.getElementById('btn-clima');
             if (!climaCargado) {
-                // Cargar y mostrar
                 cargarClima();
                 climaVisible = true;
                 btn.classList.add('active');
             } else {
-                // Alternar visibilidad
                 if (climaVisible) {
                     if (capaClima) map.removeLayer(capaClima);
                     climaVisible = false;
                     btn.classList.remove('active');
                 } else {
-                    if (capaClima) map.addLayer(capaClima);
+                    if (capaClima) {
+                        map.addLayer(capaClima);
+                        if (selectedKoppen !== null) {
+                            actualizarEstilosClima();
+                        }
+                    }
                     climaVisible = true;
                     btn.classList.add('active');
                 }
             }
         };
+
+        // Evento en el mapa para deseleccionar al hacer clic fuera de los polígonos
+        map.on('click', function() {
+            if (selectedKoppen !== null) {
+                selectedKoppen = null;
+                actualizarEstilosClima();
+            }
+        });
 
         // ═══════════════════════════════════════════════════════════
         // 6. REINICIAR
@@ -747,14 +792,17 @@
                 map.addLayer(capaFrontera);
             }
 
-            // Clima: ocultar si está visible
+            // Clima: ocultar si está visible y limpiar selección
             if (climaVisible && capaClima) {
                 map.removeLayer(capaClima);
                 climaVisible = false;
                 document.getElementById('btn-clima').classList.remove('active');
             }
+            if (selectedKoppen !== null) {
+                selectedKoppen = null;
+                if (capaClima) actualizarEstilosClima();
+            }
 
-            // Vista
             map.setView([19.03556466237287, -70.89432006796727], 8);
         };
 
