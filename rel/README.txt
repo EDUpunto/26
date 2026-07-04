@@ -1,14 +1,5 @@
 POBLACIÓN SD
-Es un mapa interactivo creado con fines educativos.
-La investigación de este recurso abarcó varios meses.  Si usted encuentra puntos de mejora, por favor contácteme.
+Es un mapa interactivo creado con visión y fines educativos.
+Detrás de este recurso hay varios meses de investigación y trabajo.  Tu opinión es fundamental: si ves algún punto que se pueda mejorar, ¡no dudes en escribirme!
 Juan Ernesto De Frías para EDUpunto / edefrias@gmail.com
 Inicio 22.jun.2026
-
-
-
-OSM/Leaftlet
-MGhydro
-Worldpop
-Qgis
-HTML5 
-IA
