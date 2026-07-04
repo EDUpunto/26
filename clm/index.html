@@ -262,10 +262,10 @@
 
             <!-- Enlaces -->
             <div class="enlaces-discretos">
-                <a href="https://edupunto.com" target="_blank" class="enlace-texto">🌐 Artículo WEB</a>
+                <a href="https://edupunto.com/2026/07/clima-de-la-isla-de-santo-domingo/" target="_blank" class="enlace-texto">🌐 Artículo WEB</a>
                 <a href="https://drive.google.com/file/d/1_vCSxXcRSJ0mbn3yztgX4m2m8wM1YF2S/view?usp=sharing" target="_blank" class="enlace-texto">🖨️ IMPRIMIBLE</a>
                 <span class="enlace-texto cursor-pointer" onclick="abrirModalCreditos()">© CRÉDITOS</span>
-                <a href="https://drive.google.com/file/d/1OJQQP_R3WLFkzEUOQadzETlqdVaggDcD/view?usp=sharing" target="_blank" class="enlace-texto">💡 CONCEPTO</a>
+                <a href="https://tinyurl.com/23zxba3u" target="_blank" class="enlace-texto">💡 CONCEPTO</a>
             </div>
         </div>
     </div>
@@ -600,7 +600,7 @@
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch('FRONTERA RD_HAI.geojson')
+            fetch('anx/FRONTERA RD_HAI.geojson')
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
