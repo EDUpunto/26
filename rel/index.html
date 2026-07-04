@@ -674,7 +674,7 @@ const ciudadesRD = [
             var grupo = L.layerGroup();
             ciudadesRD.forEach(function(c) {
                 var marker = L.marker([c.lat, c.lng], { icon: iconComunidad });
-                marker.bindPopup("<b>" + c.nombre + "</b><br>Población: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
+                marker.bindPopup("<b>" + c.nombre + "</b><br>Población 2022: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
                 marker.addTo(grupo);
             });
             return grupo;
