@@ -4,11 +4,3 @@ Detrás de este recurso hay varios meses de investigación y trabajo.<br>Tu opin
 Juan Ernesto De Frías para EDUpunto / edefrias@gmail.com
 Inicio de maquetación 16.mayo.2026
 
-
-
-OSM/Leaftlet
-MGhydro
-Worldpop
-Qgis
-HTML5 
-IA
