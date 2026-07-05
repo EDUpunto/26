@@ -428,7 +428,8 @@
         // 3. DATOS
         // ═══════════════════════════════════════════════════════════
 
-        var puntos = [
+        // ---------- Accidentes costeros RD ----------
+        var puntosRD = [
 { lat: 18.401415971261315, lng: -69.63189544985755, titulo: "Cabo Caucedo", comentario: "Lugar del puerto principal de la RD.  Amplio movimiento de entrada y salida de contenedores.<br>18.40141, -69.63189" },
 { lat: 19.898697175303738, lng: -71.65371073936308, titulo: "Cabo del Morro", comentario: "Acantilado y vista al océano Atlántico.<br>19.89869, -71.65371" },
 { lat: 19.889945596166736, lng: -71.6492172103686, titulo: "Morro de Montecristi", comentario: "Formación rocosa costera con valor ecológico.  Descubierto por Colón en su 1er viaje.<br>19.88994, -71.64921" },
@@ -487,11 +488,6 @@
 { lat: 18.406436824199496, lng: -68.94775432831271, titulo: "Punta Águila del este", comentario: "Punta rocosa con vista al mar Caribe.<br>18.40643, -68.94775" },
 { lat: 18.359648082761627, lng: -69.00855679720497, titulo: "Isla Catalina", comentario: "Isla situada frente a la costa de La Romana.  Ocupa 9 km² Sus costas mixtas de playas, arrecifes de coral y acantilados rocosos.<br>18.35964, -69.00855" },
 { lat: 18.430212915226395, lng: -69.32156770291772, titulo: "Cabo Macorís", comentario: "Cabo cercano a San Pedro de Macorís.<br>18.43021, -69.32156" },
-{ lat: 18.428303077375407, lng: -74.47954967222906, titulo: "Cabo Irois (Cap des lrois)", comentario: "Cabo rocoso más al oeste de Haití.<br>18.42830, -74.47954" },
-{ lat: 18.031940054249684, lng: -73.78866797037658, titulo: "Punta Abaco (Pointe L’Abacou)", comentario: "Punta rocosa en la costa sur de Haití.<br>18.03194, -73.78866" },
-{ lat: 18.57841172264001, lng: -73.60430040834693, titulo: "Península de Baraderes (Presqu’ile de Baraderes)", comentario: "Península desierta dentro del golfo de Gonave.<br>18.57841, -73.60430" },
-{ lat: 19.063050954507887, lng: -72.81933374614087, titulo: "Cabo San Marcos (Cap Saint Marc)", comentario: "Cabo rocoso frente al golfo de Gonave.<br>19.06305, -72.81933" },
-{ lat: 20.08761149075324, lng: -72.8575801686309, titulo: "Cabo Binquette (Cap Binquette)", comentario: "Cabo al norte de la isla Tortuga.<br>20.08761, -72.85758" },
 { lat: 18.43126462935202, lng: -69.60799795394897, titulo: "Bahía de Andrés", comentario: "Bahía con puerto deportivo y playas.<br>18.43126, -69.60799" },
 { lat: 18.2238636606466, lng: -70.23729951762026, titulo: "Punta Catalina", comentario: "Punta al sur con importante generadora eléctrica.<br>18.22386, -70.23729" },
 { lat: 18.20929459584414, lng: -70.5664762247784, titulo: "Punta Salinas", comentario: "Punta con salinas y playas.<br>18.20929, -70.56647" },
@@ -513,30 +509,38 @@
 { lat: 17.770161361705018, lng: -71.68837748932467, titulo: "Cabo Falso / Punta Águilas", comentario: "Cabo rocoso y poca vegetación, con acantilados.<br>17.77016, -71.68837" },
 { lat: 17.810781382495712, lng: -71.65318854393053, titulo: "Punta Chimanche", comentario: "Punta de acantilados rocosos y agrestes.<br>17.81078, -71.65318" },
 { lat: 17.90507251288631, lng: -71.67203813986372, titulo: "Cabo Rojo", comentario: "Cabo rocoso y acantilado.<br>17.90507, -71.67203" },
-{ lat: 17.840256274199824, lng: -71.63372213599197, titulo: "Bahía de Las Águilas", comentario: "Bahía con playa de arena blanca y aguas prístinas.<br>17.84025, -71.63372" },
+{ lat: 17.840256274199824, lng: -71.63372213599197, titulo: "Bahía de Las Águilas", comentario: "Bahía con playa de arena blanca y aguas prístinas.<br>17.84025, -71.63372" }
+        ];
+
+        // ---------- Accidentes costeros HAITÍ ----------
+        var puntosHT = [
 { lat: 18.178501710547327, lng: -72.54537471811965, titulo: "Cabo Jacmel", comentario: "Cabo cerca de la ciudad de Jacmel.<br>18.17850, -72.54537" },
 { lat: 18.39189119735582, lng: -73.3416776906585, titulo: "Península de Tiburón", comentario: "Península occidental de Haití. Conjuntamente con península de San Nicolás limitan el golfo de Gonave.<br>18.39189, -73.34167" },
+{ lat: 19.771530620940034, lng: -73.00070193191715, titulo: "Península de San Nicolás", comentario: "Península noroccidental de Haití. Conjuntamente con península de Tiburón limitan el golfo de Gonave.<br>19.77153, -73.00070" },
 { lat: 18.078632835421335, lng: -73.62325703844466, titulo: "Isla de la Vaca (Île-à-Vache)", comentario: "Isla turística haitiana con poca vegetación y playas.  Se extiende por 45km².<br>18.07863, -73.62325" },
-
-{ lat: 18.215230853802794, lng: -73.53603260122556, titulo: "Cayo Orange", comentario: "Cayo haitiano habitada a pocos km de la costa.  Se extiende por 155 mil m² (0.155 km²).  Rodeada de playas y arrecifes de coral.<br>8.21523, -73.53603" },
+{ lat: 18.215230853802794, lng: -73.53603260122556, titulo: "Cayo Orange", comentario: "Cayo haitiano habitada a pocos km de la costa.  Se extiende por 155 mil m² (0.155 km²).  Rodeada de playas y arrecifes de coral.<br>18.21523, -73.53603" },
 { lat: 18.213162717302545, lng: -73.51632139879462, titulo: "Isla Moustique (Mosquito)", comentario: "Isla haitiana deshabitada a pocos km de la costa.  Se extiende por 295 mil m² (0.295 km²) y esta rodeada de playas.<br>18.21316, -73.51632" },
-
 { lat: 18.217399862251668, lng: -73.46400365689595, titulo: "Isla Audén", comentario: "Isla haitiana habitada a pocos km de la costa.  Se extiende por 120 mil m² (0.12 km²) y esta rodeada de playas y arrecifes de coral. <br>18.21739, -73.46400" },
-
 { lat: 18.224615461150048, lng: -73.40606394462283, titulo: "Cayo Grueso (Île Grosse Caye)", comentario: "Pequeña isla haitiana a escasos km de la costa. Posee 3.5 km². <br>18.22461, -73.40606" },
 { lat: 18.618622987637483, lng: -73.73570091926777, titulo: "Isla Gran Cayemite (Île GrandeCayemite)", comentario: "Isla haitiana con manglares dentro del golfo de Gonave. Se extiende por 50 km². <br>18.61862, -73.73570" },
 { lat: 18.61035826269783, lng: -73.80919168849435, titulo: "Isla Pequeña Cayemite (Île Petite Cayemite)", comentario: "Isla haitiana ubicada dentro del golfo de Gonave. Se extiende por 1.1 km². <br>18.61035, -73.80919" },
 { lat: 18.83630504530466, lng: -73.0118022199312, titulo: "Isla de Gonave", comentario: "Isla en el golfo de Gonave de clima semiárido, escasa vegetación. Posee 690 km². <br>18.83630, -73.01180" },
 { lat: 19.163115128402698, lng: -73.05940870692616, titulo: "Golfo de Gonave", comentario: "Golfo haitiano orientado al oeste, al Canal de los Vientos.<br>19.16311, -73.05940" },
-{ lat: 20.04580561027507, lng: -72.76411223048235, titulo: "Isla de La Tortuga", comentario: "Isla al norte de la isla de Santo Domingo histórica por las incursiones de piratas y contrabandistas del s17.  Posee una extensión de 180 km². <br>20.04580, -72.76411" },
+{ lat: 20.04580561027507, lng: -72.76411223048235, titulo: "Isla de La Tortuga", comentario: "Isla al norte de Haití, histórica por las incursiones de piratas y contrabandistas del s17.  Posee una extensión de 180 km². <br>20.04580, -72.76411" },
 { lat: 18.40384906773233, lng: -75.01368694612037, titulo: "Isla Navasse (Île de la Navasse)", comentario: "La isla de Navassa es el punto estratégico más al oeste de Haití. Se extiende por 4.7 km².  La isla está rodeada por acantilados blancos verticales. Actualmente se encuentra ocupada por EEUU.<br>18.40384, -75.01368" },
 { lat: 19.828431275039282, lng: -73.42094628876438, titulo: "Cabo Môle-Saint-Nicolas", comentario: "Cabo más estratégico al oeste de Haití.<br>19.82843, -73.42094" },
 { lat: 19.681199070393557, lng: -71.84854563483924, titulo: "Bahía del Fuerte Libertad", comentario: "Bahía cerrada y profunda al norte de Haití.<br>19.68119, -71.84854" },
 { lat: 18.22985799131059, lng: -70.15892961940402, titulo: "Punta Palenque", comentario: "Punta con playa cercana a San Cristóbal.<br>18.22985, -70.15892" },
 { lat: 19.80713370508267, lng: -73.17169502428142, titulo: "Península de San Nicolás/Noroeste (Presqu’ile de Saint Nicolas)", comentario: "Península noroeste de Haití que -conjuntamente con península de Tiburón- limita el Golfo de Gonave al norte.<br>19.80713, -73.17169" },
+{ lat: 18.428303077375407, lng: -74.47954967222906, titulo: "Cabo Irois (Cap des lrois)", comentario: "Cabo rocoso más al oeste de Haití.<br>18.42830, -74.47954" },
+{ lat: 18.031940054249684, lng: -73.78866797037658, titulo: "Punta Abaco (Pointe L’Abacou)", comentario: "Punta rocosa en la costa sur de Haití.<br>18.03194, -73.78866" },
+{ lat: 18.57841172264001, lng: -73.60430040834693, titulo: "Península de Baraderes (Presqu’ile de Baraderes)", comentario: "Península desierta dentro del golfo de Gonave.<br>18.57841, -73.60430" },
+{ lat: 19.063050954507887, lng: -72.81933374614087, titulo: "Cabo San Marcos (Cap Saint Marc)", comentario: "Cabo rocoso frente al golfo de Gonave.<br>19.06305, -72.81933" },
+{ lat: 20.08761149075324, lng: -72.8575801686309, titulo: "Cabo Binquette (Cap Binquette)", comentario: "Cabo al norte de la isla Tortuga.<br>20.08761, -72.85758" }
         ];
 
-        var rios = [
+        // ---------- Ríos RD ----------
+        var riosRD = [
 { nombre: "Río Haina", coordenadas: [18.418738687509286, -70.01889335090772], comentario: "Cuenca influenciada por actividad industrial y portuaria.<br>18.41873, -70.01889" },
 { nombre: "Río Ozama", coordenadas: [18.47100959803709, -69.87952116396366], comentario: "Principal río del Gran Santo Domingo, con alta presión urbana.<br>18.47100, -69.87952" },
 { nombre: "Río Higuamo", coordenadas: [18.441846417578624, -69.31513488241391], comentario: "Importante ecosistema estuarino asociado a manglares en su cauce bajo.<br>18.44184, -69.31513" },
@@ -578,8 +582,11 @@
 { nombre: "Río Yeguada", coordenadas: [18.987512439217085, -69.04063479419878], comentario: "Río que desemboca en el Atlántico, frente a Miches.<br>18.98751, -69.04063" },
 { nombre: "Río Jobero", coordenadas: [18.986207125476977, -69.01985989369223], comentario: "Pequeño río que desemboca en el Atlántico. Posee humedales costeros en su desembocadura.<br>18.98620, -69.01985" },
 { nombre: "Río Maimón este", coordenadas: [18.844461209964066, -68.62188989028091], comentario: "Pequeño río que desemboca en el Atlántico. Posee importantes humedales costeros.<br>18.84446, -68.62188" },
-{ nombre: "Río Anamuya", coordenadas: [18.78340222462785, -68.55207686614445], comentario: "Pequeño río que desemboca en el Atlántico. Posee humedales costeros frente a la barrera coralina.<br>18.78340, -68.55207" },
+{ nombre: "Río Anamuya", coordenadas: [18.78340222462785, -68.55207686614445], comentario: "Pequeño río que desemboca en el Atlántico. Posee humedales costeros frente a la barrera coralina.<br>18.78340, -68.55207" }
+        ];
 
+        // ---------- Ríos HAITÍ ----------
+        var riosHT = [
 { nombre: "Riviere Artibonite", coordenadas: [19.238217604861383, -72.78031967248685], comentario: "Río más importante y largo de Haití. Desemboca en el Golfo de Gonave.<br>19.23821, -72.78031" },
 { nombre: "Riviere Mapou", coordenadas: [19.755103625864546, -72.20088615984051], comentario: "Desemboca en el Océano Atlántico frente a Cabo Haitiano.<br>19.75510, -72.20088" },
 { nombre: "Grande riviere du Nord (Gran Río del Norte)", coordenadas: [19.751717929564453, -72.13422759279226], comentario: "Río importante del norte haitiano. Desemboca en el Océano Atlántico.<br>19.75171, -72.13422" },
@@ -599,7 +606,8 @@
 { nombre: "Riviere Ravine du Sud", coordenadas: [18.180231613120736, -73.76102779475907], comentario: "Río que desemboca frente a Les Cayes en el mar Caribe.<br>18.18023, -73.76102" }
         ];
 
-        var puertosData = [
+        // ---------- Puertos RD ----------
+        var puertosDataRD = [
         { tipo: "turístico", nombre: "Puerto turístico Cabo Rojo", lat: 17.925237701801414, lng: -71.66036845323396, profundidad: "10.9 metros" },
         { tipo: "turístico", nombre: "Puerto turístico Casa de Campo", lat: 18.415758134659303, lng: -68.9589774197403, profundidad: null },
         { tipo: "turístico", nombre: "Puerto Plata Taino Bay", lat: 19.801882413335033, lng: -70.70038903592275, profundidad: "9.1 metros" },
@@ -607,7 +615,7 @@
         { tipo: "turístico", nombre: "Puerto Turístico Don Diego", lat: 18.475655604626535, lng: -69.88177505904382 , profundidad: null },
         { tipo: "turístico", nombre: "Puerto Turístico Ferries del Caribe", lat: 18.46914272129233, lng: -69.8826302977981 , profundidad: null },
         { tipo: "turístico", nombre: "Puerto Turístico Sans Soucí", lat: 18.470718030534712, lng: -69.87701546206662 , profundidad: null },
-        { tipo: "marina", nombre: "Marina Bartolomé COlón", lat: 18.477672727213506, lng: -69.8797977276046 , profundidad: null },
+        { tipo: "marina", nombre: "Marina Bartolomé Colón", lat: 18.477672727213506, lng: -69.8797977276046 , profundidad: null },
         { tipo: "marina", nombre: "Marina Soco", lat: 18.446045139171, lng: -69.19735424388215, profundidad: null },
         { tipo: "marina", nombre: "Marina La Caleta", lat: 18.401542889357888, lng: -68.99583181639176, profundidad: null },
         { tipo: "marina", nombre: "Marina Capitan Kidd", lat: 18.401939796784347, lng: -68.98910841203757, profundidad: null },
@@ -647,7 +655,17 @@
         { tipo: "fondeadero", nombre: "Fondeadero REFIDOMSA combustibles", lat: 18.407094622041942, lng: -70.02242250849139, profundidad: null }
         ];
 
-const ciudadesRD = [
+        // ---------- Puertos HAITÍ ----------
+        var puertosDataHT = [
+        { tipo: "turístico", nombre: "Fondeadero turístico Labadee", lat: 19.779838487980424, lng: -72.24329194383702, profundidad: "N.D." },
+        { tipo: "carga", nombre: "Puerto Príncipe (Port-au-Prince)", lat: 18.5392, lng: -72.3350, profundidad: "10 metros" },
+        { tipo: "carga", nombre: "Cap-Haïtien", lat: 19.75, lng: -72.2, profundidad: "N.D." },
+        { tipo: "marina", nombre: "Marina de Jacmel", lat: 18.2342, lng: -72.5347, profundidad: null },
+        { tipo: "fondeadero", nombre: "Fondeadero de Les Cayes", lat: 18.2, lng: -73.75, profundidad: null }
+        ];
+
+        // ---------- Ciudades RD ----------
+        var ciudadesRD = [
   { nombre: "Santo Domingo Este", pob: "1,029,117", lat: 18.50418063560038, lng: -69.81371132455324 },
   { nombre: "Santo Domingo Oeste", pob: "410,578", lat: 18.478751774824087, lng: -70.00106449952185 },
   { nombre: "Santo Domingo Norte", pob: "674,274", lat: 18.571170575582176, lng: -69.90107190877544 },
@@ -810,6 +828,7 @@ const ciudadesRD = [
   { nombre: "El Valle", pob: "9,890", lat: 18.97833368279181, lng: -69.37851857650571 }
 ];
 
+        // ---------- Ciudades HAITÍ ----------
         var ciudadesHT = [
             { nombre: "Port-au-Prince", pob: "2,914,190", lat: 18.5469, lng: -72.3403 },
             { nombre: "Carrefour", pob: "511,345", lat: 18.5333, lng: -72.4 },
@@ -846,6 +865,9 @@ const ciudadesRD = [
             { nombre: "Milot", pob: "31,992", lat: 19.6047, lng: -72.2186 },
             { nombre: "Fort Liberté", pob: "30,110", lat: 19.6647, lng: -71.8386 }
         ];
+
+        // ---------- Combinar todos los puertos (RD + HT) ----------
+        var todosLosPuertos = puertosDataRD.concat(puertosDataHT);
 
         // ═══════════════════════════════════════════════════════════
         // 4. CREACIÓN DE CAPAS
@@ -892,16 +914,7 @@ const ciudadesRD = [
         var iconoEstrellaRD = crearIconoEstrella('#F4B09F');
         var iconoEstrellaHT = crearIconoEstrella('#F4B09F');
 
-        function esHaiti(lng, titulo) {
-            var haitiTitles = ["Cabo Jacmel","Península de Tiburón","Isla de la Vaca","Isla de Cayemite","Isla de Gonave","Golfo de Gonave","Isla de La Tortuga","Isla de Navassa","Bahía del Fuerte Libertad","Península del Noroeste","Cabo Irois","Punta Abaco","Península de Baraderes","Cabo San Marcos","Cabo Binquette","Cayo Orange","Isla Moustique","Isla Audén","Cayo Grueso","Isla Gran Cayemite","Isla Pequeña Cayemite","Isla de Gonave","Golfo de Gonave","Isla de La Tortuga","Isla Navasse","Cabo Môle-Saint-Nicolas","Península de San Nicolás"];
-            return haitiTitles.indexOf(titulo) !== -1 || lng < -71.84;
-        }
-
-        function esRioHaiti(nombre) {
-            var nombres = ["Río Artibonito","Río Mapou","Río Grande del norte","Río Momance","Río Ravine"];
-            return nombres.indexOf(nombre) !== -1;
-        }
-
+        // Capas
         var layerAccidentesRD = L.layerGroup().addTo(map);
         var layerAccidentesHAITI = L.layerGroup().addTo(map);
         var layerRiosRD = L.layerGroup().addTo(map);
@@ -914,17 +927,17 @@ const ciudadesRD = [
         var layerCiudadesRD = L.layerGroup();
         var layerCiudadesHT = L.layerGroup();
 
-        // Accidentes costeros
-        puntos.forEach(function(p) {
+        // ---------- Accidentes costeros ----------
+        puntosRD.forEach(function(p) {
             var popup = '<div style="text-align:center;"><strong>📍 ' + p.titulo + '</strong><br><span style="color:#4a5568;">' + p.comentario + '</span></div>';
-            if (esHaiti(p.lng, p.titulo)) {
-                L.marker([p.lat, p.lng], { icon: iconoHaiti }).bindPopup(popup).addTo(layerAccidentesHAITI);
-            } else {
-                L.marker([p.lat, p.lng], { icon: iconoRD }).bindPopup(popup).addTo(layerAccidentesRD);
-            }
+            L.marker([p.lat, p.lng], { icon: iconoRD }).bindPopup(popup).addTo(layerAccidentesRD);
+        });
+        puntosHT.forEach(function(p) {
+            var popup = '<div style="text-align:center;"><strong>📍 ' + p.titulo + '</strong><br><span style="color:#4a5568;">' + p.comentario + '</span></div>';
+            L.marker([p.lat, p.lng], { icon: iconoHaiti }).bindPopup(popup).addTo(layerAccidentesHAITI);
         });
 
-        // Ríos
+        // ---------- Ríos ----------
         function calcularRadioRios(zoom) {
             if (zoom <= 7) return 3;
             if (zoom <= 9) return 5;
@@ -934,9 +947,8 @@ const ciudadesRD = [
         }
 
         var listaCirculosRios = [];
-        rios.forEach(function(rio) {
-            var esH = esRioHaiti(rio.nombre);
-            var capaDestino = esH ? layerRiosHAITI : layerRiosRD;
+
+        riosRD.forEach(function(rio) {
             var circulo = L.circleMarker(rio.coordenadas, {
                 radius: calcularRadioRios(map.getZoom()),
                 color: '#666666',
@@ -945,7 +957,20 @@ const ciudadesRD = [
                 weight: 2
             })
             .bindPopup('<div><strong>🌊 ' + rio.nombre + '</strong><br>' + rio.comentario + '</div>')
-            .addTo(capaDestino);
+            .addTo(layerRiosRD);
+            listaCirculosRios.push({ marker: circulo });
+        });
+
+        riosHT.forEach(function(rio) {
+            var circulo = L.circleMarker(rio.coordenadas, {
+                radius: calcularRadioRios(map.getZoom()),
+                color: '#666666',
+                fillColor: '#00BFFF',
+                fillOpacity: 0.85,
+                weight: 2
+            })
+            .bindPopup('<div><strong>🌊 ' + rio.nombre + '</strong><br>' + rio.comentario + '</div>')
+            .addTo(layerRiosHAITI);
             listaCirculosRios.push({ marker: circulo });
         });
 
@@ -954,7 +979,7 @@ const ciudadesRD = [
             listaCirculosRios.forEach(function(i) { i.marker.setRadius(nr); });
         });
 
-        // Puertos
+        // ---------- Puertos (todos) ----------
         var colorMap = {
             turístico: "#3964FE",
             marina:    "#FFFFFF",
@@ -977,7 +1002,7 @@ const ciudadesRD = [
             fondeadero: "Fondeadero"
         };
 
-        puertosData.forEach(function(p) {
+        todosLosPuertos.forEach(function(p) {
             var color = colorMap[p.tipo] || "#5ABBF5";
             var borde = bordeMap[p.tipo] || "#666666";
             var icono = crearIconoRombo(color, borde);
@@ -993,7 +1018,7 @@ const ciudadesRD = [
             else if (p.tipo === "fondeadero") marker.addTo(layerPuertosFondeaderos);
         });
 
-        // Comunidades
+        // ---------- Comunidades ----------
         ciudadesRD.forEach(function(c) {
             var popup = '<div style="text-align:center;"><strong>🏙️ ' + c.nombre + '</strong><br>👥 ' + c.pob + ' hab.<br><span style="font-size:0.7rem;">' + c.lat.toFixed(4) + ', ' + c.lng.toFixed(4) + '</span></div>';
             L.marker([c.lat, c.lng], { icon: iconoEstrellaRD }).bindPopup(popup).addTo(layerCiudadesRD);
@@ -1043,20 +1068,34 @@ const ciudadesRD = [
             e.target.checked ? map.addLayer(layerCiudadesHT) : map.removeLayer(layerCiudadesHT);
         });
 
-        // Reiniciar
+        // Reiniciar (restaura todos los checkboxes a su estado inicial por defecto)
         document.getElementById('resetMapBtn').addEventListener('click', function() {
+            // Centrar mapa
             map.setView([19.03556466237287, -70.89432006796727], 8);
 
-            var checkboxes = document.querySelectorAll('.checkbox-opcion input[type="checkbox"]');
-            checkboxes.forEach(function(chk) {
-                if (chk.id !== 'chk-frontera') {
-                    if (chk.checked) {
-                        chk.checked = false;
-                        chk.dispatchEvent(new Event('change'));
-                    }
-                } else {
-                    if (!chk.checked) {
-                        chk.checked = true;
+            // Definir estado inicial: todos los checkboxes de capas costeras y puertos marcados,
+            // ciudades desmarcadas, frontera marcada.
+            var estadoInicial = {
+                chkAccRD: true,
+                chkAccHT: true,
+                chkRiosRD: true,
+                chkRiosHT: true,
+                chkTur: true,
+                chkMarina: true,
+                chkArmada: true,
+                chkCarga: true,
+                chkFondeadero: true,
+                chkCiudadesRD: false,
+                chkCiudadesHT: false,
+                'chk-frontera': true
+            };
+
+            Object.keys(estadoInicial).forEach(function(id) {
+                var chk = document.getElementById(id);
+                if (chk) {
+                    var debeEstar = estadoInicial[id];
+                    if (chk.checked !== debeEstar) {
+                        chk.checked = debeEstar;
                         chk.dispatchEvent(new Event('change'));
                     }
                 }
