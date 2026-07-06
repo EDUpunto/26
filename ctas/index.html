@@ -1068,23 +1068,27 @@
             e.target.checked ? map.addLayer(layerCiudadesHT) : map.removeLayer(layerCiudadesHT);
         });
 
-        // Reiniciar (restaura todos los checkboxes a su estado inicial por defecto)
+        // ═══════════════════════════════════════════════════════════
+        // 6. BOTÓN REINICIAR (MODIFICADO SEGÚN REQUERIMIENTO)
+        // ═══════════════════════════════════════════════════════════
         document.getElementById('resetMapBtn').addEventListener('click', function() {
-            // Centrar mapa
+            // 1. Cambiar a vista Dibujo
+            cambiarBase('mapa', document.getElementById('vistaDibujoBtn'));
+
+            // 2. Centrar y zoom original
             map.setView([19.03556466237287, -70.89432006796727], 8);
 
-            // Definir estado inicial: todos los checkboxes de capas costeras y puertos marcados,
-            // ciudades desmarcadas, frontera marcada.
+            // 3. Estados según lo solicitado
             var estadoInicial = {
                 chkAccRD: true,
                 chkAccHT: true,
-                chkRiosRD: true,
-                chkRiosHT: true,
-                chkTur: true,
-                chkMarina: true,
-                chkArmada: true,
+                chkRiosRD: false,
+                chkRiosHT: false,
+                chkTur: false,
+                chkMarina: false,
+                chkArmada: false,
                 chkCarga: true,
-                chkFondeadero: true,
+                chkFondeadero: false,
                 chkCiudadesRD: false,
                 chkCiudadesHT: false,
                 'chk-frontera': true
@@ -1103,7 +1107,7 @@
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 6. FRONTERA
+        // 7. FRONTERA
         // ═══════════════════════════════════════════════════════════
 
         var capaFrontera = null;
@@ -1159,7 +1163,7 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 7. UTILIDADES
+        // 8. UTILIDADES
         // ═══════════════════════════════════════════════════════════
 
         window.togglePanel = function(panelId) {
