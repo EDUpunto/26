@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "1SEPTENTRIONAL",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4979" } },
+"features": [
+{ "type": "Feature", "properties": { "id": null, "Name": "Promontorio de Cabrera", "description": "El Promontorio de Cabrera es un accidente geográfico ubicado en el extremo oriental de la Cordillera Septentrional, al noreste de la República Dominicana. Posee 11 niveles de terrazas marinas y su topografía es del tipo kárstica.\n", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": null, "extrude": null, "visibility": null, "drawOrder": null, "icon": null, "Name2": null }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -70.075619341136388, 19.658068752258512, 0.0 ], [ -70.079669780717282, 19.63804157877485, 0.0 ], [ -70.068868608501376, 19.61913952739701, 0.0 ], [ -70.045466068700236, 19.603837866757804, 0.0 ], [ -70.020263333529783, 19.587636108433941, 0.0 ], [ -69.987409768039797, 19.555457616207377, 0.0 ], [ -69.951855909495691, 19.545331517254965, 0.0 ], [ -69.922602734744345, 19.548256834730104, 0.0 ], [ -69.910001367159126, 19.57345956990056, 0.0 ], [ -69.899200194943205, 19.600462500440333, 0.0 ], [ -69.899200194943205, 19.623865040241469, 0.0 ], [ -69.917202148636392, 19.636466407826696, 0.0 ], [ -69.937004297698891, 19.654468361519875, 0.0 ], [ -69.962207032869344, 19.674270510582375, 0.0 ], [ -69.99281035414775, 19.679671096690331, 0.0 ], [ -70.025213870795483, 19.674270510582375, 0.0 ], [ -70.046816215227295, 19.674270510582375, 0.0 ], [ -70.061217778181842, 19.665269533735785, 0.0 ], [ -70.075619341136388, 19.658068752258512, 0.0 ] ] ] } }
+]
+}
