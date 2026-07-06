@@ -300,10 +300,10 @@
                     <input type="checkbox" id="chkAccHT" checked> <span class="legend-symbol" style="background:#8E44AD;"></span> Accidentes costeros HAITÍ
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkRiosRD" checked> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos RD
+                    <input type="checkbox" id="chkRiosRD"> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos RD
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkRiosHT" checked> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos HAITÍ
+                    <input type="checkbox" id="chkRiosHT"> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos HAITÍ
                 </label>
             </div>
 
@@ -311,19 +311,19 @@
             <div class="grupo-control">
                 <h4>Puertos / Marinas</h4>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkTur" checked> <span class="symbol-rombo" style="background:#3964FE;"></span> Puertos turísticos
+                    <input type="checkbox" id="chkTur"> <span class="symbol-rombo" style="background:#3964FE;"></span> Puertos turísticos
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkMarina" checked> <span class="symbol-rombo" style="background:#FFFFFF;"></span> Marinas recreativas
+                    <input type="checkbox" id="chkMarina"> <span class="symbol-rombo" style="background:#FFFFFF;"></span> Marinas recreativas
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkArmada" checked> <span class="symbol-rombo" style="background:#666666;"></span> Armada (Base naval)
+                    <input type="checkbox" id="chkArmada"> <span class="symbol-rombo" style="background:#666666;"></span> Armada (Base naval)
                 </label>
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chkCarga" checked> <span class="symbol-rombo" style="background:#5ABBF5;"></span> Carga / Combustibles
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkFondeadero" checked> <span class="symbol-rombo" style="background:#F39C12;"></span> Fondeaderos
+                    <input type="checkbox" id="chkFondeadero"> <span class="symbol-rombo" style="background:#F39C12;"></span> Fondeaderos
                 </label>
             </div>
 
@@ -657,11 +657,11 @@
 
         // ---------- Puertos HAITÍ ----------
         var puertosDataHT = [
-        { tipo: "turístico", nombre: "Fondeadero turístico Labadee", lat: 19.779838487980424, lng: -72.24329194383702, profundidad: null },
-        { tipo: "carga", nombre: "Puerto Príncipe (Port-au-Prince)", lat: 18.5392, lng: -72.3350, profundidad: "10 metros" },
-        { tipo: "carga", nombre: "Cap-Haïtien", lat: 19.75, lng: -72.2, profundidad: null },
-        { tipo: "marina", nombre: "Marina de Jacmel", lat: 18.2342, lng: -72.5347, profundidad: null },
-        { tipo: "fondeadero", nombre: "Fondeadero de Les Cayes", lat: 18.2, lng: -73.75, profundidad: null }
+        { tipo: "turístico", nombre: "Labadee (fondeadero)", lat: 19.779838487980424, lng: -72.24329194383702, profundidad: null },
+        { tipo: "carga", nombre: "Puerto Príncipe (Port-au-Prince)", lat: 18.569291632215222, lng: -72.35073822584917, profundidad: "10 metros" },
+        { tipo: "carga", nombre: "Cap-Haïtien", lat: 19.75916034481115, lng: -72.19542718297005, profundidad: null }, 
+        { tipo: "carga", nombre: "Puerto de Jacmel", lat: 18.23169575937033, lng: -72.53575814632295, profundidad: null },
+        { tipo: "fondeadero", nombre: "Fondeadero de Les Cayes", lat: 18.189246383035595, lng: -73.74851648516923, profundidad: null }
         ];
 
         // ---------- Ciudades RD ----------
@@ -1163,7 +1163,15 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 8. UTILIDADES
+        // 8. Sincronización inicial de capas con los checkboxes
+        // ═══════════════════════════════════════════════════════════
+        // Forzamos que los checkboxes apliquen su estado actual a las capas
+        document.querySelectorAll('#panel-controles input[type="checkbox"]').forEach(function(chk) {
+            chk.dispatchEvent(new Event('change'));
+        });
+
+        // ═══════════════════════════════════════════════════════════
+        // 9. UTILIDADES
         // ═══════════════════════════════════════════════════════════
 
         window.togglePanel = function(panelId) {
