@@ -337,7 +337,7 @@
                     <input type="checkbox" id="chkCiudadesHT"> <span class="symbol-star">★</span> Comunidades haitianas
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> <span class="symbol-line"></span> Frontera RD-Haití
+                    <input type="checkbox" id="chk-frontera" checked> <span class="symbol-line"></span> Frontera RD-Haití
                 </label>
             </div>
 
@@ -1068,7 +1068,7 @@
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 6. BOTÓN REINICIAR (MODIFICADO SEGÚN REQUERIMIENTO)
+        // 6. BOTÓN REINICIAR
         // ═══════════════════════════════════════════════════════════
         document.getElementById('resetMapBtn').addEventListener('click', function() {
             // 1. Cambiar a vista Dibujo
@@ -1132,6 +1132,7 @@
                         }
                     });
                     fronteraCargada = true;
+                    // Si el checkbox está marcado, añadir al mapa
                     if (document.getElementById('chk-frontera').checked) {
                         map.addLayer(capaFrontera);
                     }
@@ -1145,18 +1146,24 @@
         window.toggleFrontera = function() {
             var chk = document.getElementById('chk-frontera');
             if (chk.checked) {
+                // Activar: si no cargada, cargar; si ya cargada y no está en el mapa, añadir
                 if (!fronteraCargada) {
                     cargarFrontera();
-                } else if (capaFrontera) {
+                } else if (capaFrontera && !map.hasLayer(capaFrontera)) {
                     map.addLayer(capaFrontera);
                 }
             } else {
-                if (capaFrontera) {
+                // Desactivar: si la capa existe y está en el mapa, remover
+                if (capaFrontera && map.hasLayer(capaFrontera)) {
                     map.removeLayer(capaFrontera);
                 }
             }
         };
 
+        // Listener para el checkbox de frontera
+        document.getElementById('chk-frontera').addEventListener('change', toggleFrontera);
+
+        // Cargar frontera inicialmente si está marcada
         if (document.getElementById('chk-frontera').checked) {
             cargarFrontera();
         }
@@ -1164,7 +1171,6 @@
         // ═══════════════════════════════════════════════════════════
         // 8. Sincronización inicial de capas con los checkboxes
         // ═══════════════════════════════════════════════════════════
-        // Forzamos que los checkboxes apliquen su estado actual a las capas
         document.querySelectorAll('#panel-controles input[type="checkbox"]').forEach(function(chk) {
             chk.dispatchEvent(new Event('change'));
         });
