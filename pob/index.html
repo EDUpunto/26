@@ -71,7 +71,7 @@
             padding: 12px 16px 16px 16px;
             transition: opacity 0.3s ease, max-height 0.3s ease;
             opacity: 1;
-            max-height: 1000px;
+            max-height: calc(85vh - 48px);
             overflow-y: auto;
         }
         .collapsed .panel-content {
@@ -80,6 +80,10 @@
             padding: 0 16px;
             pointer-events: none;
         }
+        .panel-content::-webkit-scrollbar { width: 6px; }
+        .panel-content::-webkit-scrollbar-track { background: transparent; }
+        .panel-content::-webkit-scrollbar-thumb { background: #b0b8bf; border-radius: 3px; }
+        .panel-content::-webkit-scrollbar-thumb:hover { background: #8a94a0; }
 
         .enlaces-discretos {
             display: grid;
@@ -129,6 +133,15 @@
             font-size: 12px; color: #333; cursor: pointer;
         }
         .checkbox-opcion input { accent-color: #2980b9; width: 14px; height: 14px; cursor: pointer; }
+        .symbol-rombo {
+            display: inline-block;
+            width: 11px;
+            height: 11px;
+            border: 1px solid #555;
+            transform: rotate(45deg);
+            flex-shrink: 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
 
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -190,6 +203,9 @@
                 top: 70px; right: 10px; width: 260px; 
                 max-height: 70vh;
             }
+            .panel-content {
+                max-height: calc(70vh - 48px);
+            }
         }
         @media (max-width: 480px) {
             #panel-controles { width: calc(100vw - 20px); right: 10px; }
@@ -230,6 +246,26 @@
                     <button id="btn-pob-ht" class="btn-opcion" onclick="cambiarCapas('ht', this)">👥 Distribución población haitiana</button>
                     <button id="btn-pob-ambos" class="btn-opcion active" onclick="cambiarCapas('ambos', this)">🗂️ Ambas</button>
                 </div>
+            </div>
+
+            <!-- Puertos -->
+            <div class="grupo-control">
+                <h4>Puertos / Marinas</h4>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkTur" onchange="togglePuertos('turístico', 'chkTur')"> <span class="symbol-rombo" style="background:#3964FE;"></span> Puertos turísticos
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkMarina" onchange="togglePuertos('marina', 'chkMarina')"> <span class="symbol-rombo" style="background:#FFFFFF;"></span> Marinas recreativas
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkArmada" onchange="togglePuertos('armada', 'chkArmada')"> <span class="symbol-rombo" style="background:#666666;"></span> Armada (Base naval)
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkCarga" checked onchange="togglePuertos('carga', 'chkCarga')"> <span class="symbol-rombo" style="background:#5ABBF5;"></span> Carga / Combustibles
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkFondeadero" onchange="togglePuertos('fondeadero', 'chkFondeadero')"> <span class="symbol-rombo" style="background:#F39C12;"></span> Fondeaderos
+                </label>
             </div>
 
             <!-- Reiniciar -->
@@ -771,6 +807,127 @@
         }
 
         // ═══════════════════════════════════════════════════════════
+        // 5.1 PUERTOS / MARINAS
+        // ═══════════════════════════════════════════════════════════
+        // ---------- Puertos RD ----------
+        var puertosDataRD = [
+        { tipo: "turístico", nombre: "Puerto turístico Cabo Rojo", lat: 17.925237701801414, lng: -71.66036845323396, profundidad: "10.9 metros" },
+        { tipo: "turístico", nombre: "Puerto turístico Casa de Campo", lat: 18.415758134659303, lng: -68.9589774197403, profundidad: null },
+        { tipo: "turístico", nombre: "Puerto Plata Taino Bay", lat: 19.801882413335033, lng: -70.70038903592275, profundidad: "9.1 metros" },
+        { tipo: "turístico", nombre: "Puerto Turístico Maimón-Amber Cove", lat: 19.833686081020694, lng: -70.77580161587102, profundidad: null },
+        { tipo: "turístico", nombre: "Puerto Turístico Don Diego", lat: 18.475655604626535, lng: -69.88177505904382 , profundidad: null },
+        { tipo: "turístico", nombre: "Puerto Turístico Ferries del Caribe", lat: 18.46914272129233, lng: -69.8826302977981 , profundidad: null },
+        { tipo: "turístico", nombre: "Puerto Turístico Sans Soucí", lat: 18.470718030534712, lng: -69.87701546206662 , profundidad: null },
+        { tipo: "marina", nombre: "Marina Bartolomé Colón", lat: 18.477672727213506, lng: -69.8797977276046 , profundidad: null },
+        { tipo: "marina", nombre: "Marina Soco", lat: 18.446045139171, lng: -69.19735424388215, profundidad: null },
+        { tipo: "marina", nombre: "Marina La Caleta", lat: 18.401542889357888, lng: -68.99583181639176, profundidad: null },
+        { tipo: "marina", nombre: "Marina Capitan Kidd", lat: 18.401939796784347, lng: -68.98910841203757, profundidad: null },
+        { tipo: "marina", nombre: "Marina Las Calderas", lat: 18.217693004657335, lng: -70.51170268633982, profundidad: null },
+        { tipo: "marina", nombre: "Marina Bahía Samaná", lat: 19.194213358429096, lng: -69.35559633644706, profundidad: null },
+        { tipo: "marina", nombre: "Marina fondeadero Samaná", lat: 19.201951321088686, lng: -69.33142652209001, profundidad: null },
+        { tipo: "marina", nombre: "Marina Salinas", lat: 18.21336910504091, lng: -70.54397834321536, profundidad: null },
+        { tipo: "marina", nombre: "Marina Boca Chica", lat: 18.44444867888889, lng: -69.6260080193129, profundidad: null },
+        { tipo: "marina", nombre: "Marina La Ciénaga", lat: 18.066650419254294, lng: -71.0976988246961, profundidad: null },
+        { tipo: "marina", nombre: "Marina Barahona", lat: 18.213292070623513, lng: -71.08781173631682, profundidad: null },
+        { tipo: "marina", nombre: "Marina La Romana", lat: 18.421850913489223, lng: -68.96205520241152, profundidad: null },
+        { tipo: "marina", nombre: "Marina Casa de Campo", lat: 18.399320147767455, lng: -68.90016972070073, profundidad: null },
+        { tipo: "marina", nombre: "Marina Bayahibe", lat: 18.37015058333116, lng: -68.84114501626321, profundidad: null },
+        { tipo: "marina", nombre: "Marina Cap Cana", lat: 18.50362479760481, lng: -68.37955951330221, profundidad: null },
+        { tipo: "marina", nombre: "Marina Cabrera", lat: 19.647989765235593, lng: -69.9142555139017, profundidad: null },
+        { tipo: "marina", nombre: "Marina Ocean World", lat: 19.827692085023227, lng: -70.73245614000295, profundidad: null },
+        { tipo: "marina", nombre: "Marina Río San Juan", lat: 19.64126937770025, lng: -70.08279742884481, profundidad: null },
+        { tipo: "marina", nombre: "Marina Montecristi", lat: 19.86710938295587, lng: -71.65347015930327, profundidad: null },
+        { tipo: "marina", nombre: "Marina fondeadero Bahía Luperón", lat: 19.898285726570478, lng: -70.95598026732219, profundidad: null },
+        { tipo: "armada", nombre: "Puerto Las Calderas Armada", lat: 18.215844664195334, lng: -70.51601943976067, profundidad: null },
+        { tipo: "armada", nombre: "Puerto Santo Domingo Armada", lat: 18.467915227042464, lng: -69.87892256307819, profundidad: "10 metros" },
+        { tipo: "carga", nombre: "Puerto Viejo Azua de combustibles", lat: 18.34546345310926, lng: -70.83641866067394, profundidad: "9.14 metros" },
+        { tipo: "carga", nombre: "Puerto de carga Haina", lat: 18.416922722794126, lng: -70.01822176982856, profundidad: "10 metros" },
+        { tipo: "carga", nombre: "Puerto de carga Santo Domingo", lat: 18.472928089799606, lng: -69.87995226857417, profundidad: "10 metros" },
+        { tipo: "carga", nombre: "Puerto carga Barahona", lat: 18.21488479459011, lng: -71.08714265549924, profundidad: "10 metros" },
+        { tipo: "carga", nombre: "Puerto Turístico Barahona", lat: 18.214311408032536, lng: -71.08937726159067, profundidad: "10 metros" },
+        { tipo: "carga", nombre: "Puerto de carga Caucedo", lat: 18.424634963951057, lng: -69.62947414256703, profundidad: "13.5 metros" },
+        { tipo: "carga", nombre: "Puerto de carga Boca Chica", lat: 18.441360909886395, lng: -69.63090562459392, profundidad: "7.6 metros" },
+        { tipo: "carga", nombre: "Puerto de carga San Pedro de Macorís", lat: 18.445569775018836, lng: -69.3113957368044, profundidad: "8.9 metros" },
+        { tipo: "carga", nombre: "Puerto de carga La Romana", lat: 18.417390765014908, lng: -68.96061698857922, profundidad: "7.9 metros" },
+        { tipo: "carga", nombre: "Puerto de carga Arroyo Barril", lat: 19.198828998150777, lng: -69.4474023631398, profundidad: "11 metros" },
+        { tipo: "carga", nombre: "Puerto de carga Manzanillo", lat: 19.708465405310296, lng: -71.74291712863356, profundidad: "14.6 metros" },
+        { tipo: "carga", nombre: "Puerto Plata carga", lat: 19.799578958886208, lng: -70.70371218451689, profundidad: "9.1 metros" },
+        { tipo: "fondeadero", nombre: "Fondeadero Punta Catalina combustibles", lat: 18.21799735047322, lng: -70.23075290638988, profundidad: null },
+        { tipo: "fondeadero", nombre: "Fondeadero SPM COASTAL combustibles", lat: 18.43976796588472, lng: -69.2530412561037, profundidad: null },
+        { tipo: "fondeadero", nombre: "Fondeadero Punta Caucedo combustibles", lat: 18.407518323779605, lng: -69.62575744662446, profundidad: null },
+        { tipo: "fondeadero", nombre: "Fondeadero REFIDOMSA combustibles", lat: 18.407094622041942, lng: -70.02242250849139, profundidad: null }
+        ];
+
+        // ---------- Puertos HAITÍ ----------
+        var puertosDataHT = [
+        { tipo: "turístico", nombre: "Labadee (fondeadero)", lat: 19.779838487980424, lng: -72.24329194383702, profundidad: null },
+        { tipo: "carga", nombre: "Puerto Príncipe (Port-au-Prince)", lat: 18.569291632215222, lng: -72.35073822584917, profundidad: "10 metros" },
+        { tipo: "carga", nombre: "Cap-Haïtien", lat: 19.75916034481115, lng: -72.19542718297005, profundidad: null }, 
+        { tipo: "carga", nombre: "Puerto de Jacmel", lat: 18.23169575937033, lng: -72.53575814632295, profundidad: null },
+        { tipo: "fondeadero", nombre: "Fondeadero de Les Cayes", lat: 18.189246383035595, lng: -73.74851648516923, profundidad: null }
+        ];
+
+        var coloresPuertos = {
+            'turístico': '#3964FE',
+            'marina': '#FFFFFF',
+            'armada': '#666666',
+            'carga': '#5ABBF5',
+            'fondeadero': '#F39C12'
+        };
+
+        function iconoPuerto(color) {
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: '<div style="width:13px;height:13px;background:' + color + ';border:2px solid #333333;transform:rotate(45deg);box-shadow:0 1px 3px rgba(0,0,0,0.5);"></div>',
+                iconSize: [13, 13],
+                iconAnchor: [7, 7]
+            });
+        }
+
+        var capaPuertosTur = L.layerGroup();
+        var capaPuertosMarina = L.layerGroup();
+        var capaPuertosArmada = L.layerGroup();
+        var capaPuertosCarga = L.layerGroup();
+        var capaPuertosFondeadero = L.layerGroup();
+
+        var mapaCapasPuertos = {
+            'turístico': capaPuertosTur,
+            'marina': capaPuertosMarina,
+            'armada': capaPuertosArmada,
+            'carga': capaPuertosCarga,
+            'fondeadero': capaPuertosFondeadero
+        };
+
+        function crearMarcadoresPuertos(datos) {
+            datos.forEach(function(p) {
+                var color = coloresPuertos[p.tipo] || '#999999';
+                var marker = L.marker([p.lat, p.lng], { icon: iconoPuerto(color) });
+                var contenido = '<b>' + p.nombre + '</b>';
+                contenido += '<br>Tipo: ' + p.tipo.charAt(0).toUpperCase() + p.tipo.slice(1);
+                if (p.profundidad) contenido += '<br>Profundidad: ' + p.profundidad;
+                marker.bindPopup(contenido);
+                var capa = mapaCapasPuertos[p.tipo];
+                if (capa) marker.addTo(capa);
+            });
+        }
+
+        crearMarcadoresPuertos(puertosDataRD);
+        crearMarcadoresPuertos(puertosDataHT);
+
+        window.togglePuertos = function(tipo, checkboxId) {
+            var chk = document.getElementById(checkboxId);
+            var capa = mapaCapasPuertos[tipo];
+            if (!capa) return;
+            if (chk.checked) map.addLayer(capa);
+            else map.removeLayer(capa);
+        };
+
+        // Carga inicial: solo "Carga / Combustibles" activo por defecto
+        if (document.getElementById('chkCarga').checked) {
+            map.addLayer(capaPuertosCarga);
+        }
+
+        // ═══════════════════════════════════════════════════════════
         // 6. NUEVAS CAPAS DE VÍAS (naranja con borde negro)
         // ═══════════════════════════════════════════════════════════
         // Variables para las capas de vías
@@ -910,6 +1067,17 @@
             if (capaViasRDNaranja && map.hasLayer(capaViasRDNaranja)) map.removeLayer(capaViasRDNaranja);
             if (capaViasHTBase && map.hasLayer(capaViasHTBase)) map.removeLayer(capaViasHTBase);
             if (capaViasHTNaranja && map.hasLayer(capaViasHTNaranja)) map.removeLayer(capaViasHTNaranja);
+
+            // Puertos: restablecer al estado por defecto (solo Carga/Combustibles activo)
+            ['chkTur', 'chkMarina', 'chkArmada', 'chkFondeadero'].forEach(function(id) {
+                document.getElementById(id).checked = false;
+            });
+            document.getElementById('chkCarga').checked = true;
+            Object.keys(mapaCapasPuertos).forEach(function(tipo) {
+                var capa = mapaCapasPuertos[tipo];
+                if (capa && map.hasLayer(capa)) map.removeLayer(capa);
+            });
+            map.addLayer(capaPuertosCarga);
 
             // Vista
             map.setView([19.03556466237287, -70.89432006796727], 8);
