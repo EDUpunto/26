@@ -176,6 +176,15 @@
             border-radius: 2px;
             flex-shrink: 0;
         }
+        .symbol-corales {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: #00CED1;
+            border: 1px solid #008B8B;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
 
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -318,6 +327,9 @@
                 </label>
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chkManglares"> <span class="symbol-manglar"></span> Manglares costeros
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkCorales"> <span class="symbol-corales"></span> Sistemas coralinos
                 </label>
             </div>
 
@@ -844,10 +856,11 @@
         var layerCiudadesRD = L.layerGroup();
         var layerCiudadesHT = L.layerGroup();
 
-        // Nuevas capas para playas y manglares
+        // Nuevas capas para playas, manglares y corales
         var layerPlayasRD = L.layerGroup();
         var layerPlayasHT = L.layerGroup();
         var layerManglares = L.layerGroup();
+        var layerCorales = L.layerGroup();
 
         // ---------- Accidentes costeros ----------
         puntosRD.forEach(function(p) {
@@ -913,7 +926,7 @@
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 5. CARGAR CAPAS GEOJSON (Playas y Manglares)
+        // 5. CARGAR CAPAS GEOJSON (Playas, Manglares, Corales)
         // ═══════════════════════════════════════════════════════════
 
         function cargarGeoJSON(url, capa, estilo, popupProp) {
@@ -939,29 +952,37 @@
                 });
         }
 
-        // Playas RD
+        // Playas RD (color amarillo, borde ocre)
         cargarGeoJSON('anx/PLAYASDOM.geojson', layerPlayasRD, {
-            color: '#F4D03F',
+            color: '#B7950B',
             weight: 2,
-            fillColor: '#F9E79F',
+            fillColor: '#F4D03F',
             fillOpacity: 0.6
-        }, 'nombre');
+        }, 'Name');
 
         // Playas HT
         cargarGeoJSON('anx/PLAYASHT.geojson', layerPlayasHT, {
-            color: '#F4D03F',
+            color: '#B7950B',
             weight: 2,
-            fillColor: '#F9E79F',
+            fillColor: '#F4D03F',
             fillOpacity: 0.6
-        }, 'nombre');
+        }, 'Name');
 
-        // Manglares
+        // Manglares (verde oscuro)
         cargarGeoJSON('anx/manglaresSD.geojson', layerManglares, {
-            color: '#2E7D32',
+            color: '#1B5E20',
             weight: 2,
-            fillColor: '#4CAF50',
+            fillColor: '#2E7D32',
             fillOpacity: 0.5
-        }, 'nombre');
+        }, 'Name');
+
+        // Corales (turquesa)
+        cargarGeoJSON('anx/coralesSD.geojson', layerCorales, {
+            color: '#008B8B',
+            weight: 2,
+            fillColor: '#00CED1',
+            fillOpacity: 0.5
+        }, 'Name');
 
         // ═══════════════════════════════════════════════════════════
         // 6. CONTROLES UI
@@ -997,6 +1018,9 @@
         document.getElementById('chkManglares').addEventListener('change', function(e) {
             e.target.checked ? map.addLayer(layerManglares) : map.removeLayer(layerManglares);
         });
+        document.getElementById('chkCorales').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(layerCorales) : map.removeLayer(layerCorales);
+        });
 
         // ═══════════════════════════════════════════════════════════
         // 7. BOTÓN REINICIAR
@@ -1019,7 +1043,8 @@
                 'chk-frontera': true,
                 chkPlayasRD: false,
                 chkPlayasHT: false,
-                chkManglares: false
+                chkManglares: false,
+                chkCorales: false
             };
 
             Object.keys(estadoInicial).forEach(function(id) {
@@ -1035,7 +1060,7 @@
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 8. FRONTERA
+        // 8. FRONTERA (con ruta corregida)
         // ═══════════════════════════════════════════════════════════
 
         var capaFrontera = null;
@@ -1045,7 +1070,7 @@
         function cargarFrontera() {
             if (fronteraCargada || fronteraCargando) return;
             fronteraCargando = true;
-            fetch('FRONTERA RD_HAI.geojson')
+            fetch('anx/FRONTERA RD_HAI.geojson')
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
