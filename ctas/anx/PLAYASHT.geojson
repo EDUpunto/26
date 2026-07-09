@@ -1,0 +1,13 @@
+{
+"type": "FeatureCollection",
+"name": "PLAYASHT",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": null, "Name": "PLAYA ROYAL CARIBBEAN - LABADEE BEACH", "description": null, "timestamp": null, "altitudeMode": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -72.243779691269708, 19.786403018463531, 0.0 ] } },
+{ "type": "Feature", "properties": { "id": null, "Name": "PLAYA GROSSE ROCHE", "description": null, "timestamp": null, "altitudeMode": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -72.699552775469499, 19.126844705750369, 0.0 ] } },
+{ "type": "Feature", "properties": { "id": null, "Name": "PLAYA GELEE", "description": null, "timestamp": null, "altitudeMode": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -73.767615979744164, 18.180133105723471, 0.0 ] } },
+{ "type": "Feature", "properties": { "id": null, "Name": "PLAYA CAMP LOUISE", "description": null, "timestamp": null, "altitudeMode": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -72.347535599355936, 19.777349799930342, 0.0 ] } },
+{ "type": "Feature", "properties": { "id": null, "Name": "PLAYA BAHÍA PARAISO", "description": null, "timestamp": null, "altitudeMode": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -72.259046087334298, 19.759882167354458, 0.0 ] } },
+{ "type": "Feature", "properties": { "id": null, "Name": "PLAYA COCOYER", "description": null, "timestamp": null, "altitudeMode": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -72.993584577779544, 18.46616890040497, 0.0 ] } }
+]
+}
