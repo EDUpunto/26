@@ -929,22 +929,70 @@
         // 5. CARGAR CAPAS GEOJSON (Playas, Manglares, Corales)
         // ═══════════════════════════════════════════════════════════
 
-        function cargarGeoJSON(url, capa, estilo, popupProp) {
+        // ─────────────────────────────────────────────────────────
+        // Icono rectangular para marcadores tipo "playa" (proporción 2.5:1)
+        // Para futuros cambios: ajustar ANCHO_PLAYA/ALTO_PLAYA manteniendo
+        // la razón 2.5:1, o pasar otro color/borde al invocar la función.
+        // ─────────────────────────────────────────────────────────
+        function crearIconoRectangularPlaya(colorRelleno, colorBorde) {
+            var ANCHO_PLAYA = 20; // px
+            var ALTO_PLAYA = 8;   // px  (20 / 8 = 2.5 -> proporción 2.5:1)
+            return function(feature, latlng) {
+                var icono = L.divIcon({
+                    className: '', // sin clase de Leaflet por defecto (evita el pin azul)
+                    html: '<div style="width:' + ANCHO_PLAYA + 'px; height:' + ALTO_PLAYA + 'px; ' +
+                          'background:' + colorRelleno + '; border:1px solid ' + colorBorde + '; ' +
+                          'box-sizing:border-box;"></div>',
+                    iconSize: [ANCHO_PLAYA, ALTO_PLAYA],
+                    iconAnchor: [ANCHO_PLAYA / 2, ALTO_PLAYA / 2]
+                });
+                return L.marker(latlng, { icon: icono });
+            };
+        }
+
+        // ─────────────────────────────────────────────────────────
+        // Marcador circular para "Manglares costeros" (solo cambia color,
+        // conserva la forma de punto). Para futuros cambios: modificar
+        // 'radius', 'color' (borde) o 'fillColor' (relleno) aquí.
+        // ─────────────────────────────────────────────────────────
+        function crearMarcadorManglar(feature, latlng) {
+            return L.circleMarker(latlng, {
+                radius: 6,
+                color: '#1B5E20',     // borde
+                weight: 1,
+                fillColor: '#2E7D32', // relleno
+                fillOpacity: 0.8
+            });
+        }
+
+        function cargarGeoJSON(url, capa, estilo, popupProp, pointToLayerFn, popupFijo) {
             fetch(url)
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
                 })
                 .then(function(data) {
-                    L.geoJSON(data, {
+                    var opciones = {
                         style: estilo,
                         onEachFeature: function(feature, layer) {
-                            if (popupProp && feature.properties) {
+                            // Si se define 'popupFijo', se usa siempre ese texto
+                            // (ignora las propiedades del feature). Para futuros
+                            // cambios: editar el texto en la llamada a cargarGeoJSON().
+                            if (popupFijo) {
+                                layer.bindPopup(popupFijo);
+                            } else if (popupProp && feature.properties) {
                                 var texto = feature.properties[popupProp] || '';
                                 if (texto) layer.bindPopup(texto);
                             }
                         }
-                    }).addTo(capa);
+                    };
+                    // 'pointToLayer' solo afecta a features de tipo Point.
+                    // Si el GeoJSON es Polygon/LineString, Leaflet la ignora
+                    // y sigue usando 'style' con normalidad (sin romper nada).
+                    if (pointToLayerFn) {
+                        opciones.pointToLayer = pointToLayerFn;
+                    }
+                    L.geoJSON(data, opciones).addTo(capa);
                     console.log('Cargado: ' + url);
                 })
                 .catch(function(error) {
@@ -953,28 +1001,32 @@
         }
 
         // Playas RD (color amarillo, borde ocre)
+        // Marcador: rectángulo proporción 2.5:1, color #F4D03F (ver crearIconoRectangularPlaya)
         cargarGeoJSON('anx/PLAYASDOM.geojson', layerPlayasRD, {
             color: '#B7950B',
             weight: 2,
             fillColor: '#F4D03F',
             fillOpacity: 0.6
-        }, 'Name');
+        }, 'Name', crearIconoRectangularPlaya('#F4D03F', '#B7950B'));
 
         // Playas HT
+        // Marcador: rectángulo proporción 2.5:1, color #F4D03F (ver crearIconoRectangularPlaya)
         cargarGeoJSON('anx/PLAYASHT.geojson', layerPlayasHT, {
             color: '#B7950B',
             weight: 2,
             fillColor: '#F4D03F',
             fillOpacity: 0.6
-        }, 'Name');
+        }, 'Name', crearIconoRectangularPlaya('#F4D03F', '#B7950B'));
 
         // Manglares (verde oscuro)
+        // Marcador: círculo color #2E7D32 (ver crearMarcadorManglar)
+        // Popup fijo "Manglar / humedal" para todos los features
         cargarGeoJSON('anx/manglaresSD.geojson', layerManglares, {
             color: '#1B5E20',
             weight: 2,
             fillColor: '#2E7D32',
             fillOpacity: 0.5
-        }, 'Name');
+        }, 'Name', crearMarcadorManglar, 'Manglar / humedal');
 
         // Corales (turquesa)
         cargarGeoJSON('anx/coralesSD.geojson', layerCorales, {
