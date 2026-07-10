@@ -35,7 +35,7 @@
             letter-spacing: 0.5px;
             line-height: 1.1;
         }
-        #panel-titulo h2 {
+        #panel-titulo p {
             font-size: 14px;
             color: #2c3e50;
             font-weight: 500;
@@ -149,6 +149,13 @@
             border: 1px solid #555;
             flex-shrink: 0;
             box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .icono-puerto-chk {
+            font-size: 18px;
+            line-height: 1;
+            display: inline-block;
+            width: 20px;
+            text-align: center;
         }
 
         .modal-overlay {
@@ -267,28 +274,28 @@
                 </label>
 
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkAeropuerto" onchange="toggleAeropuertos()"> <span class="symbol-rect" style="background:#9B59B6;"></span> Aeropuertos internacionales
+                    <input type="checkbox" id="chkAeropuerto" onchange="toggleAeropuertos()"> <span style="font-size:18px;">✈️</span> Aeropuertos internacionales
                 </label>
 
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkTur" onchange="togglePuertos('turístico', 'chkTur')"> <span class="symbol-rombo" style="background:#3964FE;"></span> Puertos turísticos
+                    <input type="checkbox" id="chkTur" onchange="togglePuertos('turístico', 'chkTur')"> <span style="color:#3964FE; font-size:18px;">⚓</span> Puertos turísticos
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkMarina" onchange="togglePuertos('marina', 'chkMarina')"> <span class="symbol-rombo" style="background:#FFFFFF;"></span> Marinas recreativas
+                    <input type="checkbox" id="chkMarina" onchange="togglePuertos('marina', 'chkMarina')"> <span style="color:#FFFFFF; text-shadow: 0 0 2px #000; font-size:18px;">⚓</span> Marinas recreativas
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkArmada" onchange="togglePuertos('armada', 'chkArmada')"> <span class="symbol-rombo" style="background:#666666;"></span> Puertos Armada (Base naval)
+                    <input type="checkbox" id="chkArmada" onchange="togglePuertos('armada', 'chkArmada')"> <span style="color:#666666; font-size:18px;">⚓</span> Puertos Armada (Base naval)
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkCarga" onchange="togglePuertos('carga', 'chkCarga')"> <span class="symbol-rombo" style="background:#5ABBF5;"></span> Puertos Carga / Combustibles
+                    <input type="checkbox" id="chkCarga" onchange="togglePuertos('carga', 'chkCarga')"> <span style="color:#5ABBF5; font-size:18px;">⚓</span> Puertos Carga / Combustibles
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkFondeadero" onchange="togglePuertos('fondeadero', 'chkFondeadero')"> <span class="symbol-rombo" style="background:#F39C12;"></span> Fondeaderos
+                    <input type="checkbox" id="chkFondeadero" onchange="togglePuertos('fondeadero', 'chkFondeadero')"> <span style="color:#F39C12; font-size:18px;">⚓</span> Fondeaderos
                 </label>
 
-                <!-- NUEVA CAPA: Generadoras eléctricas -->
+                <!-- Generadoras eléctricas -->
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkElectricidad" onchange="toggleElectricidad()"> ⚡ Generadoras de electricidad
+                    <input type="checkbox" id="chkElectricidad" onchange="toggleElectricidad()"> <span style="font-size:18px; color:#D9E6FD;">⚡</span> Generadoras de electricidad
                 </label>
             </div>
 
@@ -400,7 +407,7 @@
         var capaPobHT = null;
         var pobRDCargada = false;
         var pobHTCargada = false;
-        var capaActiva = 'rd';  // Ahora por defecto solo RD
+        var capaActiva = 'rd';  // Por defecto solo RD
 
         function getColor(dn, minDN, maxDN) {
             if (dn === null || dn === undefined || maxDN === minDN) {
@@ -825,7 +832,7 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 5.1 PUERTOS / MARINAS
+        // 5.1 PUERTOS / MARINAS (con nuevo icono unificado)
         // ═══════════════════════════════════════════════════════════
         var puertosDataRD = [
         { tipo: "turístico", nombre: "Puerto turístico Cabo Rojo", lat: 17.925237701801414, lng: -71.66036845323396, profundidad: "10.9 metros" },
@@ -891,12 +898,13 @@
             'fondeadero': '#F39C12'
         };
 
+        // Nuevo icono unificado: círculo de color con ancla blanca
         function iconoPuerto(color) {
             return L.divIcon({
                 className: 'custom-div-icon',
-                html: '<div style="width:13px;height:13px;background:' + color + ';border:2px solid #333333;transform:rotate(45deg);box-shadow:0 1px 3px rgba(0,0,0,0.5);"></div>',
-                iconSize: [13, 13],
-                iconAnchor: [7, 7]
+                html: '<div style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;background:'+color+';border-radius:50%;border:2px solid #333;color:#fff;font-size:16px;box-shadow:0 1px 3px rgba(0,0,0,0.5);">⚓</div>',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
             });
         }
 
@@ -939,21 +947,17 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 5.2 AEROPUERTOS INTERNACIONALES
+        // 5.2 AEROPUERTOS INTERNACIONALES (icono avión)
         // ═══════════════════════════════════════════════════════════
         var capaAeropuertos = null;
         var aeropuertosCargados = false;
 
         function iconoAeropuerto() {
-            var anchoIcono = 18;
-            var altoIcono = anchoIcono / 2.5;
             return L.divIcon({
                 className: 'custom-div-icon',
-                html: '<div style="width:' + anchoIcono + 'px;height:' + altoIcono + 'px;' +
-                      'background:#9B59B6;border:2px solid #333333;' +
-                      'box-shadow:0 1px 3px rgba(0,0,0,0.5);"></div>',
-                iconSize: [anchoIcono, altoIcono],
-                iconAnchor: [anchoIcono / 2, altoIcono / 2]
+                html: '<div style="font-size:26px;line-height:1;text-align:center;">✈️</div>',
+                iconSize: [26, 26],
+                iconAnchor: [13, 13]
             });
         }
 
@@ -1002,7 +1006,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 6. GENERADORAS ELÉCTRICAS (NUEVA CAPA)
+        // 6. GENERADORAS ELÉCTRICAS (con fondo #D9E6FD)
         // ═══════════════════════════════════════════════════════════
         var capaElectricidad = null;
         var electricidadCargada = false;
@@ -1010,9 +1014,9 @@
         function iconoElectricidad() {
             return L.divIcon({
                 className: 'custom-div-icon',
-                html: '<div style="background:#FFA500;width:22px;height:22px;border-radius:50%;border:2px solid #333;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.5);">⚡</div>',
-                iconSize: [22, 22],
-                iconAnchor: [11, 11]
+                html: '<div style="background:#D9E6FD;width:24px;height:24px;border-radius:50%;border:2px solid #333;display:flex;align-items:center;justify-content:center;font-size:16px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,0.5);">⚡</div>',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
             });
         }
 
@@ -1030,10 +1034,14 @@
                         },
                         onEachFeature: function(feature, layer) {
                             var props = feature.properties || {};
-                            var nombre = props.NOMBRE || props.nombre || props.Name || 'Generadora';
-                            var tipo = props.TIPO || props.tipo || '';
+                            var nombre = props.name || props.NOMBRE || 'Generadora';
+                            var operador = props.operator || props.OPERADOR || 'N/D';
+                            var produccion = props['plant:output:electricity'] || props.PRODUCCION || 'N/D';
+                            var fuente = props['plant:source'] || props.FUENTE || 'N/D';
                             var contenido = '<b>' + nombre + '</b>';
-                            if (tipo) contenido += '<br>Tipo: ' + tipo;
+                            contenido += '<br>Operador: ' + operador;
+                            contenido += '<br>Producción nominal: ' + produccion;
+                            contenido += '<br>Fuente: ' + fuente;
                             layer.bindPopup(contenido);
                         }
                     });
@@ -1064,7 +1072,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 7. VÍAS (naranja con borde negro)
+        // 7. VÍAS (naranja con borde negro) - icono ya está bien (🛣️)
         // ═══════════════════════════════════════════════════════════
         var capaViasRDBase = null;
         var capaViasRDNaranja = null;
@@ -1179,7 +1187,7 @@
             if (capaViasHTBase && map.hasLayer(capaViasHTBase)) map.removeLayer(capaViasHTBase);
             if (capaViasHTNaranja && map.hasLayer(capaViasHTNaranja)) map.removeLayer(capaViasHTNaranja);
 
-            // Puertos: solo carga (desactivado)
+            // Puertos: todos desactivados
             ['chkTur', 'chkMarina', 'chkArmada', 'chkCarga', 'chkFondeadero'].forEach(function(id) {
                 document.getElementById(id).checked = false;
             });
@@ -1272,4 +1280,3 @@
     </script>
 </body>
 </html>
-```
