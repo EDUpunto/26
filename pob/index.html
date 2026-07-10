@@ -142,6 +142,16 @@
             flex-shrink: 0;
             box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
+        /* Símbolo de leyenda para Aeropuertos: rectángulo con proporción 2.5:1 (ancho:alto).
+           Si se cambia el ancho, mantener alto = ancho / 2.5 para conservar la proporción. */
+        .symbol-rect {
+            display: inline-block;
+            width: 15px;
+            height: 6px; /* 15 / 2.5 = 6 → proporción 2.5:1 */
+            border: 1px solid #555;
+            flex-shrink: 0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
 
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -250,7 +260,7 @@
 
             <!-- Puertos -->
             <div class="grupo-control">
-                <h4>Puertos / Marinas</h4>
+                <h4>Infraestructura</h4>
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chkTur" onchange="togglePuertos('turístico', 'chkTur')"> <span class="symbol-rombo" style="background:#3964FE;"></span> Puertos turísticos
                 </label>
@@ -265,6 +275,9 @@
                 </label>
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chkFondeadero" onchange="togglePuertos('fondeadero', 'chkFondeadero')"> <span class="symbol-rombo" style="background:#F39C12;"></span> Fondeaderos
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkAeropuerto" onchange="toggleAeropuertos()"> <span class="symbol-rect" style="background:#9B59B6;"></span> Aeropuertos internacionales
                 </label>
             </div>
 
@@ -928,6 +941,79 @@
         }
 
         // ═══════════════════════════════════════════════════════════
+        // 5.2 AEROPUERTOS INTERNACIONALES
+        // ═══════════════════════════════════════════════════════════
+        var capaAeropuertos = null;
+        var aeropuertosCargados = false;
+
+        // ---------- Ícono de Aeropuerto ----------
+        // Marcador en forma de RECTÁNGULO con proporción fija 2.5:1 (ancho:alto).
+        // Para modificar el tamaño en el futuro: solo cambiar 'anchoIcono'.
+        // El alto se calcula automáticamente como anchoIcono / 2.5 para
+        // conservar siempre la proporción 2.5:1. No editar 'altoIcono' directamente.
+        function iconoAeropuerto() {
+            var anchoIcono = 18;           // ancho del rectángulo en px (editable)
+            var altoIcono = anchoIcono / 2.5; // alto derivado (proporción 2.5:1) = 7.2px
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: '<div style="width:' + anchoIcono + 'px;height:' + altoIcono + 'px;' +
+                      'background:#9B59B6;border:2px solid #333333;' +
+                      'box-shadow:0 1px 3px rgba(0,0,0,0.5);"></div>',
+                iconSize: [anchoIcono, altoIcono],
+                iconAnchor: [anchoIcono / 2, altoIcono / 2]
+            });
+        }
+
+        function cargarAeropuertos() {
+            if (aeropuertosCargados) return;
+            fetch('anx/aeropuertosSD.geojson')
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    capaAeropuertos = L.geoJSON(data, {
+                        pointToLayer: function(feature, latlng) {
+                            return L.marker(latlng, { icon: iconoAeropuerto() });
+                        },
+                        onEachFeature: function(feature, layer) {
+                            var props = feature.properties || {};
+                            var nombre = props.NAME || props.nombre || props.Name || 'Aeropuerto Internacional';
+                            layer.bindPopup('<b>' + nombre + '</b>');
+                        }
+                    });
+                    aeropuertosCargados = true;
+                    if (document.getElementById('chkAeropuerto').checked) {
+                        map.addLayer(capaAeropuertos);
+                    }
+                    console.log('Aeropuertos cargados correctamente.');
+                })
+                .catch(function(error) {
+                    console.warn('Error cargando aeropuertosSD.geojson:', error.message);
+                });
+        }
+
+        window.toggleAeropuertos = function() {
+            var chk = document.getElementById('chkAeropuerto');
+            if (chk.checked) {
+                if (!aeropuertosCargados) {
+                    cargarAeropuertos();
+                } else if (capaAeropuertos) {
+                    map.addLayer(capaAeropuertos);
+                }
+            } else {
+                if (capaAeropuertos) {
+                    map.removeLayer(capaAeropuertos);
+                }
+            }
+        };
+
+        // Carga inicial: solo si el checkbox viene marcado por defecto (actualmente desmarcado)
+        if (document.getElementById('chkAeropuerto').checked) {
+            cargarAeropuertos();
+        }
+
+        // ═══════════════════════════════════════════════════════════
         // 6. NUEVAS CAPAS DE VÍAS (naranja con borde negro)
         // ═══════════════════════════════════════════════════════════
         // Variables para las capas de vías
@@ -1078,6 +1164,10 @@
                 if (capa && map.hasLayer(capa)) map.removeLayer(capa);
             });
             map.addLayer(capaPuertosCarga);
+
+            // Aeropuertos: restablecer al estado por defecto (desactivado)
+            document.getElementById('chkAeropuerto').checked = false;
+            if (capaAeropuertos && map.hasLayer(capaAeropuertos)) map.removeLayer(capaAeropuertos);
 
             // Vista
             map.setView([19.03556466237287, -70.89432006796727], 8);
