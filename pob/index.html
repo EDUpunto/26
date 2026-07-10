@@ -274,28 +274,28 @@
                 </label>
 
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkAeropuerto" onchange="toggleAeropuertos()"> <span style="font-size:18px;">✈️</span> Aeropuertos internacionales
+                    <input type="checkbox" id="chkAeropuerto" onchange="toggleAeropuertos()"> <span style="font-size:16px;">✈️</span> Aeropuertos internacionales
                 </label>
 
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkTur" onchange="togglePuertos('turístico', 'chkTur')"> <span style="color:#3964FE; font-size:18px;">⚓</span> Puertos turísticos
+                    <input type="checkbox" id="chkTur" onchange="togglePuertos('turístico', 'chkTur')"> <span style="color:#B7FFFF; font-size:16px;">⚓</span> Puertos turísticos
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkMarina" onchange="togglePuertos('marina', 'chkMarina')"> <span style="color:#FFFFFF; text-shadow: 0 0 2px #000; font-size:18px;">⚓</span> Marinas recreativas
+                    <input type="checkbox" id="chkMarina" onchange="togglePuertos('marina', 'chkMarina')"> <span style="color:#FFFFFF; font-size:16px;">⚓</span> Marinas recreativas
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkArmada" onchange="togglePuertos('armada', 'chkArmada')"> <span style="color:#666666; font-size:18px;">⚓</span> Puertos Armada (Base naval)
+                    <input type="checkbox" id="chkArmada" onchange="togglePuertos('armada', 'chkArmada')"> <span style="color:#999999; font-size:16px;">⚓</span> Puertos Armada (Base naval)
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkCarga" onchange="togglePuertos('carga', 'chkCarga')"> <span style="color:#5ABBF5; font-size:18px;">⚓</span> Puertos Carga / Combustibles
+                    <input type="checkbox" id="chkCarga" onchange="togglePuertos('carga', 'chkCarga')"> <span style="color:#FFFF66; font-size:16px;">⚓</span> Puertos Carga / Combustibles
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkFondeadero" onchange="togglePuertos('fondeadero', 'chkFondeadero')"> <span style="color:#F39C12; font-size:18px;">⚓</span> Fondeaderos
+                    <input type="checkbox" id="chkFondeadero" onchange="togglePuertos('fondeadero', 'chkFondeadero')"> <span style="color:#F7BB57; font-size:16px;">⚓</span> Fondeaderos
                 </label>
 
                 <!-- Generadoras eléctricas -->
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkElectricidad" onchange="toggleElectricidad()"> <span style="font-size:18px; color:#D9E6FD;">⚡</span> Generadoras de electricidad
+                    <input type="checkbox" id="chkElectricidad" onchange="toggleElectricidad()"> <span style="font-size:16px; color:#D9E6FD;">⚡</span> Generadoras de electricidad
                 </label>
             </div>
 
@@ -891,11 +891,11 @@
         ];
 
         var coloresPuertos = {
-            'turístico': '#3964FE',
+            'turístico': '#B7FFFF',
             'marina': '#FFFFFF',
-            'armada': '#666666',
-            'carga': '#5ABBF5',
-            'fondeadero': '#F39C12'
+            'armada': '#999999',
+            'carga': '#FFFF66',
+            'fondeadero': '#F7BB57'
         };
 
         // Nuevo icono unificado: círculo de color con ancla blanca
@@ -947,7 +947,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 5.2 AEROPUERTOS INTERNACIONALES (icono avión)
+        // 5.2 AEROPUERTOS INTERNACIONALES (icono avión con fondo blanco)
         // ═══════════════════════════════════════════════════════════
         var capaAeropuertos = null;
         var aeropuertosCargados = false;
@@ -955,9 +955,9 @@
         function iconoAeropuerto() {
             return L.divIcon({
                 className: 'custom-div-icon',
-                html: '<div style="font-size:26px;line-height:1;text-align:center;">✈️</div>',
-                iconSize: [26, 26],
-                iconAnchor: [13, 13]
+                html: '<div style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;background:#FFFFFF;border-radius:50%;border:1px solid #333;font-size:20px;box-shadow:0 1px 3px rgba(0,0,0,0.3);">✈️</div>',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
             });
         }
 
