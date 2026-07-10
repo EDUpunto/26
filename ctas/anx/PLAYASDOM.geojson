@@ -71,6 +71,8 @@
 { "type": "Feature", "properties": { "id": null, "Name": "PLAYA CAYENAS", "description": null, "timestamp": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -69.789379600951833, 19.311041299299749, 0.0 ] } },
 { "type": "Feature", "properties": { "id": null, "Name": "PLAYA LA ENTRADA", "description": null, "timestamp": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -69.901620499700726, 19.538984039575482, 0.0 ] } },
 { "type": "Feature", "properties": { "id": null, "Name": "PLAYA EL BRETON", "description": null, "timestamp": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -69.938516600081115, 19.662810999806631, 0.0 ] } },
-{ "type": "Feature", "properties": { "id": null, "Name": "PLAYA GRANDE", "description": null, "timestamp": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -70.011900659713348, 19.677539338868488, 0.0 ] } }
+{ "type": "Feature", "properties": { "id": null, "Name": "PLAYA GRANDE", "description": null, "timestamp": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -70.011900659713348, 19.677539338868488, 0.0 ] } },
+{ "type": "Feature", "properties": { "id": null, "Name": "PLAYA DE JUAN DOLIO", "description": "PLAYA DE JUAN DOLIO", "timestamp": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -69.417288641403559, 18.426210684303925, 0.0 ] } },
+{ "type": "Feature", "properties": { "id": null, "Name": "PLAYA DE GUAYACANES", "description": "PLAYA DE GUAYACANES", "timestamp": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ -69.455880984853394, 18.419347731983926, 0.0 ] } }
 ]
 }
