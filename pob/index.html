@@ -262,6 +262,19 @@
             <div class="grupo-control">
                 <h4>Infraestructura</h4>
                 <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-vias-rd" onchange="toggleViasRD()"> 🛣️ Vías dominicanas
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-vias-ht" onchange="toggleViasHT()"> 🛣️ Vías haitianas
+                </label>
+
+
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkAeropuerto" onchange="toggleAeropuertos()"> <span class="symbol-rect" style="background:#9B59B6;"></span> Aeropuertos internacionales
+                </label>
+
+
+                <label class="checkbox-opcion">
                     <input type="checkbox" id="chkTur" onchange="togglePuertos('turístico', 'chkTur')"> <span class="symbol-rombo" style="background:#3964FE;"></span> Puertos turísticos
                 </label>
                 <label class="checkbox-opcion">
@@ -275,9 +288,6 @@
                 </label>
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chkFondeadero" onchange="togglePuertos('fondeadero', 'chkFondeadero')"> <span class="symbol-rombo" style="background:#F39C12;"></span> Fondeaderos
-                </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkAeropuerto" onchange="toggleAeropuertos()"> <span class="symbol-rect" style="background:#9B59B6;"></span> Aeropuertos internacionales
                 </label>
             </div>
 
@@ -295,12 +305,7 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-comunidades-ht" onchange="toggleComunidadesHT()"> ⭐ Comunidades haitianas
                 </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-vias-rd" onchange="toggleViasRD()"> 🛣️ Vías dominicanas
-                </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-vias-ht" onchange="toggleViasHT()"> 🛣️ Vías haitianas
-                </label>
+
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🔴 Frontera RD‑Haití
                 </label>
