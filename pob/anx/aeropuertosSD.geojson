@@ -1,0 +1,18 @@
+{
+"type": "FeatureCollection",
+"name": "aeropuertosSD",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "fid": 1, "Name": "Aeropuerto Cabo Haitiano", "Description": "Aeropuerto Cabo Haitiano", "Type": "Internacional", "Pais": "HAI" }, "geometry": { "type": "Point", "coordinates": [ -72.199497941618674, 19.727291736257492 ] } },
+{ "type": "Feature", "properties": { "fid": 2, "Name": "Aeropuerto Puerto Príncipe", "Description": "Aeropuerto Puerto Príncipe", "Type": "Internacional", "Pais": "HAI" }, "geometry": { "type": "Point", "coordinates": [ -72.293728878741717, 18.578654740852141 ] } },
+{ "type": "Feature", "properties": { "fid": 3, "Name": "Aeropuerto Barahona", "Description": "Aeropuerto Barahona", "Type": "Internacional", "Pais": "DOM" }, "geometry": { "type": "Point", "coordinates": [ -71.121180102181398, 18.250643929664129 ] } },
+{ "type": "Feature", "properties": { "fid": 4, "Name": "Aeropuerto Gregorio Luperón", "Description": "Aeropuerto Gregorio Luperón en Puerto Plata", "Type": "Internacional", "Pais": "DOM" }, "geometry": { "type": "Point", "coordinates": [ -70.567450791896263, 19.758447861133096 ] } },
+{ "type": "Feature", "properties": { "fid": 5, "Name": "Aeropuerto El Cibao", "Description": "Aeropuerto El Cibao próximo a Santiago", "Type": "Internacional", "Pais": "DOM" }, "geometry": { "type": "Point", "coordinates": [ -70.602256323007111, 19.405000143796844 ] } },
+{ "type": "Feature", "properties": { "fid": 6, "Name": "Aeropuerto El Catey", "Description": "Aeropuerto El Catey entre Nagua y Samaná", "Type": "Internacional", "Pais": "DOM" }, "geometry": { "type": "Point", "coordinates": [ -69.738055138963773, 19.269155081840211 ] } },
+{ "type": "Feature", "properties": { "fid": 7, "Name": "Aeropuerto Punta Cana", "Description": "Aeropuerto Punta Cana", "Type": "Internacional", "Pais": "DOM" }, "geometry": { "type": "Point", "coordinates": [ -68.366640956949297, 18.569667397138076 ] } },
+{ "type": "Feature", "properties": { "fid": 8, "Name": "Aeropuerto La Romana", "Description": "Aeropuerto La Romana", "Type": "Internacional", "Pais": "DOM" }, "geometry": { "type": "Point", "coordinates": [ -68.913289329762762, 18.452123835108228 ] } },
+{ "type": "Feature", "properties": { "fid": 9, "Name": "Aeropuerto Las Américas", "Description": "Aeropuerto Las Américas", "Type": "Internacional", "Pais": "DOM" }, "geometry": { "type": "Point", "coordinates": [ -69.672529232975876, 18.431698053939925 ] } },
+{ "type": "Feature", "properties": { "fid": 10, "Name": "Aeropuerto Pte. Balaguer", "Description": "Aeropuerto Pte. Balaguer", "Type": "Internacional", "Pais": "DOM" }, "geometry": { "type": "Point", "coordinates": [ -69.98561560672357, 18.573970428370849 ] } },
+{ "type": "Feature", "properties": { "fid": 11, "Name": "Aeropuerto Cabo Rojo", "Description": "Aeropuerto Cabo Rojo", "Type": "Internacional", "Pais": "DOM" }, "geometry": { "type": "Point", "coordinates": [ -71.643698818841472, 17.928679149701946 ] } }
+]
+}
