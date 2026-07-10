@@ -142,12 +142,10 @@
             flex-shrink: 0;
             box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
-        /* Símbolo de leyenda para Aeropuertos: rectángulo con proporción 2.5:1 (ancho:alto).
-           Si se cambia el ancho, mantener alto = ancho / 2.5 para conservar la proporción. */
         .symbol-rect {
             display: inline-block;
             width: 15px;
-            height: 6px; /* 15 / 2.5 = 6 → proporción 2.5:1 */
+            height: 6px;
             border: 1px solid #555;
             flex-shrink: 0;
             box-shadow: 0 1px 2px rgba(0,0,0,0.2);
@@ -252,13 +250,13 @@
                 <h4>Capa población 2020</h4>
                     <div style="display: flex; flex-direction: column; gap: 6px;">
                     <p style="font-size: 10px; text-align: center;">Cada cuadrícula del mapa representa 1 km²</p>
-                    <button id="btn-pob-rd" class="btn-opcion" onclick="cambiarCapas('rd', this)">👥 Distribución población dominicana</button>
+                    <button id="btn-pob-rd" class="btn-opcion active" onclick="cambiarCapas('rd', this)">👥 Distribución población dominicana</button>
                     <button id="btn-pob-ht" class="btn-opcion" onclick="cambiarCapas('ht', this)">👥 Distribución población haitiana</button>
-                    <button id="btn-pob-ambos" class="btn-opcion active" onclick="cambiarCapas('ambos', this)">🗂️ Ambas</button>
+                    <button id="btn-pob-ambos" class="btn-opcion" onclick="cambiarCapas('ambos', this)">🗂️ Ambas</button>
                 </div>
             </div>
 
-            <!-- Puertos -->
+            <!-- Infraestructura -->
             <div class="grupo-control">
                 <h4>Infraestructura</h4>
                 <label class="checkbox-opcion">
@@ -268,11 +266,9 @@
                     <input type="checkbox" id="chk-vias-ht" onchange="toggleViasHT()"> 🛣️ Vías principales haitianas
                 </label>
 
-
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chkAeropuerto" onchange="toggleAeropuertos()"> <span class="symbol-rect" style="background:#9B59B6;"></span> Aeropuertos internacionales
                 </label>
-
 
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chkTur" onchange="togglePuertos('turístico', 'chkTur')"> <span class="symbol-rombo" style="background:#3964FE;"></span> Puertos turísticos
@@ -284,10 +280,15 @@
                     <input type="checkbox" id="chkArmada" onchange="togglePuertos('armada', 'chkArmada')"> <span class="symbol-rombo" style="background:#666666;"></span> Puertos Armada (Base naval)
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkCarga" checked onchange="togglePuertos('carga', 'chkCarga')"> <span class="symbol-rombo" style="background:#5ABBF5;"></span> Puertos Carga / Combustibles
+                    <input type="checkbox" id="chkCarga" onchange="togglePuertos('carga', 'chkCarga')"> <span class="symbol-rombo" style="background:#5ABBF5;"></span> Puertos Carga / Combustibles
                 </label>
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chkFondeadero" onchange="togglePuertos('fondeadero', 'chkFondeadero')"> <span class="symbol-rombo" style="background:#F39C12;"></span> Fondeaderos
+                </label>
+
+                <!-- NUEVA CAPA: Generadoras eléctricas -->
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkElectricidad" onchange="toggleElectricidad()"> ⚡ Generadoras de electricidad
                 </label>
             </div>
 
@@ -309,7 +310,6 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🔴 Frontera RD‑Haití
                 </label>
-
             </div>
 
             <!-- Enlaces -->
@@ -353,7 +353,7 @@
 
     <script>
         // ═══════════════════════════════════════════════════════════
-        // 1. INICIALIZAR MAPA con maxZoom = 10 (~5 km de escala)
+        // 1. INICIALIZAR MAPA con maxZoom = 12
         // ═══════════════════════════════════════════════════════════
         var map = L.map('map', { 
             zoomControl: false,
@@ -400,7 +400,7 @@
         var capaPobHT = null;
         var pobRDCargada = false;
         var pobHTCargada = false;
-        var capaActiva = 'ambos';  // 'rd', 'ht', 'ambos'
+        var capaActiva = 'rd';  // Ahora por defecto solo RD
 
         function getColor(dn, minDN, maxDN) {
             if (dn === null || dn === undefined || maxDN === minDN) {
@@ -827,7 +827,6 @@
         // ═══════════════════════════════════════════════════════════
         // 5.1 PUERTOS / MARINAS
         // ═══════════════════════════════════════════════════════════
-        // ---------- Puertos RD ----------
         var puertosDataRD = [
         { tipo: "turístico", nombre: "Puerto turístico Cabo Rojo", lat: 17.925237701801414, lng: -71.66036845323396, profundidad: "10.9 metros" },
         { tipo: "turístico", nombre: "Puerto turístico Casa de Campo", lat: 18.415758134659303, lng: -68.9589774197403, profundidad: null },
@@ -876,7 +875,6 @@
         { tipo: "fondeadero", nombre: "Fondeadero REFIDOMSA combustibles", lat: 18.407094622041942, lng: -70.02242250849139, profundidad: null }
         ];
 
-        // ---------- Puertos HAITÍ ----------
         var puertosDataHT = [
         { tipo: "turístico", nombre: "Labadee (fondeadero)", lat: 19.779838487980424, lng: -72.24329194383702, profundidad: null },
         { tipo: "carga", nombre: "Puerto Príncipe (Port-au-Prince)", lat: 18.569291632215222, lng: -72.35073822584917, profundidad: "10 metros" },
@@ -940,25 +938,15 @@
             else map.removeLayer(capa);
         };
 
-        // Carga inicial: solo "Carga / Combustibles" activo por defecto
-        if (document.getElementById('chkCarga').checked) {
-            map.addLayer(capaPuertosCarga);
-        }
-
         // ═══════════════════════════════════════════════════════════
         // 5.2 AEROPUERTOS INTERNACIONALES
         // ═══════════════════════════════════════════════════════════
         var capaAeropuertos = null;
         var aeropuertosCargados = false;
 
-        // ---------- Ícono de Aeropuerto ----------
-        // Marcador en forma de RECTÁNGULO con proporción fija 2.5:1 (ancho:alto).
-        // Para modificar el tamaño en el futuro: solo cambiar 'anchoIcono'.
-        // El alto se calcula automáticamente como anchoIcono / 2.5 para
-        // conservar siempre la proporción 2.5:1. No editar 'altoIcono' directamente.
         function iconoAeropuerto() {
-            var anchoIcono = 18;           // ancho del rectángulo en px (editable)
-            var altoIcono = anchoIcono / 2.5; // alto derivado (proporción 2.5:1) = 7.2px
+            var anchoIcono = 18;
+            var altoIcono = anchoIcono / 2.5;
             return L.divIcon({
                 className: 'custom-div-icon',
                 html: '<div style="width:' + anchoIcono + 'px;height:' + altoIcono + 'px;' +
@@ -1013,17 +1001,73 @@
             }
         };
 
-        // Carga inicial: solo si el checkbox viene marcado por defecto (actualmente desmarcado)
-        if (document.getElementById('chkAeropuerto').checked) {
-            cargarAeropuertos();
+        // ═══════════════════════════════════════════════════════════
+        // 6. GENERADORAS ELÉCTRICAS (NUEVA CAPA)
+        // ═══════════════════════════════════════════════════════════
+        var capaElectricidad = null;
+        var electricidadCargada = false;
+
+        function iconoElectricidad() {
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: '<div style="background:#FFA500;width:22px;height:22px;border-radius:50%;border:2px solid #333;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.5);">⚡</div>',
+                iconSize: [22, 22],
+                iconAnchor: [11, 11]
+            });
         }
 
+        function cargarElectricidad() {
+            if (electricidadCargada) return;
+            fetch('anx/electricidadSD.geojson')
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    capaElectricidad = L.geoJSON(data, {
+                        pointToLayer: function(feature, latlng) {
+                            return L.marker(latlng, { icon: iconoElectricidad() });
+                        },
+                        onEachFeature: function(feature, layer) {
+                            var props = feature.properties || {};
+                            var nombre = props.NOMBRE || props.nombre || props.Name || 'Generadora';
+                            var tipo = props.TIPO || props.tipo || '';
+                            var contenido = '<b>' + nombre + '</b>';
+                            if (tipo) contenido += '<br>Tipo: ' + tipo;
+                            layer.bindPopup(contenido);
+                        }
+                    });
+                    electricidadCargada = true;
+                    if (document.getElementById('chkElectricidad').checked) {
+                        map.addLayer(capaElectricidad);
+                    }
+                    console.log('Generadoras eléctricas cargadas correctamente.');
+                })
+                .catch(function(error) {
+                    console.warn('Error cargando electricidadSD.geojson:', error.message);
+                });
+        }
+
+        window.toggleElectricidad = function() {
+            var chk = document.getElementById('chkElectricidad');
+            if (chk.checked) {
+                if (!electricidadCargada) {
+                    cargarElectricidad();
+                } else if (capaElectricidad) {
+                    map.addLayer(capaElectricidad);
+                }
+            } else {
+                if (capaElectricidad) {
+                    map.removeLayer(capaElectricidad);
+                }
+            }
+        };
+
         // ═══════════════════════════════════════════════════════════
-        // 6. NUEVAS CAPAS DE VÍAS (naranja con borde negro)
+        // 7. VÍAS (naranja con borde negro)
         // ═══════════════════════════════════════════════════════════
-        // Variables para las capas de vías
-        var capaViasRDBase = null;   // capa negra (borde)
-        var capaViasRDNaranja = null; // capa naranja (interior)
+        var capaViasRDBase = null;
+        var capaViasRDNaranja = null;
         var capaViasHTBase = null;
         var capaViasHTNaranja = null;
         var viasRDCargada = false;
@@ -1037,24 +1081,13 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Capa base negra (borde) más gruesa
                     capaViasRDBase = L.geoJSON(data, {
-                        style: {
-                            color: 'black',
-                            weight: 5,
-                            opacity: 0.6
-                        }
+                        style: { color: 'black', weight: 5, opacity: 0.6 }
                     });
-                    // Capa superior naranja más fina
                     capaViasRDNaranja = L.geoJSON(data, {
-                        style: {
-                            color: 'orange',
-                            weight: 3,
-                            opacity: 0.9
-                        }
+                        style: { color: 'orange', weight: 3, opacity: 0.9 }
                     });
                     viasRDCargada = true;
-                    // Si el checkbox está activo, añadimos ambas capas
                     if (document.getElementById('chk-vias-rd').checked) {
                         map.addLayer(capaViasRDBase);
                         map.addLayer(capaViasRDNaranja);
@@ -1073,18 +1106,10 @@
                 })
                 .then(data => {
                     capaViasHTBase = L.geoJSON(data, {
-                        style: {
-                            color: 'black',
-                            weight: 5,
-                            opacity: 0.6
-                        }
+                        style: { color: 'black', weight: 5, opacity: 0.6 }
                     });
                     capaViasHTNaranja = L.geoJSON(data, {
-                        style: {
-                            color: 'orange',
-                            weight: 3,
-                            opacity: 0.9
-                        }
+                        style: { color: 'orange', weight: 3, opacity: 0.9 }
                     });
                     viasHTCargada = true;
                     if (document.getElementById('chk-vias-ht').checked) {
@@ -1099,12 +1124,9 @@
         window.toggleViasRD = function() {
             var chk = document.getElementById('chk-vias-rd');
             if (chk.checked) {
-                if (!viasRDCargada) {
-                    cargarViasRD();
-                } else {
-                    if (capaViasRDBase) map.addLayer(capaViasRDBase);
-                    if (capaViasRDNaranja) map.addLayer(capaViasRDNaranja);
-                }
+                if (!viasRDCargada) cargarViasRD();
+                else { if (capaViasRDBase) map.addLayer(capaViasRDBase);
+                       if (capaViasRDNaranja) map.addLayer(capaViasRDNaranja); }
             } else {
                 if (capaViasRDBase) map.removeLayer(capaViasRDBase);
                 if (capaViasRDNaranja) map.removeLayer(capaViasRDNaranja);
@@ -1114,12 +1136,9 @@
         window.toggleViasHT = function() {
             var chk = document.getElementById('chk-vias-ht');
             if (chk.checked) {
-                if (!viasHTCargada) {
-                    cargarViasHT();
-                } else {
-                    if (capaViasHTBase) map.addLayer(capaViasHTBase);
-                    if (capaViasHTNaranja) map.addLayer(capaViasHTNaranja);
-                }
+                if (!viasHTCargada) cargarViasHT();
+                else { if (capaViasHTBase) map.addLayer(capaViasHTBase);
+                       if (capaViasHTNaranja) map.addLayer(capaViasHTNaranja); }
             } else {
                 if (capaViasHTBase) map.removeLayer(capaViasHTBase);
                 if (capaViasHTNaranja) map.removeLayer(capaViasHTNaranja);
@@ -1127,59 +1146,64 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 7. REINICIAR
+        // 8. REINICIAR
         // ═══════════════════════════════════════════════════════════
         window.mostrarTodas = function() {
-            // Población
+            // Población: solo RD
             if (capaPobRD && map.hasLayer(capaPobRD)) map.removeLayer(capaPobRD);
             if (capaPobHT && map.hasLayer(capaPobHT)) map.removeLayer(capaPobHT);
-            capaActiva = 'ambos';
+            capaActiva = 'rd';
             document.querySelectorAll('#panel-controles .grupo-control:nth-child(2) .btn-opcion').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-pob-ambos').classList.add('active');
+            document.getElementById('btn-pob-rd').classList.add('active');
+            if (!pobRDCargada) cargarPoblacionRD();
+            else if (capaPobRD) map.addLayer(capaPobRD);
 
             // Comunidades
             ['chk-comunidades-rd', 'chk-comunidades-ht'].forEach(function(id) {
                 document.getElementById(id).checked = false;
+                toggleComunidadesRD();
+                toggleComunidadesHT();
             });
-            toggleComunidadesRD();
-            toggleComunidadesHT();
 
             // Frontera (dejamos activa)
             if (document.getElementById('chk-frontera').checked && capaFrontera && !map.hasLayer(capaFrontera)) {
                 map.addLayer(capaFrontera);
             }
 
-            // Vías: desactivar checkboxes y remover capas
+            // Vías
             ['chk-vias-rd', 'chk-vias-ht'].forEach(function(id) {
                 document.getElementById(id).checked = false;
             });
-            // Remover capas de vías si existen
             if (capaViasRDBase && map.hasLayer(capaViasRDBase)) map.removeLayer(capaViasRDBase);
             if (capaViasRDNaranja && map.hasLayer(capaViasRDNaranja)) map.removeLayer(capaViasRDNaranja);
             if (capaViasHTBase && map.hasLayer(capaViasHTBase)) map.removeLayer(capaViasHTBase);
             if (capaViasHTNaranja && map.hasLayer(capaViasHTNaranja)) map.removeLayer(capaViasHTNaranja);
 
-            // Puertos: restablecer al estado por defecto (solo Carga/Combustibles activo)
-            ['chkTur', 'chkMarina', 'chkArmada', 'chkFondeadero'].forEach(function(id) {
+            // Puertos: solo carga (desactivado)
+            ['chkTur', 'chkMarina', 'chkArmada', 'chkCarga', 'chkFondeadero'].forEach(function(id) {
                 document.getElementById(id).checked = false;
             });
-            document.getElementById('chkCarga').checked = true;
             Object.keys(mapaCapasPuertos).forEach(function(tipo) {
                 var capa = mapaCapasPuertos[tipo];
                 if (capa && map.hasLayer(capa)) map.removeLayer(capa);
             });
-            map.addLayer(capaPuertosCarga);
 
-            // Aeropuertos: restablecer al estado por defecto (desactivado)
+            // Aeropuertos
             document.getElementById('chkAeropuerto').checked = false;
             if (capaAeropuertos && map.hasLayer(capaAeropuertos)) map.removeLayer(capaAeropuertos);
 
+            // Generadoras
+            document.getElementById('chkElectricidad').checked = false;
+            if (capaElectricidad && map.hasLayer(capaElectricidad)) map.removeLayer(capaElectricidad);
+
             // Vista
             map.setView([19.03556466237287, -70.89432006796727], 8);
+            // Asegurar vista dibujo
+            cambiarBase('mapa', document.querySelector('#panel-controles .grupo-control:first-child .btn-opcion:first-child'));
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 8. UTILIDADES UI
+        // 9. UTILIDADES UI
         // ═══════════════════════════════════════════════════════════
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
@@ -1196,13 +1220,56 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 9. CARGA INICIAL DE POBLACIÓN (por defecto "Ambas")
+        // 10. CARGA INICIAL
         // ═══════════════════════════════════════════════════════════
         window.addEventListener('load', function() {
-            cargarPoblacionRD();
-            cargarPoblacionHT();
-            // Las vías se cargarán solo cuando se activen los checkboxes
+            // Forzar vista dibujo
+            cambiarBase('mapa', document.querySelector('#panel-controles .grupo-control:first-child .btn-opcion:first-child'));
+
+            // Activar solo población RD
+            cambiarCapas('rd', document.getElementById('btn-pob-rd'));
+
+            // Desmarcar y remover todas las capas adicionales excepto frontera
+            var checkboxes = [
+                'chk-vias-rd', 'chk-vias-ht',
+                'chkAeropuerto',
+                'chkTur', 'chkMarina', 'chkArmada', 'chkCarga', 'chkFondeadero',
+                'chk-comunidades-rd', 'chk-comunidades-ht',
+                'chkElectricidad'
+            ];
+            checkboxes.forEach(function(id) {
+                var chk = document.getElementById(id);
+                if (chk) {
+                    chk.checked = false;
+                    // Forzar la función de toggle para remover capas
+                    if (id === 'chk-vias-rd') toggleViasRD();
+                    else if (id === 'chk-vias-ht') toggleViasHT();
+                    else if (id === 'chkAeropuerto') toggleAeropuertos();
+                    else if (id === 'chkTur') togglePuertos('turístico', 'chkTur');
+                    else if (id === 'chkMarina') togglePuertos('marina', 'chkMarina');
+                    else if (id === 'chkArmada') togglePuertos('armada', 'chkArmada');
+                    else if (id === 'chkCarga') togglePuertos('carga', 'chkCarga');
+                    else if (id === 'chkFondeadero') togglePuertos('fondeadero', 'chkFondeadero');
+                    else if (id === 'chk-comunidades-rd') toggleComunidadesRD();
+                    else if (id === 'chk-comunidades-ht') toggleComunidadesHT();
+                    else if (id === 'chkElectricidad') toggleElectricidad();
+                }
+            });
+
+            // Asegurar que la frontera esté activa (checkbox checked por defecto)
+            var chkFrontera = document.getElementById('chk-frontera');
+            if (chkFrontera && !chkFrontera.checked) {
+                chkFrontera.checked = true;
+                toggleFrontera();
+            } else if (chkFrontera && chkFrontera.checked) {
+                if (!fronteraCargada) cargarFrontera();
+                else if (capaFrontera && !map.hasLayer(capaFrontera)) map.addLayer(capaFrontera);
+            }
+
+            // Establecer vista y zoom
+            map.setView([19.03556466237287, -70.89432006796727], 8);
         });
     </script>
 </body>
 </html>
+```
