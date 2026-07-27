@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Golpe de 1930</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ----- reset & base ----- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: #faf8f4;
+            color: #0f1e38;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        :root {
+            --bg-dark: #15130f;
+            --bg-dark-2: #211d17;
+            --cream: #f2ead2;
+            --gold: #cdaa5c;
+            --gold-dim: #8d7745;
+            --navy: #0f1e38;
+            --navy-2: #16294a;
+            --orange: #e8592a;
+            --orange-dim: #c94a20;
+            --gray: #5c6472;
+            --gray-light: #8a91a0;
+            --paper: #faf8f4;
+            --line: #e7e2d6;
+            --shadow: 0 18px 40px -18px rgba(15, 30, 56, 0.35);
+            --radius: 14px;
+            --disp: 'Cinzel', serif;
+            --body: 'Work Sans', sans-serif;
+        }
+
+        /* ========== PORTADA (fija) ========== */
+        #portada {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 15vh;
+            min-height: 80px;
+            width: 100%;
+            background: var(--bg-dark);
+            color: var(--cream);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 300;
+            box-shadow: 0 12px 30px -14px rgba(0,0,0,0.6);
+        }
+        .portada-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .portada-bg picture,
+        .portada-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+        .portada-bg .ph {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #2a2520;
+            color: var(--gold-dim);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .portada-bg .ph b {
+            display: block;
+            color: var(--cream);
+            margin-bottom: 0.25rem;
+        }
+        .portada-veil {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(21, 19, 15, 0.10) 0%,
+                    rgba(21, 19, 15, 0.35) 45%,
+                    rgba(21, 19, 15, 0.85) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .portada-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5vw;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .portada-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .portada-eyebrow {
+            letter-spacing: 0.25em;
+            font-size: 0.6rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .portada-title {
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(1rem, 2.2vw, 2rem);
+            line-height: 1.1;
+            margin: 0;
+            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+        .portada-dates {
+            font-family: var(--disp);
+            color: var(--gold);
+            font-size: clamp(0.6rem, 1vw, 0.9rem);
+            letter-spacing: 0.1em;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        /* ========== MENÚ HAMBURGUESA ========== */
+        .menu-hamburguesa {
+            position: fixed;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 999;
+            background: var(--navy);
+            border: 1px solid var(--gold);
+            border-radius: 6px;
+            padding: 0.5rem 0.7rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transition: background 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-hamburguesa:hover {
+            background: var(--navy-2);
+        }
+        .menu-hamburguesa span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: var(--cream);
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+
+        /* ===== NAVEGACIÓN LATERAL ===== */
+        .nav-lateral {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: var(--navy);
+            border-right: 3px solid var(--gold);
+            padding: 2rem 1rem 1.5rem;
+            overflow-y: auto;
+            transition: left 0.35s ease;
+            z-index: 1000;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+        }
+        .nav-lateral.abierto {
+            left: 0;
+        }
+        .nav-lateral .cerrar-menu {
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 2.2rem;
+            line-height: 1;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 1.2rem;
+            transition: 0.2s;
+        }
+        .nav-lateral .cerrar-menu:hover {
+            color: var(--gold);
+            transform: rotate(90deg);
+        }
+        .nav-lateral ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 1.8rem;
+            clear: both;
+        }
+        .nav-lateral ul li {
+            border-bottom: 1px solid #2f4a5a;
+            padding: 0.4rem 0;
+        }
+        .nav-lateral ul li a {
+            display: block;
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 1.0rem;
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            transition: 0.15s;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        .nav-lateral ul li a:hover {
+            background: #2a4a5a;
+            color: #f5efe0;
+            padding-left: 0.9rem;
+        }
+        .nav-lateral ul li a.activo {
+            background: var(--gold);
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        .overlay-menu {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.35);
+            z-index: 998;
+        }
+        .overlay-menu.activo {
+            display: block;
+        }
+
+        /* ========== INTRO (parrafo destacado estilo tarjeta) ========== */
+        .intro-wrap {
+            background: var(--paper);
+            padding: 2.2rem 5vw 0.5rem;
+            margin-top: 15vh;
+        }
+        .intro-card {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            padding: 1.8rem 2.2rem;
+        }
+        .intro-eyebrow {
+            font-weight: 700;
+            color: var(--orange);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .intro-texto {
+            color: #2c3a4b;
+            line-height: 1.75;
+            font-size: 1.05rem;
+            margin-top: 0.8rem;
+        }
+
+        /* ========== SCROLLYTELLING ========== */
+        .historia {
+            background: var(--bg-dark);
+        }
+        .capitulo {
+            position: relative;
+        }
+        .capitulo-bg {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .capitulo-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%;
+        }
+        .capitulo-bg .ph {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #2a2520;
+            color: var(--gold-dim);
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .capitulo-bg .ph b {
+            display: block;
+            color: var(--cream);
+            margin-bottom: 0.25rem;
+        }
+        .capitulo-veil {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(15, 19, 15, 0.55) 0%,
+                    rgba(15, 13, 10, 0.72) 55%,
+                    rgba(15, 13, 10, 0.92) 100%);
+        }
+        .capitulo-numero {
+            position: absolute;
+            top: 1.6rem;
+            right: 1.8rem;
+            font-family: var(--disp);
+            color: var(--gold);
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            opacity: 0.85;
+        }
+        .capitulo-textos {
+            position: relative;
+            margin-top: -100vh;
+            z-index: 2;
+        }
+        .texto-bloque {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 3rem 6vw;
+        }
+        .texto-caja {
+            max-width: 520px;
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .texto-caja.en-vista {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .texto-bloque:nth-child(even) {
+            justify-content: flex-end;
+        }
+        .texto-bloque:nth-child(even) .texto-caja {
+            text-align: right;
+            margin-left: auto;
+        }
+        .texto-caja.intro-grande .bloque-parrafo {
+            font-family: var(--disp);
+            font-size: clamp(1.3rem, 2.6vw, 2rem);
+            line-height: 1.35;
+            color: var(--cream);
+            font-weight: 600;
+        }
+        .bloque-titulo {
+            font-weight: 700;
+            color: var(--gold);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 0.7rem;
+            display: inline-block;
+            border-bottom: 2px solid var(--orange);
+            padding-bottom: 0.35rem;
+        }
+        .bloque-parrafo {
+            color: var(--cream);
+            line-height: 1.75;
+            font-size: 1.02rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        @media (max-width: 760px) {
+            .texto-bloque {
+                padding: 2.4rem 6vw;
+                justify-content: center !important;
+            }
+            .texto-caja {
+                max-width: 100%;
+                text-align: left !important;
+                margin-left: 0 !important;
+            }
+        }
+
+        /* ========== CIERRE ========== */
+        .cierre-wrap {
+            background: var(--paper);
+            padding: 3rem 5vw 5rem;
+        }
+        .cierre-card {
+            max-width: 900px;
+            margin: 0 auto;
+            border-left: 4px solid var(--orange);
+            background: #fdf3ee;
+            border-radius: 0 8px 8px 0;
+            padding: 1.4rem 1.7rem;
+            color: #3d2418;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        .cierre-card b {
+            color: var(--orange-dim);
+        }
+
+        /* ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== */
+        .btn-flotante {
+            position: fixed;
+            z-index: 100;
+            background: var(--navy);
+            color: var(--cream);
+            border: none;
+            border-radius: 999px;
+            padding: 0.85rem 1.3rem 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            box-shadow: 0 14px 30px -10px rgba(15, 30, 56, 0.55);
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-flotante svg {
+            width: 17px;
+            height: 17px;
+            stroke: var(--gold);
+            flex-shrink: 0;
+        }
+        .btn-flotante:hover {
+            background: var(--navy-2);
+            transform: translateY(-2px);
+        }
+        #btn-top {
+            right: 1.4rem;
+            bottom: 1.4rem;
+        }
+
+        @media (max-width: 640px) {
+            .btn-flotante span.txt {
+                display: none;
+            }
+            #btn-top {
+                right: 1rem;
+                bottom: 1rem;
+                padding: 0.85rem;
+                border-radius: 50%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== PORTADA (fija) ========== -->
+    <section id="portada">
+        <div class="portada-bg">
+            <picture>
+                <source media="(max-width:640px)" srcset="ins/001portadaCv.png" />
+                <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+            </picture>
+            <div class="ph">
+                <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
+            </div>
+            <div class="portada-veil"></div>
+        </div>
+        <div class="portada-content">
+            <div class="portada-left">
+                <span class="portada-eyebrow">Historia de la República Dominicana</span>
+                <h1 class="portada-title">Golpe de Estado 1930</h1>
+                <h3 class="portada-dates">Tiranía Trujillista 1930-1961</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MENÚ HAMBURGUESA ========== -->
+    <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- ========== MENÚ LATERAL ========== -->
+    <nav class="nav-lateral" id="menuLateral" role="navigation">
+        <button class="cerrar-menu" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button>
+        <ul>
+            <li><a href="ind0.HTML">INICIO</a></li>
+            <li><a href="lt_ctx.HTML">Línea de Tiempo</a></li>
+            <li><a href="bio_tru.HTML">Reseña Biográfica</a></li>
+            <li><a href="gen_tru.HTML">Genealogía</a></li>
+            <li><a href="antes_tru.HTML">Antecedentes</a></li>
+            <li><a href="glpe30.HTML" class="activo">Golpe de Estado 1930</a></li>
+            <li><a href="maq_tir.HTML">Maquinaria de la Tiranía</a></li>
+            <li><a href="etap_tir.HTML">Etapas de la Tiranía</a></li>
+            <li><a href="elec_tru.HTML">Elecciones</a></li>
+            <li><a href="reb_tru.HTML">Rebeldes</a></li>
+            <li><a href="casos_tru.HTML">Casos Famosos</a></li>
+            <li><a href="ultnoche.HTML">Última Noche</a></li>
+            <li><a href="destru.HTML">Destrujillización</a></li>
+            <li><a href="galr.HTML">Galería</a></li>
+            <li><a href="glos.HTML">Glosario</a></li>
+            <li><a href="not.HTML">Créditos y Fuentes</a></li>
+        </ul>
+    </nav>
+
+    <!-- ========== OVERLAY ========== -->
+    <div class="overlay-menu" id="overlayMenu"></div>
+
+    <!-- ========== INTRODUCCIÓN ========== -->
+    <div class="intro-wrap">
+        <div class="intro-card">
+            <span class="intro-eyebrow">¿Cómo llegó Trujillo al poder?</span>
+            <div class="intro-texto">El <strong>GOLPE DE ESTADO</strong> fue una maniobra cuidadosamente coordinada que combinó la presión militar, la astucia política y la debilidad del gobierno.  Desplázate para recorrer, paso a paso, cómo se ejecutó.</div>
+        </div>
+    </div>
+
+    <!-- ========== SCROLLYTELLING ========== -->
+    <div class="historia">
+
+        <!-- CAPÍTULO 1 -->
+        <section class="capitulo">
+            <div class="capitulo-bg">
+                <img src="ins/golpe1.png" alt="imagen 1" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/golpe1.png</div></div>
+                <div class="capitulo-veil"></div>
+                <span class="capitulo-numero">I · IV</span>
+            </div>
+            <div class="capitulo-textos">
+                <div class="texto-bloque">
+                    <div class="texto-caja intro-grande">
+                        <div class="bloque-parrafo">La noche del 22 de febrero de 1930, hombres armados con rifles y machetes simularon un asalto a la Fortaleza Militar San Luís de Santiago, la más importante del Cibao.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Marcha desde Santiago</span>
+                        <div class="bloque-parrafo">Esa misma noche iniciaron una marcha por la carretera Duarte hacia la capital que duró varios días, durante el trayecto se agregaron simpatizantes.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 2 -->
+        <section class="capitulo">
+            <div class="capitulo-bg">
+                <img src="ins/golpe2.png" alt="imagen 2" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/golpe2.png</div></div>
+                <div class="capitulo-veil"></div>
+                <span class="capitulo-numero">II · IV</span>
+            </div>
+            <div class="capitulo-textos">
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Rebeldes en Santo Domingo</span>
+                        <div class="bloque-parrafo">El líder de la pandilla fue Rafael Estrella Ureña, un amante del fascismo y aliado de Trujillo. La marcha de "los rebeldes" llegó a Santo Domingo el 26 de febrero de 1930 y ocupó la ciudad sin resistencia. El presidente Vásquez estaba confundido; no entendió la maniobra, mientras tanto el general Trujillo y jefe del ejército, le mentía diciendo que sólo quedaba defender su posición. Vásquez nada podía hacer, todo el ejército respondía a Trujillo.</div>
+                    </div>
+                </div>
+            <div class="capitulo-bg">
+                <img src="ins/golpe3.png" alt="imagen 3" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/golpe3.png</div></div>
+                <div class="capitulo-veil"></div>
+                <span class="capitulo-numero">I · IV</span>
+            </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Vásquez renunció</span>
+                        <div class="bloque-parrafo">Poco después empezaron los encuentros. Los rebeldes exigieron la renuncia del Presidente Horacio Vásquez y el Vicepresidente José Dolores Alfonseca. Antes de renunciar, y como parte del acuerdo, Vásquez designó a Estrella Ureña como Ministro de Interior y Policía, la autoridad que según la Constitución debía asumir la presidencia. Así el Golpe de Estado se había completado.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Presidente provisional</span>
+                        <div class="bloque-parrafo">Rafael Estrella Ureña asumió la presidencia provisional e inmediatamente convocó a elecciones.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 3 -->
+        <section class="capitulo">
+            <div class="capitulo-bg">
+                <img src="ins/golpe4.png" alt="Imagen 4" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/golpe3.png</div></div>
+                <div class="capitulo-veil"></div>
+                <span class="capitulo-numero">III · IV</span>
+            </div>
+            <div class="capitulo-textos">
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Campaña electoral 1930</span>
+                        <div class="bloque-parrafo">Rafael Leonídas Trujillo se presentó como candidato a presidente y Rafael Estrella Ureña como vicepresidente. Los candidatos opositores formaron una "Alianza Nacional Progresista", con Federico Velázquez a la presidencia y Ángel Morales a la vicepresidencia.<br> Trujillo y Ureña respondieron con una "Confederación de Partidos". La campaña no fue una contienda libre: estuvo acompañada de violencia, intimidación, control y represión. Trujillo organizó un grupo de bandidos para perseguir, intimidar y asesinar a los opositores, impidiéndoles realizar cualquier actividad política.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Renuncia directiva de la JCE</span>
+                        <div class="bloque-parrafo">Para garantizar el control total del proceso, los miembros de la Junta Central Electoral fueron presionados. El presidente de la Junta, Domingo Estrada, renunció a su cargo el 1 de mayo de 1930, y le siguieron los demás miembros. Fueron sustituidos inmediatamente por simpatizantes de Trujillo, quienes se encargaron de validar el proceso.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 4 -->
+        <section class="capitulo">
+            <div class="capitulo-bg">
+                <img src="ins/golpe5.png" alt="Imagen 5" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/golpe4.png</div></div>
+                <div class="capitulo-veil"></div>
+                <span class="capitulo-numero">IV · IV</span>
+            </div>
+            <div class="capitulo-textos">
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Elecciones 1930-1934</span>
+                        <div class="bloque-parrafo">La fuerza política opositora "Alianza Nacional Progresista" se retiró de las elecciones un día antes, argumentando que no había garantías para ejercer un voto libre. Trujillo acudió a las elecciones como candidato único a la presidencia.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Elecciones falsas</span>
+                        <div class="bloque-parrafo">La oposición calificó el proceso electoral como fraudulento. Trujillo desató una ola de terror que incluyó saqueos, amenazas de muerte a jueces y hasta el arresto del candidato opositor Federico Velázquez.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja intro-grande">
+                        <span class="bloque-titulo">Trujillo y Ureña al poder</span>
+                        <div class="bloque-parrafo">Finalmente ambos candidatos asumieron la presidencia el 16 de agosto de 1930, sin atender a más reclamos. La oposición acudió a Washington a presentar reclamos. El presidente de EUA, Herbert Hoover, reconoció el gobierno. Trujillo tenía 38 años.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ========== CIERRE ========== -->
+    <div class="cierre-wrap">
+        <div class="cierre-card">Así, en menos de seis meses (feb-ago), una marcha simulada desde Santiago se transformó en <b>presidencia constitucional</b>: la fuerza policiaco-militar, la manipulación electoral y el reconocimiento internacional se combinaron para dar inicio a la <b>tiranía trujillista (1930-1961)</b>.</div>
+    </div>
+
+    <!-- ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== -->
+    <button id="btn-top" class="btn-flotante" aria-label="Volver arriba">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+        <span class="txt">Arriba</span>
+    </button>
+
+    <script>
+        // Revela cada bloque de texto al entrar en la vista, y lo oculta al salir hacia abajo
+        // para permitir que vuelva a animarse si el usuario retrocede.
+        const cajas = document.querySelectorAll('.texto-caja');
+        const observador = new IntersectionObserver((entradas) => {
+            entradas.forEach((entrada) => {
+                if (entrada.isIntersecting) {
+                    entrada.target.classList.add('en-vista');
+                }
+            });
+        }, { threshold: 0.35 });
+        cajas.forEach((caja) => observador.observe(caja));
+
+        document.getElementById('btn-top').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ===== MENÚ HAMBURGUESA (toggle + overlay) =====
+        (function() {
+            const btnHamburguesa = document.getElementById('btnHamburguesa');
+            const menuLateral = document.getElementById('menuLateral');
+            const btnCerrarMenu = document.getElementById('btnCerrarMenu');
+            const overlayMenu = document.getElementById('overlayMenu');
+
+            function abrirMenu() {
+                menuLateral.classList.add('abierto');
+                overlayMenu.classList.add('activo');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function cerrarMenu() {
+                menuLateral.classList.remove('abierto');
+                overlayMenu.classList.remove('activo');
+                document.body.style.overflow = '';
+            }
+
+            if (btnHamburguesa) {
+                btnHamburguesa.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    abrirMenu();
+                });
+            }
+
+            if (btnCerrarMenu) {
+                btnCerrarMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    cerrarMenu();
+                });
+            }
+
+            if (overlayMenu) {
+                overlayMenu.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    cerrarMenu();
+                }
+            });
+
+            const enlacesMenu = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
+            enlacesMenu.forEach(function(enlace) {
+                enlace.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            });
+
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth > 900 && menuLateral.classList.contains('abierto')) {
+                        cerrarMenu();
+                    }
+                }, 200);
+            });
+        })();
+    </script>
+
+</body>
+</html>

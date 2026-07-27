@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Genealogía Trujillo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Work Sans', sans-serif;
+      background: #faf8f4;
+      color: #0f1e38;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    :root {
+      --bg-dark: #15130f;
+      --bg-dark-2: #211d17;
+      --cream: #f2ead2;
+      --gold: #cdaa5c;
+      --gold-dim: #8d7745;
+      --navy: #0f1e38;
+      --navy-2: #16294a;
+      --gray: #5c6472;
+      --gray-light: #8a91a0;
+      --paper: #faf8f4;
+      --line: #e7e2d6;
+      --shadow: 0 18px 40px -18px rgba(15, 30, 56, 0.35);
+      --radius: 14px;
+      --disp: 'Cinzel', serif;
+      --body: 'Work Sans', sans-serif;
+      --card-w: 170px;
+      --card-h: 210px;
+    }
+
+    /* ===== PORTADA ===== */
+    #portada {
+      position: sticky;
+      top: 0;
+      z-index: 500;
+      height: 15vh;
+      min-height: 80px;
+      width: 100%;
+      background: var(--bg-dark);
+      color: var(--cream);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .portada-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .portada-bg picture,
+    .portada-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .portada-bg .ph {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: #2a2520;
+      color: var(--gold-dim);
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 1rem;
+    }
+    .portada-bg .ph b { display: block; color: var(--cream); margin-bottom: 0.25rem; }
+    .portada-veil {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(21,19,15,0.10) 0%, rgba(21,19,15,0.35) 45%, rgba(21,19,15,0.85) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .portada-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 5vw;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .portada-left {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .portada-eyebrow {
+      letter-spacing: 0.25em;
+      font-size: 0.6rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .portada-title {
+      font-family: var(--disp);
+      font-weight: 700;
+      font-size: clamp(1rem, 2.2vw, 2rem);
+      line-height: 1.1;
+      margin: 0;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+      white-space: nowrap;
+    }
+    .portada-dates {
+      font-family: var(--disp);
+      color: var(--gold);
+      font-size: clamp(0.6rem, 1vw, 0.9rem);
+      letter-spacing: 0.1em;
+      margin: 0;
+      white-space: nowrap;
+    }
+    .portada-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .btn-mini {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--gold-dim);
+      border-radius: 30px;
+      padding: 0.2rem 0.9rem;
+      font-size: 0.65rem;
+      color: var(--cream);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+    }
+    .btn-mini:hover { background: rgba(255,255,255,0.18); }
+
+    /* ===== MENÚ HAMBURGUESA ===== */
+    .menu-hamburguesa {
+      position: fixed;
+      top: 1.2rem;
+      left: 1.2rem;
+      z-index: 999;
+      background: var(--navy);
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      padding: 0.5rem 0.7rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      transition: background 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .menu-hamburguesa:hover {
+      background: var(--navy-2);
+    }
+    .menu-hamburguesa span {
+      display: block;
+      width: 28px;
+      height: 3px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: 0.2s;
+    }
+
+    /* ===== NAVEGACIÓN LATERAL ===== */
+    .nav-lateral {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 300px;
+      height: 100vh;
+      background: var(--navy);
+      border-right: 3px solid var(--gold);
+      padding: 2rem 1rem 1.5rem;
+      overflow-y: auto;
+      transition: left 0.35s ease;
+      z-index: 1000;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+    }
+    .nav-lateral.abierto {
+      left: 0;
+    }
+    .nav-lateral .cerrar-menu {
+      background: none;
+      border: none;
+      color: var(--cream);
+      font-size: 2.2rem;
+      line-height: 1;
+      cursor: pointer;
+      float: right;
+      margin-bottom: 1.2rem;
+      transition: 0.2s;
+    }
+    .nav-lateral .cerrar-menu:hover {
+      color: var(--gold);
+      transform: rotate(90deg);
+    }
+    .nav-lateral ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1.8rem;
+      clear: both;
+    }
+    .nav-lateral ul li {
+      border-bottom: 1px solid #2f4a5a;
+      padding: 0.4rem 0;
+    }
+    .nav-lateral ul li a {
+      display: block;
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 1.0rem;
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      transition: 0.15s;
+      font-family: 'Work Sans', sans-serif;
+      letter-spacing: 0.3px;
+    }
+    .nav-lateral ul li a:hover {
+      background: #2a4a5a;
+      color: #f5efe0;
+      padding-left: 0.9rem;
+    }
+    .nav-lateral ul li a.activo {
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .overlay-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.35);
+      z-index: 998;
+    }
+    .overlay-menu.activo {
+      display: block;
+    }
+
+    /* ===== CONTENIDO PRINCIPAL ===== */
+    .contenido {
+      background: var(--paper);
+      padding: 2rem 5vw 5rem;
+    }
+    .contenido-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      margin-bottom: 1.8rem;
+      text-align: center;
+    }
+    .contenido-header h2 {
+      font-family: var(--disp);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      color: var(--navy);
+    }
+    .contenido-header p {
+      color: var(--gray);
+      line-height: 1.6;
+      font-size: 0.95rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .context-figure {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+    .context-figure img {
+      width: 90%;
+      max-width: 1200px;
+      height: auto;
+      display: block;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: #f5efe6;
+    }
+
+    /* ===== ÁRBOL GENEALÓGICO ===== */
+    .tree-wrap {
+      background: #fff;
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      overflow-x: auto;
+    }
+    .tree-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+      min-width: 320px;
+    }
+    .gen {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .gen-label {
+      font-family: var(--disp);
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 0.3rem;
+      margin-bottom: 0.3rem;
+    }
+    .gen-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.8rem 1.5rem;
+    }
+    .tree-connector {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--line);
+      font-size: 1.2rem;
+      line-height: 1;
+      padding: 0.1rem 0;
+      user-select: none;
+    }
+    .tree-connector span {
+      display: inline-block;
+      width: 2px;
+      height: 18px;
+      background: var(--line);
+    }
+
+    /* ===== TARJETAS GIRATORIAS ===== */
+    .card-flip {
+      perspective: 900px;
+      width: var(--card-w);
+      height: var(--card-h);
+      flex: 0 0 auto;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    /* ZOOM x% AL HOVER (y también al focus para accesibilidad) */
+    .card-flip:hover {
+      transform: scale(1.5);
+      z-index: 10;
+      position: relative;
+    }
+    .card-flip.destacado {
+      width: calc(var(--card-w) * 1.3);
+      height: calc(var(--card-h) * 1.3);
+    }
+    .card-flip .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      transform-style: preserve-3d;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .card-flip:hover .card-inner,
+    .card-flip.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front,
+    .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 0.6rem;
+      text-align: center;
+      border: 1px solid var(--line);
+      background: #fcf9f5;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .card-front {
+      background: linear-gradient(145deg, #fcf9f5, #f3ede5);
+      border-color: var(--gold-dim);
+    }
+    .card-flip.destacado .card-front {
+      background: linear-gradient(145deg, #e8d9b0, #cdaa5c);
+      border-color: #b8943e;
+      box-shadow: 0 0 0 2px var(--gold), 0 8px 24px rgba(205,170,92,0.4);
+    }
+    .card-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--disp);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+      border: 2px solid var(--gold);
+      overflow: hidden;
+    }
+    .card-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .card-avatar .fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      font-family: var(--disp);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--cream);
+    }
+    .card-flip.destacado .card-avatar {
+      width: 70px;
+      height: 70px;
+      font-size: 2rem;
+      background: var(--navy);
+      border-color: var(--cream);
+      color: var(--gold);
+    }
+    .card-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      line-height: 1.2;
+      color: var(--navy);
+      word-break: break-word;
+    }
+    .card-flip.destacado .card-name {
+      font-size: 1.1rem;
+      color: var(--bg-dark);
+    }
+    .card-apodo {
+      font-size: 0.65rem;
+      color: var(--gray-light);
+      font-style: italic;
+      margin-top: 0.1rem;
+    }
+    .card-flip.destacado .card-apodo {
+      color: var(--navy);
+    }
+    .card-back {
+      transform: rotateY(180deg);
+      background: linear-gradient(145deg, #f6f0e6, #ede6da);
+      border-color: var(--gold);
+      justify-content: center;
+      gap: 0.2rem;
+      padding: 0.8rem 0.5rem;
+    }
+    .card-flip.destacado .card-back {
+      background: linear-gradient(145deg, #e0ceaa, #cdaa5c);
+      border-color: #b8943e;
+    }
+    .card-back-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--navy);
+    }
+    .card-flip.destacado .card-back-name {
+      font-size: 1rem;
+      color: var(--bg-dark);
+    }
+    .card-back-dates {
+      font-size: 0.7rem;
+      /*color: var(--black); */
+      color: var(--black); // txt
+    }
+    .card-flip.destacado .card-back-dates {
+      color: var(--navy);
+    }
+    .card-back-role {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold-dim);
+      background: rgba(255,255,255,0.4);
+      padding: 0.05rem 0.6rem;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 0.1rem;
+    }
+    .card-flip.destacado .card-back-role {
+      background: rgba(15,30,56,0.15);
+      color: var(--navy);
+    }
+    .card-back-comment {
+      font-size: 0.6rem;
+      color: var(--gray);
+      margin-top: 0.2rem;
+      line-height: 1.3;
+      max-width: 90%;
+      font-style: italic;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      padding-top: 0.3rem;
+    }
+    .card-flip.destacado .card-back-comment {
+      color: var(--bg-dark);
+      border-color: rgba(0,0,0,0.15);
+    }
+
+    /* ===== TARJETAS MODALES (botones fijos) ===== */
+    .card-flip.modal-card .card-inner {
+      transform: none !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .card-flip.modal-card .card-back {
+      display: none;
+    }
+    .card-flip.modal-card .card-front {
+      background: var(--gold);
+      border: 2px solid #b8943e;
+      border-radius: 50px;
+      padding: 0.8rem 1.5rem;
+      flex-direction: row;
+      gap: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .card-flip.modal-card .card-front:hover {
+      background: #b8943e;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+    .card-flip.modal-card .card-avatar {
+      width: 40px;
+      height: 40px;
+      background: var(--navy);
+      border-color: var(--cream);
+      font-size: 1.2rem;
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+    .card-flip.modal-card .card-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .card-flip.modal-card .card-name {
+      font-size: 1rem;
+      color: #fff;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .card-flip.modal-card .card-apodo {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.8);
+      margin-top: 0;
+      font-style: normal;
+    }
+
+    /* ===== CONECTORES ===== */
+    .spouse-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem 1rem;
+    }
+    .spouse-connector {
+      font-size: 2rem;
+      color: var(--gold-dim);
+      font-weight: 300;
+      padding: 0 0.2rem;
+    }
+    .children-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem 1.2rem;
+      margin-top: 0.4rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed var(--line);
+      width: 100%;
+    }
+    .child-label {
+      width: 100%;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray-light);
+      text-align: center;
+      margin-bottom: -0.2rem;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      animation: fadeIn 0.25s ease;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: #fff;
+      max-width: 720px;
+      width: 100%;
+      max-height: 85vh;
+      border-radius: 20px;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      overflow-y: auto;
+      position: relative;
+      animation: slideUp 0.3s ease;
+    }
+    .modal-box h2 {
+      font-family: var(--disp);
+      color: var(--navy);
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--gray);
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 0.3rem;
+    }
+    .modal-close:hover { color: var(--navy); }
+    .modal-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* --- Estilos para los items del modal con imagen --- */
+    .modal-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      background: var(--paper);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      border-left: 4px solid var(--gold);
+    }
+    .modal-item .modal-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .modal-item .modal-img {
+      max-height: 60px;
+      width: auto;
+      height: auto;
+      flex-shrink: 0;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+    .modal-item strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--navy);
+    }
+    .modal-item .dates {
+      font-size: 0.8rem;
+      color: var(--gray);
+    }
+    .modal-item .role {
+      display: inline-block;
+      background: var(--gold-dim);
+      color: #fff;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.05rem 0.6rem;
+      border-radius: 12px;
+      margin: 0.2rem 0;
+    }
+    .modal-item .comment {
+      font-size: 0.8rem;
+      color: var(--gray);
+      margin-top: 0.2rem;
+      font-style: italic;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      :root { --card-w: 140px; --card-h: 180px; }
+      .contenido { padding: 1.5rem 4vw 3rem; }
+      .tree-wrap { padding: 1.2rem 0.8rem; }
+      .card-flip.destacado { width: calc(var(--card-w) * 1.3); height: calc(var(--card-h) * 1.3); }
+      .card-avatar { width: 48px; height: 48px; font-size: 1.2rem; }
+      .card-flip.destacado .card-avatar { width: 56px; height: 56px; font-size: 1.6rem; }
+      .card-name { font-size: 0.75rem; }
+      .card-flip.destacado .card-name { font-size: 0.95rem; }
+      .card-back-name { font-size: 0.75rem; }
+      .card-back-dates { font-size: 0.6rem; }
+      .card-back-comment { font-size: 0.55rem; }
+      .gen-row { gap: 0.6rem 1rem; }
+      .portada-content { flex-direction: column; align-items: flex-start; gap: 0.2rem; padding: 0 4vw; }
+      .portada-title { font-size: clamp(0.9rem, 3.5vw, 1.4rem); white-space: normal; }
+      .portada-dates { font-size: 0.6rem; }
+      .portada-right { width: 100%; justify-content: flex-start; gap: 0.5rem; }
+      .context-figure img { width: 100%; }
+      .modal-box { padding: 1.5rem; }
+      .card-flip.modal-card .card-front {
+        padding: 0.6rem 1.2rem;
+        border-radius: 40px;
+      }
+      .card-flip.modal-card .card-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+      }
+      .card-flip.modal-card .card-name {
+        font-size: 0.85rem;
+      }
+      .menu-hamburguesa {
+        top: 1rem;
+        left: 1rem;
+        padding: 0.4rem 0.6rem;
+      }
+      .menu-hamburguesa span {
+        width: 24px;
+        height: 3px;
+      }
+      .nav-lateral {
+        width: 270px;
+        left: -290px;
+      }
+    }
+    @media (max-width: 480px) {
+      :root { --card-w: 110px; --card-h: 150px; }
+      .card-flip.destacado { width: calc(var(--card-w) * 1.3); height: calc(var(--card-h) * 1.3); }
+      .card-avatar { width: 40px; height: 40px; font-size: 1rem; }
+      .card-flip.destacado .card-avatar { width: 48px; height: 48px; font-size: 1.4rem; }
+      .card-name { font-size: 0.65rem; }
+      .card-flip.destacado .card-name { font-size: 0.8rem; }
+      .card-back-name { font-size: 0.65rem; }
+      .card-back-dates { font-size: 0.55rem; }
+      .card-back-comment { font-size: 0.5rem; }
+      .gen-row { gap: 0.4rem 0.6rem; }
+      .tree-wrap { padding: 0.8rem 0.4rem; }
+      .card-flip.modal-card .card-front {
+        padding: 0.4rem 1rem;
+        border-radius: 30px;
+        gap: 0.4rem;
+      }
+      .card-flip.modal-card .card-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+      }
+      .card-flip.modal-card .card-name {
+        font-size: 0.7rem;
+      }
+      .card-flip.modal-card .card-apodo {
+        font-size: 0.6rem;
+      }
+      .modal-item .modal-img {
+        max-height: 40px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition-duration: 0.01ms !important; }
+    }
+
+    /* ===== BOTÓN FLOTANTE ARRIBA (derecha abajo) ===== */
+    .btn-flotante {
+      position: fixed;
+      z-index: 100;
+      background: var(--navy);
+      color: var(--cream);
+      border: none;
+      border-radius: 999px;
+      padding: 0.85rem 1.3rem 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      box-shadow: 0 14px 30px -10px rgba(15,30,56,0.55);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-flotante svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--gold);
+      flex-shrink: 0;
+    }
+    .btn-flotante:hover {
+      background: var(--navy-2);
+      transform: translateY(-2px);
+    }
+    #btn-top {
+      right: 1.4rem;
+      bottom: 1.4rem;
+    }
+
+    @media (max-width: 640px) {
+      .btn-flotante span.txt { display: none; }
+      #btn-top { right: 1rem; bottom: 1rem; padding: 0.85rem; border-radius: 50%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== PORTADA ========== -->
+  <section id="portada">
+    <div class="portada-bg">
+      <picture>
+        <source media="(max-width:640px)" srcset="ins/001portadaCv.png" />
+        <img src="ins/001portadaL.png" alt="Genealogía de la Familia Trujillo"
+        onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+      </picture>
+      <div class="ph"><div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div></div>
+      <div class="portada-veil"></div>
+    </div>
+    <div class="portada-content">
+      <div class="portada-left">
+        <span class="portada-eyebrow">Historia de la República Dominicana</span>
+        <h1 class="portada-title">Genealogía</h1>
+        <h3 class="portada-dates">Tiranía Trujillista 1930-1961</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MENÚ HAMBURGUESA ========== -->
+  <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- ========== MENÚ LATERAL ========== -->
+  <nav class="nav-lateral" id="menuLateral" role="navigation">
+    <button class="cerrar-menu" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button>
+    <ul>
+      <li><a href="ind0.HTML">INICIO</a></li>
+      <li><a href="lt_ctx.HTML">Línea de Tiempo</a></li>
+      <li><a href="bio_tru.HTML">Reseña Biográfica</a></li>
+      <li><a href="gen_tru.HTML" class="activo">Genealogía</a></li>
+      <li><a href="antes_tru.HTML">Antecedentes</a></li>
+      <li><a href="glpe30.HTML">Golpe de Estado 1930</a></li>
+      <li><a href="maq_tir.HTML">Maquinaria de la Tiranía</a></li>
+      <li><a href="etap_tir.HTML">Etapas de la Tiranía</a></li>
+      <li><a href="elec_tru.HTML">Elecciones</a></li>
+      <li><a href="reb_tru.HTML">Rebeldes</a></li>
+      <li><a href="casos_tru.HTML">Casos Famosos</a></li>
+      <li><a href="ultnoche.HTML">Última Noche</a></li>
+      <li><a href="destru.HTML">Destrujillización</a></li>
+      <li><a href="galr.HTML">Galería</a></li>
+      <li><a href="glos.HTML">Glosario</a></li>
+      <li><a href="not.HTML">Créditos y Fuentes</a></li>
+    </ul>
+  </nav>
+
+  <!-- ========== OVERLAY ========== -->
+  <div class="overlay-menu" id="overlayMenu"></div>
+
+  <!-- ========== CONTENIDO ========== -->
+  <div class="contenido">
+
+    <figure class="context-figure">
+      <img src="ins/genes_trujillo.gif" alt="Árbol genealógico de la familia Trujillo (imagen original)" onerror="this.parentElement.style.display='none'">
+    </figure>
+
+    <div class="contenido-header">
+      <p>Analiza la estructura familiar del clan Trujillo, con sus matrimonios, descendencia y relaciones.</p>
+      <p style="font-size:0.8rem; color:var(--gray-light);"> Selecciona una tarjeta para revelar datos sobre el personaje</p>
+    </div>
+
+    <div class="tree-wrap">
+      <div class="tree-grid">
+
+        <!-- ===== GENERACIÓN 1: ABUELOS ===== -->
+        <div class="gen">
+          <div class="gen-label">▸ ABUELOS DEL DICTADOR</div>
+          <div class="gen-row">
+            <!-- José Trujillo Monagas -->
+            <div class="card-flip" data-person="jose-trujillo-monagas">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">ABUELO PATERNO</div>
+                  <div class="card-avatar"><img src="ins/siluetaM.png" alt="José Trujillo Monagas" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>JM</span>'"><span class="fallback" style="display:none;">JM</span></div>
+                  <div class="card-name">José Trujillo Monagas</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">José Trujillo Monagas</div>
+                  <div class="card-back-dates">(nacido en España)</div>
+                  <div class="card-back-role">Abuelo paterno del Dictador</div>
+                  <div class="card-back-comment">Originario de España, finalmente se estableció en la República Dominicana.  Padre de José Trujillo Valdez.</div>
+                </div>
+              </div>
+            </div>
+<span class="spouse-connector">✧</span>
+            <!-- Silveria Valdez -->
+            <div class="card-flip" data-person="silveria-valdez">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">ABUELA PATERNA</div>
+                  <div class="card-avatar"><img src="ins/siluetaF.png" alt="Silveria Valdez" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>SV</span>'"><span class="fallback" style="display:none;">SV</span></div>
+                  <div class="card-name">Silveria Valdez</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Silveria Valdez</div>
+                  <div class="card-back-dates">(datos no disponibles)</div>
+                  <div class="card-back-role">Abuela paterna del Dictador</div>
+                  <div class="card-back-comment">Madre de José Trujillo Valdez.</div>
+                </div>
+              </div>
+            </div>
+            <!-- Luisa Ercina Chevalier -->
+            <div class="card-flip" data-person="luisa-ercina-chevalier">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">ABUELA MATERNA</div>
+                  <div class="card-avatar"><img src="ins/siluetaF.png" alt="Luisa Ercina Chevalier" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>LC</span>'"><span class="fallback" style="display:none;">LC</span></div>
+                  <div class="card-name">Luisa Ercina Chevalier</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Luisa Ercina Chevalier</div>
+                  <div class="card-back-dates">(datos no disponibles)</div>
+                  <div class="card-back-role">Abuela materna del Dictador</div>
+                  <div class="card-back-comment">Luisa Ercina Chevalier se dedicó a la docencia y fue madre de Altagracia Julia Molina.  Sus padres eran de origen francés y haitiano. Su madre se llamó Eleonore Juliette "Diyetta" Chevalier Moreau (bisabuela de Trujillo). </div>
+                </div>
+              </div>
+            </div>
+<span class="spouse-connector">✧</span>
+            <!-- Pedro Molina -->
+            <div class="card-flip" data-person="pedro-molina">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">ABUELO MATERNO</div>
+                  <div class="card-avatar"><img src="ins/siluetaM.png" alt="Pedro Molina" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>PM</span>'"><span class="fallback" style="display:none;">PM</span></div>
+                  <div class="card-name">Pedro Molina</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Pedro Molina</div>
+                  <div class="card-back-dates">(datos no disponibles)</div>
+                  <div class="card-back-role">Abuelo materno del Dictador</div>
+                  <div class="card-back-comment">Padre de Altagracia Julia Molina.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ===== GENERACIÓN 2: PADRES ===== -->
+        <div class="gen">
+          <div class="gen-label">▸ PADRES DEL DICTADOR</div>
+          <div class="gen-row">
+            <div class="card-flip" data-person="jose-trujillo-valdez">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">PADRE</div>
+                  <div class="card-avatar"><img src="ins/pepeTRU.png" alt="José Trujillo Valdez" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>JV</span>'"><span class="fallback" style="display:none;">JV</span></div>
+                  <div class="card-name">José Trujillo Valdez</div>
+                  <div class="card-apodo">«Don Pepe»</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">José Trujillo Valdez</div>
+                  <div class="card-back-dates">25.Jul.1864 – 10.Jun.1936</div>
+                  <div class="card-back-role">Padre biológico del Dictador</div>
+                  <div class="card-back-comment">En su juventud, "Don Pepe" se involucró en varios hechos delictivos.  La propaganda lo promovió falsamente como un ilustre ciudadano.  Tenía una conducta violenta.  El dictador lo hizo diputado y se le promovió falsamente como el "Legislador de la cordialidad"</div>
+                </div>
+              </div>
+            </div>
+            <span class="spouse-connector">✧</span>
+            <div class="card-flip" data-person="altagracia-molina">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">MADRE</div>
+                  <div class="card-avatar"><img src="ins/mamaTRU.png" alt="Altagracia Julia Molina Chevalier" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>AM</span>'"><span class="fallback" style="display:none;">AM</span></div>
+                  <div class="card-name">Altagracia Julia Molina Chevalier</div>
+                  <div class="card-apodo">«Mamá Julia o Excelsa matrona»</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Altagracia Julia Molina Chevalier</div>
+                  <div class="card-back-dates">25.Ene.1865 – 30.Abr.1964</div>
+                  <div class="card-back-role">Madre del Dictador</div>
+                  <div class="card-back-comment">Madre de los 7 hermanos Trujillo Molina. Desempeñó un rol importante dentro de la dinámica familiar debido a la ausencia del padre.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ===== GENERACIÓN 3: HERMANOS ===== -->
+        <div class="gen">
+          <div class="gen-label">▸ HERMANOS DEL DICTADOR</div>
+          <div class="gen-row">
+            <!-- Flérida Marina -->
+            <div class="card-flip" data-person="flerida-marina">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">HERMANA</div>
+                  <div class="card-avatar"><img src="ins/siluetaF.png" alt="Flérida Marina" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>FM</span>'"><span class="fallback" style="display:none;">FM</span></div>
+                  <div class="card-name">Flérida Marina</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Flérida Marina Trujillo Molina</div>
+                  <div class="card-back-dates">10.Ago.1888 – 13.Feb.1976</div>
+                  <div class="card-back-role">Hermana mayor</div>
+                  <div class="card-back-comment">La mayor de los 7 hermanos Trujillo Molina</div>
+                </div>
+              </div>
+            </div>
+            <!-- Virgilio -->
+            <div class="card-flip" data-person="virgilio">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">HERMANO</div>
+                  <div class="card-avatar"><img src="ins/siluetaM.png" alt="Virgilio Trujillo Molina" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>VT</span>'"><span class="fallback" style="display:none;">VT</span></div>
+                  <div class="card-name">Virgilio Trujillo Molina</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Virgilio Trujillo Molina</div>
+                  <div class="card-back-dates">24.Jul.1889 – 29.Jul.1987</div>
+                  <div class="card-back-role">Hermano</div>
+                  <div class="card-back-comment">Hermano mayor del dictador. Tenía un nivel más alto de educación formal y un perfil más diplomático. Vivió 98 años, el más longevo de los 7 hermanos Trujillo Molina</div>
+                </div>
+              </div>
+            </div>
+            <!-- Rafael Leónidas (destacado) -->
+            <div class="card-flip destacado" data-person="rafael-leonidas">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-avatar"><img src="ins/rafaelTrujillo.png" alt="Rafael Leónidas Trujillo Molina" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>RL</span>'"><span class="fallback" style="display:none;">RL</span></div>
+                  <div class="card-name">★ Rafael Leónidas Trujillo Molina</div>
+                  <div class="card-apodo">Tirano y dictador</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Rafael Leónidas Trujillo Molina</div>
+                  <div class="card-back-dates">24.Oct.1891 – 30.Mayo.1961</div>
+                  <div class="card-back-role">Tirano y dictador</div>
+                  <div class="card-back-comment">Gobernó la República Dominicana con mano de hierro durante 31 años.  Murió a los 69 años.</div>
+                </div>
+              </div>
+            </div>
+            <!-- Rosa María Julieta -->
+            <div class="card-flip" data-person="rosa-maria-julieta">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">HERMANA</div>
+                  <div class="card-avatar"><img src="ins/siluetaF.png" alt="Rosa María Julieta" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>RJ</span>'"><span class="fallback" style="display:none;">RJ</span></div>
+                  <div class="card-name">Rosa María Julieta</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Rosa María Julieta Trujillo Molina</div>
+                  <div class="card-back-dates">5.Mar.1893 – 23.Oct.1980</div>
+                  <div class="card-back-role">Hermana</div>
+                  <div class="card-back-comment">Hermana de Rafael.</div>
+                </div>
+              </div>
+            </div>
+            <!-- José Arismendy (Petán) -->
+            <div class="card-flip" data-person="jose-arismendy">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">HERMANO</div>
+                  <div class="card-avatar"><img src="ins/petanTRU.png" alt="José Arismendy" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>JA</span>'"><span class="fallback" style="display:none;">JA</span></div>
+                  <div class="card-name">José Arismendy Trujillo Molina</div>
+                  <div class="card-apodo">«Petán»</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">José Arismendy Trujillo Molina</div>
+                  <div class="card-back-dates">4.Oct.1895 – 6.Mayo.1970</div>
+                  <div class="card-back-role">Hermano</div>
+                  <div class="card-back-comment">Fue uno de los hermanos más influyentes, temidos y excéntricos del dictador. Operó como "dueño y señor" de Bonao.  Fue dueño de la radiotelevisora mas importante de RD. Falleció en el exilio el 6 de mayo de 1969 en Carolina, Puerto Rico</div>
+                </div>
+              </div>
+            </div>
+            <!-- Romeo Amable (Pipí) -->
+            <div class="card-flip" data-person="romeo-amable">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">HERMANO</div>
+                  <div class="card-avatar"><img src="ins/siluetaM.png" alt="Romeo Amable" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>RA</span>'"><span class="fallback" style="display:none;">RA</span></div>
+                  <div class="card-name">Romeo Amable Trujillo Molina</div>
+                  <div class="card-apodo">«Pipí»</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Romeo Amable Trujillo Molina</div>
+                  <div class="card-back-dates">14.Ago.1896 – 19.Sep.1970</div>
+                  <div class="card-back-role">Hermano</div>
+                  <div class="card-back-comment">Hermano de Rafael.</div>
+                </div>
+              </div>
+            </div>
+            <!-- Aníbal Julio -->
+            <div class="card-flip" data-person="anibal-julio">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">HERMANO</div>
+                  <div class="card-avatar"><img src="ins/siluetaM.png" alt="Aníbal Julio" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>AJ</span>'"><span class="fallback" style="display:none;">AJ</span></div>
+                  <div class="card-name">Aníbal Julio Trujillo Molina</div>
+                  <div class="card-apodo">«Bonsito»</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Aníbal Julio Trujillo Molina</div>
+                  <div class="card-back-dates">18.Oct.1898 – 2.Dic.1948</div>
+                  <div class="card-back-role">Hermano</div>
+                  <div class="card-back-comment">Aníbal "Bonsito" es recordado por sus problemas de salud mental (esquizofrenia), su inestabilidad y su suicidio en diciembre de 1948.</div>
+                </div>
+              </div>
+            </div>
+            <!-- Nieves Luisa -->
+            <div class="card-flip" data-person="nieves-luisa">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">HERMANA</div>
+                  <div class="card-avatar"><img src="ins/siluetaF.png" alt="Nieves Luisa" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>NL</span>'"><span class="fallback" style="display:none;">NL</span></div>
+                  <div class="card-name">Nieves Luisa Trujillo Molina</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Nieves Luisa Trujillo Molina</div>
+                  <div class="card-back-dates">4.Ago.1900 – 25.Ene.1977</div>
+                  <div class="card-back-role">Hermana</div>
+                  <div class="card-back-comment">Hermana de Rafael.</div>
+                </div>
+              </div>
+            </div>
+            <!-- Pedro Vitelio (Pedrito) -->
+            <div class="card-flip" data-person="pedro-vitelio">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">HERMANO</div>
+                  <div class="card-avatar"><img src="ins/siluetaM.png" alt="Pedro Vitelio" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>PV</span>'"><span class="fallback" style="display:none;">PV</span></div>
+                  <div class="card-name">Pedro Vitelio Trujillo Molina</div>
+                  <div class="card-apodo">«Pedrito»</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Pedro Vitelio Trujillo Molina</div>
+                  <div class="card-back-dates">27.Ene.1902 – 14.Mar.1981</div>
+                  <div class="card-back-role">Hermano</div>
+                  <div class="card-back-comment">Apodado "Pedrito".</div>
+                </div>
+              </div>
+            </div>
+            <!-- Ofelia Japonesa -->
+            <div class="card-flip" data-person="ofelia-japonesa">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">HERMANA</div>
+                  <div class="card-avatar"><img src="ins/siluetaF.png" alt="Ofelia Japonesa" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>OJ</span>'"><span class="fallback" style="display:none;">OJ</span></div>
+                  <div class="card-name">Ofelia Japonesa Trujillo Molina</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Ofelia Japonesa Trujillo Molina</div>
+                  <div class="card-back-dates">26.Mayo.1905 – 4.Feb.1978</div>
+                  <div class="card-back-role">Hermana</div>
+                  <div class="card-back-comment">Hermana de Rafael.</div>
+                </div>
+              </div>
+            </div>
+            <!-- Héctor Bienvenido (Negro) -->
+            <div class="card-flip" data-person="hector-bienvenido">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-name">HERMANO</div>
+                  <div class="card-avatar"><img src="ins/negroTRU.png" alt="Héctor Bienvenido" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>HB</span>'"><span class="fallback" style="display:none;">HB</span></div>
+                  <div class="card-name">Héctor Bienvenido Trujillo Molina</div>
+                  <div class="card-apodo">«Negro»</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Héctor Bienvenido Trujillo Molina</div>
+                  <div class="card-back-dates">6.Abr.1908 – 19.Oct.2002</div>
+                  <div class="card-back-role">Hermano</div>
+                  <div class="card-back-comment">Negro, sirvió como "presidente títere" (1952 al 1960). En 1961, huyó al exilio y finalmente falleció en Miami.</div>
+                </div>
+              </div>
+            </div>
+            <!-- Tarjeta modal: OTROS HERMANOS (botón) -->
+            <div class="card-flip modal-card" data-modal="hermanos">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div><strong>Otros Hermanos del tirano y dictador</strong>
+                  <p style="font-size: 0.6rem;">(hijos de Pepe Trujillo)</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ===== GENERACIÓN 4: MUJERES E HIJOS ===== -->
+        <div class="gen">
+          <div class="gen-label">▸ MUJERES DEL DICTADOR</div>
+          <div class="spouse-group">
+
+            <div class="card-flip destacado" data-person="rafael-leonidas">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-avatar"><img src="ins/rafaelTrujillo.png" alt="Rafael Leónidas Trujillo Molina" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>RL</span>'"><span class="fallback" style="display:none;">RL</span></div>
+                  <div class="card-name">★ Rafael Leónidas Trujillo Molina</div>
+                  <div class="card-apodo">Tirano y dictador</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Rafael Leónidas Trujillo Molina</div>
+                  <div class="card-back-dates">24.Oct.1891 – 30.Mayo.1961</div>
+                  <div class="card-back-role">Tirano y dictador</div>
+                  <div class="card-back-comment">Gobernó la República Dominicana con mano de hierro durante 31 años</div>
+                </div>
+              </div>
+            </div>
+
+        <!--  <span class="spouse-connector">✧</span>  -->
+
+            <div class="card-flip" data-person="aminta-ledesma">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-avatar"><img src="ins/siluetaF.png" alt="Aminta Ledesma Pérez" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>AL</span>'"><span class="fallback" style="display:none;">AL</span></div>
+                  <div class="card-name">Aminta Ledesma</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Aminta Ledesma Pérez</div>
+                  <!-- <div class="card-back-dates"> ? – ? </div>  -->
+                  <div class="card-back-role">1ra esposa</div>
+                  <div class="card-back-comment">Primera esposa de Rafael, madre de sus primeras hijas: Julia Genoveva y Flor de Oro</div>
+                </div>
+              </div>
+            </div>
+
+        <!--  <span class="spouse-connector">✧</span>  -->
+
+            <div class="card-flip" data-person="bienvenida-ricardo">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-avatar"><img src="ins/bdaRIC.png" alt="Bienvenida Ricardo" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>AL</span>'"><span class="fallback" style="display:none;">AL</span></div>
+                  <div class="card-name">Bienvenida Ricardo</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Bienvenida Inocencia Ricardo</div>
+                  <!-- <div class="card-back-dates"> ? – ? </div>  -->
+                  <div class="card-back-role">2da esposa</div>
+                  <div class="card-back-comment">La "montecristeña" Bienvenida, era pariente de Joaquín Balaguer Ricardo. Trujillo estuvo casado con ella durante dos años sin procrear hijos. Durante ese tiempo vivió en unión libre con María Martínez Alba. Luego del divorcio con Bienvenida, procreó con ella a Odette, mientras estaba casado con María Martínez.</div>
+                </div>
+              </div>
+            </div>
+
+        <!--  <span class="spouse-connector">✧</span>  -->
+
+            <div class="card-flip" data-person="maria-martinez-alba">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-avatar"><img src="ins/marMAR.png" alt="María Martínez Alba" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>MM</span>'"><span class="fallback" style="display:none;">MM</span></div>
+                  <div class="card-name">María Martínez Alba</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">María Martínez Alba</div>
+                  <div class="card-back-dates">26.Ago.1899 – 14.Mayo.1989 </div>
+                  <div class="card-back-role">3ra esposa</div>
+                  <div class="card-back-comment">Conocida como "La españolita" por ser hija de inmigrantes españoles. Fue la madre de "Ramfis", "Angelita" y Radhamés. Luego de 1961 se exilió y falleció en Panamá. Era de caraácter fuerte y ejerció presión sobre el dictador</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tarjeta modal: OTRAS RELACIONES (botón) integrada en el mismo grupo -->
+
+            <div class="card-flip modal-card" data-modal="relaciones">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div><strong>Otras Relaciones</strong>
+                  <p style="font-size: 0.6rem;">(amantes del Tirano y Dictador)</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- HIJOS DEL TIRANO Y DICTADOR  -->
+          <div class="gen-label">▸ HIJOS DEL DICTADOR</div>
+          <div class="children-wrap">
+            <!-- Ramfis -->
+            <div class="card-flip" data-person="JuliaG">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-avatar"><img src="ins/siluetaF.png" alt="Julia Genoveva Trujillo" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>RF</span>'"><span class="fallback" style="display:none;">RF</span></div>
+                  <div class="card-name">Julia Genoveva</div>
+                  <div class="card-apodo"> </div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Julia Genoveva Trujillo Ledesma</div>
+                  <div class="card-back-dates">1914 – 1915</div>
+                  <div class="card-back-role">hija de Aminta Ledesma</div>
+                  <div class="card-back-comment">Julia Genoveva Trujillo Ledesma, primer hija del dictador Rafael Leónidas Trujillo y su primera esposa Aminta Ledesma, nació en 1914 y falleció en 1915 en San Cristóbal. Tenía menos de un año de edad.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-flip" data-person="Flordeoro">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-avatar"><img src="ins/florTRU.png" alt="Flor de Oro Trujillo" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>RF</span>'"><span class="fallback" style="display:none;">RF</span></div>
+                  <div class="card-name">Flor de Oro</div>
+                  <div class="card-apodo">  </div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Flor de Oro Trujillo Ledesma</div>
+                  <div class="card-back-dates">5.Jun.1929 – 15.Feb.1978</div>
+                  <div class="card-back-role">hija de Aminta Ledesma</div>
+                  <div class="card-back-comment">Fue la hija mayor del dictador. Su vida estuvo marcada por el lujo, el escándalo y el control de su padre. Se casó 8 veces, su primer matrimonio fue con Porfirio Rubirosa.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-flip" data-person="Odette">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-avatar"><img src="ins/siluetaF.png" alt="Odette Altagracia Trujillo" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>RF</span>'"><span class="fallback" style="display:none;">RF</span></div>
+                  <div class="card-name">Odette</div>
+                  <div class="card-apodo">  </div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Odette Altagracia Julia Lourdes Mercedes Trujillo Ricardo</div>
+                  <div class="card-back-dates">1936 – ?</div>
+                  <div class="card-back-role">hija de Bienvenida Ricardo</div>
+                  <div class="card-back-comment">Hija del dictador dominicano con Bienvenida Ricardo, cuando estaba casado con María Martínez. Odette tuvo 4 hijos y llevó una vida discreta.</div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Ramfis -->
+            <div class="card-flip" data-person="Ramfis">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-avatar"><img src="ins/ramfisTRU.png" alt="Rafael Leonidas Trujillo" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>RF</span>'"><span class="fallback" style="display:none;">RF</span></div>
+                  <div class="card-name">Rafael Leonidas</div>
+                  <div class="card-apodo">«Ramfis»</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Rafael Leonidas Trujillo Martínez</div>
+                  <!-- <div class="card-apodo">«Ramfis»</div> -->
+                  <div class="card-back-dates">5.Jun.1929 – 26.Dic.1969</div>
+                  <div class="card-back-role">hijo de María Martínez Alba</div>
+                  <div class="card-back-comment">Nació cuando Trujillo estaba casado con Bienvenida Ricardo.  Ramfis se distinguió por sus excesos, fue coronel a los 4 años y general a los 9. En 1961, lideró persecuciones y el asesinato de los ajusticiadores antes de huir a España, donde murió en un accidente.</div>
+                </div>
+              </div>
+            </div>
+            <!-- Angelita -->
+            <div class="card-flip" data-person="angelita">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-avatar"><img src="ins/angelitaTRU.png" alt="María de los Ángeles Trujillo" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>AT</span>'"><span class="fallback" style="display:none;">AT</span></div>
+                  <div class="card-name">María de los Ángeles</div>
+                  <div class="card-apodo">«Angelita»</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">María de los Ángeles Trujillo Martínez</div>
+                  <!-- <div class="card-apodo">«Angelita»</div> -->
+                  <div class="card-back-dates">10.Jun.1939 - 21.Ago.2023</div>
+                  <div class="card-back-role">hija de María Martínez Alba</div>
+                  <div class="card-back-comment">Hija predilecta del dictador dominicano. Creció rodeada de lujos extremos, llegando a ser coronada "reina" en 1955. Al morir su padre en 1961, vivió exiliada en España y posteriormente en Miami, donde falleció</div>
+                </div>
+              </div>
+            </div>
+            <!-- Radhamés -->
+            <div class="card-flip" data-person="radhames">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div class="card-avatar"><img src="ins/radTRU.png" alt="Leonídas Radhamés Trujillo" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=fallback>RT</span>'"><span class="fallback" style="display:none;">RT</span></div>
+                  <div class="card-name">Leonídas Radhamés</div>
+                </div>
+                <div class="card-back">
+                  <div class="card-back-name">Leonidas Radhamés Trujillo Martínez</div>
+                  <div class="card-back-dates">1.Dic.1941 – 14.Ago.1995</div>
+                  <div class="card-back-role">hijo de María Martínez Alba</div>
+                  <div class="card-back-comment">Nació en 1942. Luego de 1961, vivió exiliado en Europa. Se involucró con el Cartel de Cali.  Fue asesinado en 1994 a los 51 años.  Su muerte salió a relucir durante los juicios contra los hermanos Rodríguez Orejuela del Cartel de Cali en Miami.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- OTROS HIJOS (tarjeta modal) -->
+            <div class="card-flip modal-card" data-modal="hijos">
+              <div class="card-inner">
+                <div class="card-front">
+                  <div><strong>Otros Hijos del tirano y dictador</strong>
+                  <p style="font-size: 0.6rem;">(hijos del Tirano y Dictador)</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <!-- ===== NOTAS FINALES ===== -->
+        <div style="font-size:0.75rem; color:var(--gray); text-align:center; border-top:1px solid var(--line); padding-top:1rem; margin-top:0.5rem;">
+          <p>Documento publicado por vez primera el <strong>3 de noviembre de 1995</strong> en el <em>Periódico Hoy (hoy.com.do)</em>.</p>
+          <p style="margin-top:0.2rem;">Diseño adaptado a partir del árbol genealógico original · EDUpunto.com</p>
+        </div>
+
+      </div><!-- /tree-grid -->
+    </div><!-- /tree-wrap -->
+
+  </div><!-- /contenido -->
+
+  <!-- ========== MODALES ========== -->
+  <div class="modal-overlay" id="modal-hermanos">
+    <div class="modal-box">
+      <h2>Otros Hermanos - hijos de Pepe Trujillo<button class="modal-close" data-close="modal-hermanos">&times;</button></h2>
+      <div class="modal-list" id="lista-hermanos"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-hijos">
+    <div class="modal-box">
+      <h2>Otros hijos del tirano y dictador<button class="modal-close" data-close="modal-hijos">&times;</button></h2>
+      <div class="modal-list" id="lista-hijos"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-relaciones">
+    <div class="modal-box">
+      <h2>Otras relaciones del tirano y dictador<button class="modal-close" data-close="modal-relaciones">&times;</button></h2>
+      <div class="modal-list" id="lista-relaciones"></div>
+    </div>
+  </div>
+
+  <!-- ========== BOTÓN ARRIBA (derecha abajo) ========== -->
+  <button id="btn-top" class="btn-flotante" aria-label="Volver arriba">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+    <span class="txt">Arriba</span>
+  </button>
+
+  <!-- ========== SCRIPT ========== -->
+  <script>
+    // Botón "Arriba"
+    document.getElementById('btn-top').addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Tarjetas giratorias (toggle con clic)
+    const cards = document.querySelectorAll('.card-flip:not(.modal-card)');
+    cards.forEach(card => {
+      card.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.classList.toggle('flipped');
+      });
+    });
+
+    // Datos para los modales
+    const data = {
+      hermanos: [
+        { nombre: 'Julián Nivar', apodo: '«Juliancito»', fecha: '(Murió de 105 años)', rol: 'Familiar', comentario: ' ' },
+        { nombre: 'Aníbal Trujillo', apodo: '«Trujillito»', fecha: '', rol: 'Familiar', comentario: 'Existieron 2 hermanos con el nombre de Aníbal: «Bonsito» y «Trujillito»' },
+        { nombre: 'Felipe Jacobo', apodo: '', fecha: '', rol: 'Familiar', comentario: '' },
+        { nombre: 'Héctor Cabral', apodo: '«Papito»', fecha: 'nació en 1936', rol: 'Familiar', comentario: '' },
+        { nombre: 'Luis Rafael', apodo: '«Nene»', fecha: 'n. 21/Ene/1936', rol: 'Familiar', comentario: '' },
+        { nombre: 'Milagros Ortiz', apodo: '', fecha: 'nació en 1936', rol: 'Familiar', comentario: '' },
+        { nombre: 'Josefina Báez', apodo: '', fecha: 'nació en 1936', rol: 'Familiar', comentario: '' },
+        { nombre: 'Mélida', apodo: '', fecha: '', rol: 'Familiar', comentario: '' }
+      ],
+      hijos: [
+        { nombre: 'Yolanda Trujillo', apodo: '«Landy»', fecha: '1939 - ?', rol: 'hija (Lina Lovatón)', comentario: '' },
+        { nombre: 'Rafael Trujillo', apodo: '«Randy»', fecha: '20.Jun.1943 - ?', rol: 'hijo (Lina Lovatón)', comentario: '' },
+        { nombre: 'Elsa Julia', apodo: '', fecha: '1946 - ?', rol: 'hijo (Elsa Bermúdez)', comentario: '' },
+        { nombre: 'Bernardette', apodo: '', fecha: '1952 - ?', rol: 'hijo (Norma Meinardo)', comentario: '' }
+      ],
+      relaciones: [
+        { 
+          nombre: 'Lina Lovatón', 
+          apodo: '', 
+          fecha: '', 
+          rol: 'Amante', 
+          comentario: 'Madre de Randy y Landy. Fue la figura femenina más destacada y comentada dentro de los amorios de Trujillo, debido a su prolongada relación extramarital.',
+          imagen: 'ins/linaLOV.png'   // <--- Imagen añadida aquí
+        },
+        { nombre: 'Elsa Bermúdez', apodo: '', fecha: '', rol: 'Amante', comentario: 'Madre de Elsa Julia oriunda de San Pedro de Macorís.' },
+        { nombre: 'Norma Meinardo', apodo: '', fecha: '', rol: 'Amante', comentario: 'Amante de Rafael, madre de Bernardette' },
+        { nombre: 'Varias efímeras con las cuales no tuvo hijos', apodo: '', fecha: '', rol: 'Amante', comentario: ' ' }
+      ]
+    };
+
+    // Renderizar listas en los modales
+    function renderModal(listId, items) {
+      const container = document.getElementById(listId);
+      if (!container) return;
+      container.innerHTML = items.map(item => {
+        const textHtml = `
+          <strong>${item.nombre} ${item.apodo ? '– ' + item.apodo : ''}</strong>
+          ${item.fecha ? `<div class="dates">${item.fecha}</div>` : ''}
+          ${item.rol ? `<div class="role">${item.rol}</div>` : ''}
+          ${item.comentario ? `<div class="comment">${item.comentario}</div>` : ''}
+        `;
+        const imgHtml = item.imagen 
+          ? `<img class="modal-img" src="${item.imagen}" alt="${item.nombre}" onerror="this.style.display='none'">`
+          : '';
+        return `
+          <div class="modal-item">
+            <div class="modal-text">${textHtml}</div>
+            ${imgHtml}
+          </div>
+        `;
+      }).join('');
+    }
+
+    renderModal('lista-hermanos', data.hermanos);
+    renderModal('lista-hijos', data.hijos);
+    renderModal('lista-relaciones', data.relaciones);
+
+    // Abrir modal al hacer clic en tarjeta modal
+    document.querySelectorAll('.modal-card').forEach(card => {
+      card.addEventListener('click', function(e) {
+        const modalId = this.dataset.modal;
+        if (modalId) {
+          const modal = document.getElementById('modal-' + modalId);
+          if (modal) modal.classList.add('active');
+        }
+      });
+    });
+
+    // Cerrar modales con botón de cierre o clic en overlay
+    document.querySelectorAll('.modal-close').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const modal = document.getElementById(this.dataset.close);
+        if (modal) modal.classList.remove('active');
+      });
+    });
+
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+      });
+    });
+
+    // Cerrar con tecla ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+      }
+    });
+
+    // ===== MENÚ HAMBURGUESA (toggle + overlay) =====
+    (function() {
+      const btnHamburguesa = document.getElementById('btnHamburguesa');
+      const menuLateral = document.getElementById('menuLateral');
+      const btnCerrarMenu = document.getElementById('btnCerrarMenu');
+      const overlayMenu = document.getElementById('overlayMenu');
+
+      function abrirMenu() {
+        menuLateral.classList.add('abierto');
+        overlayMenu.classList.add('activo');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function cerrarMenu() {
+        menuLateral.classList.remove('abierto');
+        overlayMenu.classList.remove('activo');
+        document.body.style.overflow = '';
+      }
+
+      if (btnHamburguesa) {
+        btnHamburguesa.addEventListener('click', function(e) {
+          e.stopPropagation();
+          abrirMenu();
+        });
+      }
+
+      if (btnCerrarMenu) {
+        btnCerrarMenu.addEventListener('click', function(e) {
+          e.stopPropagation();
+          cerrarMenu();
+        });
+      }
+
+      if (overlayMenu) {
+        overlayMenu.addEventListener('click', function() {
+          cerrarMenu();
+        });
+      }
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          cerrarMenu();
+        }
+      });
+
+      const enlacesMenu = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
+      enlacesMenu.forEach(function(enlace) {
+        enlace.addEventListener('click', function() {
+          cerrarMenu();
+        });
+      });
+
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          if (window.innerWidth > 900 && menuLateral.classList.contains('abierto')) {
+            cerrarMenu();
+          }
+        }, 200);
+      });
+    })();
+
+    console.log('Árbol genealógico con tarjetas giratorias, zoom y modales cargado.');
+  </script>
+
+</body>
+</html>

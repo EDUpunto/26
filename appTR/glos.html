@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Glosario</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ----- reset & base (tomado de lt_ctx.html) ----- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Work Sans', sans-serif;
+      background: #faf8f4;
+      color: #0f1e38;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    img {
+      max-width: 100%;
+      display: block;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    :root {
+      --bg-dark: #15130f;
+      --bg-dark-2: #211d17;
+      --cream: #f2ead2;
+      --gold: #cdaa5c;
+      --gold-dim: #8d7745;
+      --navy: #0f1e38;
+      --navy-2: #16294a;
+      --orange: #e8592a;
+      --orange-dim: #c94a20;
+      --gray: #5c6472;
+      --gray-light: #8a91a0;
+      --paper: #faf8f4;
+      --line: #e7e2d6;
+      --shadow: 0 18px 40px -18px rgba(15, 30, 56, 0.35);
+      --radius: 14px;
+      --disp: 'Cinzel', serif;
+      --body: 'Work Sans', sans-serif;
+    }
+
+    /* ========== PORTADA (fija) ========== */
+    #portada {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 15vh;
+      min-height: 80px;
+      width: 100%;
+      background: var(--bg-dark);
+      color: var(--cream);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+      z-index: 300;
+      box-shadow: 0 12px 30px -14px rgba(0,0,0,0.6);
+    }
+    .portada-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .portada-bg picture,
+    .portada-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .portada-bg .ph {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: #2a2520;
+      color: var(--gold-dim);
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 1rem;
+    }
+    .portada-bg .ph b {
+      display: block;
+      color: var(--cream);
+      margin-bottom: 0.25rem;
+    }
+    .portada-veil {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,
+          rgba(21, 19, 15, 0.10) 0%,
+          rgba(21, 19, 15, 0.35) 45%,
+          rgba(21, 19, 15, 0.85) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .portada-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 5vw;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .portada-left {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .portada-eyebrow {
+      letter-spacing: 0.25em;
+      font-size: 0.6rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .portada-title {
+      font-family: var(--disp);
+      font-weight: 700;
+      font-size: clamp(1rem, 2.2vw, 2rem);
+      line-height: 1.1;
+      margin: 0;
+      text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+      white-space: nowrap;
+    }
+    .portada-dates {
+      font-family: var(--disp);
+      color: var(--gold);
+      font-size: clamp(0.6rem, 1vw, 0.9rem);
+      letter-spacing: 0.1em;
+      margin: 0;
+      white-space: nowrap;
+    }
+    .portada-divider,
+    .portada-lede {
+      display: none;
+    }
+    .portada-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .btn-mini {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--gold-dim);
+      border-radius: 30px;
+      padding: 0.2rem 0.9rem;
+      font-size: 0.65rem;
+      color: var(--cream);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+    }
+    .btn-mini:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    /* ========== MENÚ HAMBURGUESA ========== */
+    .menu-hamburguesa {
+      position: fixed;
+      top: 1.2rem;
+      left: 1.2rem;
+      z-index: 999;
+      background: var(--navy);
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      padding: 0.5rem 0.7rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      transition: background 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .menu-hamburguesa:hover {
+      background: var(--navy-2);
+    }
+    .menu-hamburguesa span {
+      display: block;
+      width: 28px;
+      height: 3px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: 0.2s;
+    }
+
+    /* ===== NAVEGACIÓN LATERAL ===== */
+    .nav-lateral {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 300px;
+      height: 100vh;
+      background: var(--navy);
+      border-right: 3px solid var(--gold);
+      padding: 2rem 1rem 1.5rem;
+      overflow-y: auto;
+      transition: left 0.35s ease;
+      z-index: 1000;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+    }
+    .nav-lateral.abierto {
+      left: 0;
+    }
+    .nav-lateral .cerrar-menu {
+      background: none;
+      border: none;
+      color: var(--cream);
+      font-size: 2.2rem;
+      line-height: 1;
+      cursor: pointer;
+      float: right;
+      margin-bottom: 1.2rem;
+      transition: 0.2s;
+    }
+    .nav-lateral .cerrar-menu:hover {
+      color: var(--gold);
+      transform: rotate(90deg);
+    }
+    .nav-lateral ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1.8rem;
+      clear: both;
+    }
+    .nav-lateral ul li {
+      border-bottom: 1px solid #2f4a5a;
+      padding: 0.4rem 0;
+    }
+    .nav-lateral ul li a {
+      display: block;
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 1.0rem;
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      transition: 0.15s;
+      font-family: 'Work Sans', sans-serif;
+      letter-spacing: 0.3px;
+    }
+    .nav-lateral ul li a:hover {
+      background: #2a4a5a;
+      color: #f5efe0;
+      padding-left: 0.9rem;
+    }
+    .nav-lateral ul li a.activo {
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .overlay-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.35);
+      z-index: 998;
+    }
+    .overlay-menu.activo {
+      display: block;
+    }
+
+    /* ========== CONTENIDO PRINCIPAL ========== */
+    .contenido {
+      background: var(--paper);
+      padding: 2rem 5vw 5rem;
+      margin-top: 15vh;
+    }
+
+    /* ========== GLOSARIO ========== */
+    .section-head {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--orange);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .contenido h2 {
+      margin: 0;
+      font-family: var(--disp);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      color: var(--navy);
+    }
+    .section-desc {
+      max-width: 640px;
+      margin: 14px auto 0;
+      color: var(--gray);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .search-bar {
+      max-width: 460px;
+      margin: 0 auto 30px;
+      position: relative;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 14px 20px 14px 46px;
+      border-radius: 30px;
+      border: 1px solid #e4dacb;
+      background: #fff;
+      font-size: 15px;
+      color: var(--navy);
+      outline: none;
+      box-shadow: 0 6px 18px rgba(43, 53, 66, 0.06);
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .search-bar input:focus {
+      border-color: var(--orange);
+      box-shadow: 0 6px 18px rgba(232, 89, 42, 0.15);
+    }
+    .search-bar svg {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      stroke: var(--gray);
+    }
+    .search-empty {
+      display: none;
+      text-align: center;
+      color: var(--gray);
+      font-style: italic;
+      padding: 30px 0;
+    }
+
+    .alpha-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+    .alpha-nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid #e4dacb;
+      color: var(--orange-dim);
+      font-weight: 700;
+      font-size: 13px;
+      text-decoration: none;
+      transition: background .15s ease, color .15s ease, transform .15s ease;
+    }
+    .alpha-nav a:hover {
+      background: var(--orange);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .glossary {
+      column-count: 2;
+      column-gap: 22px;
+    }
+    .term-card {
+      break-inside: avoid;
+      background: #fff;
+      border: 1px solid #efe8dd;
+      border-radius: var(--radius);
+      padding: 24px 26px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 22px rgba(43, 53, 66, 0.06);
+      scroll-margin-top: 24px;
+    }
+    .term-letter-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #fff;
+      background: #aec9da;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .term-card.tyranny-term .term-letter-tag {
+      background: var(--orange);
+    }
+    .term-title {
+      margin: 0 0 12px;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      color: var(--navy);
+      text-transform: uppercase;
+      border-bottom: 2px solid #e7b389;
+      padding-bottom: 10px;
+    }
+    .term-def p {
+      margin: 0 0 10px;
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: #454f5b;
+    }
+    .term-def p:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 720px) {
+      .glossary {
+        column-count: 1;
+      }
+      .contenido {
+        padding: 1.5rem 4vw 3rem;
+      }
+      .portada-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.2rem;
+        padding: 0 4vw;
+      }
+      .portada-title {
+        font-size: clamp(0.9rem, 3.5vw, 1.4rem);
+        white-space: normal;
+      }
+      .portada-dates {
+        font-size: 0.6rem;
+      }
+      .portada-right {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 0.5rem;
+      }
+      .menu-hamburguesa {
+        top: 1rem;
+        left: 1rem;
+        padding: 0.4rem 0.6rem;
+      }
+      .menu-hamburguesa span {
+        width: 24px;
+        height: 3px;
+      }
+      .nav-lateral {
+        width: 270px;
+        left: -290px;
+      }
+    }
+
+    /* ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== */
+    .btn-flotante {
+      position: fixed;
+      z-index: 100;
+      background: var(--navy);
+      color: var(--cream);
+      border: none;
+      border-radius: 999px;
+      padding: 0.85rem 1.3rem 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      box-shadow: 0 14px 30px -10px rgba(15, 30, 56, 0.55);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-flotante svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--gold);
+      flex-shrink: 0;
+    }
+    .btn-flotante:hover {
+      background: var(--navy-2);
+      transform: translateY(-2px);
+    }
+    #btn-top {
+      right: 1.4rem;
+      bottom: 1.4rem;
+    }
+
+    @media (max-width: 640px) {
+      .btn-flotante span.txt {
+        display: none;
+      }
+      #btn-top {
+        right: 1rem;
+        bottom: 1rem;
+        padding: 0.85rem;
+        border-radius: 50%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== PORTADA (fija) ========== -->
+  <section id="portada">
+    <div class="portada-bg">
+      <picture>
+        <source media="(max-width:640px)" srcset="ins/001portadaCv.png" />
+        <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961"
+        onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+      </picture>
+      <div class="ph">
+        <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
+      </div>
+      <div class="portada-veil"></div>
+    </div>
+    <div class="portada-content">
+      <div class="portada-left">
+        <span class="portada-eyebrow">Historia de la República Dominicana</span>
+        <h1 class="portada-title">Glosario</h1>
+        <h3 class="portada-dates">Tiranía trujillista 1930-1961</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MENÚ HAMBURGUESA ========== -->
+  <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- ========== MENÚ LATERAL ========== -->
+  <nav class="nav-lateral" id="menuLateral" role="navigation">
+    <button class="cerrar-menu" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button>
+    <ul>
+      <li><a href="ind0.HTML">INICIO</a></li>
+      <li><a href="lt_ctx.HTML">Línea de Tiempo</a></li>
+      <li><a href="bio_tru.HTML">Reseña Biográfica</a></li>
+      <li><a href="gen_tru.HTML">Genealogía</a></li>
+      <li><a href="antes_tru.HTML">Antecedentes</a></li>
+      <li><a href="glpe30.HTML">Golpe de Estado 1930</a></li>
+      <li><a href="maq_tir.HTML">Maquinaria de la Tiranía</a></li>
+      <li><a href="etap_tir.HTML">Etapas de la Tiranía</a></li>
+      <li><a href="elec_tru.HTML">Elecciones</a></li>
+      <li><a href="reb_tru.HTML">Rebeldes</a></li>
+      <li><a href="casos_tru.HTML">Casos Famosos</a></li>
+      <li><a href="ultnoche.HTML">Última Noche</a></li>
+      <li><a href="destru.HTML">Destrujillización</a></li>
+      <li><a href="galr.HTML">Galería</a></li>
+      <li><a href="glos.HTML" class="activo">Glosario</a></li>
+      <li><a href="not.HTML">Créditos y Fuentes</a></li>
+    </ul>
+  </nav>
+
+  <!-- ========== OVERLAY ========== -->
+  <div class="overlay-menu" id="overlayMenu"></div>
+
+  <!-- ========== CONTENIDO ========== -->
+  <div class="contenido">
+    <div class="section-head">
+      <span class="eyebrow">Términos y conceptos clave</span>
+            <!-- <p class="section-desc">Definiciones de los términos y conceptos clave para comprender el periodo de la Tiranía Trujillista y su contexto.</p>  -->
+    </div>
+
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="searchInput" placeholder="Buscar un término...">
+    </div> 
+
+    <nav class="alpha-nav" id="alphaNav"></nav>
+
+    <div class="glossary" id="glossaryList"></div>
+    <p class="search-empty" id="emptyMsg">No se encontraron términos que coincidan con tu búsqueda.</p>
+  </div>
+
+  <!-- ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== -->
+  <button id="btn-top" class="btn-flotante" aria-label="Volver arriba">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+    <span class="txt">Arriba</span>
+  </button>
+
+  <script>
+    /* ======================================================
+       DATOS DEL GLOSARIO (igual que antes)
+       ====================================================== */
+    const glossaryData = [
+      {term:"CLANDESTINO", tyranny:false, def:[
+        "Se refiere a algo secreto, oculto y dicho o hecho en secreto por temor a la ley o a las autoridades."
+      ]},
+      {term:"COMPLOT", tyranny:false, def:[
+        "Confabulación entre dos o más personas contra otra u otras. Es una conspiración o entendimiento secreto entre varias personas para cambiar el estatus de otro grupo."
+      ]},
+      {term:"CRISIS", tyranny:false, def:[
+        "Se refiere a una situación mala o difícil. También se relaciona con un cambio profundo y de consecuencias importantes en un proceso o una situación, o en la manera en que estos son apreciados."
+      ]},
+      {term:"DEMOCRACIA", tyranny:false, def:[
+        "La democracia es una forma de vida en la cual sus miembros son libres e iguales y las relaciones sociales se basan en la convivencia.",
+        "La democracia es una forma de organización social que transfiere el ejercicio del poder a la ciudadanía.",
+        "La democracia también es una forma de organizar el Estado, en la cual las decisiones importantes son decididas por el pueblo mediante mecanismos de participación."
+      ]},
+      {term:"DICTADURA", tyranny:true, def:[
+        "Régimen político en el que una sola persona gobierna con poder total, sin someterse a ningún tipo de limitaciones y con la facultad de promulgar y modificar leyes a su voluntad.",
+        "En este trabajo se utilizan indistintamente los términos dictadura y tiranía para referirse a la forma de gobierno antidemocrática practicada por Trujillo entre 1930 y 1961."
+      ]},
+      {term:"FAD — Fuerza Aérea Dominicana", tyranny:true, def:[
+        "El 5 de febrero de 1948, mediante el Decreto No. 4918, se crea el Cuerpo de Aviación Militar, que posteriormente se conocería como la Fuerza Aérea Dominicana (FAD).",
+        "Igual que otros países de Latinoamérica, Trujillo adquirió los equipos y armas excedentes de los Estados Unidos luego de la Segunda Guerra Mundial."
+      ]},
+      {term:"FASCISMO", tyranny:false, def:[
+        "Doctrina política de carácter antidemocrático, totalitaria y nacionalista.",
+        "Movimiento político y social de carácter totalitario y nacionalista fundado en Italia por Benito Mussolini después de la Primera Guerra Mundial."
+      ]},
+      {term:"FBI", tyranny:false, def:[
+        "Acrónimo del inglés Federal Bureau of Investigation (Oficina Federal de Investigación).",
+        "Es la principal agencia de investigación criminal del Departamento de Justicia de Estados Unidos."
+      ]},
+      {term:"GAVILLEROS", tyranny:false, def:[
+        "Hombres y mujeres, mal organizados, que hicieron frente a la intervención norteamericana de 1916-1924 en la región Este del país. Surgieron luego del despojo de tierras a los campesinos, ocurrido durante el apogeo de la industria azucarera extranjera iniciado a finales del siglo XIX y, posteriormente, al establecerse el sistema catastral de medición Torrens por los estadounidenses. Los invasores los llamaron «gavilleros» de manera despectiva y los acusaron de ladrones y saqueadores.",
+        "Existieron dos tipos de gavilleros: los caudillistas y los cuatreros, estos últimos de menor incidencia y cuyos objetivos no iban más allá de robar ganado y vender la carne. Los ligados al fenómeno caudillista actuaban más ampliamente atacando a las autoridades y sus aliados; practicaban también el cobro de protección a los hacendados y merodeaban las localidades rurales y los ingenios azucareros. Este último grupo fue el que más se destacó y trascendió a través de los años. Finalmente, los gavilleros fueron asesinados o murieron mientras eran salvajemente torturados por los invasores."
+      ]},
+      {term:"GOLPE DE ESTADO", tyranny:false, def:[
+        "Toma del poder político de repente y con violencia. El golpe de Estado viola todas las normas legales de sucesión en el poder."
+      ]},
+      {term:"HUELGA", tyranny:false, def:[
+        "Forma de protesta de los trabajadores que consiste en detener el trabajo en conjunto. Las huelgas requieren un acuerdo entre los trabajadores con el fin de conseguir mejoras laborales o sociales; no se trata de realizar actividades violentas."
+      ]},
+      {term:"INFAME", tyranny:false, def:[
+        "Persona muy malvada, que carece de honra, crédito y estimación."
+      ]},
+      {term:"MASACRE DEL PEREJIL", tyranny:true, def:[
+        "Matanza de haitianos en territorio dominicano, en los alrededores de Mao y Dajabón, iniciada el 2 de octubre de 1937. Los asesinatos se ejecutaron principalmente a garrotazos, ahorcamientos y puñaladas por miembros del Ejército y la Policía dominicana. Los asesinos obligaban a las víctimas a pronunciar la palabra «perejil»; si era mal pronunciada, procedían al asesinato. La acción duró entre 36 y 48 horas.",
+        "La idea era liberar el territorio dominicano que se consideraba ocupado por haitianos. El gobierno de Haití sometió el caso ante cortes internacionales y logró que se condenara al gobierno de Trujillo, que tuvo que realizar varios pagos por el incidente."
+      ]},
+      {term:"MISIÓN DAWES", tyranny:false, def:[
+        "Comisión estadounidense contratada por el gobierno de Horacio Vásquez en 1929, cuyo trabajo se concretó en certificar que el Estado dominicano se encontraba en bancarrota."
+      ]},
+      {term:"PARAMILITARES", tyranny:false, def:[
+        "Grupo armado que cumple una función similar a la de un ejército, pero que no forma parte de las fuerzas militares oficiales de un país. Son grupos ilegales."
+      ]},
+      {term:"SIM — Servicio de Inteligencia Militar", tyranny:true, def:[
+        "Organización de espionaje al servicio de Trujillo, clave durante los últimos años de su dictadura.",
+        "Esta organización represiva aterrorizaba a la población y a funcionarios de todos los niveles; en su nómina figuraban miles de agentes secretos diseminados por todo el país."
+      ]},
+      {term:"TIRANÍA", tyranny:true, def:[
+        "Forma de gobierno en la que el gobernante tiene un poder total o absoluto, no limitado por leyes, especialmente cuando lo obtiene por medios ilícitos, y abusa de él.",
+        "En este trabajo se utilizan indistintamente los términos dictadura y tiranía para referirse a la forma de gobierno antidemocrática practicada por Trujillo entre 1930 y 1961."
+      ]}
+    ];
+
+    /* ======================================================
+       RENDERIZADO DEL GLOSARIO
+       ====================================================== */
+    const listEl = document.getElementById('glossaryList');
+    const alphaEl = document.getElementById('alphaNav');
+    const emptyMsg = document.getElementById('emptyMsg');
+    const searchInput = document.getElementById('searchInput');
+
+    function firstLetter(term){
+      return term.trim().charAt(0).toUpperCase();
+    }
+
+    function slug(term){
+      return 'term-' + term.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+        .replace(/[^a-z0-9]+/g,'-');
+    }
+
+    function renderAlphaNav(){
+      const letters = [...new Set(glossaryData.map(t => firstLetter(t.term)))];
+      alphaEl.innerHTML = letters.map(l => {
+        const target = glossaryData.find(t => firstLetter(t.term) === l);
+        return `<a href="#${slug(target.term)}">${l}</a>`;
+      }).join('');
+    }
+
+    function renderGlossary(filter=''){
+      const f = filter.trim().toLowerCase();
+      const filtered = glossaryData.filter(t =>
+        t.term.toLowerCase().includes(f) ||
+        t.def.some(p => p.toLowerCase().includes(f))
+      );
+
+      emptyMsg.style.display = filtered.length ? 'none' : 'block';
+
+      listEl.innerHTML = filtered.map(t => `
+        <div class="term-card ${t.tyranny ? 'tyranny-term' : ''}" id="${slug(t.term)}">
+          <span class="term-letter-tag">${firstLetter(t.term)}</span>
+          <h3 class="term-title">${t.term}</h3>
+          <div class="term-def">
+            ${t.def.map(p => `<p>${p}</p>`).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    searchInput.addEventListener('input', (e) => renderGlossary(e.target.value));
+
+    renderAlphaNav();
+    renderGlossary();
+
+    /* =========================================================
+       BOTÓN FLOTANTE "ARRIBA"
+       ========================================================= */
+    document.getElementById('btn-top').addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ===== MENÚ HAMBURGUESA (toggle + overlay) =====
+    (function() {
+      const btnHamburguesa = document.getElementById('btnHamburguesa');
+      const menuLateral = document.getElementById('menuLateral');
+      const btnCerrarMenu = document.getElementById('btnCerrarMenu');
+      const overlayMenu = document.getElementById('overlayMenu');
+
+      function abrirMenu() {
+        menuLateral.classList.add('abierto');
+        overlayMenu.classList.add('activo');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function cerrarMenu() {
+        menuLateral.classList.remove('abierto');
+        overlayMenu.classList.remove('activo');
+        document.body.style.overflow = '';
+      }
+
+      if (btnHamburguesa) {
+        btnHamburguesa.addEventListener('click', function(e) {
+          e.stopPropagation();
+          abrirMenu();
+        });
+      }
+
+      if (btnCerrarMenu) {
+        btnCerrarMenu.addEventListener('click', function(e) {
+          e.stopPropagation();
+          cerrarMenu();
+        });
+      }
+
+      if (overlayMenu) {
+        overlayMenu.addEventListener('click', function() {
+          cerrarMenu();
+        });
+      }
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          cerrarMenu();
+        }
+      });
+
+      const enlacesMenu = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
+      enlacesMenu.forEach(function(enlace) {
+        enlace.addEventListener('click', function() {
+          cerrarMenu();
+        });
+      });
+
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          if (window.innerWidth > 900 && menuLateral.classList.contains('abierto')) {
+            cerrarMenu();
+          }
+        }, 200);
+      });
+    })();
+  </script>
+
+</body>
+</html>

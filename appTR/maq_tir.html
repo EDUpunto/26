@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Maquinaria</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Material Symbols Sharp (SettingsSharp) -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        /* ----- reset & base ----- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: #faf8f4;
+            color: #0f1e38;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        :root {
+            --bg-dark: #15130f;
+            --bg-dark-2: #211d17;
+            --cream: #f2ead2;
+            --gold: #cdaa5c;
+            --gold-dim: #8d7745;
+            --navy: #0f1e38;
+            --navy-2: #16294a;
+            --orange: #e8592a;
+            --orange-dim: #c94a20;
+            --gray: #5c6472;
+            --gray-light: #8a91a0;
+            --paper: #faf8f4;
+            --line: #e7e2d6;
+            --shadow: 0 18px 40px -18px rgba(15, 30, 56, 0.35);
+            --radius: 14px;
+            --disp: 'Cinzel', serif;
+            --body: 'Work Sans', sans-serif;
+        }
+
+        /* ========== PORTADA (fija) ========== */
+        #portada {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 15vh;
+            min-height: 80px;
+            width: 100%;
+            background: var(--bg-dark);
+            color: var(--cream);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 300;
+            box-shadow: 0 12px 30px -14px rgba(0,0,0,0.6);
+        }
+        .portada-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .portada-bg picture,
+        .portada-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+        .portada-bg .ph {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #2a2520;
+            color: var(--gold-dim);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .portada-bg .ph b {
+            display: block;
+            color: var(--cream);
+            margin-bottom: 0.25rem;
+        }
+        .portada-veil {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(21, 19, 15, 0.10) 0%,
+                    rgba(21, 19, 15, 0.35) 45%,
+                    rgba(21, 19, 15, 0.85) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .portada-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5vw;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .portada-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .portada-eyebrow {
+            letter-spacing: 0.25em;
+            font-size: 0.6rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .portada-title {
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(1rem, 2.2vw, 2rem);
+            line-height: 1.1;
+            margin: 0;
+            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+        .portada-dates {
+            font-family: var(--disp);
+            color: var(--gold);
+            font-size: clamp(0.6rem, 1vw, 0.9rem);
+            letter-spacing: 0.1em;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        /* ========== MENÚ HAMBURGUESA ========== */
+        .menu-hamburguesa {
+            position: fixed;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 999;
+            background: var(--navy);
+            border: 1px solid var(--gold);
+            border-radius: 6px;
+            padding: 0.5rem 0.7rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transition: background 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-hamburguesa:hover {
+            background: var(--navy-2);
+        }
+        .menu-hamburguesa span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: var(--cream);
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+
+        /* ===== NAVEGACIÓN LATERAL ===== */
+        .nav-lateral {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: var(--navy);
+            border-right: 3px solid var(--gold);
+            padding: 2rem 1rem 1.5rem;
+            overflow-y: auto;
+            transition: left 0.35s ease;
+            z-index: 1000;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+        }
+        .nav-lateral.abierto {
+            left: 0;
+        }
+        .nav-lateral .cerrar-menu {
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 2.2rem;
+            line-height: 1;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 1.2rem;
+            transition: 0.2s;
+        }
+        .nav-lateral .cerrar-menu:hover {
+            color: var(--gold);
+            transform: rotate(90deg);
+        }
+        .nav-lateral ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 1.8rem;
+            clear: both;
+        }
+        .nav-lateral ul li {
+            border-bottom: 1px solid #2f4a5a;
+            padding: 0.4rem 0;
+        }
+        .nav-lateral ul li a {
+            display: block;
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 1.0rem;
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            transition: 0.15s;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        .nav-lateral ul li a:hover {
+            background: #2a4a5a;
+            color: #f5efe0;
+            padding-left: 0.9rem;
+        }
+        .nav-lateral ul li a.activo {
+            background: var(--gold);
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        .overlay-menu {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.35);
+            z-index: 998;
+        }
+        .overlay-menu.activo {
+            display: block;
+        }
+
+        /* ========== CONTENIDO PRINCIPAL ========== */
+        .contenido {
+            background: var(--paper);
+            padding: 0rem 5vw 5rem;
+            margin-top: 15vh;
+        }
+        .contenido-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            margin-bottom: .6rem;
+            text-align: center;
+        }
+        .contenido-header p {
+            color: var(--gray);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            max-width: 720px;
+            margin: 0.4rem auto 0;
+        }
+
+        /* ========== ESCENARIO DE ENGRANAJES FIJOS ========== */
+        .stage-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ---- Fondo con imagen ins/fd0.png ---- */
+        #circulos-stage {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            min-height: 420px;
+            max-height: 620px;
+            border-radius: 24px;
+            /* imagen principal + fallback degradado */
+            background: url('ins/fd0.png') center / cover no-repeat,
+                linear-gradient(180deg, #f4efe4 0%, #dfd9ca 100%);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        /* Engranajes en la parte superior */
+        .engranajes-contenedor {
+            position: absolute;
+            top: 5%;
+            left: 0;
+            width: 100%;
+            height: 45%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3%;
+            padding: 0 2%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .engranaje {
+            pointer-events: auto;
+            width: clamp(90px, 12vw, 130px);
+            height: clamp(90px, 12vw, 130px);
+            border: none;
+            padding: 0;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            outline: none;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+            flex-shrink: 0;
+            position: relative;
+        }
+        /* Contenedor interno que gira: agrupa icono (dientes reales de
+           SettingsSharp) + imagen central como una sola unidad visual y funcional */
+        .engranaje-interno {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 50%;
+            transition: filter 0.3s ease;
+        }
+        .engranaje-interno.girando {
+            animation: girar 18s linear infinite;
+        }
+        .engranaje:not(.girando) .engranaje-interno {
+            animation-play-state: paused;
+        }
+
+        /* Activa la fuente de íconos Material Symbols Sharp (se mantiene como
+           mejora progresiva, pero el engranaje YA NO depende de ella: ver
+           .icono-settings svg más abajo, que es el dibujo real de los dientes) */
+        .material-symbols-sharp {
+            font-family: 'Material Symbols Sharp';
+            font-weight: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: 'liga';
+        }
+
+        /* Icono "SettingsSharp": dibujado como SVG inline (no como texto de
+           fuente web) para que los dientes de la rueda dentada SIEMPRE se
+           vean, sin depender de que la fuente Material Symbols cargue. */
+        .icono-settings {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-dim);
+            z-index: 1;
+            filter: drop-shadow(0 8px 18px rgba(15, 30, 56, 0.3));
+            transition: filter 0.3s ease;
+        }
+        .icono-settings svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            fill: currentColor;
+            overflow: visible;
+        }
+        .icono-settings svg path {
+            stroke: #000000;
+        }
+
+        /* CIRCULO AQUI: imagen central. Se ajusta al hueco interior del
+           engranaje (no al diámetro completo) para que los dientes de la
+           rueda dentada permanezcan siempre visibles alrededor. */
+        .imagen-engranaje {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 46%;
+            height: 46%;
+            border-radius: 50%;
+            object-fit: cover;
+            z-index: 2;
+            pointer-events: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+
+        .engranaje:hover .engranaje-interno {
+            filter: drop-shadow(0 12px 28px rgba(15, 30, 56, 0.5));
+        }
+        .engranaje.zoom {
+            transform: scale(1.8);
+            z-index: 5;
+        }
+        .engranaje.zoom .engranaje-interno {
+            filter: drop-shadow(0 0 0 5px rgba(232, 89, 42, 0.25)) drop-shadow(0 12px 28px rgba(15, 30, 56, 0.5));
+        }
+
+        @keyframes girar {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .engranaje .titulo-engranaje {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(0.5rem, 0.7vw, 0.7rem);
+            color: var(--cream);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            line-height: 1.2;
+            pointer-events: none;
+            z-index: 5;
+            width: 80%;
+            letter-spacing: 0.04em;
+        }
+
+        /* ========== PANEL DE INFORMACIÓN (parte inferior) con SCROLL ========== */
+        #info-panel {
+            position: absolute;
+            bottom: 5%;
+            left: 5%;
+            right: 5%;
+            top: 50%;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(4px);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: var(--shadow);
+            padding: 1.8rem 2rem;
+            overflow-y: auto;
+            z-index: 6;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: none;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold-dim) rgba(255, 255, 255, 0.2);
+        }
+        #info-panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        #info-panel.salir {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        #info-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+        #info-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        #info-panel::-webkit-scrollbar-thumb {
+            background: var(--gold-dim);
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        #info-panel::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+
+        .info-titulo {
+            font-family: var(--disp);
+            font-weight: 700;
+            color: var(--navy);
+            font-size: clamp(1.1rem, 2vw, 1.6rem);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+        }
+        .info-titulo::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--orange);
+            flex-shrink: 0;
+        }
+        .info-desc {
+            color: #333c4c;
+            line-height: 1.75;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .info-items {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .info-items li {
+            position: relative;
+            padding-left: 1.4rem;
+            color: var(--navy-2);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .info-items li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            top: -2px;
+            color: var(--orange);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 640px) {
+            #circulos-stage {
+                height: 56vh;
+                min-height: 340px;
+            }
+            .engranaje {
+                width: clamp(70px, 16vw, 90px);
+                height: clamp(70px, 16vw, 90px);
+            }
+            #info-panel {
+                padding: 1.2rem 1.2rem;
+                bottom: 3%;
+                left: 3%;
+                right: 3%;
+                top: 55%;
+            }
+        }
+
+        /* ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== */
+        .btn-flotante {
+            position: fixed;
+            z-index: 100;
+            background: var(--navy);
+            color: var(--cream);
+            border: none;
+            border-radius: 999px;
+            padding: 0.85rem 1.3rem 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            box-shadow: 0 14px 30px -10px rgba(15, 30, 56, 0.55);
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-flotante svg {
+            width: 17px;
+            height: 17px;
+            stroke: var(--gold);
+            flex-shrink: 0;
+        }
+        .btn-flotante:hover {
+            background: var(--navy-2);
+            transform: translateY(-2px);
+        }
+        #btn-top {
+            right: 1.4rem;
+            bottom: 1.4rem;
+        }
+
+        @media (max-width: 640px) {
+            .btn-flotante span.txt {
+                display: none;
+            }
+            #btn-top {
+                right: 1rem;
+                bottom: 1rem;
+                padding: 0.85rem;
+                border-radius: 50%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== PORTADA (fija) ========== -->
+    <section id="portada">
+        <div class="portada-bg">
+            <picture>
+                <source media="(max-width:640px)" srcset="ins/001portadaCv.png" />
+                <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+            </picture>
+            <div class="ph">
+                <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
+            </div>
+            <div class="portada-veil"></div>
+        </div>
+        <div class="portada-content">
+            <div class="portada-left">
+                <span class="portada-eyebrow">Historia de la República Dominicana</span>
+                <h1 class="portada-title">Maquinaria de la Tiranía</h1>
+                <h3 class="portada-dates">Trujillo 1930-1961</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MENÚ HAMBURGUESA ========== -->
+    <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- ========== MENÚ LATERAL ========== -->
+    <nav class="nav-lateral" id="menuLateral" role="navigation">
+        <button class="cerrar-menu" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button>
+        <ul>
+            <li><a href="ind0.HTML">INICIO</a></li>
+            <li><a href="lt_ctx.HTML">Línea de Tiempo</a></li>
+            <li><a href="bio_tru.HTML">Reseña Biográfica</a></li>
+            <li><a href="gen_tru.HTML">Genealogía</a></li>
+            <li><a href="antes_tru.HTML">Antecedentes</a></li>
+            <li><a href="glpe30.HTML">Golpe de Estado 1930</a></li>
+            <li><a href="maq_tir.HTML" class="activo">Maquinaria de la Tiranía</a></li>
+            <li><a href="etap_tir.HTML">Etapas de la Tiranía</a></li>
+            <li><a href="elec_tru.HTML">Elecciones</a></li>
+            <li><a href="reb_tru.HTML">Rebeldes</a></li>
+            <li><a href="casos_tru.HTML">Casos Famosos</a></li>
+            <li><a href="ultnoche.HTML">Última Noche</a></li>
+            <li><a href="destru.HTML">Destrujillización</a></li>
+            <li><a href="galr.HTML">Galería</a></li>
+            <li><a href="glos.HTML">Glosario</a></li>
+            <li><a href="not.HTML">Créditos y Fuentes</a></li>
+        </ul>
+    </nav>
+
+    <!-- ========== OVERLAY ========== -->
+    <div class="overlay-menu" id="overlayMenu"></div>
+
+    <!-- ========== CONTENIDO ========== -->
+    <div class="contenido">
+        <div class="contenido-header">
+            <p>El control absoluto de Trujillo se sostenía sobre una maquinaria con cuatro ruedas dentadas: terror, estado, economía y política. Descubre cómo funcionaba esa máquinaria de la dictadura.  Selecciona el engranaje para explorar sus detalles.</p>
+        </div>
+
+        <div class="stage-wrap">
+            <div id="circulos-stage" aria-label="Cuatro pilares del régimen de Trujillo, presentados como engranajes fijos en la parte superior">
+                <!-- Contenedor de engranajes -->
+                <div class="engranajes-contenedor" id="engranajes-contenedor"></div>
+
+                <!-- Panel de información -->
+                <div id="info-panel">
+                    <div class="info-titulo" id="info-titulo"></div>
+                    <div class="info-desc" id="info-desc"></div>
+                    <ul class="info-items" id="info-items"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== -->
+    <button id="btn-top" class="btn-flotante" aria-label="Volver arriba">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+        <span class="txt">Arriba</span>
+    </button>
+
+    <script>
+        /* ======================================================
+           DATOS: Secciones temáticas
+           ====================================================== */
+        const sectionsData = [{
+            titulo: "EL TERROR",
+            img: "ins/terror.png",
+            desc: "Impuso el terror a toda la población.  Trujillo supo seleccionar a sus subordinados que aceptaban sus órdenes sin miedos ni titubeos. Con ellos impuso el terror. No cesaba en los ataques y espionaje contra importantes antagonistas extranjeros como los presidentes cubanos Ramón Grau San Martín y Carlos Prío Socarrás; Juan José Arévalo y Jacobo Árbenz, de Guatemala; los venezolanos Rómulo Gallegos y Rómulo Betancourt y el costarricense José Figueres. Organizó grupos paramilitares, como 'Los Cocuyos de la Cordillera' y 'Los Paleros', para intimidar a la población. El SIM era un organismo que tenía el poder para investigar a todos. Hasta los militares le temían.",
+            items: [
+                "Controló al ejército",
+                "Controló la policía",
+                "Impuso al SIM"
+            ]
+        }, {
+            titulo: "EL ESTADO",
+            img: "ins/estado.png",
+            desc: "El estado era Trujillo.  Aún sin ser presidente, todos los funcionarios públicos estaban bajo sus órdenes. La administración del estado, poder ejecutivo, las leyes y la justicia las imponía Trujillo. Sólo los miembros del Partído Dominicano (trujillista) podían ejercer cargos públicos. Todos pagaban una cuota al partído de Trujillo.",
+            items: [
+                "Controló los Municipios",
+                "Controló la Justicia",
+                "Controló el Congreso",
+                "Controló el Poder Ejecutivo"
+            ]
+        }, {
+            titulo: "LA ECONOMÍA",
+            img: "ins/economia.png",
+            desc: "El país progresó como una empresa trujillista, no como país. La economía del país era la economía de Trujillo. Las empresas aseguradoras, la industria del cemento, hoteles, productoras de sal, tejidos, zapatos, cigarrillos, bancos, líneas aéreas, azucareras, armas, terrenos, entre otros formaban parte de su fortuna personal. Para 1946, un año después de finalizada la 2da Guerra Mundial, Trujillo controlaba toda la economía nacional.",
+            items: [
+                "Controló la mayor parte de la producción industrial y agrícola",
+                "Controló las finanzas (banca), aseguradoras y moneda",
+                "Controló casi todos los servicios (electricidad, agua potable, comunicaciones, transporte internacional, etc...)"
+            ]
+        }, {
+            titulo: "LA POLÍTICA",
+            img: "ins/politica.png",
+            desc: "Trujillo desorganizó la población disolviendo todas las organizaciones sindicales, empresariales, profesionales, grupos religiosos, entre otros. El tirano asesinó, aterrorizó, intimidó o humilló a todos los opositores con el propósito de doblegarlos o eliminarlos. Los medios de comunicación como la prensa escrita, la radio y más tarde la TV, fueron censurados de alguna manera. Estableció un sistema de partído único.  Por otro lado se concentró en el adoctrinamiento político utilizando la Cartilla Cívica que promovía su figura.",
+            items: [
+                "Desorganizó la población",
+                "Desintegró a la oposición",
+                "Impuso un partído único",
+                "Censuró y controló la prensa"
+            ]
+        }];
+
+        /* ======================================================
+           CONSTRUCCIÓN DE ENGRANAJES FIJOS EN LA PARTE SUPERIOR
+           ====================================================== */
+        const stage = document.getElementById('circulos-stage');
+        const contenedor = document.getElementById('engranajes-contenedor');
+        const panel = document.getElementById('info-panel');
+        const infoTitulo = document.getElementById('info-titulo');
+        const infoDesc = document.getElementById('info-desc');
+        const infoItems = document.getElementById('info-items');
+
+        let selectedIndex = null;
+        let timeoutSalida = null;
+
+        function construirEngranajes() {
+            contenedor.innerHTML = '';
+            sectionsData.forEach((sec, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'engranaje girando';
+                btn.setAttribute('aria-pressed', 'false');
+                btn.setAttribute('aria-label', sec.titulo);
+                btn.dataset.index = idx;
+
+                // Contenedor interno que rota: icono + imagen funcionan como una sola unidad
+                const interno = document.createElement('div');
+                interno.className = 'engranaje-interno girando';
+
+                // Icono "SettingsSharp": SVG inline (path oficial del engranaje),
+                // así los dientes SIEMPRE se ven, sin depender de una fuente web
+                const icono = document.createElement('span');
+                icono.className = 'icono-settings';
+                icono.setAttribute('aria-hidden', 'true');
+                icono.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" stroke="#000000" stroke-width="0.55" stroke-linejoin="round" d="M19.14,12.94c0.04,-0.3,0.06,-0.61,0.06,-0.94c0,-0.32,-0.02,-0.64,-0.07,-0.94l2.03,-1.58c0.18,-0.14,0.23,-0.41,0.12,-0.61l-1.92,-3.32c-0.12,-0.22,-0.37,-0.29,-0.59,-0.22l-2.39,0.96c-0.5,-0.38,-1.03,-0.7,-1.62,-0.94L14.4,2.81c-0.04,-0.24,-0.24,-0.41,-0.48,-0.41h-3.84c-0.24,0,-0.43,0.17,-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22,-0.08,-0.47,0,-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14,-0.23,0.41,-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39,-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44,-0.17,0.47,-0.41l0.36,-2.54c0.59,-0.24,1.13,-0.56,1.62,-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59,-0.22l1.92,-3.32c0.12,-0.22,0.07,-0.47,-0.12,-0.61L19.14,12.94z M12,15.6c-1.98,0,-3.6,-1.62,-3.6,-3.6s1.62,-3.6,3.6,-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                </svg>`;
+                interno.appendChild(icono);
+
+                // CIRCULO AQUI: imagen central, ajustada al hueco interior del
+                // engranaje para dejar visibles los dientes de la rueda dentada
+                const img = document.createElement('img');
+                img.className = 'imagen-engranaje';
+                img.src = sec.img;
+                img.alt = sec.titulo;
+                img.loading = 'lazy';
+                interno.appendChild(img);
+
+                btn.appendChild(interno);
+
+                // Título fuera del contenedor que rota (NO gira con la rueda)
+                const titulo = document.createElement('span');
+                titulo.className = 'titulo-engranaje';
+                titulo.textContent = sec.titulo;
+                btn.appendChild(titulo);
+
+                btn.addEventListener('click', () => seleccionar(idx));
+
+                contenedor.appendChild(btn);
+            });
+        }
+
+        /* ======================================================
+           SELECCIÓN Y CONTROL DE GIRO / ZOOM / INFO
+           ====================================================== */
+        function seleccionar(idx) {
+            const engranajes = contenedor.querySelectorAll('.engranaje');
+
+            if (selectedIndex === idx) {
+                selectedIndex = null;
+                engranajes.forEach(el => {
+                    el.classList.remove('zoom');
+                    el.classList.add('girando');
+                    el.setAttribute('aria-pressed', 'false');
+                });
+                ocultarPanel();
+                return;
+            }
+
+            if (selectedIndex !== null) {
+                engranajes[selectedIndex].classList.remove('zoom');
+                engranajes[selectedIndex].classList.add('girando');
+                engranajes[selectedIndex].setAttribute('aria-pressed', 'false');
+            }
+
+            selectedIndex = idx;
+            engranajes.forEach((el, i) => {
+                if (i === idx) {
+                    el.classList.add('zoom');
+                    el.classList.remove('girando');
+                    el.setAttribute('aria-pressed', 'true');
+                } else {
+                    el.classList.remove('zoom');
+                    el.classList.add('girando');
+                    el.setAttribute('aria-pressed', 'false');
+                }
+            });
+
+            mostrarInfo(idx);
+        }
+
+        function mostrarInfo(idx) {
+            const sec = sectionsData[idx];
+            infoTitulo.textContent = sec.titulo;
+            infoDesc.textContent = sec.desc;
+            infoItems.innerHTML = sec.items.map(item => `<li>${item}</li>`).join('');
+
+            if (panel.classList.contains('visible')) {
+                panel.classList.remove('visible');
+                panel.classList.add('salir');
+                clearTimeout(timeoutSalida);
+                timeoutSalida = setTimeout(() => {
+                    panel.classList.remove('salir');
+                    panel.classList.add('visible');
+                }, 300);
+            } else {
+                panel.classList.add('visible');
+            }
+        }
+
+        function ocultarPanel() {
+            panel.classList.remove('visible');
+            panel.classList.add('salir');
+            clearTimeout(timeoutSalida);
+            timeoutSalida = setTimeout(() => {
+                panel.classList.remove('salir');
+                infoTitulo.textContent = '';
+                infoDesc.textContent = '';
+                infoItems.innerHTML = '';
+            }, 300);
+        }
+
+        // Inicializar
+        construirEngranajes();
+
+        document.getElementById('btn-top').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ===== MENÚ HAMBURGUESA (toggle + overlay) =====
+        (function() {
+            const btnHamburguesa = document.getElementById('btnHamburguesa');
+            const menuLateral = document.getElementById('menuLateral');
+            const btnCerrarMenu = document.getElementById('btnCerrarMenu');
+            const overlayMenu = document.getElementById('overlayMenu');
+
+            function abrirMenu() {
+                menuLateral.classList.add('abierto');
+                overlayMenu.classList.add('activo');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function cerrarMenu() {
+                menuLateral.classList.remove('abierto');
+                overlayMenu.classList.remove('activo');
+                document.body.style.overflow = '';
+            }
+
+            if (btnHamburguesa) {
+                btnHamburguesa.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    abrirMenu();
+                });
+            }
+
+            if (btnCerrarMenu) {
+                btnCerrarMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    cerrarMenu();
+                });
+            }
+
+            if (overlayMenu) {
+                overlayMenu.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    cerrarMenu();
+                }
+            });
+
+            const enlacesMenu = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
+            enlacesMenu.forEach(function(enlace) {
+                enlace.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            });
+
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth > 900 && menuLateral.classList.contains('abierto')) {
+                        cerrarMenu();
+                    }
+                }, 200);
+            });
+        })();
+    </script>
+</body>
+</html>

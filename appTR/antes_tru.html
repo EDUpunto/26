@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Antecedentes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
+    <style>
+        /* ----- reset & base (copiado) ----- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: #faf8f4;
+            color: #0f1e38;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        :root {
+            --bg-dark: #15130f;
+            --bg-dark-2: #211d17;
+            --cream: #f2ead2;
+            --gold: #cdaa5c;
+            --gold-dim: #8d7745;
+            --navy: #0f1e38;
+            --navy-2: #16294a;
+            --orange: #e8592a;
+            --orange-dim: #c94a20;
+            --gray: #5c6472;
+            --gray-light: #8a91a0;
+            --paper: #faf8f4;
+            --line: #e7e2d6;
+            --shadow: 0 18px 40px -18px rgba(15, 30, 56, 0.35);
+            --radius: 14px;
+            --disp: 'Cinzel', serif;
+            --body: 'Work Sans', sans-serif;
+        }
+
+        /* ========== PORTADA (fija) ========== */
+        #portada {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 15vh;
+            min-height: 80px;
+            width: 100%;
+            background: var(--bg-dark);
+            color: var(--cream);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 300;
+            box-shadow: 0 12px 30px -14px rgba(0,0,0,0.6);
+        }
+        .portada-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .portada-bg picture,
+        .portada-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+        .portada-bg .ph {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #2a2520;
+            color: var(--gold-dim);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .portada-bg .ph b {
+            display: block;
+            color: var(--cream);
+            margin-bottom: 0.25rem;
+        }
+        .portada-veil {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(21, 19, 15, 0.10) 0%,
+                    rgba(21, 19, 15, 0.35) 45%,
+                    rgba(21, 19, 15, 0.85) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .portada-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5vw;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .portada-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .portada-eyebrow {
+            letter-spacing: 0.25em;
+            font-size: 0.6rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .portada-title {
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(1rem, 2.2vw, 2rem);
+            line-height: 1.1;
+            margin: 0;
+            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+        .portada-dates {
+            font-family: var(--disp);
+            color: var(--gold);
+            font-size: clamp(0.6rem, 1vw, 0.9rem);
+            letter-spacing: 0.1em;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        /* ========== MENÚ HAMBURGUESA ========== */
+        .menu-hamburguesa {
+            position: fixed;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 999;
+            background: var(--navy);
+            border: 1px solid var(--gold);
+            border-radius: 6px;
+            padding: 0.5rem 0.7rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transition: background 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-hamburguesa:hover {
+            background: var(--navy-2);
+        }
+        .menu-hamburguesa span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: var(--cream);
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+
+        /* ===== NAVEGACIÓN LATERAL ===== */
+        .nav-lateral {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: var(--navy);
+            border-right: 3px solid var(--gold);
+            padding: 2rem 1rem 1.5rem;
+            overflow-y: auto;
+            transition: left 0.35s ease;
+            z-index: 1000;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+        }
+        .nav-lateral.abierto {
+            left: 0;
+        }
+        .nav-lateral .cerrar-menu {
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 2.2rem;
+            line-height: 1;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 1.2rem;
+            transition: 0.2s;
+        }
+        .nav-lateral .cerrar-menu:hover {
+            color: var(--gold);
+            transform: rotate(90deg);
+        }
+        .nav-lateral ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 1.8rem;
+            clear: both;
+        }
+        .nav-lateral ul li {
+            border-bottom: 1px solid #2f4a5a;
+            padding: 0.4rem 0;
+        }
+        .nav-lateral ul li a {
+            display: block;
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 1.0rem;
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            transition: 0.15s;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        .nav-lateral ul li a:hover {
+            background: #2a4a5a;
+            color: #f5efe0;
+            padding-left: 0.9rem;
+        }
+        .nav-lateral ul li a.activo {
+            background: var(--gold);
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        .overlay-menu {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.35);
+            z-index: 998;
+        }
+        .overlay-menu.activo {
+            display: block;
+        }
+
+        /* ========== CONTENIDO PRINCIPAL ========== */
+        .contenido {
+            background: var(--paper);
+            padding: 0rem 5vw 5rem;
+            margin-top: 15vh;
+        }
+
+        /* ===== EMBUDO / FUNNEL ===== */
+        .funnel-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .funnel-card {
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            padding: 2.5rem 2rem;
+            width: 100%;
+        }
+
+        .funnel-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        .funnel-header .material-symbols-outlined {
+            font-size: 2.6rem;
+            color: var(--gold);
+            flex-shrink: 0;
+            line-height: 1;
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 40;
+        }
+        .funnel-header-text h2 {
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+            color: var(--navy);
+            letter-spacing: 0.02em;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 0.6rem;
+            margin-bottom: 0.8rem;
+        }
+        .funnel-header-text p {
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--gray);
+            font-weight: 400;
+            width: 80%;
+            //*max-width: 68ch;*/
+        }
+
+        /* ---- lienzo general ---- */
+        .funnel-canvas {
+            position: relative;
+            width: 100%;
+            min-height: 660px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0.5rem 0.5rem 2rem;
+            overflow: visible;
+        }
+
+        /* ---- silueta del embudo (basada en el icono filter_alt / FilterAltTwoTone) ---- */
+        .funnel-shape {
+            position: relative;
+            width: min(560px, 94%);
+            height: 480px;
+            margin: 0 auto;
+        }
+        .funnel-fill {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(205,170,92,0.16) 0%, rgba(205,170,92,0.06) 45%, rgba(15,30,56,0.05) 100%);
+            clip-path: polygon(3% 4%, 97% 4%, 64% 58%, 64% 92%, 36% 92%, 36% 58%);
+        }
+        .funnel-outline {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .funnel-outline polygon {
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 1.4;
+            stroke-linejoin: round;
+            opacity: 0.75;
+        }
+        .funnel-label-boca {
+            position: absolute;
+            top: -1.6rem;
+            left: 3%;
+            font-family: var(--disp);
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+        }
+
+        /* zona donde "caen" los círculos: coincide con la parte ancha del embudo */
+        .circles-area {
+            position: absolute;
+            inset: 0;
+            overflow: visible;
+        }
+
+        /* posicionador: ubica cada burbuja en su punto aleatorio dentro del embudo */
+        .bubble-pos {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+        .bubble-pos:hover {
+            z-index: 9999;
+        }
+
+        /* círculo flotante: parecen caer y flotar dentro del embudo */
+        .bubble {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #0f1e38;
+            box-shadow: 0 12px 24px -10px rgba(0,0,0,0.25);
+            transition: box-shadow 0.2s ease;
+            will-change: transform;
+            cursor: default;
+            aspect-ratio: 1/1;
+            padding: 0.2rem;
+            word-break: break-word;
+            line-height: 1.25;
+            flex-shrink: 0;
+            animation-name: floatBubble;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+        .bubble .label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: #0a1729;
+            background: rgba(255,255,240,0.3);
+            padding: 0.15rem 0.4rem;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+            max-width: 84%;
+            display: block;
+            pointer-events: none;
+            text-shadow: 0 1px 4px rgba(255,255,240,0.5);
+        }
+        .bubble .tooltip {
+            position: absolute;
+            bottom: calc(100% + 16px);
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: #1f2a3f;
+            color: #f2ead2;
+            padding: 0.9rem 1.2rem;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: 400;
+            line-height: 1.6;
+            width: 240px;
+            max-width: 80vw;
+            box-shadow: 0 20px 36px -12px rgba(0,0,0,0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            text-align: left;
+            border: 1px solid var(--gold-dim);
+            z-index: 20;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.01em;
+        }
+        .bubble .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #1f2a3f;
+        }
+        .bubble:hover .tooltip {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+        .bubble:hover {
+            animation-play-state: paused;
+            transform: scale(1.08) !important;
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        /* flotación: amplitud/rotación variable por burbuja via variables CSS asignadas en JS */
+        @keyframes floatBubble {
+            0% { transform: translateY(0px) rotate(var(--rot-a, -4deg)); }
+            100% { transform: translateY(var(--float-y, -16px)) rotate(var(--rot-b, 4deg)); }
+        }
+
+        /* salida en hexágono, justo bajo la parte estrecha del embudo */
+        .hexagon-out {
+            margin-top: -0.6rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hexagon {
+            background: var(--navy);
+            color: var(--gold);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            padding: 1.2rem 2.6rem;
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(1rem, 1.8vw, 1.5rem);
+            text-align: center;
+            letter-spacing: 0.08em;
+            box-shadow: 0 12px 24px -12px rgba(0,0,0,0.4);
+            line-height: 1.2;
+            transition: transform 0.2s ease;
+        }
+        .hexagon:hover {
+            transform: scale(1.02);
+        }
+        .hexagon small {
+            display: block;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 400;
+            font-size: 0.5rem;
+            letter-spacing: 0.15em;
+            color: var(--gold-dim);
+            margin-top: 0.1rem;
+        }
+
+        @media (max-width: 760px) {
+            .funnel-card {
+                padding: 1.6rem 1rem;
+            }
+            .funnel-shape {
+                height: 560px;
+            }
+            .bubble .tooltip {
+                width: 180px;
+                font-size: 0.7rem;
+                padding: 0.7rem 0.9rem;
+            }
+        }
+
+        /* ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== */
+        .btn-flotante {
+            position: fixed;
+            z-index: 100;
+            background: var(--navy);
+            color: var(--cream);
+            border: none;
+            border-radius: 999px;
+            padding: 0.85rem 1.3rem 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            box-shadow: 0 14px 30px -10px rgba(15, 30, 56, 0.55);
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-flotante svg {
+            width: 17px;
+            height: 17px;
+            stroke: var(--gold);
+            flex-shrink: 0;
+        }
+        .btn-flotante:hover {
+            background: var(--navy-2);
+            transform: translateY(-2px);
+        }
+        #btn-top {
+            right: 1.4rem;
+            bottom: 1.4rem;
+        }
+
+        @media (max-width: 640px) {
+            .btn-flotante span.txt {
+                display: none;
+            }
+            #btn-top {
+                right: 1rem;
+                bottom: 1rem;
+                padding: 0.85rem;
+                border-radius: 50%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== PORTADA (fija) ========== -->
+    <section id="portada">
+        <div class="portada-bg">
+            <picture>
+                <source media="(max-width:640px)" srcset="ins/001portadaCv.png" />
+                <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+            </picture>
+            <div class="ph">
+                <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
+            </div>
+            <div class="portada-veil"></div>
+        </div>
+        <div class="portada-content">
+            <div class="portada-left">
+                <span class="portada-eyebrow">Historia de la República Dominicana</span>
+                <h1 class="portada-title">Antecedentes</h1>
+                <h3 class="portada-dates">Tiranía Trujillista 1930-1961</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MENÚ HAMBURGUESA ========== -->
+    <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- ========== MENÚ LATERAL ========== -->
+    <nav class="nav-lateral" id="menuLateral" role="navigation">
+        <button class="cerrar-menu" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button>
+        <ul>
+            <li><a href="ind0.HTML">INICIO</a></li>
+            <li><a href="lt_ctx.HTML">Línea de Tiempo</a></li>
+            <li><a href="bio_tru.HTML">Reseña Biográfica</a></li>
+            <li><a href="gen_tru.HTML">Genealogía</a></li>
+            <li><a href="antes_tru.HTML" class="activo">Antecedentes</a></li>
+            <li><a href="glpe30.HTML">Golpe de Estado 1930</a></li>
+            <li><a href="maq_tir.HTML">Maquinaria de la Tiranía</a></li>
+            <li><a href="etap_tir.HTML">Etapas de la Tiranía</a></li>
+            <li><a href="elec_tru.HTML">Elecciones</a></li>
+            <li><a href="reb_tru.HTML">Rebeldes</a></li>
+            <li><a href="casos_tru.HTML">Casos Famosos</a></li>
+            <li><a href="ultnoche.HTML">Última Noche</a></li>
+            <li><a href="destru.HTML">Destrujillización</a></li>
+            <li><a href="galr.HTML">Galería</a></li>
+            <li><a href="glos.HTML">Glosario</a></li>
+            <li><a href="not.HTML">Créditos y Fuentes</a></li>
+        </ul>
+    </nav>
+
+    <!-- ========== OVERLAY ========== -->
+    <div class="overlay-menu" id="overlayMenu"></div>
+
+    <!-- ========== CONTENIDO EMBUDO ========== -->
+    <div class="contenido">
+        <div class="funnel-wrap">
+            <div class="funnel-card">
+                <div class="funnel-header">
+                    <!-- <span class="material-symbols-outlined">filter_alt</span>  -->
+                    <div class="funnel-header-text">
+                        <h2>¿Qué provocó el ascenso de Trujillo al poder?</h2>
+                        <p>No es una respuesta sencilla. El ascenso de Trujillo fue la mezcla de la geopolítica regional, inestabilidad política, la intervención militar extranjera y el colapso institucional de la República Dominicana.</p>
+                    </div>
+                </div>
+
+                <div class="funnel-canvas" id="funnelCanvas">
+                    <div class="funnel-shape">
+
+                        <div class="funnel-fill"></div>
+                        <svg class="funnel-outline" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <polygon points="3,4 97,4 64,58 64,92 36,92 36,58" />
+                        </svg>
+                        <!-- área de círculos que "caen" al embudo, en posiciones aleatorias -->
+                        <div class="circles-area" id="circlesArea"></div>
+                    </div>
+
+                    <!-- hexágono de salida (parte estrecha) -->
+                    <div class="hexagon-out">
+                        <div class="hexagon">
+                            TIRANÍA<br>TRUJILLISTA
+                            <small>1930 · 1961</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== -->
+    <button id="btn-top" class="btn-flotante" aria-label="Volver arriba">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+        <span class="txt">Arriba</span>
+    </button>
+
+    <script>
+        (function() {
+            // ----- datos: cada círculo = título + texto desplegable (sin alterar) -----
+            const items = [
+                {
+                    titulo: 'GEOPOLÍTICA REGIONAL',
+                    texto: 'GEOPOLÍTICA REGIONAL - Europa estaba envuelta en la 1GM y EUA aprovechó para aplicar su Doctrina Monroe y Corolario Roosevelt: "América para los americanos". EUA temía que Alemania tomara control. EUA ya había ocupado militarmente a Haití en 1915 sin ninguna consecuencia.'
+                },
+                {
+                    titulo: 'INESTABILIDAD POLÍTICA',
+                    texto: 'INESTABILIDAD POLÍTICA - El asesinato de Ramón "Mon" Cáceres en 1911 desató una guerra civil recurrente. El caudillo Desiderio Arias se rebeló en 1916 contra el presidente Jimenes, amenazando con otra guerra que impedía el desarrollo social y económico.'
+                },
+                {
+                    titulo: 'IMPAGO DE LA DEUDA',
+                    texto: 'IMPAGO DE LA DEUDA - EUA presionaba para que RD pagara la deuda externa desde la "Convención de 1907". La inestabilidad interrumpía el pago a acreedores estadounidenses.'
+                },
+                {
+                    titulo: 'OCUPACIÓN MILITAR DE EUA',
+                    texto: 'OCUPACIÓN MILITAR DE EUA - Producto de una mezcla de geopolítica, inestabilidad y temor al impago de la deuda provocaron la ocupación militar de 1916.'
+                },
+                {
+                    titulo: 'DESOCUPACIÓN MILITAR',
+                    texto: 'DESOCUPACIÓN MILITAR - Las tropas de EUA salieron en 1924 dejando estructura favorable: país pacificado, desarme, ejército organizado a su imagen, aduanas controladas.'
+                },
+{
+                    titulo: 'PROLONGACIÓN DEL MANDATO',
+                    texto: 'PROLONGACIÓN DEL MANDATO - Horacio Vásquez provocó una crisis política al prolongar su mandato presidencial de 4 años a 6 años y con la posibilidad de reelegirse. El vicepresidente Federico Velásquez renunció en 1928, como medida de protesta.'
+                },
+                {
+                    titulo: 'VÁSQUEZ ENFERMO Y DÉBIL',
+                    texto: 'VÁSQUEZ ENFERMO Y DÉBIL - El presidente Vásquez enfermó en 1929 y viajó de emergencia a EUA. Esto provocó un vacío de poder que Trujillo aprovechó para desplazarlo usando sobornos y chantajes.'
+                },
+                {
+                    titulo: 'BANCARROTA EN NY y RD',
+                    texto: 'BANCARROTA EN NY y RD - La bancarrota de Nueva York de 1929 complicó la economía mundial y en RD se agravó con la bancarrota local del mismo año provocada por desfalcos.'
+                },
+                {
+                    titulo: 'VÁSQUEZ CONFUSO',
+                    texto: 'VÁSQUEZ CONFUSO - El presidente Vásquez estuvo confuso en feb.1930, no entendía las maniobras Trujillistas y siguió confiando en él.'
+                }
+            ];
+
+            const area = document.getElementById('circlesArea');
+            if (!area) return;
+
+            // paleta de colores armónicos (más variados)
+            const colores = [
+                '#FADADD', '#D4E9F7', '#D9E3D6', '#FCE8C8', '#E3D7F0',
+                '#F7D6C4', '#C8E3E8', '#F1D4D9', '#D6D9E6', '#E6D4B8',
+                '#C9D9D9', '#F5D7C6', '#DAC9E0', '#E8D5C4', '#C5D9E0',
+                '#FCE4D6', '#D4E6E0', '#F0D9D9', '#D9D1E6', '#E6D6C8'
+            ];
+
+            function getRandom(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            // ---- geometría de la silueta del embudo (coincide con el polygon del SVG) ----
+            // boca ancha: y=4 -> x de 3 a 97 | cuello: y=58 -> x de 36 a 64
+            const Y_TOP = 4;
+            const Y_NECK = 58;
+            const X_TOP_LEFT = 3, X_TOP_RIGHT = 97;
+            const X_NECK_LEFT = 36, X_NECK_RIGHT = 64;
+
+            function limitesEnY(yPercent) {
+                const y = Math.min(Math.max(yPercent, Y_TOP), Y_NECK);
+                const t = (y - Y_TOP) / (Y_NECK - Y_TOP);
+                const left = X_TOP_LEFT + (X_NECK_LEFT - X_TOP_LEFT) * t;
+                const right = X_TOP_RIGHT - (X_TOP_RIGHT - X_NECK_RIGHT) * t;
+                return { left, right };
+            }
+
+            area.innerHTML = '';
+
+            // rango vertical donde "caen" las burbujas: la parte ancha superior del embudo
+            const Y_MIN = 12, Y_MAX = 46;
+
+            // posiciones aleatorias, no alineadas, evitando salirse del embudo
+            const usadas = [];
+
+            items.forEach((item, index) => {
+                // posición vertical aleatoria dentro de la boca del embudo
+                let y = getRandom(Y_MIN, Y_MAX);
+                const { left, right } = limitesEnY(y);
+                const margen = 9; // % de margen respecto a los bordes del embudo en ese nivel
+                let xMin = left + margen;
+                let xMax = right - margen;
+                if (xMax <= xMin) { xMin = left; xMax = right; }
+                let x = getRandom(xMin, xMax);
+
+                // pequeño reintento para reducir solapes evidentes con burbujas previas
+                for (let intento = 0; intento < 4; intento++) {
+                    const choca = usadas.some(p => Math.hypot(p.x - x, p.y - y) < 11);
+                    if (!choca) break;
+                    y = getRandom(Y_MIN, Y_MAX);
+                    const b2 = limitesEnY(y);
+                    x = getRandom(b2.left + margen, Math.max(b2.left + margen, b2.right - margen));
+                }
+                usadas.push({ x, y });
+
+                // ---- animación de entrada: la burbuja inicia en el lateral del embudo y luego se ubica en su punto final (x,y) ----
+                const ENTRANCE_TOTAL = 2.5; // segundos, duración total de la animación de entrada
+                const ENTRANCE_STAGGER = 0.6; // desfase máximo entre burbujas, todas terminan al mismo tiempo
+                const entranceDelay = items.length > 1 ? (index / (items.length - 1)) * ENTRANCE_STAGGER : 0;
+                const entranceDuration = ENTRANCE_TOTAL - entranceDelay;
+
+                // punto de partida: lateral izquierdo o derecho del embudo, según a qué mitad pertenezca su posición final
+                const startX = x < 50 ? -14 : 114;
+
+                // contenedor posicionador (ubica la burbuja en el punto x,y del embudo)
+                const pos = document.createElement('div');
+                pos.className = 'bubble-pos';
+                pos.style.left = startX + '%';
+                pos.style.top = y + '%';
+                pos.style.opacity = '0';
+                pos.style.transition =
+                    `left ${entranceDuration}s cubic-bezier(0.22, 0.9, 0.32, 1) ${entranceDelay}s, ` +
+                    `top ${entranceDuration}s cubic-bezier(0.22, 0.9, 0.32, 1) ${entranceDelay}s, ` +
+                    `opacity ${Math.min(0.8, entranceDuration)}s ease-out ${entranceDelay}s`;
+
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+
+                // tamaño aleatorio entre 68px y 118px (+5%)
+                const size = Math.floor(getRandom(68 * 1.05, 118 * 1.05));
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+
+                // color aleatorio al iniciar
+                const color = colores[Math.floor(Math.random() * colores.length)];
+                bubble.style.background = color;
+
+                // animación flotante: duración, retraso, amplitud y rotación aleatorias
+                // el retraso inicia después de que la burbuja termina de entrar al embudo (2.5s)
+                const dur = getRandom(3.0, 6.0);
+                const delay = ENTRANCE_TOTAL + getRandom(0, 1.2);
+                const amplitud = getRandom(-22, -10);
+                const rotA = getRandom(-9, 0);
+                const rotB = getRandom(0, 9);
+                bubble.style.animationDuration = dur + 's';
+                bubble.style.animationDelay = delay + 's';
+                bubble.style.setProperty('--float-y', amplitud + 'px');
+                bubble.style.setProperty('--rot-a', rotA + 'deg');
+                bubble.style.setProperty('--rot-b', rotB + 'deg');
+
+                // título
+                const label = document.createElement('span');
+                label.className = 'label';
+                label.textContent = item.titulo;
+                bubble.appendChild(label);
+
+                // tooltip (texto desplegable al hover)
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tooltip';
+                tooltip.textContent = item.texto;
+                bubble.appendChild(tooltip);
+
+                pos.appendChild(bubble);
+                area.appendChild(pos);
+
+                // forzar el layout inicial (posición lateral) antes de animar hacia la posición final
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        pos.style.left = x + '%';
+                        pos.style.top = y + '%';
+                        pos.style.opacity = '1';
+                    });
+                });
+            });
+
+        })();
+
+        // ===== BOTÓN ARRIBA =====
+        document.getElementById('btn-top').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ===== MENÚ HAMBURGUESA (toggle + overlay) =====
+        (function() {
+            const btnHamburguesa = document.getElementById('btnHamburguesa');
+            const menuLateral = document.getElementById('menuLateral');
+            const btnCerrarMenu = document.getElementById('btnCerrarMenu');
+            const overlayMenu = document.getElementById('overlayMenu');
+
+            function abrirMenu() {
+                menuLateral.classList.add('abierto');
+                overlayMenu.classList.add('activo');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function cerrarMenu() {
+                menuLateral.classList.remove('abierto');
+                overlayMenu.classList.remove('activo');
+                document.body.style.overflow = '';
+            }
+
+            if (btnHamburguesa) {
+                btnHamburguesa.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    abrirMenu();
+                });
+            }
+
+            if (btnCerrarMenu) {
+                btnCerrarMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    cerrarMenu();
+                });
+            }
+
+            if (overlayMenu) {
+                overlayMenu.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    cerrarMenu();
+                }
+            });
+
+            const enlacesMenu = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
+            enlacesMenu.forEach(function(enlace) {
+                enlace.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            });
+
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth > 900 && menuLateral.classList.contains('abierto')) {
+                        cerrarMenu();
+                    }
+                }, 200);
+            });
+        })();
+    </script>
+
+</body>
+</html>

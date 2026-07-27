@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Elecciones · Tiranía Trujillista 1930-1961</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ----- reset & base ----- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: #faf8f4;
+            color: #0f1e38;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        :root {
+            --bg-dark: #15130f;
+            --bg-dark-2: #211d17;
+            --cream: #f2ead2;
+            --gold: #cdaa5c;
+            --gold-dim: #8d7745;
+            --navy: #0f1e38;
+            --navy-2: #16294a;
+            --orange: #e8592a;
+            --orange-dim: #c94a20;
+            --gray: #5c6472;
+            --gray-light: #8a91a0;
+            --paper: #faf8f4;
+            --line: #e7e2d6;
+            --shadow: 0 18px 40px -18px rgba(15, 30, 56, 0.35);
+            --radius: 14px;
+            --disp: 'Cinzel', serif;
+            --body: 'Work Sans', sans-serif;
+        }
+
+        /* ========== PORTADA (fija) ========== */
+        #portada {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 15vh;
+            min-height: 80px;
+            width: 100%;
+            background: var(--bg-dark);
+            color: var(--cream);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 300;
+            box-shadow: 0 12px 30px -14px rgba(0,0,0,0.6);
+        }
+        .portada-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .portada-bg picture,
+        .portada-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+        .portada-bg .ph {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #2a2520;
+            color: var(--gold-dim);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .portada-bg .ph b {
+            display: block;
+            color: var(--cream);
+            margin-bottom: 0.25rem;
+        }
+        .portada-veil {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(21, 19, 15, 0.10) 0%,
+                    rgba(21, 19, 15, 0.35) 45%,
+                    rgba(21, 19, 15, 0.85) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .portada-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5vw;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .portada-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .portada-eyebrow {
+            letter-spacing: 0.25em;
+            font-size: 0.6rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .portada-title {
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(1rem, 2.2vw, 2rem);
+            line-height: 1.1;
+            margin: 0;
+            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+        .portada-dates {
+            font-family: var(--disp);
+            color: var(--gold);
+            font-size: clamp(0.6rem, 1vw, 0.9rem);
+            letter-spacing: 0.1em;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        /* ========== MENÚ HAMBURGUESA ========== */
+        .menu-hamburguesa {
+            position: fixed;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 999;
+            background: var(--navy);
+            border: 1px solid var(--gold);
+            border-radius: 6px;
+            padding: 0.5rem 0.7rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transition: background 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-hamburguesa:hover {
+            background: var(--navy-2);
+        }
+        .menu-hamburguesa span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: var(--cream);
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+
+        /* ===== NAVEGACIÓN LATERAL ===== */
+        .nav-lateral {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: var(--navy);
+            border-right: 3px solid var(--gold);
+            padding: 2rem 1rem 1.5rem;
+            overflow-y: auto;
+            transition: left 0.35s ease;
+            z-index: 1000;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+        }
+        .nav-lateral.abierto {
+            left: 0;
+        }
+        .nav-lateral .cerrar-menu {
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 2.2rem;
+            line-height: 1;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 1.2rem;
+            transition: 0.2s;
+        }
+        .nav-lateral .cerrar-menu:hover {
+            color: var(--gold);
+            transform: rotate(90deg);
+        }
+        .nav-lateral ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 1.8rem;
+            clear: both;
+        }
+        .nav-lateral ul li {
+            border-bottom: 1px solid #2f4a5a;
+            padding: 0.4rem 0;
+        }
+        .nav-lateral ul li a {
+            display: block;
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 1.0rem;
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            transition: 0.15s;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        .nav-lateral ul li a:hover {
+            background: #2a4a5a;
+            color: #f5efe0;
+            padding-left: 0.9rem;
+        }
+        .nav-lateral ul li a.activo {
+            background: var(--gold);
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        .overlay-menu {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.35);
+            z-index: 998;
+        }
+        .overlay-menu.activo {
+            display: block;
+        }
+
+        /* ========== CONTENIDO PRINCIPAL ========== */
+        .contenido {
+            background: var(--paper);
+            padding: 0rem 5vw 5rem;
+            margin-top: 15vh;
+        }
+
+        /* ========== CARRUSEL ========== */
+        .carrusel-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .carrusel-slides {
+            position: relative;
+            min-height: 420px;
+            height: auto;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+            padding: 2rem 2.5rem;
+            display: flex;
+            flex-direction: row;
+            gap: 2rem;
+            align-items: stretch;
+            background: white;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+        .slide.activo {
+            opacity: 1;
+            pointer-events: auto;
+            position: relative;
+        }
+
+        /* Slide de introducción: imagen flotante dentro del texto */
+        .slide-intro {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .slide-intro .slide-texto {
+            flex: 1 1 auto;
+            width: 100%;
+        }
+
+        /* Slides normales: texto con imagen flotante (75%) y gráfica (25%) */
+        .slide-normal .slide-texto {
+            flex: 0 0 75%;
+            min-width: 0;
+        }
+        /* Imagen dentro del texto: flotante a la izquierda (normal) */
+        .imagen-en-texto {
+            float: right;
+            margin: 0 0 0.6rem 1.2rem;
+            max-width: 35%;
+            height: auto;
+            border-radius: 4px;
+            background: transparent;
+        }
+
+        /* Imagen de introducción: más grande y flotante a la derecha */
+        .imagen-intro {
+            float: right;
+            margin: 0 0 1rem 1.5rem;
+            max-width: 55%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .slide-derecha {
+            flex: 0 0 25%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            padding: 0.2rem 0;
+            max-height: 100%;
+        }
+        .slide-derecha .grafica-wrap {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slide-derecha canvas {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            aspect-ratio: 1/1;
+            display: block;
+            border-radius: 0;
+            box-shadow: none;
+            background: transparent;
+        }
+
+        .slide-titulo {
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: var(--navy);
+            margin-bottom: 0.6rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 0.3rem;
+            display: inline-block;
+        }
+        .slide-sub {
+            font-weight: 600;
+            color: var(--orange);
+            margin-top: 0.8rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            clear: both;
+        }
+        .slide-contexto,
+        .slide-resultado,
+        .slide-conclusion {
+            color: #2c3a4b;
+            line-height: 1.7;
+            font-size: 0.92rem;
+            margin-top: 0.4rem;
+        }
+        .slide-contexto {
+            margin-top: 0.2rem;
+        }
+        .slide-conclusion {
+            margin-top: 0.8rem;
+            border-top: 1px solid var(--line);
+            padding-top: 0.8rem;
+            font-style: italic;
+            color: #3d4a5e;
+            clear: both;
+        }
+
+        /* Navegación */
+        .carrusel-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            background: #f8f6f0;
+            border-top: 1px solid var(--line);
+        }
+        .carrusel-nav button {
+            background: var(--navy);
+            color: var(--cream);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .carrusel-nav button:hover {
+            background: var(--navy-2);
+        }
+        .carrusel-nav button:disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        .carrusel-indicadores {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .carrusel-indicadores button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--gray-light);
+            border: none;
+            padding: 0;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .carrusel-indicadores button.activo {
+            background: var(--gold);
+            transform: scale(1.25);
+        }
+
+        @media (max-width: 760px) {
+            .slide {
+                flex-direction: column;
+                padding: 1.5rem 1.2rem;
+                max-height: none;
+                min-height: 400px;
+            }
+            .slide-normal .slide-texto {
+                flex: 1 1 auto;
+                width: 100%;
+            }
+            .imagen-en-texto,
+            .imagen-intro {
+                float: none;
+                max-width: 100%;
+                margin: 0 0 0.8rem 0;
+            }
+            .slide-derecha {
+                flex: 1 1 auto;
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 1rem 0;
+                max-height: 320px;
+            }
+            .slide-derecha .grafica-wrap {
+                flex: 0 0 60%;
+                max-width: 300px;
+                height: auto;
+            }
+            .slide-derecha canvas {
+                max-width: 180px;
+                max-height: 180px;
+            }
+            .carrusel-slides {
+                min-height: 500px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== PORTADA (fija) ========== -->
+    <section id="portada">
+        <div class="portada-bg">
+            <picture>
+                <source media="(max-width:640px)" srcset="ins/001portadaCv.png" />
+                <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+            </picture>
+            <div class="ph">
+                <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
+            </div>
+            <div class="portada-veil"></div>
+        </div>
+        <div class="portada-content">
+            <div class="portada-left">
+                <span class="portada-eyebrow">Historia de la República Dominicana</span>
+                <h1 class="portada-title">Elecciones</h1>
+                <h3 class="portada-dates">Tiranía Trujillista 1930-1961</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MENÚ HAMBURGUESA ========== -->
+    <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- ========== MENÚ LATERAL ========== -->
+    <nav class="nav-lateral" id="menuLateral" role="navigation">
+        <button class="cerrar-menu" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button>
+        <ul>
+            <li><a href="ind0.HTML">INICIO</a></li>
+            <li><a href="lt_ctx.HTML">Línea de Tiempo</a></li>
+            <li><a href="bio_tru.HTML">Reseña Biográfica</a></li>
+            <li><a href="gen_tru.HTML">Genealogía</a></li>
+            <li><a href="antes_tru.HTML">Antecedentes</a></li>
+            <li><a href="glpe30.HTML">Golpe de Estado 1930</a></li>
+            <li><a href="maq_tir.HTML">Maquinaria de la Tiranía</a></li>
+            <li><a href="etap_tir.HTML">Etapas de la Tiranía</a></li>
+            <li><a href="elec_tru.HTML" class="activo">Elecciones</a></li>
+            <li><a href="reb_tru.HTML">Rebeldes</a></li>
+            <li><a href="casos_tru.HTML">Casos Famosos</a></li>
+            <li><a href="ultnoche.HTML">Última Noche</a></li>
+            <li><a href="destru.HTML">Destrujillización</a></li>
+            <li><a href="galr.HTML">Galería</a></li>
+            <li><a href="glos.HTML">Glosario</a></li>
+            <li><a href="not.HTML">Créditos y Fuentes</a></li>
+        </ul>
+    </nav>
+
+    <!-- ========== OVERLAY ========== -->
+    <div class="overlay-menu" id="overlayMenu"></div>
+
+    <!-- ========== CONTENIDO ========== -->
+    <div class="contenido">
+<br>
+        <div class="carrusel-wrap">
+            <div class="carrusel-slides" id="carruselSlides">
+                <!-- Los slides se generan con JS -->
+            </div>
+            <div class="carrusel-nav">
+                <button id="prevSlide" aria-label="Anterior">‹</button>
+                <div class="carrusel-indicadores" id="indicadores"></div>
+                <button id="nextSlide" aria-label="Siguiente">›</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  DATOS DE LAS ELECCIONES (con imagen y gráfica)
+        // ============================================================
+        const elecciones = [{
+            id: 'elec000',
+            titulo: 'Introducción',
+            contexto: 'Trujillo no creyó nunca en la democracia, no le interesaba practicarla.  Era un personaje autoritario y le gustaba imponerse. </br> </br> Nunca ejerció la democracia ni en el ejercicio del poder, ni en su vida personal. Bajo su sombra realizó 7 elecciones en las que él o sus candidatos participaron.</br> </br> Desde el primer momento Trujillo controló la Junta Electoral, la prensa, las Fuerzas Armadas, la administración pública y la organización del proceso electoral.',
+            resultado: '',
+            conclusion: '',
+            grafica: null,
+            imagen: 'ins/elec0.png'
+        }, {
+            id: 'elec001',
+            titulo: 'ELECCIONES 1930-1934',
+            contexto: 'Trujillo y Estrella Ureña se postularon como candidatos a la presidencia y vicepresidencia respectivamente.  Los demás candidatos se retiraron de la contienda debido a la intensa persecución, el acoso militar y la violencia ejercida contra sus seguidores, lo que dejó a Trujillo como candidato único.',
+            resultado: 'Rafael Leonidas Trujillo Molina ganó las elecciones con un conteo oficial de 223,926 votos a favor y 1870 en contra. Porcentaje: 99.17% a favor de Trujillo y 0.83% en contra.',
+            conclusion: 'El proceso electoral concluyó con la proclamación oficial de Trujillo y Estrella Ureña el 24 de mayo de 1930, asumiendo Trujillo la presidencia el 16 de agosto de ese mismo año. Este evento marcó el inicio de la dictadura, que se extendería hasta su muerte en 1961 y la caída de la dictadura en 1962.',
+            grafica: {
+                etiquetas: ['A favor', 'En contra'],
+                porcentajes: [99.17, 0.83],
+                colores: ['#2a7f6e', '#c94a20']
+            },
+            imagen: 'ins/elec1.png'
+        }, {
+            id: 'elec002',
+            titulo: 'ELECCIONES 1934-1938',
+            contexto: 'Bajo la consigna "Seguiré a caballo", Trujillo se postuló para su primera reelección presidencial.  Se destacó la falta absoluta de oposición política y la represión a nivel nacional.  Únicamente participó el Partido Dominicano, dirigido por trujillo y sus seguidores.',
+            resultado: 'Porcentaje: 100% a favor de Trujillo y 0% en contra.',
+            conclusion: 'Rafael L. Trujillo Molina y Jacinto B. Peynado fueron portulados por el Partido Dominicano como Presidente y Vicepresidente.  Peynado era hombre de confianza de Trujillo.',
+            grafica: {
+                etiquetas: ['A favor'],
+                porcentajes: [100],
+                colores: ['#2a7f6e']
+            },
+            imagen: 'ins/elec2.png'
+        }, {
+            id: 'elec003',
+            titulo: 'ELECCIONES 1938-1942',
+            contexto: 'La dictadura de Rafael Leónidas Trujillo ya se encontraba consolidada.  Las elecciones se realizaron pocos meses después de la Masacre del Perejil (1937) lo que provocó una fuerte condena internacional.  Para mejorar su imagen, Trujillo aceptó retirar su candidatura y sugerir a Jacinto B. Peynado como su candidato.',
+            resultado: 'Porcentaje: 100% a favor de Jacinto B. Peynado, el candidato de Trujillo y 0% en contra.',
+            conclusion: 'Aunque Jacinto B. Peynado ejercía la Presidencia, en la práctica Rafael L. Trujillo mantuvo el control completo y total.  Peynado confirmó a Trujillo como "Generalísimo" y a todo el gabinete en sus puestos. El Presidente Peynado murió en marzo de 1940 y el vicepresidente Manuel de Js. Troncoso de la Concha, asumió obedientemente la presidencia hasta 1942.',
+            grafica: {
+                etiquetas: ['A favor'],
+                porcentajes: [100],
+                colores: ['#2a7f6e']
+            },
+            imagen: 'ins/elec3.png'
+        }, {
+            id: 'elec004',
+            titulo: 'ELECCIONES 1942-1947',
+            contexto: 'Trujillo decidió volver a la Presidencia, presentándose como único candidato del Partido Dominicano.  La 2da Guerra Mundial (2GM) había iniciado y el mundo se encotraba en un momento difícil que requería decisiones ágiles.  Se reconoció el derecho al voto de las mujeres.',
+            resultado: 'Porcentaje: 100% a favor de Trujillo y 0% en contra.',
+            conclusion: 'La 2GM cambió la goepolítica de EUA y Trujillo se dedicó a fortalecer su cooperación.  La demanda internacional de azúcar, cacao y otros productos agrícolas aumentó durante el conflicto y esto fortaleció la economía nacional.',
+            grafica: {
+                etiquetas: ['A favor'],
+                porcentajes: [100],
+                colores: ['#2a7f6e']
+            },
+            imagen: 'ins/elec4.png'
+        }, {
+            id: 'elec005',
+            titulo: 'ELECCIONES 1947-1952',
+            contexto: 'Trujillo participó en estas elecciones junto a otros candidatos.  El régimen permitió la organización de algunos partidos distintos al oficialista.  Se trataba del el Partido Nacional Democrático (PND) y el Partido Nacional Laborista (PNL).  El cargo de vicepresidente no figuraba en la constitución.',
+            resultado: 'Porcentaje: 92.98% a favor de Trujillo, 3.54% a favor de Rafael A. Espaillat (PND) y 3.47% a favor de Francisco Prats Ramírez (PNL).',
+            conclusion: 'Estos comicios fueron los únicos durante la dictadura pero no fueron libres ni competitivos.  El proceso electoral fue utilizado para dar una apariencia de democracia y pluralismo.',
+            grafica: {
+                etiquetas: ['A favor', 'Espaillat', 'Prats R'],
+                porcentajes: [92.98, 3.54, 3.47],
+                colores: ['#2a7f6e', '#c9a84c', '#6b8c9e']
+            },
+            imagen: 'ins/elec5.png'
+        }, {
+            id: 'elec006',
+            titulo: 'ELECCIONES 1952-1957',
+            contexto: 'Trujillo decidió institucionalizar el "trujillismo" delegando el cargo en su hermano menor, Héctor Bienvenido Trujillo, a quien apodaban "Negro".  El cargo de vicepresidente no figuraba en la constitución.  En estas elecciones se retornó al candidato único y partído único. Héctor Trujillo participó sin hacer campaña, por lo general no salió de su casa, pues no había ningún rival político.',
+            resultado: 'Porcentaje: 100% a favor del hermano y candidato de Trujillo y 0% en contra.',
+            conclusion: 'El régimen utilizó mecanismos de coacción, se hizo obligatorio el voto mediante la presentación de la cédula sellada (la "palmita") para realizar cualquier trámite civil, garantizando así una asistencia masiva y controlada a las urnas.',
+            grafica: {
+                etiquetas: ['A favor'],
+                porcentajes: [100],
+                colores: ['#2a7f6e']
+            },
+            imagen: 'ins/elec6.png'
+        }, {
+            id: 'elec007',
+            titulo: 'ELECCIONES 1957-1962',
+            contexto: 'Héctor Bienvenido Trujillo, fue el candidato a la presidencia nuevamente.  Joaquín Antonio Balaguer Ricardo, un funcionario trujillista desde 1949, fue elegido formalmente como vicepresidente en esta boleta.',
+            resultado: 'Porcentaje: 100% a favor del hermano y candidato de Trujillo y 0% en contra.',
+            conclusion: 'El Presidente Héctor Bienvenido Trujillo (negro) se vio forzado a renunciar el 3.ago.1960, debido a un escándalo internacional.  El tirano y generalísimo ordenó el 24.jun.1960 un atentado contra el presidente de Venezuela, Rómulo Betancourt, su enemigo político. Este crimen falló y a la vez unificó a los países de la región en contra de la dictadura. La Organización de Estados Americanos (OEA) sancionó al país aislándolo, el régimen buscó desesperadamente aparentar una renovación política.',
+            grafica: {
+                etiquetas: ['A favor'],
+                porcentajes: [100],
+                colores: ['#2a7f6e']
+            },
+            imagen: 'ins/elec7.png'
+        }];
+
+        // ============================================================
+        //  RENDERIZAR CARRUSEL
+        // ============================================================
+        const slidesContainer = document.getElementById('carruselSlides');
+        const indicadoresContainer = document.getElementById('indicadores');
+        let currentIndex = 0;
+        let animFrameId = null;
+
+        function renderSlides() {
+            slidesContainer.innerHTML = '';
+            elecciones.forEach((el, idx) => {
+                const slide = document.createElement('div');
+                slide.className = 'slide' + (idx === 0 ? ' slide-intro' : ' slide-normal');
+                if (idx === 0) slide.classList.add('activo');
+                slide.dataset.index = idx;
+
+                const textoDiv = document.createElement('div');
+                textoDiv.className = 'slide-texto';
+
+                // Construir el HTML completo del texto (incluyendo la imagen flotante)
+                let html = '';
+                if (el.imagen) {
+                    const clase = idx === 0 ? 'imagen-intro' : 'imagen-en-texto';
+                    html += `<img src="${el.imagen}" alt="Imagen ${el.titulo}" class="${clase}" onerror="this.style.display='none'" />`;
+                }
+                html += `<div class="slide-titulo">${el.titulo}</div>`;
+                if (el.contexto) {
+                    html += `<div class="slide-contexto">${el.contexto}</div>`;
+                }
+                if (el.resultado) {
+                    html += `<div class="slide-sub">Resultado</div><div class="slide-resultado">${el.resultado}</div>`;
+                }
+                if (el.conclusion) {
+                    html += `<div class="slide-sub">Conclusión</div><div class="slide-conclusion">${el.conclusion}</div>`;
+                }
+                textoDiv.innerHTML = html;
+                slide.appendChild(textoDiv);
+
+                // Gráfica solo para slides normales (no intro)
+                if (idx > 0 && el.grafica) {
+                    const derechaDiv = document.createElement('div');
+                    derechaDiv.className = 'slide-derecha';
+                    const graficaWrap = document.createElement('div');
+                    graficaWrap.className = 'grafica-wrap';
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 600;
+                    canvas.height = 600;
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
+                    canvas.style.aspectRatio = '1/1';
+                    canvas.style.maxWidth = '100%';
+                    canvas.style.maxHeight = '100%';
+                    canvas.style.objectFit = 'contain';
+                    canvas.dataset.index = idx;
+                    graficaWrap.appendChild(canvas);
+                    derechaDiv.appendChild(graficaWrap);
+                    slide.appendChild(derechaDiv);
+                }
+
+                slidesContainer.appendChild(slide);
+            });
+
+            indicadoresContainer.innerHTML = '';
+            elecciones.forEach((_, idx) => {
+                const btn = document.createElement('button');
+                btn.dataset.index = idx;
+                if (idx === 0) btn.classList.add('activo');
+                btn.setAttribute('aria-label', `Ir a slide ${idx+1}`);
+                btn.addEventListener('click', () => goToSlide(idx));
+                indicadoresContainer.appendChild(btn);
+            });
+
+            updateSlide(0);
+        }
+
+        function goToSlide(index) {
+            if (index < 0) index = elecciones.length - 1;
+            if (index >= elecciones.length) index = 0;
+            if (index === currentIndex) return;
+
+            const slides = document.querySelectorAll('.slide');
+            slides[currentIndex].classList.remove('activo');
+            slides[index].classList.add('activo');
+
+            document.querySelectorAll('.carrusel-indicadores button').forEach((btn, i) => {
+                btn.classList.toggle('activo', i === index);
+            });
+            currentIndex = index;
+
+            document.getElementById('prevSlide').disabled = (index === 0);
+            document.getElementById('nextSlide').disabled = (index === elecciones.length - 1);
+
+            const canvas = slides[index].querySelector('canvas');
+            if (canvas) {
+                const idx = parseInt(canvas.dataset.index);
+                dibujarGrafica(canvas, elecciones[idx].grafica);
+            }
+        }
+
+        function updateSlide(index) {
+            goToSlide(index);
+        }
+
+        document.getElementById('prevSlide').addEventListener('click', () => {
+            goToSlide(currentIndex - 1);
+        });
+        document.getElementById('nextSlide').addEventListener('click', () => {
+            goToSlide(currentIndex + 1);
+        });
+
+        // ============================================================
+        //  DIBUJAR GRÁFICA DE TORTA CON LEYENDA DEBAJO (dentro del canvas)
+        //  Muestra etiquetas y valores siempre debajo del círculo
+        // ============================================================
+        function dibujarGrafica(canvas, data) {
+            if (!data) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            const total = data.porcentajes.reduce((a, b) => a + b, 0);
+            if (total === 0) return;
+
+            const n = data.etiquetas.length;
+            const boxSize = 24;
+            const rowHeight = 38;
+            const rowGap = 12;
+            const legendTop = 26;
+            const legendBottom = 20;
+            const legendHeight = n * rowHeight + (n - 1) * rowGap;
+
+            const centerX = w / 2;
+            const espacioCirculo = h - legendHeight - legendTop - legendBottom;
+            const centerY = Math.max(espacioCirculo / 2, 30);
+            const radius = Math.max(Math.min(w * 0.36, espacioCirculo / 2 - 10), 40);
+            const legendStartY = centerY + radius + legendTop;
+
+            const sectores = [];
+            let acum = 0;
+            data.porcentajes.forEach((p, i) => {
+                const ang = (p / 100) * 2 * Math.PI;
+                sectores.push({
+                    inicio: acum,
+                    fin: acum + ang,
+                    porcentaje: p,
+                    color: data.colores[i],
+                    label: data.etiquetas[i]
+                });
+                acum += ang;
+            });
+
+            let startTime = null;
+            const duracion = 800;
+
+            function animar(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progreso = Math.min(elapsed / duracion, 1);
+                const anguloActual = progreso * 2 * Math.PI;
+
+                ctx.clearRect(0, 0, w, h);
+
+                let anguloDibujado = 0;
+                for (let i = 0; i < sectores.length; i++) {
+                    const s = sectores[i];
+                    if (anguloActual <= anguloDibujado) break;
+                    const finSector = Math.min(s.fin, anguloDibujado + (anguloActual - anguloDibujado));
+                    if (finSector > s.inicio) {
+                        ctx.beginPath();
+                        ctx.moveTo(centerX, centerY);
+                        ctx.arc(centerX, centerY, radius, s.inicio, finSector);
+                        ctx.closePath();
+                        ctx.fillStyle = s.color;
+                        ctx.fill();
+                        ctx.strokeStyle = '#fff';
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+                    }
+                    anguloDibujado = s.fin;
+                }
+
+                if (progreso >= 1) {
+                    dibujarLeyenda(ctx, w, sectores, legendStartY, boxSize, rowHeight, rowGap);
+                } else {
+                    requestAnimationFrame(animar);
+                }
+            }
+
+            function dibujarLeyenda(ctx, w, sectores, startY, boxSize, rowHeight, rowGap) {
+                const margenLateral = 20;
+                const gapBoxText = 12;
+                let fontSize = 26;
+                const fontSizeMin = 16;
+
+                const construirTextos = () => sectores.map(
+                    s => `${s.label} — ${s.porcentaje.toFixed(1)}%`
+                );
+
+                let textos = construirTextos();
+                let maxTextWidth = 0;
+
+                do {
+                    ctx.font = `600 ${fontSize}px "Work Sans", sans-serif`;
+                    maxTextWidth = Math.max(...textos.map(t => ctx.measureText(t).width));
+                    const anchoBloque = boxSize + gapBoxText + maxTextWidth;
+                    if (anchoBloque <= w - margenLateral * 2 || fontSize <= fontSizeMin) break;
+                    fontSize -= 1;
+                } while (true);
+
+                const blockWidth = boxSize + gapBoxText + maxTextWidth;
+                const startX = Math.max((w - blockWidth) / 2, margenLateral);
+
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'middle';
+                ctx.font = `600 ${fontSize}px "Work Sans", sans-serif`;
+
+                sectores.forEach((s, i) => {
+                    const y = startY + i * (rowHeight + rowGap) + rowHeight / 2;
+
+                    ctx.fillStyle = s.color;
+                    ctx.fillRect(startX, y - boxSize / 2, boxSize, boxSize);
+                    ctx.strokeStyle = '#999';
+                    ctx.lineWidth = 0.5;
+                    ctx.strokeRect(startX, y - boxSize / 2, boxSize, boxSize);
+
+                    ctx.fillStyle = '#0f1e38';
+                    ctx.font = `600 ${fontSize}px "Work Sans", sans-serif`;
+                    ctx.fillText(textos[i], startX + boxSize + gapBoxText, y);
+                });
+            }
+
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            animFrameId = requestAnimationFrame(animar);
+        }
+
+        // ============================================================
+        //  INICIALIZACIÓN
+        // ============================================================
+        function initCarrusel() {
+            renderSlides();
+            const primerCanvas = document.querySelector('.slide-normal canvas');
+            if (primerCanvas) {
+                const idx = parseInt(primerCanvas.dataset.index);
+                dibujarGrafica(primerCanvas, elecciones[idx].grafica);
+            }
+            document.getElementById('prevSlide').disabled = true;
+            if (elecciones.length === 1) {
+                document.getElementById('nextSlide').disabled = true;
+            }
+        }
+
+        initCarrusel();
+
+        // ===== MENÚ HAMBURGUESA (toggle + overlay) =====
+        (function() {
+            const btnHamburguesa = document.getElementById('btnHamburguesa');
+            const menuLateral = document.getElementById('menuLateral');
+            const btnCerrarMenu = document.getElementById('btnCerrarMenu');
+            const overlayMenu = document.getElementById('overlayMenu');
+
+            function abrirMenu() {
+                menuLateral.classList.add('abierto');
+                overlayMenu.classList.add('activo');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function cerrarMenu() {
+                menuLateral.classList.remove('abierto');
+                overlayMenu.classList.remove('activo');
+                document.body.style.overflow = '';
+            }
+
+            if (btnHamburguesa) {
+                btnHamburguesa.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    abrirMenu();
+                });
+            }
+
+            if (btnCerrarMenu) {
+                btnCerrarMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    cerrarMenu();
+                });
+            }
+
+            if (overlayMenu) {
+                overlayMenu.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    cerrarMenu();
+                }
+            });
+
+            const enlacesMenu = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
+            enlacesMenu.forEach(function(enlace) {
+                enlace.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            });
+
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth > 900 && menuLateral.classList.contains('abierto')) {
+                        cerrarMenu();
+                    }
+                }, 200);
+            });
+        })();
+    </script>
+</body>
+</html>

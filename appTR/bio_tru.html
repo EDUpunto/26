@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Reseña Biografica y Personalidad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Work Sans', sans-serif;
+      background: #faf8f4;
+      color: #0f1e38;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    :root {
+      --bg-dark: #15130f;
+      --cream: #f2ead2;
+      --gold: #cdaa5c;
+      --gold-dim: #8d7745;
+      --navy: #0f1e38;
+      --navy-2: #16294a;
+      --orange: #e8592a;
+      --paper: #faf8f4;
+      --disp: 'Cinzel', serif;
+      --body: 'Work Sans', sans-serif;
+      --header-h: 100px;
+    }
+    @media (max-width: 820px) { :root { --header-h: 84px; } }
+    @media (max-width: 480px) { :root { --header-h: 68px; } }
+
+    /* ========== ENCABEZADO FIJO ========== */
+    #portada {
+      position: fixed;
+      top: 0; left: 0;
+      height: var(--header-h);
+      width: 100%;
+      background: var(--bg-dark);
+      color: var(--cream);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+      z-index: 300;
+      box-shadow: 0 12px 30px -14px rgba(0,0,0,0.6);
+    }
+    .portada-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+    .portada-bg picture, .portada-bg img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center top;
+    }
+    .portada-bg .ph {
+      position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+      background: #2a2520; color: var(--gold-dim); font-size: 0.75rem; text-align: center; padding: 1rem;
+    }
+    .portada-bg .ph b { display: block; color: var(--cream); margin-bottom: 0.25rem; }
+    .portada-veil {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(21,19,15,0.10) 0%, rgba(21,19,15,0.35) 45%, rgba(21,19,15,0.88) 100%);
+      z-index: 1; pointer-events: none;
+    }
+    .portada-content {
+      position: relative; z-index: 2; width: 100%; max-width: 1200px; margin: 0 auto;
+      padding: 0 5vw; display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .portada-left { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+    .portada-eyebrow { letter-spacing: 0.25em; font-size: 0.6rem; color: var(--gold); text-transform: uppercase; font-weight: 600; }
+    .portada-title {
+      font-family: var(--disp); font-weight: 700; font-size: clamp(1rem, 2.2vw, 2rem);
+      line-height: 1.1; margin: 0; text-shadow: 0 2px 16px rgba(0,0,0,0.5); white-space: nowrap;
+    }
+    .portada-dates {
+      font-family: var(--disp); color: var(--gold); font-size: clamp(0.6rem, 1vw, 0.9rem);
+      letter-spacing: 0.1em; margin: 0; white-space: nowrap;
+    }
+
+    /* ========== MENÚ HAMBURGUESA ========== */
+    .menu-hamburguesa {
+      position: fixed;
+      top: 1.2rem;
+      left: 1.2rem;
+      z-index: 999;
+      background: var(--navy);
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      padding: 0.5rem 0.7rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      transition: background 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .menu-hamburguesa:hover {
+      background: var(--navy-2);
+    }
+    .menu-hamburguesa span {
+      display: block;
+      width: 28px;
+      height: 3px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: 0.2s;
+    }
+
+    /* ===== NAVEGACIÓN LATERAL ===== */
+    .nav-lateral {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 300px;
+      height: 100vh;
+      background: var(--navy);
+      border-right: 3px solid var(--gold);
+      padding: 2rem 1rem 1.5rem;
+      overflow-y: auto;
+      transition: left 0.35s ease;
+      z-index: 1000;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+    }
+    .nav-lateral.abierto {
+      left: 0;
+    }
+    .nav-lateral .cerrar-menu {
+      background: none;
+      border: none;
+      color: var(--cream);
+      font-size: 2.2rem;
+      line-height: 1;
+      cursor: pointer;
+      float: right;
+      margin-bottom: 1.2rem;
+      transition: 0.2s;
+    }
+    .nav-lateral .cerrar-menu:hover {
+      color: var(--gold);
+      transform: rotate(90deg);
+    }
+    .nav-lateral ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1.8rem;
+      clear: both;
+    }
+    .nav-lateral ul li {
+      border-bottom: 1px solid #2f4a5a;
+      padding: 0.4rem 0;
+    }
+    .nav-lateral ul li a {
+      display: block;
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 1.0rem;
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      transition: 0.15s;
+      font-family: 'Work Sans', sans-serif;
+      letter-spacing: 0.3px;
+    }
+    .nav-lateral ul li a:hover {
+      background: #2a4a5a;
+      color: #f5efe0;
+      padding-left: 0.9rem;
+    }
+    .nav-lateral ul li a.activo {
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .overlay-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.35);
+      z-index: 998;
+    }
+    .overlay-menu.activo {
+      display: block;
+    }
+
+    /* ========== CONTENIDO ========== */
+    .contenido { background: var(--paper); padding-top: var(--header-h); position: relative; }
+
+    .two-col { display: flex; align-items: flex-start; position: relative; }
+
+    .col-left {
+      width: 30%;
+      position: sticky;
+      top: var(--header-h);
+      align-self: flex-start;
+      height: calc(100vh - var(--header-h));
+      overflow: hidden;
+      background: #1e1b16;
+      flex-shrink: 0;
+    }
+    .img-viewport { position: relative; width: 100%; height: 100%; }
+    .img-layer {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+      will-change: opacity, transform;
+    }
+    .img-layer.activa { opacity: 1; z-index: 2; }
+    .img-layer img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+    .img-layer .ph-mini {
+      position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+      background: #221e18; color: var(--gold-dim); font-size: 0.75rem; text-align: center; padding: 1rem;
+    }
+    .img-layer.broken .ph-mini { display: flex; }
+    .img-layer.broken img { visibility: hidden; }
+    .img-layer .etiqueta {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+      padding: 0.8rem 1rem 0.7rem;
+      background: linear-gradient(0deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 100%);
+      color: var(--cream);
+      font-family: var(--disp);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .col-right { width: 70%; padding: 2.5rem 3rem 6rem 2.5rem; background: var(--paper); }
+
+    .bloque { margin-bottom: 0.5rem; }
+
+    .col-right h2 {
+      font-family: var(--disp); font-size: clamp(1.4rem, 2.8vw, 2.2rem); color: var(--navy);
+      margin: 2rem 0 0.8rem 0; border-bottom: 2px solid var(--gold); padding-bottom: 0.4rem;
+    }
+    .col-right .bloque:first-child h2 { margin-top: 0; }
+    .col-right h3 { font-family: var(--disp); font-size: 1.2rem; color: var(--navy-2); margin: 1.6rem 0 0.6rem 0; font-weight: 600; }
+    .col-right p { font-size: 15px; line-height: 1.7; color: #2a3440; margin-bottom: 0.9rem; }
+    .col-right ul { margin: 0.6rem 0 1.2rem 1.6rem; list-style: disc; }
+    .col-right ul li { font-size: 15px; line-height: 1.7; color: #2a3440; margin-bottom: 0.3rem; }
+    .col-right .destacado {
+      background: #f3ede4; padding: 0.8rem 1.6rem; border-left: 5px solid var(--orange);
+      margin: 1rem 0; font-style: italic; border-radius: 0 8px 8px 0;
+    }
+    .col-right .rotulo-seccion {
+      display: inline-block; font-family: var(--disp); font-size: 0.68rem; letter-spacing: 0.18em;
+      color: var(--gold-dim); text-transform: uppercase; margin-bottom: 0.3rem;
+    }
+
+    @media (max-width: 820px) {
+      .two-col { flex-direction: column; }
+      .col-left { width: 100%; height: 46vh; position: relative; top: auto; }
+      .img-layer .etiqueta { font-size: 0.7rem; }
+      .col-right { width: 100%; padding: 1.5rem 1.5rem 3rem; }
+      .portada-title, .portada-dates { white-space: normal; }
+    }
+    @media (max-width: 480px) {
+      .col-left { height: 34vh; }
+      .col-right { padding: 1rem 1rem 2rem; }
+      .col-right p, .col-right ul li { font-size: 14px; }
+    }
+
+    /* ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== */
+    .btn-flotante {
+      position: fixed;
+      z-index: 250;
+      background: var(--navy);
+      color: var(--cream);
+      border: none;
+      border-radius: 999px;
+      padding: 0.85rem 1.3rem 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      box-shadow: 0 14px 30px -10px rgba(15,30,56,0.55);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-flotante svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--gold);
+      flex-shrink: 0;
+    }
+    .btn-flotante:hover {
+      background: var(--navy-2);
+      transform: translateY(-2px);
+    }
+    #btn-top {
+      right: 1.4rem;
+      bottom: 1.4rem;
+    }
+
+    @media (max-width: 640px) {
+      .btn-flotante span.txt { display: none; }
+      #btn-top { right: 1rem; bottom: 1rem; padding: 0.85rem; border-radius: 50%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition-duration: 0.01ms !important; }
+      .img-layer { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== ENCABEZADO (fijo) ========== -->
+  <section id="portada">
+    <div class="portada-bg">
+      <picture>
+        <source media="(max-width:640px)" srcset="ins/001portadaCv.png" />
+        <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961"
+        onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+      </picture>
+      <div class="ph">
+        <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
+      </div>
+      <div class="portada-veil"></div>
+    </div>
+    <div class="portada-content">
+      <div class="portada-left">
+        <span class="portada-eyebrow">Historia de la República Dominicana</span>
+        <h1 class="portada-title">Reseña Biográfica</h1>
+        <h3 class="portada-dates">Tiranía Trujillista 1930-1961</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MENÚ HAMBURGUESA ========== -->
+  <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- ========== MENÚ LATERAL ========== -->
+  <nav class="nav-lateral" id="menuLateral" role="navigation">
+    <button class="cerrar-menu" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button>
+    <ul>
+      <li><a href="ind0.HTML">INICIO</a></li>
+      <li><a href="lt_ctx.HTML">Línea de Tiempo</a></li>
+      <li><a href="bio_tru.HTML" class="activo">Reseña Biográfica</a></li>
+      <li><a href="gen_tru.HTML">Genealogía</a></li>
+      <li><a href="antes_tru.HTML">Antecedentes</a></li>
+      <li><a href="glpe30.HTML">Golpe de Estado 1930</a></li>
+      <li><a href="maq_tir.HTML">Maquinaria de la Tiranía</a></li>
+      <li><a href="etap_tir.HTML">Etapas de la Tiranía</a></li>
+      <li><a href="elec_tru.HTML">Elecciones</a></li>
+      <li><a href="reb_tru.HTML">Rebeldes</a></li>
+      <li><a href="casos_tru.HTML">Casos Famosos</a></li>
+      <li><a href="ultnoche.HTML">Última Noche</a></li>
+      <li><a href="destru.HTML">Destrujillización</a></li>
+      <li><a href="galr.HTML">Galería</a></li>
+      <li><a href="glos.HTML">Glosario</a></li>
+      <li><a href="not.HTML">Créditos y Fuentes</a></li>
+    </ul>
+  </nav>
+
+  <!-- ========== OVERLAY ========== -->
+  <div class="overlay-menu" id="overlayMenu"></div>
+
+  <!-- ========== CONTENIDO ========== -->
+  <div class="contenido">
+    <div class="two-col">
+
+      <!-- COLUMNA IZQUIERDA (imágenes fijas) -->
+      <div class="col-left" id="parallaxLeft">
+        <div class="img-viewport" id="imgViewport">
+          <div class="img-layer" data-slot="a">
+            <img alt="">
+            <div class="ph-mini"><span>Falta imagen</span></div>
+            <div class="etiqueta" data-role="etiqueta"></div>
+          </div>
+          <div class="img-layer" data-slot="b">
+            <img alt="">
+            <div class="ph-mini"><span>Falta imagen</span></div>
+            <div class="etiqueta" data-role="etiqueta"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA (scroll) -->
+      <div class="col-right" id="colRight">
+
+        <!-- 1. ORIGEN -->
+        <div class="bloque" data-imgs="ins/Limabio01.png" data-rotulo="Origen">
+          <span class="rotulo-seccion"> </span>
+          <h2>Origen</h2>
+          <div style="overflow: hidden; margin: 20px 0;">
+            <img src="ins/imabio01.png" alt="Padres de Rafael Leónidas Trujillo" style="float: left; width: 40%; max-width: 250px; height: auto; margin-right: 20px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <p style="margin-top: 0;">Rafael Leonidas Trujillo Molina nació en San Cristóbal el 24 de octubre de 1891. Fue el tercer hijo de un total de once.</p>
+            <p>Su padre era empleado público y su madre costurera. Durante su niñez y adolescencia, la familia vivió en la pobreza y en un entorno disfuncional: pues su padre era mujeriego y no atendía debidamente a la familia.</p>
+            <p>En su juventud, Trujillo trabajó como telegrafista en San Cristóbal y luego en Baní. Más adelante se empleó como «Guardia Campestre» en el ingenio azucarero San Luis y, para 1916, en Boca Chica. Tiempo después, solicitó permiso para inscribirse en la Academia Militar de Haina.</p>
+          </div>
+        </div>
+
+        <!-- 2. ACADEMIA HAINA -->
+        <div class="bloque" data-imgs="ins/Limabio02.png" data-rotulo="Academia Haina">
+          <span class="rotulo-seccion"> </span>
+          <h2>Academia Haina</h2>
+          <div style="overflow: hidden; margin: 20px 0;">
+            <img src="ins/imabio02.png" alt="Academia Haina" style="float: left; width: 40%; max-width: 250px; height: auto; margin-right: 20px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <p>Como estudiante en la Academia Militar de Haina, Trujillo resultó ser un cadete sobresaliente. Luego de graduarse pasó a formar parte de la recién formada Guardia Nacional Dominicana. Prestó servicios en San Pedro de Macorís, en la región este, combatiendo a los guerrilleros dominicanos contrarios a la invasión yanqui, conocidos como Los Gavilleros.</p>
+            <p>En 1924, las tropas de Estados Unidos empezaron a salir del país y Trujillo quedó como Teniente del Ejército. La Academia Militar de Haina le sirvió de trampolín para alcanzar las fuentes del poder.</p>
+          </div>
+        </div>
+
+        <!-- 3. ASCENSO -->
+        <div class="bloque" data-imgs="ins/Limabio03.png" data-rotulo="Ascenso">
+          <span class="rotulo-seccion"> </span>
+          <h2>Ascenso</h2>
+          <div style="overflow: hidden; margin: 20px 0;">
+            <img src="ins/imabio03.png" alt="Ascenso" style="float: left; width: 40%; max-width: 250px; height: auto; margin-right: 20px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <p>Después de 1924, Trujillo atrajo la atención del presidente Horacio Vásquez por su eficiencia en el cumplimiento de las misiones. En 1926 fue condecorado y el 15 de agosto de 1927, ascendido a General de Brigada. Para 1929 ya era el comandante de las Fuerzas Armadas (Jefe del Ejército) y estaba listo para tomar el poder.</p>
+          </div>
+        </div>
+
+        <!-- 4. CORRUPCIÓN Y RIQUEZA -->
+        <div class="bloque" data-imgs="ins/Limabio04.png" data-rotulo="Corrupción y riqueza">
+          <span class="rotulo-seccion"> </span>
+          <h2>Corrupción y riqueza</h2>
+          <div style="overflow: hidden; margin: 20px 0;">
+            <img src="ins/imabio14.png" alt="Corrupción" style="float: left; width: 40%; max-width: 250px; height: auto; margin-right: 20px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <p>Se rodeó de personas incondicionales y, junto a ellos, en pocos años se convirtió en un hombre rico y poderoso usando chantajes, abuso de poder, extorsiones, cobro de sueldos de soldados inexistentes, negocios turbios dentro de los cuarteles y favores políticos, entre otros.</p>
+            <p>En 1929, la comisión liderada por Charles G. Dawes (exvicepresidente de EUA) destapó una profunda red de corrupción y malversación de fondos en el ejército que apuntaba directamente a la gestión de Rafael Leónidas Trujillo. Salvó su posición, gracias a la falta de visión y la confianza que el presidente Vásquez le tenía.</p>
+          </div>
+        </div>
+
+        <!-- 5. OPORTUNIDAD EN LA CRISIS -->
+        <div class="bloque" data-imgs="ins/Limabio05.png" data-rotulo="Oportunidad en la crisis">
+          <span class="rotulo-seccion"> </span>
+          <h2>Oportunidad en la crisis</h2>
+          <div style="overflow: hidden; margin: 20px 0;">
+            <img src="ins/imabio04.png" alt="Crisis" style="float: left; width: 40%; max-width: 250px; height: auto; margin-right: 20px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <p>La política dominicana entró en crisis en 1929 y, para colmo, llegó la quiebra financiera en Nueva York que detuvo las exportaciones. Todo esto se combinó con la estructura económica, política y social que quedó instalada por las tropas estadounidenses. Trujillo quedó en la mejor posición porque ya tenía control de todo el ejército.</p>
+          </div>
+        </div>
+
+        <!-- 6. GOLPE DE ESTADO -->
+        <div class="bloque" data-imgs="ins/Limabio06.png" data-rotulo="Golpe de Estado">
+          <span class="rotulo-seccion"> </span>
+          <h2>Golpe de Estado</h2>
+          <div style="overflow: hidden; margin: 20px 0;">
+            <img src="ins/imabio04b.png" alt="Golpe de Estado" style="float: left; width: 40%; max-width: 250px; height: auto; margin-right: 20px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <p>En 1930, aliado con Rafael Estrella Ureña, un político de Santiago, dio un golpe de Estado al presidente Horacio Vásquez. Pronto se deshizo de Estrella Ureña.  En las siguientes elecciones se postuló a presidente y logró ganarlas en solitario; es decir, no participó ningún otro opositor ni partido.</p>
+          </div>
+        </div>
+
+        <!-- 7. PODER Y MÁS RIQUEZAS -->
+        <div class="bloque" data-imgs="ins/Limabio07.png" data-rotulo="Poder y más riquezas">
+          <span class="rotulo-seccion"> </span>
+          <h2>Poder y más riquezas</h2>
+          <div style="overflow: hidden; margin: 20px 0;">
+            <img src="ins/imabio07.png" alt="Poder" style="float: left; width: 40%; max-width: 250px; height: auto; margin-right: 20px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <p>Desde el poder se mantuvo dominante en todo momento, utilizó el dinero y la estructura del Estado dominicano para enriquecerse, manipular, chantajear e intimidar a otros. No respetó nigún proceso democrático, la ética, ni la vida de muchos.</p>
+            <p>Logró desarticular toda oposición y los intentos para derrocarlo. Su participación como protagonista de la política dominicana se extendió por tres décadas, hasta 1961.</p>
+          </div>
+        </div>
+
+        <!-- 8. CAÍDA Y MUERTE -->
+        <div class="bloque" data-imgs="ins/Limabio08.png" data-rotulo="Caída y muerte">
+          <span class="rotulo-seccion"> </span>
+          <h2>Caída y muerte</h2>
+          <div style="overflow: hidden; margin: 20px 0;">
+            <img src="ins/imabio08.png" alt="Caída" style="float: left; width: 40%; max-width: 250px; height: auto; margin-right: 20px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <p>A pesar de que Trujillo y sus compinches controlaban y espiaban a todos, fueron sus mismos colaboradores quienes lo asesinaron. No contaba con la alianza de algunos de ellos, a los cuales había humillado anteriormente.</p>
+          </div>
+        </div>
+
+        <!-- 9. PERSONALIDAD -->
+        <div class="bloque" data-imgs="ins/Limabio09.png" data-rotulo="Personalidad">
+          <span class="rotulo-seccion"> </span>
+          <h2>Personalidad</h2>
+          <div style="overflow: hidden; margin: 20px 0;">
+            <img src="ins/imabio06.png" alt="Personalidad" style="float: left; width: 60%; max-width: 350px; height: auto; margin-right: 20px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <p>Su personalidad fue compleja: Amaba los caballos y el ganado vacuno. Era generoso y amable con sus familiares, mujeriego y galante con las damas, y prefería mujeres de piel clara. Tuvo nueve mujeres conocidas.</p>
+          </div>
+
+          <h3>Aseado, elegante y ostentoso</h3>
+          <p>Trujillo era sumamente meticuloso con su aspecto personal. Cuidaba con extrema rigurosidad su vestimenta, usaba trajes hechos a la medida o uniformes cargados de condecoraciones. También cuidaba los modales formales y la higiene en su entorno, exigiendo el mismo estándar a sus colaboradores más cercanos. De joven, su tío materno Plinio Piña Chevalier le orientó a vestir, a mostrarse limpio, perfumado y a comportarse en grupos sociales.</p>
+
+          <h3>Megalómano y narcisista</h3>
+          <p>Exigía y necesitaba de admiración absoluta y constante para él y sus familiares. Esto se manifestó en el monumental culto a la personalidad: renombró la capital del país como «Ciudad Trujillo», bautizó el pico más alto de las Antillas (Pico Duarte) con su propio nombre, levantó miles de estatuas en su honor y exigió que todas las instituciones públicas y privadas exhibieran lemas oficiales como «Dios y Trujillo». Se autoasignó los títulos de «Generalísimo» y «Benefactor». Las placas y fotos de Trujillo estaban presentes en casi todos los hogares del país.</p>
+
+          <h3>Despiadado, cruel y vengativo</h3>
+          <p>No mostraba clemencia ni empatía al momento de eliminar obstáculos políticos o neutralizar a cualquier opositor real o potencial. La violencia sistemática, el terror, las torturas y los crímenes de Estado (como el asesinato de las hermanas Mirabal, la Masacre del Perejil o el caso Galíndez) y su aparato de inteligencia (como el Servicio de Inteligencia Militar – SIM) fueron herramientas estructurales de su régimen.</p>
+
+          <h3>Rígido y autoritario</h3>
+          <p>Su formación en la Guardia Nacional (creada por la ocupación estadounidense de 1916-1924) moldeó una personalidad obsesionada con la disciplina rígida, la jerarquía militar y el orden. Se mostraba a sí mismo como el único salvador capaz de ordenar el país.</p>
+          <p>Ejerció un control absoluto y centralizado sobre el Estado y la sociedad dominicana durante tres décadas. Nada ocurría en el país sin su consentimiento directo, y anuló por completo las libertades públicas, la división de poderes y cualquier forma de autonomía institucional.</p>
+
+          <h3>Manipulador, corrupto y corruptor</h3>
+          <p>Poseía una aguda inteligencia práctica y una gran capacidad para observar, corromper y manipular a personas, colaboradores, aliados y oponentes. Sabía identificar las debilidades ajenas para someterlas a su voluntad o neutralizarlas a tiempo.</p>
+          <p>A pesar de que provenía de una familia pobre y disfuncional, pudo rescatarla con la fortuna que acumuló. Su gobierno y su vida personal estuvieron marcados por la fanfarria, el lujo desmedido y la necesidad constante de impresionar. También se rodeó de una «corte» con aires de monarquía.</p>
+
+          <h3>Títulos y condecoraciones</h3>
+          <ul>
+            <li>Se declaró "Benefactor de la Patria" (1932).</li>
+            <li>Se autonombró "Generalísimo de los Ejércitos" (1933).</li>
+            <li>Nombró a su hijo Ramfis, con solo cuatro años de edad (1933), como "Coronel del Ejército" con sueldo y privilegios correspondientes al cargo.</li>
+            <li>Nombró a su hijo Ramfis, con solo nueve años de edad (1938), como "General de Brigada" mediante un decreto firmado por el presidente títere Jacinto B. Peynado.</li>
+            <li>En 1955 se declaró "Padre de la Patria Nueva", sucedió en la presidencia de su hermano y presidente títere, Héctor Bienvenido Trujillo, el Congreso Nacional promulgó una ley que le otorgó este título.</li>
+            <li>En 1955, durante la "Feria de la Paz y la Confraternidad del Mundo Libre", su hija "Angelita" fue coronada como reina.  A semejanza de las monarquías europeas.</li>
+            <li>En ene.1936, cambió el nombre de la capital por "Ciudad Trujillo".</li>
+            <li>El país fue sembrado literalmente de cientos de bustos, estatuas y tarjas del dictador.</li>
+            <li>Nombró varias provincias del país con alegorías para él y su familia.</li>
+            <li>Su imagen era omnipresente en casi todas las viviendas del país y en todas las oficinas públicas.</li>
+            <li>Los sellos de correos tenían su imagen y la de sus familiares.</li>
+            <li>Los bustos de Trujillo se encontraban en toda la geografía nacional.</li>
+          </ul>
+
+
+        </div>
+
+      </div> <!-- /col-right -->
+    </div> <!-- /two-col -->
+  </div> <!-- /contenido -->
+
+  <!-- ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== -->
+  <button id="btn-top" class="btn-flotante" aria-label="Volver arriba">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+    <span class="txt">Arriba</span>
+  </button>
+
+  <script>
+    /* =========================================================
+       IMÁGENES LIGADAS A LA SECCIÓN VISIBLE + EFECTO PARALAJE
+       ========================================================= */
+    (function () {
+      const colRight = document.getElementById('colRight');
+      const viewport = document.getElementById('imgViewport');
+      if (!colRight || !viewport) return;
+
+      const layerA = viewport.querySelector('.img-layer[data-slot="a"]');
+      const layerB = viewport.querySelector('.img-layer[data-slot="b"]');
+      let frontLayer = layerA;
+      let backLayer = layerB;
+      frontLayer.classList.add('activa');
+
+      function cargarEnCapa(layer, src, etiquetaTxt) {
+        const img = layer.querySelector('img');
+        layer.classList.remove('broken');
+        img.onerror = () => layer.classList.add('broken');
+        img.onload = () => layer.classList.remove('broken');
+        img.alt = etiquetaTxt || '';
+        img.src = src;
+        layer.querySelector('[data-role="etiqueta"]').textContent = etiquetaTxt || '';
+      }
+
+      function construirPuntos() {
+        const bloques = Array.from(colRight.querySelectorAll('.bloque'));
+        const puntos = [];
+        bloques.forEach((bloque) => {
+          const imgs = (bloque.dataset.imgs || '').split(',').map(s => s.trim()).filter(Boolean);
+          const rotulo = bloque.dataset.rotulo || '';
+          if (!imgs.length) return;
+          const top = bloque.offsetTop;
+          const alto = bloque.offsetHeight;
+          if (imgs.length === 1) {
+            puntos.push({ y: top, src: imgs[0], rotulo, rangoInicio: top, rangoFin: top + alto });
+          } else {
+            const mitad = alto / imgs.length;
+            imgs.forEach((src, i) => {
+              const y = top + mitad * i;
+              puntos.push({ y, src, rotulo, rangoInicio: y, rangoFin: top + mitad * (i + 1) });
+            });
+          }
+        });
+        return puntos.sort((a, b) => a.y - b.y);
+      }
+
+      let puntos = construirPuntos();
+      let srcActual = null;
+
+      function actualizar() {
+        if (!puntos.length) return;
+        const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 100;
+        const lineaRef = window.scrollY + headerH + window.innerHeight * 0.4;
+
+        let activo = puntos[0];
+        for (let i = 0; i < puntos.length; i++) {
+          if (puntos[i].y <= lineaRef) activo = puntos[i];
+          else break;
+        }
+
+        if (activo.src !== srcActual) {
+          srcActual = activo.src;
+          cargarEnCapa(backLayer, activo.src, activo.rotulo);
+          backLayer.classList.add('activa');
+          frontLayer.classList.remove('activa');
+          const tmp = frontLayer; frontLayer = backLayer; backLayer = tmp;
+        }
+
+        const rango = Math.max(1, activo.rangoFin - activo.rangoInicio);
+        const progreso = Math.min(1, Math.max(0, (lineaRef - activo.rangoInicio) / rango));
+        const desplazamiento = (progreso - 0.5) * 26;
+        frontLayer.style.transform = `translateY(${desplazamiento}px) scale(1.02)`;
+      }
+
+      let ticking = false;
+      function onScroll() {
+        if (!ticking) {
+          window.requestAnimationFrame(() => { actualizar(); ticking = false; });
+          ticking = true;
+        }
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', () => { puntos = construirPuntos(); actualizar(); });
+      window.addEventListener('load', () => { puntos = construirPuntos(); actualizar(); });
+      setTimeout(() => { puntos = construirPuntos(); actualizar(); }, 60);
+    })();
+
+    document.getElementById('btn-top').addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ===== MENÚ HAMBURGUESA (toggle + overlay) =====
+    (function() {
+      const btnHamburguesa = document.getElementById('btnHamburguesa');
+      const menuLateral = document.getElementById('menuLateral');
+      const btnCerrarMenu = document.getElementById('btnCerrarMenu');
+      const overlayMenu = document.getElementById('overlayMenu');
+
+      function abrirMenu() {
+        menuLateral.classList.add('abierto');
+        overlayMenu.classList.add('activo');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function cerrarMenu() {
+        menuLateral.classList.remove('abierto');
+        overlayMenu.classList.remove('activo');
+        document.body.style.overflow = '';
+      }
+
+      if (btnHamburguesa) {
+        btnHamburguesa.addEventListener('click', function(e) {
+          e.stopPropagation();
+          abrirMenu();
+        });
+      }
+
+      if (btnCerrarMenu) {
+        btnCerrarMenu.addEventListener('click', function(e) {
+          e.stopPropagation();
+          cerrarMenu();
+        });
+      }
+
+      if (overlayMenu) {
+        overlayMenu.addEventListener('click', function() {
+          cerrarMenu();
+        });
+      }
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          cerrarMenu();
+        }
+      });
+
+      const enlacesMenu = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
+      enlacesMenu.forEach(function(enlace) {
+        enlace.addEventListener('click', function() {
+          cerrarMenu();
+        });
+      });
+
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          if (window.innerWidth > 900 && menuLateral.classList.contains('abierto')) {
+            cerrarMenu();
+          }
+        }, 200);
+      });
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Etapas · Era de Trujillo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ----- reset & base ----- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: #faf8f4;
+            color: #0f1e38;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        :root {
+            --bg-dark: #15130f;
+            --bg-dark-2: #211d17;
+            --cream: #f2ead2;
+            --gold: #cdaa5c;
+            --gold-dim: #8d7745;
+            --navy: #0f1e38;
+            --navy-2: #16294a;
+            --orange: #e8592a;
+            --orange-dim: #c94a20;
+            --gray: #5c6472;
+            --gray-light: #8a91a0;
+            --paper: #faf8f4;
+            --line: #e7e2d6;
+            --shadow: 0 18px 40px -18px rgba(15, 30, 56, 0.35);
+            --radius: 14px;
+            --disp: 'Cinzel', serif;
+            --body: 'Work Sans', sans-serif;
+        }
+
+        /* ========== PORTADA (fija) ========== */
+        #portada {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 15vh;
+            min-height: 80px;
+            width: 100%;
+            background: var(--bg-dark);
+            color: var(--cream);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 300;
+            box-shadow: 0 12px 30px -14px rgba(0,0,0,0.6);
+        }
+        .portada-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .portada-bg picture,
+        .portada-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+        .portada-bg .ph {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #2a2520;
+            color: var(--gold-dim);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .portada-bg .ph b {
+            display: block;
+            color: var(--cream);
+            margin-bottom: 0.25rem;
+        }
+        .portada-veil {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(21, 19, 15, 0.10) 0%,
+                    rgba(21, 19, 15, 0.35) 45%,
+                    rgba(21, 19, 15, 0.85) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .portada-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5vw;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .portada-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .portada-eyebrow {
+            letter-spacing: 0.25em;
+            font-size: 0.6rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .portada-title {
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(1rem, 2.2vw, 2rem);
+            line-height: 1.1;
+            margin: 0;
+            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+        .portada-dates {
+            font-family: var(--disp);
+            color: var(--gold);
+            font-size: clamp(0.6rem, 1vw, 0.9rem);
+            letter-spacing: 0.1em;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        /* ========== MENÚ HAMBURGUESA ========== */
+        .menu-hamburguesa {
+            position: fixed;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 999;
+            background: var(--navy);
+            border: 1px solid var(--gold);
+            border-radius: 6px;
+            padding: 0.5rem 0.7rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transition: background 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-hamburguesa:hover {
+            background: var(--navy-2);
+        }
+        .menu-hamburguesa span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: var(--cream);
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+
+        /* ===== NAVEGACIÓN LATERAL ===== */
+        .nav-lateral {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: var(--navy);
+            border-right: 3px solid var(--gold);
+            padding: 2rem 1rem 1.5rem;
+            overflow-y: auto;
+            transition: left 0.35s ease;
+            z-index: 1000;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+        }
+        .nav-lateral.abierto {
+            left: 0;
+        }
+        .nav-lateral .cerrar-menu {
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 2.2rem;
+            line-height: 1;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 1.2rem;
+            transition: 0.2s;
+        }
+        .nav-lateral .cerrar-menu:hover {
+            color: var(--gold);
+            transform: rotate(90deg);
+        }
+        .nav-lateral ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 1.8rem;
+            clear: both;
+        }
+        .nav-lateral ul li {
+            border-bottom: 1px solid #2f4a5a;
+            padding: 0.4rem 0;
+        }
+        .nav-lateral ul li a {
+            display: block;
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 1.0rem;
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            transition: 0.15s;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        .nav-lateral ul li a:hover {
+            background: #2a4a5a;
+            color: #f5efe0;
+            padding-left: 0.9rem;
+        }
+        .nav-lateral ul li a.activo {
+            background: var(--gold);
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        .overlay-menu {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.35);
+            z-index: 998;
+        }
+        .overlay-menu.activo {
+            display: block;
+        }
+
+        /* ========== INTRO (parrafo destacado estilo tarjeta) ========== */
+        .intro-wrap {
+            background: var(--paper);
+            padding: 2.2rem 5vw 0.5rem;
+            margin-top: 15vh;
+        }
+        .intro-card {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            padding: 1.8rem 2.2rem;
+        }
+        .intro-eyebrow {
+            font-weight: 700;
+            color: var(--orange);
+            font-family: Cinzel;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .intro-texto {
+            color: #2c3a4b;
+            line-height: 1.75;
+            font-size: 1.05rem;
+            margin-top: 0.8rem;
+        }
+
+        /* ========== SCROLLYTELLING ========== */
+        .historia {
+            background: var(--bg-dark);
+        }
+        .capitulo {
+            position: relative;
+        }
+        .capitulo-bg {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .capitulo-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%;
+        }
+        .capitulo-bg .ph {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #2a2520;
+            color: var(--gold-dim);
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .capitulo-bg .ph b {
+            display: block;
+            color: var(--cream);
+            margin-bottom: 0.25rem;
+        }
+        .capitulo-veil {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(15, 19, 15, 0.55) 0%,
+                    rgba(15, 13, 10, 0.72) 55%,
+                    rgba(15, 13, 10, 0.92) 100%);
+        }
+        .capitulo-numero {
+            position: absolute;
+            top: 1.6rem;
+            right: 1.8rem;
+            font-family: var(--disp);
+            color: var(--gold);
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            opacity: 0.85;
+        }
+        .capitulo-textos {
+            position: relative;
+            margin-top: -100vh;
+            z-index: 2;
+        }
+        /* El título del capítulo vive en su propio contenedor, hermano de
+           capitulo-textos, para que su rango "sticky" abarque TODO el
+           capítulo (no solo el primer bloque de texto) y solo se suelte
+           al pasar al siguiente capítulo. */
+        .capitulo-titulo {
+            position: sticky;
+            top: 15vh;
+            height: 0;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .capitulo-titulo .texto-caja {
+            pointer-events: auto;
+            margin-left: 8vw; /* separación del borde izquierdo */
+        }
+        .texto-bloque {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 3rem 6vw;
+        }
+        .texto-caja {
+            max-width: 520px;
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+            margin-left: 6vw; /* separación del borde izquierdo para textos normales */
+        }
+        .texto-caja.en-vista {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .texto-caja.intro-grande {
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .texto-caja.intro-grande.en-vista {
+            transform: none;
+        }
+        /* Ajuste para que los bloques pares mantengan su alineación a la derecha */
+        .texto-bloque:nth-child(even) {
+            justify-content: flex-end;
+        }
+        .texto-bloque:nth-child(even) .texto-caja {
+            text-align: right;
+            margin-left: auto;
+            margin-right: 6vw; /* separación del borde derecho para textos pares */
+        }
+        .texto-caja.intro-grande .bloque-parrafo {
+            font-family: var(--disp);
+            font-size: clamp(2rem, 2.6vw, 2rem);
+            line-height: 1.35;
+            color: var(--cream);
+            font-weight: 800;
+        }
+        .bloque-titulo {
+            font-weight: 700;
+            color: var(--gold);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 0.7rem;
+            display: inline-block;
+            border-bottom: 2px solid var(--orange);
+            padding-bottom: 0.35rem;
+        }
+        .bloque-parrafo {
+            color: var(--cream);
+            line-height: 1.75;
+            font-size: 1.02rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+        .bloque-parrafo2 {
+            color: var(--cream);
+            line-height: 1.75;
+            font-size: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+        .bloque-lista {
+            color: var(--cream);
+            line-height: 1.75;
+            font-size: 0.95rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem 1.2rem;
+        }
+        .bloque-lista li {
+            position: relative;
+            padding-left: 0.1rem;
+            flex: 0 0 auto;
+        }
+        .bloque-lista li::before {
+            content: "•";
+            color: var(--gold);
+            margin-right: 0.4rem;
+        }
+
+        @media (max-width: 760px) {
+            .texto-bloque {
+                padding: 2.4rem 6vw;
+                justify-content: center !important;
+            }
+            .texto-caja {
+                max-width: 100%;
+                text-align: left !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+            .texto-bloque:nth-child(even) .texto-caja {
+                text-align: left !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+            .bloque-lista {
+                flex-direction: column;
+                gap: 0.2rem;
+            }
+            .capitulo-titulo {
+                position: static;
+                height: 0;
+                z-index: auto;
+            }
+            .capitulo-titulo .texto-caja {
+                margin-left: 0 !important;
+            }
+        }
+
+        /* ========== CIERRE ========== */
+        .cierre-wrap {
+            background: var(--paper);
+            padding: 3rem 5vw 5rem;
+        }
+        .cierre-card {
+            max-width: 900px;
+            margin: 0 auto;
+            border-left: 4px solid var(--orange);
+            background: #fdf3ee;
+            border-radius: 0 8px 8px 0;
+            padding: 1.4rem 1.7rem;
+            color: #3d2418;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        .cierre-card b {
+            color: var(--orange-dim);
+        }
+
+        /* ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== */
+        .btn-flotante {
+            position: fixed;
+            z-index: 100;
+            background: var(--navy);
+            color: var(--cream);
+            border: none;
+            border-radius: 999px;
+            padding: 0.85rem 1.3rem 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            box-shadow: 0 14px 30px -10px rgba(15, 30, 56, 0.55);
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-flotante svg {
+            width: 17px;
+            height: 17px;
+            stroke: var(--gold);
+            flex-shrink: 0;
+        }
+        .btn-flotante:hover {
+            background: var(--navy-2);
+            transform: translateY(-2px);
+        }
+        #btn-top {
+            right: 1.4rem;
+            bottom: 1.4rem;
+        }
+
+        @media (max-width: 640px) {
+            .btn-flotante span.txt {
+                display: none;
+            }
+            #btn-top {
+                right: 1rem;
+                bottom: 1rem;
+                padding: 0.85rem;
+                border-radius: 50%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== PORTADA (fija) ========== -->
+    <section id="portada">
+        <div class="portada-bg">
+            <picture>
+                <source media="(max-width:640px)" srcset="ins/001portadaCv.png" />
+                <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+            </picture>
+            <div class="ph">
+                <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
+            </div>
+            <div class="portada-veil"></div>
+        </div>
+        <div class="portada-content">
+            <div class="portada-left">
+                <span class="portada-eyebrow">Historia de la República Dominicana</span>
+                <h1 class="portada-title">Etapas de la Era</h1>
+                <h3 class="portada-dates">Tiranía Trujillista 1930-1961</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MENÚ HAMBURGUESA ========== -->
+    <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- ========== MENÚ LATERAL ========== -->
+    <nav class="nav-lateral" id="menuLateral" role="navigation">
+        <button class="cerrar-menu" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button>
+        <ul>
+            <li><a href="ind0.HTML">INICIO</a></li>
+            <li><a href="lt_ctx.HTML">Línea de Tiempo</a></li>
+            <li><a href="bio_tru.HTML">Reseña Biográfica</a></li>
+            <li><a href="gen_tru.HTML">Genealogía</a></li>
+            <li><a href="antes_tru.HTML">Antecedentes</a></li>
+            <li><a href="glpe30.HTML">Golpe de Estado 1930</a></li>
+            <li><a href="maq_tir.HTML">Maquinaria de la Tiranía</a></li>
+            <li><a href="etap_tir.HTML" class="activo">Etapas de la Tiranía</a></li>
+            <li><a href="elec_tru.HTML">Elecciones</a></li>
+            <li><a href="reb_tru.HTML">Rebeldes</a></li>
+            <li><a href="casos_tru.HTML">Casos Famosos</a></li>
+            <li><a href="ultnoche.HTML">Última Noche</a></li>
+            <li><a href="destru.HTML">Destrujillización</a></li>
+            <li><a href="galr.HTML">Galería</a></li>
+            <li><a href="glos.HTML">Glosario</a></li>
+            <li><a href="not.HTML">Créditos y Fuentes</a></li>
+        </ul>
+    </nav>
+
+    <!-- ========== OVERLAY ========== -->
+    <div class="overlay-menu" id="overlayMenu"></div>
+
+    <!-- ========== INTRODUCCIÓN ========== -->
+    <div class="intro-wrap">
+        <div class="intro-card">
+            <span class="intro-eyebrow">CINCO ETAPAS</span>
+            <div class="intro-texto">De esta manera fue cambiando el enfoque del régimen en los 31 años.  Desplázate y descube domo fue transformándose.</div>
+        </div>
+    </div>
+
+    <!-- ========== SCROLLYTELLING ========== -->
+    <div class="historia">
+
+        <!-- CAPÍTULO 1 · 1930-1938 -->
+        <section class="capitulo">
+            <div class="capitulo-bg">
+                <img src="ins/e1.png" alt="1930-1938 consolidación" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/e1.png</div></div>
+                <div class="capitulo-veil"></div>
+                <span class="capitulo-numero">I · IV</span>
+            </div>
+            <div class="capitulo-titulo">
+                <div class="texto-caja intro-grande">
+                    <div class="bloque-parrafo">LA CONSOLIDACIÓN EN EL PODER</div>
+                    <div class="bloque-parrafo2">Desde 1930 a 1938</div>
+                </div>
+            </div>
+            <div class="capitulo-textos">
+                <div class="texto-bloque"></div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <div class="bloque-parrafo">Trujillo utilizó todos los medios para establecerse en el poder por mucho tiempo. El ejército, la prensa, la economía, la política, entre otros giraban alrededor de su persona.  Desde su ascenso en 1930 Trujillo desarrolló una intensa labor en organizar el estado y consolidarse en el poder. Estableció rápidamente las bases de su régimen y un tiempo después le puso su nombre: "La Era de Trujillo".</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Oposición controlada</span>
+                        <div class="bloque-parrafo">Desde el principio eliminó o neutralizó a cada uno de sus opositores:  Virgilio Maynardi Reyna, Cipriano Bencosme, Desiderio Arias, Rafael Estrella Ureña... <br> La etapa concluyó con la Masacre del Perejil a finales de 1937 pues bloqueó sus aspiraciones presidenciales.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Control fronterizo</span>
+                        <div class="bloque-parrafo">Tras obtener escasos resultados en su reunión con el presidente de Haití, en la que buscaba definir y controlar la frontera, Trujillo recurrió al terror como instrumento de poder. Fue así como, en 1937, ordenó la Masacre del Perejil, un crimen de Estado que provocó la muerte de miles de haitianos y de dominicanos de ascendencia haitiana.</div>
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 2 · 1938-1947 -->
+        <section class="capitulo">
+            <div class="capitulo-bg">
+                <img src="ins/e2.png" alt="1938-1947 consolidación financiera" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/e2.png</div></div>
+                <div class="capitulo-veil"></div>
+                <span class="capitulo-numero">II · IV</span>
+            </div>
+            <div class="capitulo-titulo">
+                <div class="texto-caja intro-grande">
+                    <div class="bloque-parrafo">LA CONSOLIDACIÓN FINANCIERA</div>
+                    <div class="bloque-parrafo2">Desde 1938 a 1947</div>
+                </div>
+            </div>
+            <div class="capitulo-textos">
+                <div class="texto-bloque"></div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <div class="bloque-parrafo">Trujillo venía de una familia pobre y al convertirse en oficial del ejército, se dedicó a enriquecerse utilizando todos los medios del estado dominicano. Para 1947 ya dominaba toda la economía nacional.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Monopolios y bancos</span>
+                        <div class="bloque-parrafo">Con un presidente títere y fuera del poder formal, Trujillo se concentró en engordar sus bolsillos. Desde 1932 había empezado a monopolizar las aseguradoras. En 1935 era dueño del negocio del tabaco al obligar a Antonio Barletta a venderle su empresa. En 1937 creó la moneda nacional, siguiendo el modelo de otros países de latinoamérica y en 1941 fundó el primer gran banco dominicano. En 1945 fundó el Banco Agrícola.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Partido y cemento</span>
+                        <div class="bloque-parrafo">Los ingresos provenientes de los aportes de los miembros del Partido Dominicano fueron recursos que manejó a su antojo. En 1945 fundó el edificio sede central del partido. En 1946 las mayores empresas dominicanas en producción, finanzas y seguros eran de su propiedad. En 1947 fundó la Fábrica Dominicana de Cemento para la construcción monopolizando ese renglón.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Empresas de Trujillo</span>
+                        <div class="bloque-parrafo" style="font-size:0.9rem;">Principales empresas que Trujillo logró desarrollar con el dinero del estado dominicano:</div>
+                        <ul class="bloque-lista">
+                            <li>Atlas Comercial Compañía, C. por A.</li>
+                            <li>Compañía Anónima Tabacalera, C. por A.</li>
+                            <li>Compañía de Seguros San Rafael, C. por A.</li>
+                            <li>Compañía Dominicana de Aviación, C. por A.</li>
+                            <li>Chocolatera Industrial.</li>
+                            <li>Dominicana Industrial de Calzados.</li>
+                            <li>Fábrica de Aceites Vegetales.</li>
+                            <li>Fábrica Dominicana de Baterías, C. por A.</li>
+                            <li>Fábrica de Clavos Enriquillo.</li>
+                            <li>Fábrica Dominicana de Cemento, C. por A.</li>
+                            <li>Fábrica de Sacos y Cordelerías, C. por A.</li>
+                            <li>Industria Nacional del Papel, C. por A.</li>
+                            <li>Industria Nacional del Vidrio, C. por A.</li>
+                            <li>Marmolería Nacional, C. por A.</li>
+                            <li>Molinos Dominicanos, C. por A.</li>
+                            <li>Molinos del Norte.</li>
+                            <li>Minas de Sal y Yeso.</li>
+                            <li>Pinturas Dominicanas, C. por A.</li>
+                            <li>Planta de Recauchado.</li>
+                            <li>Refinería de Sal.</li>
+                            <li>Sociedad Inmobiliaria, C. por A.</li>
+                            <li>Tecnometal, C. por A.</li>
+                            <li>Tenería FA-2, C. por A.</li>
+                            <li>Tejidos Antillanos, C. por A.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 3 · 1947-1959 -->
+        <section class="capitulo">
+            <div class="capitulo-bg">
+                <img src="ins/e3.png" alt="1947-1959 rearme" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/e3.png</div></div>
+                <div class="capitulo-veil"></div>
+                <span class="capitulo-numero">III · IV</span>
+            </div>
+            <div class="capitulo-titulo">
+                <div class="texto-caja intro-grande">
+                    <div class="bloque-parrafo">EL REARME</div>
+                    <div class="bloque-parrafo2">Desde 1947 a 1959</div>
+                </div>
+            </div>
+            <div class="capitulo-textos">
+                <div class="texto-bloque"></div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <div class="bloque-parrafo">En 1947 la oposición en el extranjero empezó a activarse en contra de Trujillo. Los presidentes de Guatemala, Cuba y Costa Rica dieron apoyo a los grupos rebeldes.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Rebeliones y reformas</span>
+                        <div class="bloque-parrafo">Se intentaron 3 rebeliones contra la dictadura. Los 3 intentos fallaron. El régimen trujillista reformó las Fuerzas Armadas, creó la Fuerza Aérea, compró nuevas naves marítimas, renovó la artillería y estableció el Servicio Militar Obligatorio. Formó el Servicio de Inteligencia Militar (SIM) para espiar a la población, funcionarios y a los militares. Estableció una fábrica de armas o armería en la comunidad de San Cristóbal.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Escenario internacional</span>
+                        <div class="bloque-parrafo">En 1953 Trujillo se presentó en la Asamblea de la ONU en Nueva York e hizo una donación de US$50 mil para el Fondo Internacional de Emergencia para la Infancia. Buscaba impresionar a la comunidad internacional. Hizo un lujoso viaje a España en 1954 para estrechar las relaciones con su amigo personal, el dictador español Francisco Franco.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Feria de la Paz</span>
+                        <div class="bloque-parrafo">En 1955 celebró los 25 años de "La Era de Trujillo" con la inauguración de la "Feria de la Paz, de la Confraternidad y el Mundo Libre". La fiesta inaugural sirvió para coronar a su hija como "Angelita I". Los Trujillo querían formar parte de la nobleza internacional con el dinero de un país pobre. El costo de las obras y la fiesta alcanzaron la tercera parte del presupuesto, acabó hundiendo la economía nacional.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 4 · 1959-1960 -->
+        <section class="capitulo">
+            <div class="capitulo-bg">
+                <img src="ins/e4.png" alt="1959-1961 declive" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/e4.png</div></div>
+                <div class="capitulo-veil"></div>
+                <span class="capitulo-numero">IV · IV</span>
+            </div>
+            <div class="capitulo-titulo">
+                <div class="texto-caja intro-grande">
+                    <div class="bloque-parrafo">DECLIVE</div>
+                    <div class="bloque-parrafo2">Desde 1959 a 1960</div>
+                </div>
+            </div>
+            <div class="capitulo-textos">
+                <div class="texto-bloque"></div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <div class="bloque-parrafo">Después de la invasión rebelde de 1959, el país reaccionó. Se formó el movimiento político clandestino "14 de junio" compuesto por jóvenes dominicanos. El movimiento fue descubierto y perseguido por el Servico de Inteligencia Militar (SIM).</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Crisis y agresiones</span>
+                        <div class="bloque-parrafo2">Asesinatos, torturas, atentados, y agresiones de todo tipo crearon una crisis social. En el proceso hasta la iglesia católica fue agredida. El asesinato a las hermanas Mirabal, en noviembre de 1960, demostró que a los delincuentes no les importaba liquidar a las mujeres.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Atentados y sanciones</span>
+                        <div class="bloque-parrafo">Trujillo era cada vez más intolerante y agresivo. El SIM actuaba a nivel internacional hasta que fue descubierto en un atentado al presidente venezolano Rómulo Betancourt. Ya tenía una larga lista de atentados. La ONU sancionó al régimen trujillista.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- CAPÍTULO 5 · 1961 -->
+        <section class="capitulo">
+            <div class="capitulo-bg">
+                <img src="ins/e5.png" alt="1961 caída" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/e4.png</div></div>
+                <div class="capitulo-veil"></div>
+                <span class="capitulo-numero">IV · IV</span>
+            </div>
+            <div class="capitulo-titulo">
+                <div class="texto-caja intro-grande">
+                    <div class="bloque-parrafo">CAÍDA</div>
+                    <div class="bloque-parrafo2">1961</div>
+                </div>
+            </div>
+            <div class="capitulo-textos">
+                <div class="texto-bloque"></div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Muerte del dictador</span>
+                        <div class="bloque-parrafo">Finalmente un grupo de colabordores cercanos al dictador le dió muerte la noche del 31.May.1961 en el actual malecón de Santo Domingo. Los complotados tenían un plan para acabar con el dictador pero no tenían un plan para derrocar la dictadura.</div>
+                    </div>
+                </div>
+                <div class="texto-bloque">
+                    <div class="texto-caja">
+                        <span class="bloque-titulo">Caída de la Familia Trujillo</span>
+                        <div class="bloque-parrafo">El hijo mayor del dictador, Ramfis Trujillo, y los organismos de seguridad persiguieron a los complotados, les atraparon, les torturaron y asesinaron a la mayoría.  Ramfis entendió que no tenía el control del país y huyó llevándose el cadáver de su padre.  El resto de los familiares, cómplices y políticos aliados tambien huyeron pues no estaban preparados para un país rebelde, más abierto y libre.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+    </div>
+
+    <!-- ========== CIERRE ========== -->
+    <div class="cierre-wrap">
+        <div class="cierre-card">Cinco etapas que marcaron la <b>Tiranía Trujillista</b>: consolidación, poder financiero, rearme, declive y caída. Un régimen que concentró el poder, la economía y el terror durante más de tres décadas pero que realmente tenía bases débiles.</div>
+    </div>
+
+    <!-- ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== -->
+    <button id="btn-top" class="btn-flotante" aria-label="Volver arriba">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+        <span class="txt">Arriba</span>
+    </button>
+
+    <script>
+        // Revela cada bloque de texto al entrar en la vista y lo fija en su posición
+        const cajas = document.querySelectorAll('.texto-caja');
+        const observador = new IntersectionObserver((entradas) => {
+            entradas.forEach((entrada) => {
+                const el = entrada.target;
+                // Solo aplicamos sticky a los que tienen clase intro-grande (títulos de etapa)
+                if (el.classList.contains('intro-grande')) {
+                    // Una vez que el título alcanza su posición, se queda sticky.
+                    // El propio position:sticky lo limita a su sección, así que al
+                    // salir de su capítulo se suelta solo y el siguiente título
+                    // (con mayor z-index) lo sustituye visualmente.
+                    if (entrada.isIntersecting) {
+                        el.classList.add('en-vista');
+                    }
+                } else {
+                    // Para los textos normales, solo animamos la entrada
+                    if (entrada.isIntersecting) {
+                        el.classList.add('en-vista');
+                    }
+                }
+            });
+        }, { threshold: 0.3 });
+        cajas.forEach((caja) => observador.observe(caja));
+
+        document.getElementById('btn-top').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ===== MENÚ HAMBURGUESA (toggle + overlay) =====
+        (function() {
+            const btnHamburguesa = document.getElementById('btnHamburguesa');
+            const menuLateral = document.getElementById('menuLateral');
+            const btnCerrarMenu = document.getElementById('btnCerrarMenu');
+            const overlayMenu = document.getElementById('overlayMenu');
+
+            function abrirMenu() {
+                menuLateral.classList.add('abierto');
+                overlayMenu.classList.add('activo');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function cerrarMenu() {
+                menuLateral.classList.remove('abierto');
+                overlayMenu.classList.remove('activo');
+                document.body.style.overflow = '';
+            }
+
+            if (btnHamburguesa) {
+                btnHamburguesa.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    abrirMenu();
+                });
+            }
+
+            if (btnCerrarMenu) {
+                btnCerrarMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    cerrarMenu();
+                });
+            }
+
+            if (overlayMenu) {
+                overlayMenu.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    cerrarMenu();
+                }
+            });
+
+            const enlacesMenu = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
+            enlacesMenu.forEach(function(enlace) {
+                enlace.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            });
+
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth > 900 && menuLateral.classList.contains('abierto')) {
+                        cerrarMenu();
+                    }
+                }, 200);
+            });
+        })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Galería</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ========== RESET Y BASE (heredado de elec_tru.html) ========== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: #faf8f4;
+            color: #0f1e38;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        :root {
+            --bg-dark: #15130f;
+            --bg-dark-2: #211d17;
+            --cream: #f2ead2;
+            --gold: #cdaa5c;
+            --gold-dim: #8d7745;
+            --navy: #0f1e38;
+            --navy-2: #16294a;
+            --orange: #e8592a;
+            --orange-dim: #c94a20;
+            --gray: #5c6472;
+            --gray-light: #8a91a0;
+            --paper: #faf8f4;
+            --line: #e7e2d6;
+            --shadow: 0 18px 40px -18px rgba(15, 30, 56, 0.35);
+            --radius: 14px;
+            --disp: 'Cinzel', serif;
+            --body: 'Work Sans', sans-serif;
+        }
+
+        /* ========== PORTADA (15vh) ========== */
+        #portada {
+            position: sticky;
+            top: 0;
+            z-index: 500;
+            height: 15vh;
+            min-height: 80px;
+            width: 100%;
+            background: var(--bg-dark);
+            color: var(--cream);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .portada-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .portada-bg picture,
+        .portada-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+        .portada-bg .ph {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #2a2520;
+            color: var(--gold-dim);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .portada-bg .ph b {
+            display: block;
+            color: var(--cream);
+            margin-bottom: 0.25rem;
+        }
+        .portada-veil {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(21, 19, 15, 0.10) 0%,
+                    rgba(21, 19, 15, 0.35) 45%,
+                    rgba(21, 19, 15, 0.85) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .portada-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5vw;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .portada-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .portada-eyebrow {
+            letter-spacing: 0.25em;
+            font-size: 0.6rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .portada-title {
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(1rem, 2.2vw, 2rem);
+            line-height: 1.1;
+            margin: 0;
+            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+        .portada-dates {
+            font-family: var(--disp);
+            color: var(--gold);
+            font-size: clamp(0.6rem, 1vw, 0.9rem);
+            letter-spacing: 0.1em;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        /* ========== CONTENIDO PRINCIPAL ========== */
+        .contenido {
+            background: var(--paper);
+            padding: 0rem 5vw 5rem;
+        }
+
+        /* ========== MENÚ HAMBURGUESA ========== */
+        .menu-hamburguesa {
+            position: fixed;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 999;
+            background: var(--navy);
+            border: 1px solid var(--gold);
+            border-radius: 6px;
+            padding: 0.5rem 0.7rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transition: background 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-hamburguesa:hover {
+            background: var(--navy-2);
+        }
+        .menu-hamburguesa span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: var(--cream);
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+
+        /* ===== BOTÓN ARRIBA ===== */
+        .btn-arriba {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 900;
+            background: var(--navy);
+            color: var(--cream);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+            transition: 0.25s ease;
+            opacity: 0.9;
+            text-decoration: none;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .btn-arriba:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 10px 32px rgba(0,0,0,0.5);
+        }
+        .btn-arriba:active {
+            transform: scale(0.92);
+        }
+
+        /* ===== NAVEGACIÓN LATERAL ===== */
+        .nav-lateral {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: var(--navy);
+            border-right: 3px solid var(--gold);
+            padding: 2rem 1rem 1.5rem;
+            overflow-y: auto;
+            transition: left 0.35s ease;
+            z-index: 1000;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+        }
+        .nav-lateral.abierto {
+            left: 0;
+        }
+        .nav-lateral .cerrar-menu {
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 2.2rem;
+            line-height: 1;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 1.2rem;
+            transition: 0.2s;
+        }
+        .nav-lateral .cerrar-menu:hover {
+            color: var(--gold);
+            transform: rotate(90deg);
+        }
+        .nav-lateral ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 1.8rem;
+            clear: both;
+        }
+        .nav-lateral ul li {
+            border-bottom: 1px solid #2f4a5a;
+            padding: 0.4rem 0;
+        }
+        .nav-lateral ul li a {
+            display: block;
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 1.0rem;
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            transition: 0.15s;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        .nav-lateral ul li a:hover {
+            background: #2a4a5a;
+            color: #f5efe0;
+            padding-left: 0.9rem;
+        }
+        .nav-lateral ul li a.activo {
+            background: var(--gold);
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        .overlay-menu {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.35);
+            z-index: 998;
+        }
+        .overlay-menu.activo {
+            display: block;
+        }
+
+        /* ========== GALERÍA ========== */
+        .galeria-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0 1rem;
+        }
+        .galeria-titulo {
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+            color: var(--navy);
+            border-bottom: 3px solid var(--gold);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.8rem;
+            display: inline-block;
+        }
+        .galeria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin: 1.2rem 0 2rem;
+        }
+        .galeria-grid .foto-item {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .galeria-grid .foto-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 28px -12px rgba(15,30,56,0.4);
+        }
+        .galeria-grid .foto-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            background: #e6dfd3;
+            pointer-events: none;
+        }
+        .galeria-grid .foto-item .caption {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.85rem;
+            background: #f5f0e7;
+            color: var(--navy);
+            text-align: center;
+            border-top: 1px solid var(--line);
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            pointer-events: none;
+        }
+
+        /* ========== MODAL ZOOM ========== */
+        .modal-zoom {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.88);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 2rem;
+            cursor: pointer;
+            backdrop-filter: blur(6px);
+            transition: opacity 0.3s ease;
+        }
+        .modal-zoom.abierto {
+            display: flex;
+        }
+        .modal-zoom .modal-contenedor {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: zoomIn 0.35s ease forwards;
+        }
+        .modal-zoom .modal-contenedor img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            border: 2px solid var(--gold);
+            background: #1a1a1a;
+        }
+        .modal-zoom .modal-caption {
+            color: var(--cream);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            padding: 0.4rem 1.2rem;
+            background: rgba(21, 19, 15, 0.7);
+            border-radius: 30px;
+            border: 1px solid var(--gold-dim);
+            letter-spacing: 0.5px;
+        }
+        .modal-zoom .cerrar-modal {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--navy);
+            color: var(--cream);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 1.6rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            z-index: 10;
+        }
+        .modal-zoom .cerrar-modal:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: rotate(90deg);
+        }
+
+        @keyframes zoomIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ========== PIE DE PÁGINA ========== */
+        .site-footer {
+            background: var(--bg-dark);
+            color: var(--cream);
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+            border-top: 3px solid var(--gold);
+            margin-top: 2rem;
+            letter-spacing: 0.5px;
+        }
+        .site-footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 760px) {
+            .galeria-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 0.9rem;
+            }
+            .galeria-grid .foto-item img {
+                height: 140px;
+            }
+            .portada-title {
+                white-space: normal;
+            }
+            .menu-hamburguesa {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.4rem 0.6rem;
+            }
+            .menu-hamburguesa span {
+                width: 24px;
+                height: 3px;
+            }
+            .nav-lateral {
+                width: 270px;
+                left: -290px;
+            }
+            .modal-zoom .modal-contenedor img {
+                max-height: 70vh;
+            }
+            .modal-zoom .cerrar-modal {
+                top: 4px;
+                right: 4px;
+                width: 38px;
+                height: 38px;
+                font-size: 1.3rem;
+            }
+            .btn-arriba {
+                bottom: 1.2rem;
+                right: 1.2rem;
+                width: 46px;
+                height: 46px;
+                font-size: 1.4rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .galeria-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.7rem;
+            }
+            .galeria-grid .foto-item img {
+                height: 120px;
+            }
+            .btn-arriba {
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition-duration: 0.01ms !important;
+            }
+            .modal-zoom .modal-contenedor {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== PORTADA ========== -->
+    <section id="portada">
+        <div class="portada-bg">
+            <picture>
+                <source media="(max-width:640px)" srcset="ins/001portadaCv.png" />
+                <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+            </picture>
+            <div class="ph">
+                <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
+            </div>
+            <div class="portada-veil"></div>
+        </div>
+        <div class="portada-content">
+            <div class="portada-left">
+                <span class="portada-eyebrow">Historia de la República Dominicana</span>
+                <h1 class="portada-title">Galería</h1>
+                <h3 class="portada-dates">Tiranía Trujillista 1930-1961</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTENIDO ========== -->
+    <div class="contenido">
+        <div class="galeria-wrap">
+            <h2 class="galeria-titulo">📸 Imágenes históricas</h2>
+            <div class="galeria-grid" id="galeriaGrid">
+                <!-- Generado con JavaScript -->
+            </div>
+            <p style="text-align:center; color:#4a3f33; margin-top:0.5rem; font-style:italic; border-top:1px dashed var(--line); padding-top:1.2rem;">
+                Imágenes históricas 1930-1962
+            </p>
+        </div>
+    </div>
+
+    <!-- ========== PIE DE PÁGINA ========== -->
+    <footer class="site-footer">
+        <p>© 2026 · <a href="not.HTML">Créditos y Fuentes</a> · Galería 001–100</p>
+    </footer>
+
+    <!-- ========== BOTÓN ARRIBA ========== -->
+    <a href="#" class="btn-arriba" id="btnArriba" aria-label="Ir arriba">↑</a>
+
+    <!-- ========== MENÚ HAMBURGUESA ========== -->
+    <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- ========== MENÚ LATERAL ========== -->
+    <nav class="nav-lateral" id="menuLateral" role="navigation">
+        <button class="cerrar-menu" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button>
+        <ul>
+            <li><a href="ind0.HTML">INICIO</a></li>
+            <li><a href="lt_ctx.HTML">Línea de Tiempo</a></li>
+            <li><a href="bio_tru.HTML">Reseña Biográfica</a></li>
+            <li><a href="gen_tru.HTML">Genealogía</a></li>
+            <li><a href="antes_tru.HTML">Antecedentes</a></li>
+            <li><a href="glpe30.HTML">Golpe de Estado 1930</a></li>
+            <li><a href="maq_tir.HTML">Maquinaria de la Tiranía</a></li>
+            <li><a href="etap_tir.HTML">Etapas de la Tiranía</a></li>
+            <li><a href="elec_tru.HTML">Elecciones</a></li>
+            <li><a href="reb_tru.HTML">Rebeldes</a></li>
+            <li><a href="casos_tru.HTML">Casos Famosos</a></li>
+            <li><a href="ultnoche.HTML">Última Noche</a></li>
+            <li><a href="destru.HTML">Destrujillización</a></li>
+            <li><a href="galr.HTML" class="activo">Galería</a></li>
+            <li><a href="glos.HTML">Glosario</a></li>
+            <li><a href="not.HTML">Créditos y Fuentes</a></li>
+        </ul>
+    </nav>
+
+    <!-- ========== OVERLAY ========== -->
+    <div class="overlay-menu" id="overlayMenu"></div>
+
+    <!-- ========== MODAL ZOOM ========== -->
+    <div class="modal-zoom" id="modalZoom" role="dialog" aria-modal="true" aria-label="Vista ampliada de imagen">
+        <div class="modal-contenedor">
+            <button class="cerrar-modal" id="cerrarModal" aria-label="Cerrar">✕</button>
+            <img id="modalImagen" src="" alt="Vista ampliada" />
+            <div class="modal-caption" id="modalCaption">Imagen</div>
+        </div>
+    </div>
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ----- 1. GALERÍA: 150 imágenes (título "Imagen 1" ... "Imagen 150") -----
+            const galeriaGrid = document.getElementById('galeriaGrid');
+            if (galeriaGrid) {
+                let html = '';
+                for (let i = 1; i <= 150; i++) {
+                    const numStr = String(i).padStart(3, '0');
+                    const src = `ins/glr/${numStr}.png`;
+                    const caption = `Imagen ${i}`;
+                    html += `
+                        <div class="foto-item" data-src="${src}" data-caption="${caption}">
+                            <img src="${src}" alt="${caption}" loading="lazy" onerror="this.style.opacity='0.3'; this.alt='No disponible';">
+                            <div class="caption">${caption}</div>
+                        </div>
+                    `;
+                }
+                galeriaGrid.innerHTML = html;
+            }
+
+            // ----- 2. MODAL ZOOM al hacer clic en .foto-item -----
+            const modal = document.getElementById('modalZoom');
+            const modalImg = document.getElementById('modalImagen');
+            const modalCaption = document.getElementById('modalCaption');
+            const cerrarModal = document.getElementById('cerrarModal');
+
+            function abrirModal(src, caption) {
+                modalImg.src = src;
+                modalImg.alt = caption || 'Imagen';
+                modalCaption.textContent = caption || 'Imagen';
+                modal.classList.add('abierto');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function cerrarModalFn() {
+                modal.classList.remove('abierto');
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    if (!modal.classList.contains('abierto')) {
+                        modalImg.src = '';
+                    }
+                }, 300);
+            }
+
+            if (galeriaGrid) {
+                galeriaGrid.addEventListener('click', function(e) {
+                    const item = e.target.closest('.foto-item');
+                    if (item) {
+                        const src = item.dataset.src;
+                        const caption = item.dataset.caption;
+                        if (src) {
+                            abrirModal(src, caption);
+                        }
+                    }
+                });
+            }
+
+            if (cerrarModal) {
+                cerrarModal.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    cerrarModalFn();
+                });
+            }
+
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        cerrarModalFn();
+                    }
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.classList.contains('abierto')) {
+                    cerrarModalFn();
+                }
+            });
+
+            // ----- 3. MENÚ HAMBURGUESA (toggle + overlay) -----
+            const btnHamburguesa = document.getElementById('btnHamburguesa');
+            const menuLateral = document.getElementById('menuLateral');
+            const btnCerrarMenu = document.getElementById('btnCerrarMenu');
+            const overlay = document.getElementById('overlayMenu');
+
+            function abrirMenu() {
+                menuLateral.classList.add('abierto');
+                overlay.classList.add('activo');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function cerrarMenu() {
+                menuLateral.classList.remove('abierto');
+                overlay.classList.remove('activo');
+                document.body.style.overflow = '';
+            }
+
+            if (btnHamburguesa) {
+                btnHamburguesa.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    abrirMenu();
+                });
+            }
+
+            if (btnCerrarMenu) {
+                btnCerrarMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    cerrarMenu();
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    cerrarMenu();
+                }
+            });
+
+            const enlacesMenu = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
+            enlacesMenu.forEach(function(enlace) {
+                enlace.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            });
+
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth > 900 && menuLateral.classList.contains('abierto')) {
+                        cerrarMenu();
+                    }
+                }, 200);
+            });
+
+        })();
+    </script>
+
+</body>
+</html>
