@@ -37,8 +37,13 @@
       --radius: 14px;
       --disp: 'Cinzel', serif;
       --body: 'Work Sans', sans-serif;
-      --card-w: 170px;
-      --card-h: 210px;
+      /* Tamaño base aumentado un 8%: 170px * 1.08 = 183.6px -> redondeamos a 184px */
+      --card-w: 184px;
+      --card-h: 227px;
+      /* Tamaño de la tarjeta destacada (Rafael) - se mantiene en 130% */
+      --destacado-scale: 1.2;  /* Tamaño x DEFECTO de la tarjeta destacada */
+      /* Zoom al hover de la tarjeta destacada - reducido un 10%: 1.5 * 0.9 = 1.35 */
+      --destacado-hover-scale: 1.1;  // zoom tarjeta Trujillo
     }
 
     /* ===== PORTADA ===== */
@@ -370,9 +375,14 @@
       z-index: 10;
       position: relative;
     }
+    /* Tarjeta destacada de Rafael Leónidas - tamaño por defecto: 130% */
     .card-flip.destacado {
-      width: calc(var(--card-w) * 1.3);
-      height: calc(var(--card-h) * 1.3);
+      width: calc(var(--card-w) * var(--destacado-scale));
+      height: calc(var(--card-h) * var(--destacado-scale));
+    }
+    /* Zoom al hover de la tarjeta destacada - reducido un 10% (1.35 en lugar de 1.5) */
+    .card-flip.destacado:hover {
+      transform: scale(var(--destacado-hover-scale));
     }
     .card-flip .card-inner {
       position: relative;
@@ -499,8 +509,7 @@
     }
     .card-back-dates {
       font-size: 0.7rem;
-      /*color: var(--black); */
-      color: var(--black); // txt
+      color: var(--gray);
     }
     .card-flip.destacado .card-back-dates {
       color: var(--navy);
@@ -522,7 +531,7 @@
     }
     .card-back-comment {
       font-size: 0.6rem;
-      color: var(--gray);
+      color: #000000;
       margin-top: 0.2rem;
       line-height: 1.3;
       max-width: 90%;
@@ -736,10 +745,11 @@
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 700px) {
-      :root { --card-w: 140px; --card-h: 180px; }
+      :root { --card-w: 150px; --card-h: 195px; }
       .contenido { padding: 1.5rem 4vw 3rem; }
       .tree-wrap { padding: 1.2rem 0.8rem; }
-      .card-flip.destacado { width: calc(var(--card-w) * 1.3); height: calc(var(--card-h) * 1.3); }
+      .card-flip.destacado { width: calc(var(--card-w) * var(--destacado-scale)); height: calc(var(--card-h) * var(--destacado-scale)); }
+      .card-flip.destacado:hover { transform: scale(var(--destacado-hover-scale)); }
       .card-avatar { width: 48px; height: 48px; font-size: 1.2rem; }
       .card-flip.destacado .card-avatar { width: 56px; height: 56px; font-size: 1.6rem; }
       .card-name { font-size: 0.75rem; }
@@ -781,8 +791,9 @@
       }
     }
     @media (max-width: 480px) {
-      :root { --card-w: 110px; --card-h: 150px; }
-      .card-flip.destacado { width: calc(var(--card-w) * 1.3); height: calc(var(--card-h) * 1.3); }
+      :root { --card-w: 120px; --card-h: 165px; }
+      .card-flip.destacado { width: calc(var(--card-w) * var(--destacado-scale)); height: calc(var(--card-h) * var(--destacado-scale)); }
+      .card-flip.destacado:hover { transform: scale(var(--destacado-hover-scale)); }
       .card-avatar { width: 40px; height: 40px; font-size: 1rem; }
       .card-flip.destacado .card-avatar { width: 48px; height: 48px; font-size: 1.4rem; }
       .card-name { font-size: 0.65rem; }
@@ -1034,7 +1045,7 @@
                   <div class="card-back-name">Altagracia Julia Molina Chevalier</div>
                   <div class="card-back-dates">25.Ene.1865 – 30.Abr.1964</div>
                   <div class="card-back-role">Madre del Dictador</div>
-                  <div class="card-back-comment">Madre de los 7 hermanos Trujillo Molina. Desempeñó un rol importante dentro de la dinámica familiar debido a la ausencia del padre.</div>
+                  <div class="card-back-comment">Madre de los hermanos Trujillo Molina. Desempeñó un rol importante dentro de la dinámica familiar debido a la ausencia del padre.</div>
                 </div>
               </div>
             </div>
@@ -1058,7 +1069,7 @@
                   <div class="card-back-name">Flérida Marina Trujillo Molina</div>
                   <div class="card-back-dates">10.Ago.1888 – 13.Feb.1976</div>
                   <div class="card-back-role">Hermana mayor</div>
-                  <div class="card-back-comment">La mayor de los 7 hermanos Trujillo Molina</div>
+                  <div class="card-back-comment">La mayor de los hermanos Trujillo Molina</div>
                 </div>
               </div>
             </div>
@@ -1074,7 +1085,7 @@
                   <div class="card-back-name">Virgilio Trujillo Molina</div>
                   <div class="card-back-dates">24.Jul.1889 – 29.Jul.1987</div>
                   <div class="card-back-role">Hermano</div>
-                  <div class="card-back-comment">Hermano mayor del dictador. Tenía un nivel más alto de educación formal y un perfil más diplomático. Vivió 98 años, el más longevo de los 7 hermanos Trujillo Molina</div>
+                  <div class="card-back-comment">Hermano mayor del dictador. Tenía un nivel más alto de educación formal y un perfil más diplomático. Vivió 98 años, el más longevo de los hermanos Trujillo Molina</div>
                 </div>
               </div>
             </div>
@@ -1245,6 +1256,7 @@
           <div class="gen-label">▸ MUJERES DEL DICTADOR</div>
           <div class="spouse-group">
 
+            <!-- Rafael Leónidas (destacado) -->
             <div class="card-flip destacado" data-person="rafael-leonidas">
               <div class="card-inner">
                 <div class="card-front">
@@ -1261,8 +1273,6 @@
               </div>
             </div>
 
-        <!--  <span class="spouse-connector">✧</span>  -->
-
             <div class="card-flip" data-person="aminta-ledesma">
               <div class="card-inner">
                 <div class="card-front">
@@ -1271,14 +1281,11 @@
                 </div>
                 <div class="card-back">
                   <div class="card-back-name">Aminta Ledesma Pérez</div>
-                  <!-- <div class="card-back-dates"> ? – ? </div>  -->
                   <div class="card-back-role">1ra esposa</div>
                   <div class="card-back-comment">Primera esposa de Rafael, madre de sus primeras hijas: Julia Genoveva y Flor de Oro</div>
                 </div>
               </div>
             </div>
-
-        <!--  <span class="spouse-connector">✧</span>  -->
 
             <div class="card-flip" data-person="bienvenida-ricardo">
               <div class="card-inner">
@@ -1288,14 +1295,11 @@
                 </div>
                 <div class="card-back">
                   <div class="card-back-name">Bienvenida Inocencia Ricardo</div>
-                  <!-- <div class="card-back-dates"> ? – ? </div>  -->
                   <div class="card-back-role">2da esposa</div>
                   <div class="card-back-comment">La "montecristeña" Bienvenida, era pariente de Joaquín Balaguer Ricardo. Trujillo estuvo casado con ella durante dos años sin procrear hijos. Durante ese tiempo vivió en unión libre con María Martínez Alba. Luego del divorcio con Bienvenida, procreó con ella a Odette, mientras estaba casado con María Martínez.</div>
                 </div>
               </div>
             </div>
-
-        <!--  <span class="spouse-connector">✧</span>  -->
 
             <div class="card-flip" data-person="maria-martinez-alba">
               <div class="card-inner">
@@ -1312,8 +1316,7 @@
               </div>
             </div>
 
-            <!-- Tarjeta modal: OTRAS RELACIONES (botón) integrada en el mismo grupo -->
-
+            <!-- Tarjeta modal: OTRAS RELACIONES (botón) -->
             <div class="card-flip modal-card" data-modal="relaciones">
               <div class="card-inner">
                 <div class="card-front">
@@ -1327,7 +1330,7 @@
           <!-- HIJOS DEL TIRANO Y DICTADOR  -->
           <div class="gen-label">▸ HIJOS DEL DICTADOR</div>
           <div class="children-wrap">
-            <!-- Ramfis -->
+            <!-- Julia Genoveva -->
             <div class="card-flip" data-person="JuliaG">
               <div class="card-inner">
                 <div class="card-front">
@@ -1387,7 +1390,6 @@
                 </div>
                 <div class="card-back">
                   <div class="card-back-name">Rafael Leonidas Trujillo Martínez</div>
-                  <!-- <div class="card-apodo">«Ramfis»</div> -->
                   <div class="card-back-dates">5.Jun.1929 – 26.Dic.1969</div>
                   <div class="card-back-role">hijo de María Martínez Alba</div>
                   <div class="card-back-comment">Nació cuando Trujillo estaba casado con Bienvenida Ricardo.  Ramfis se distinguió por sus excesos, fue coronel a los 4 años y general a los 9. En 1961, lideró persecuciones y el asesinato de los ajusticiadores antes de huir a España, donde murió en un accidente.</div>
@@ -1404,7 +1406,6 @@
                 </div>
                 <div class="card-back">
                   <div class="card-back-name">María de los Ángeles Trujillo Martínez</div>
-                  <!-- <div class="card-apodo">«Angelita»</div> -->
                   <div class="card-back-dates">10.Jun.1939 - 21.Ago.2023</div>
                   <div class="card-back-role">hija de María Martínez Alba</div>
                   <div class="card-back-comment">Hija predilecta del dictador dominicano. Creció rodeada de lujos extremos, llegando a ser coronada "reina" en 1955. Al morir su padre en 1961, vivió exiliada en España y posteriormente en Miami, donde falleció</div>

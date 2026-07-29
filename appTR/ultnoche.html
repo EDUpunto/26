@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Etapas · Era de Trujillo</title>
+    <title>Última Noche · Era de Trujillo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
@@ -84,7 +84,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center top;
+            object-position: center 20%;
         }
         .portada-bg .ph {
             position: absolute;
@@ -281,14 +281,14 @@
             font-weight: 700;
             color: var(--orange);
             font-family: Cinzel;
-            font-size: 1.2rem;
+            font-size: 1.7rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
         }
         .intro-texto {
             color: #2c3a4b;
             line-height: 1.75;
-            font-size: 1.05rem;
+            font-size: 1.3rem;
             margin-top: 0.8rem;
         }
 
@@ -352,10 +352,6 @@
             margin-top: -100vh;
             z-index: 2;
         }
-        /* El título del capítulo vive en su propio contenedor, hermano de
-           capitulo-textos, para que su rango "sticky" abarque TODO el
-           capítulo (no solo el primer bloque de texto) y solo se suelte
-           al pasar al siguiente capítulo. */
         .capitulo-titulo {
             position: sticky;
             top: 15vh;
@@ -365,7 +361,7 @@
         }
         .capitulo-titulo .texto-caja {
             pointer-events: auto;
-            margin-left: 8vw; /* separación del borde izquierdo */
+            margin-left: 8vw;
         }
         .texto-bloque {
             min-height: 100vh;
@@ -378,7 +374,7 @@
             opacity: 0;
             transform: translateY(28px);
             transition: opacity 0.7s ease, transform 0.7s ease;
-            margin-left: 6vw; /* separación del borde izquierdo para textos normales */
+            margin-left: 6vw;
         }
         .texto-caja.en-vista {
             opacity: 1;
@@ -390,14 +386,13 @@
         .texto-caja.intro-grande.en-vista {
             transform: none;
         }
-        /* Ajuste para que los bloques pares mantengan su alineación a la derecha */
         .texto-bloque:nth-child(even) {
             justify-content: flex-end;
         }
         .texto-bloque:nth-child(even) .texto-caja {
             text-align: right;
             margin-left: auto;
-            margin-right: 6vw; /* separación del borde derecho para textos pares */
+            margin-right: 6vw;
         }
         .texto-caja.intro-grande .bloque-parrafo {
             font-family: var(--disp);
@@ -453,6 +448,29 @@
             margin-right: 0.4rem;
         }
 
+        /* lista de atacantes estilo grid */
+        .lista-atacantes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 1.5rem;
+            color: var(--cream);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+        .lista-atacantes span {
+            padding: 0.1rem 0;
+            border-bottom: 1px dotted rgba(205, 170, 92, 0.25);
+        }
+        .lista-atacantes .nota {
+            grid-column: 1 / -1;
+            font-size: 0.85rem;
+            color: var(--gold-dim);
+            border-bottom: none;
+            padding-top: 0.5rem;
+            font-style: italic;
+        }
+
         @media (max-width: 760px) {
             .texto-bloque {
                 padding: 2.4rem 6vw;
@@ -481,6 +499,9 @@
             .capitulo-titulo .texto-caja {
                 margin-left: 0 !important;
             }
+            .lista-atacantes {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* ========== CIERRE ========== */
@@ -497,13 +518,13 @@
             padding: 1.4rem 1.7rem;
             color: #3d2418;
             line-height: 1.7;
-            font-size: 1rem;
+            font-size: 1.3rem;
         }
         .cierre-card b {
             color: var(--orange-dim);
         }
 
-        /* ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== */
+        /* ========== BOTÓN FLOTANTE ARRIBA ========== */
         .btn-flotante {
             position: fixed;
             z-index: 100;
@@ -562,19 +583,19 @@
     <section id="portada">
         <div class="portada-bg">
             <picture>
-                <source media="(max-width:640px)" srcset="ins/001portadaCv.png" />
-                <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <source media="(max-width:640px)" srcset="ins/unoche2.png" />
+                <img src="ins/unoche1.png" alt="Última noche de Trujillo" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
             </picture>
             <div class="ph">
-                <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
+                <div><b>Falta imagen</b>Coloca ins/unoche1.png (laptop)<br />o ins/unoche2.png (celular)</div>
             </div>
             <div class="portada-veil"></div>
         </div>
         <div class="portada-content">
             <div class="portada-left">
                 <span class="portada-eyebrow">Historia de la República Dominicana</span>
-                <h1 class="portada-title">Etapas de la Era</h1>
-                <h3 class="portada-dates">Tiranía Trujillista 1930-1961</h3>
+                <h1 class="portada-title">Última Noche</h1>
+                <h3 class="portada-dates">30 de mayo de 1961</h3>
             </div>
         </div>
     </section>
@@ -597,11 +618,11 @@
             <li><a href="antes_tru.html">Antecedentes</a></li>
             <li><a href="glpe30.html">Golpe de Estado 1930</a></li>
             <li><a href="maq_tir.html">Maquinaria de la Tiranía</a></li>
-            <li><a href="etap_tir.html" class="activo">Etapas de la Tiranía</a></li>
+            <li><a href="etap_tir.html">Etapas de la Tiranía</a></li>
             <li><a href="elec_tru.html">Elecciones</a></li>
             <li><a href="reb_tru.html">Rebeldes</a></li>
             <li><a href="casos_tru.html">Casos Famosos</a></li>
-            <li><a href="ultnoche.html">Última Noche</a></li>
+            <li><a href="ultnoche.html" class="activo">Última Noche</a></li>
             <li><a href="destru.html">Destrujillización</a></li>
             <li><a href="galr.html">Galería</a></li>
             <li><a href="glos.html">Glosario</a></li>
@@ -615,244 +636,163 @@
     <!-- ========== INTRODUCCIÓN ========== -->
     <div class="intro-wrap">
         <div class="intro-card">
-            <span class="intro-eyebrow">CINCO ETAPAS</span>
-            <div class="intro-texto">De esta manera fue cambiando el enfoque del régimen en los 31 años.  Desplázate y descube domo fue transformándose.</div>
+            <span class="intro-eyebrow">EL FINAL DE LA TIRANÍA</span>
+            <div class="intro-texto">Después de 31 años de poder absoluto, la oposición no encontraba cómo derrocar a Trujillo.
+
+             <br> Inesperadamente para los opositores y para las instancias de seguridad del régimen, fue un grupo de colaboradores cercanos, algunos de los cuales habían sido sus propios aliados, quienes decidieron terminar con la vida del dictador la noche del 30 de mayo de 1961.  
+
+             <br> Esta es la cronología de los hechos.</div>
         </div>
     </div>
 
     <!-- ========== SCROLLYTELLING ========== -->
     <div class="historia">
 
-        <!-- CAPÍTULO 1 · 1930-1938 -->
+        <!-- CAPÍTULO 1 · LA VÍSPERA -->
         <section class="capitulo">
             <div class="capitulo-bg">
-                <img src="ins/e1.png" alt="1930-1938 consolidación" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
-                <div class="ph"><div><b>Falta imagen</b>ins/e1.png</div></div>
+                <img src="ins/unoche1.png" alt="Trayecto de Trujillo" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/unoche1.png</div></div>
                 <div class="capitulo-veil"></div>
-                <span class="capitulo-numero">I · IV</span>
+                <span class="capitulo-numero">1 de 4</span>
             </div>
             <div class="capitulo-titulo">
                 <div class="texto-caja intro-grande">
-                    <div class="bloque-parrafo">LA CONSOLIDACIÓN EN EL PODER</div>
-                    <div class="bloque-parrafo2">Desde 1930 a 1938</div>
+                    <div class="bloque-parrafo">LA RUTA</div>
+                    <div class="bloque-parrafo2">Alrededor de las 8:00 p. m.</div>
                 </div>
             </div>
             <div class="capitulo-textos">
                 <div class="texto-bloque"></div>
                 <div class="texto-bloque">
                     <div class="texto-caja">
-                        <div class="bloque-parrafo">Trujillo utilizó todos los medios para establecerse en el poder por mucho tiempo. El ejército, la prensa, la economía, la política, entre otros giraban alrededor de su persona.  Desde su ascenso en 1930 Trujillo desarrolló una intensa labor en organizar el estado y consolidarse en el poder. Estableció rápidamente las bases de su régimen y un tiempo después le puso su nombre: "La Era de Trujillo".</div>
+                        <div class="bloque-parrafo">Esa noche, Trujillo salió de su residencia oficial, la <strong>Estancia Radhamés</strong> (hoy Museo del Hombre Dominicano y Biblioteca Nacional). Luego visitó a su hija "Angelita", en la zona donde hoy se ubica el Teatro Nacional. Después se dirigió a casa de su madre, Julia Molina (Mamá Julia), en la esquina de la Avenida Máximo Gómez con México (hoy Universidad APEC).</div>
                     </div>
                 </div>
                 <div class="texto-bloque">
                     <div class="texto-caja">
-                        <span class="bloque-titulo">Oposición controlada</span>
-                        <div class="bloque-parrafo">Desde el principio eliminó o neutralizó a cada uno de sus opositores:   <br>-Virgilio Maynardi Reyna, asesinado en junio.1930 <br> 
-                        -Cipriano Bencosme, muerto en diciembre.1930 <br> 
-                        -Desiderio Arias, muerto en 1931 <br> 
-                        -Rafael Estrella Ureña, neutralizado en 1931. <br>La etapa concluyó con la Masacre del Perejil a finales de 1937 pues bloqueó sus aspiraciones presidenciales.</div>
+                        <span class="bloque-titulo">Sin escoltas</span>
+                        <div class="bloque-parrafo">Pasadas las 9:00 p. m., notificó a su chofer y guardaespaldas, Zacarías de la Cruz, que emprenderían el viaje a San Cristóbal. El auto tomó la ruta del malecón (carretera Sánchez en aquel momento), confiado y sin escoltas, rumbo al oeste. Los atacantes los esperaban.</div>
                     </div>
                 </div>
                 <div class="texto-bloque">
                     <div class="texto-caja">
-                        <span class="bloque-titulo">Control fronterizo</span>
-                        <div class="bloque-parrafo">Tras obtener escasos resultados en su reunión con el presidente de Haití, en la que buscaba definir y controlar la frontera, Trujillo recurrió al terror como instrumento de poder. Fue así como, en 1937, ordenó la Masacre del Perejil, un crimen de Estado que provocó la muerte de miles de haitianos y de dominicanos de ascendencia haitiana.</div>
+                        <span class="bloque-titulo">La emboscada</span>
+                        <div class="bloque-parrafo">El vehículo fue interceptado y atacado a balazos por un equipo de 7 complotados casi a las 10 pm. El automóvil de Trujillo, un Chevrolet modelo Bel Air del año 1957 azul claro, recibió más de 60 impactos de diversos calibres. Trujillo murió en el ataque. Los complotados cargaron el cadáver en el baúl de uno de sus vehículos para demostrar a otros el resultado del plan.  Tambien tuvieron que dejar un automovil abandonado porque no encendió.  El chofer de Trujillo logró escapar herido y dio la voz de alarma.</div>
                     </div>
                 </div>
-
-
             </div>
         </section>
 
-        <!-- CAPÍTULO 2 · 1938-1947 -->
+        <!-- CAPÍTULO 2 · LOS ATACANTES -->
         <section class="capitulo">
             <div class="capitulo-bg">
-                <img src="ins/e2.png" alt="1938-1947 consolidación financiera" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
-                <div class="ph"><div><b>Falta imagen</b>ins/e2.png</div></div>
+                <img src="ins/unoche2.png" alt="Los complotados" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/unoche2.png</div></div>
                 <div class="capitulo-veil"></div>
-                <span class="capitulo-numero">II · IV</span>
+                <span class="capitulo-numero">2 de 4</span>
             </div>
             <div class="capitulo-titulo">
                 <div class="texto-caja intro-grande">
-                    <div class="bloque-parrafo">LA CONSOLIDACIÓN FINANCIERA</div>
-                    <div class="bloque-parrafo2">Desde 1938 a 1947</div>
+                    <div class="bloque-parrafo">LOS COMPLOTADOS</div>
+                    <div class="bloque-parrafo2">Los que participaron en el ataque</div>
                 </div>
             </div>
             <div class="capitulo-textos">
                 <div class="texto-bloque"></div>
                 <div class="texto-bloque">
                     <div class="texto-caja">
-                        <div class="bloque-parrafo">Trujillo venía de una familia pobre y al convertirse en oficial del ejército, se dedicó a enriquecerse utilizando todos los medios del estado dominicano. Para 1947 ya dominaba toda la economía nacional.</div>
+                        <div class="bloque-parrafo">El equipo atacante estuvo conformado por siete hombres, algunos de ellos cercanos al régimen. Solo uno de los atacantes sobrevivió a la represión.</div>
+                        <div class="lista-atacantes">
+                            <span>Antonio de la Maza Vásquez*</span>
+                            <span>Antonio Imbert Barrera*</span>
+                            <span>Amado García Guerrero*</span>
+                            <span>Salvador Estrella Sadhalá*</span>
+                            <span>Pedro Livio Cedeño Herrera*</span>
+                            <span>Roberto Pastoriza Neret (Fifí)*</span>
+                            <span>Huáscar Tejeda Pimentel*</span>
+                            <span class="nota">* Participaron directamente en el ataque</span>
+                        </div>
                     </div>
                 </div>
                 <div class="texto-bloque">
                     <div class="texto-caja">
-                        <span class="bloque-titulo">Monopolios y bancos</span>
-                        <div class="bloque-parrafo">Con un presidente títere y fuera del poder formal, Trujillo se concentró en engordar sus bolsillos.  <br> -Desde 1932 había empezado a monopolizar las aseguradoras.  <br> -En 1935 era dueño del negocio del tabaco pues con chantajes obligó a Antonio Barletta a venderle su empresa.  <br> -En 1937 creó la moneda nacional, siguiendo el modelo de otros países de latinoamérica y en 1941 fundó el primer gran banco dominicano. En 1945 fundó el Banco Agrícola.</div>
-                    </div>
-                </div>
-                <div class="texto-bloque">
-                    <div class="texto-caja">
-                        <span class="bloque-titulo">Partido y cemento</span>
-                        <div class="bloque-parrafo">Los ingresos provenientes de los aportes de los miembros del Partido Dominicano fueron recursos que manejó a su antojo. En 1945 fundó el edificio sede central del partido. En 1946 las mayores empresas dominicanas en producción, finanzas y seguros eran de su propiedad. En 1947 fundó la Fábrica Dominicana de Cemento para la construcción monopolizando ese renglón.</div>
-                    </div>
-                </div>
-                <div class="texto-bloque">
-                    <div class="texto-caja">
-                        <span class="bloque-titulo">Empresas de Trujillo</span>
-                        <div class="bloque-parrafo" style="font-size:0.9rem;">Principales empresas que Trujillo logró desarrollar con el dinero del estado dominicano:</div>
+                        <span class="bloque-titulo">Los que no atacaron</span>
+                        <div class="bloque-parrafo">Otros cómplices no participaron en el tiroteo, pero fueron igualmente perseguidos:</div>
                         <ul class="bloque-lista">
-                            <li>Atlas Comercial Compañía, C. por A.</li>
-                            <li>Compañía Anónima Tabacalera, C. por A.</li>
-                            <li>Compañía de Seguros San Rafael, C. por A.</li>
-                            <li>Compañía Dominicana de Aviación, C. por A.</li>
-                            <li>Chocolatera Industrial.</li>
-                            <li>Dominicana Industrial de Calzados.</li>
-                            <li>Fábrica de Aceites Vegetales.</li>
-                            <li>Fábrica Dominicana de Baterías, C. por A.</li>
-                            <li>Fábrica de Clavos Enriquillo.</li>
-                            <li>Fábrica Dominicana de Cemento, C. por A.</li>
-                            <li>Fábrica de Sacos y Cordelerías, C. por A.</li>
-                            <li>Industria Nacional del Papel, C. por A.</li>
-                            <li>Industria Nacional del Vidrio, C. por A.</li>
-                            <li>Marmolería Nacional, C. por A.</li>
-                            <li>Molinos Dominicanos, C. por A.</li>
-                            <li>Molinos del Norte.</li>
-                            <li>Minas de Sal y Yeso.</li>
-                            <li>Pinturas Dominicanas, C. por A.</li>
-                            <li>Planta de Recauchado.</li>
-                            <li>Refinería de Sal.</li>
-                            <li>Sociedad Inmobiliaria, C. por A.</li>
-                            <li>Tecnometal, C. por A.</li>
-                            <li>Tenería FA-2, C. por A.</li>
-                            <li>Tejidos Antillanos, C. por A.</li>
+                            <li>Juan Tomás Díaz</li>
+                            <li>Luis Manuel Cáceres Michel (Tunti)</li>
+                            <li>Modesto Díaz Quezada</li>
+                            <li>Luis Amiama Tió</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- CAPÍTULO 3 · 1947-1959 -->
+        <!-- CAPÍTULO 3 · DESENLACE Y REPRESIÓN -->
         <section class="capitulo">
             <div class="capitulo-bg">
-                <img src="ins/e3.png" alt="1947-1959 rearme" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
-                <div class="ph"><div><b>Falta imagen</b>ins/e3.png</div></div>
+                <img src="ins/unoche3.png" alt="Represión" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/unoche1.png</div></div>
                 <div class="capitulo-veil"></div>
-                <span class="capitulo-numero">III · IV</span>
+                <span class="capitulo-numero">3 de 4</span>
             </div>
             <div class="capitulo-titulo">
                 <div class="texto-caja intro-grande">
-                    <div class="bloque-parrafo">EL REARME</div>
-                    <div class="bloque-parrafo2">Desde 1947 a 1959</div>
+                    <div class="bloque-parrafo">LA CACERÍA</div>
+                    <div class="bloque-parrafo2">El SIM actúa</div>
                 </div>
             </div>
             <div class="capitulo-textos">
                 <div class="texto-bloque"></div>
                 <div class="texto-bloque">
                     <div class="texto-caja">
-                        <div class="bloque-parrafo">En 1947 la oposición en el extranjero empezó a activarse en contra de Trujillo. Los presidentes de Guatemala, Cuba y Costa Rica dieron apoyo a los grupos rebeldes.</div>
+                        <div class="bloque-parrafo">Los complotados no tenían un plan de escape ni una estrategia para tomar el poder. El chofer Zacarías de la Cruz -dado muerto por los atacantes- pudo arrastrarse hasta una calle donde tuvo la suerte de ser auxiliado oportunamente y llevado a una çlínica. La noticia corrió y el Servicio de Inteligencia Militar (SIM) activó rápidamente una tenaz persecucción y cacería.</div>
                     </div>
                 </div>
                 <div class="texto-bloque">
                     <div class="texto-caja">
-                        <span class="bloque-titulo">Rebeliones y reformas</span>
-                        <div class="bloque-parrafo">Se intentaron 3 rebeliones contra la dictadura. Los 3 intentos fallaron. El régimen trujillista reformó las Fuerzas Armadas, creó la Fuerza Aérea, compró nuevas naves marítimas, renovó la artillería y estableció el Servicio Militar Obligatorio. Formó el Servicio de Inteligencia Militar (SIM) para espiar a la población, funcionarios y a los militares. Estableció una fábrica de armas o armería en la comunidad de San Cristóbal.</div>
+                        <span class="bloque-titulo">Caídos en combate</span>
+                        <div class="bloque-parrafo"><strong>Amado García Guerrero</strong> cayó enfrentando a las fuerzas trujillistas en su casa el 2 de junio. <strong>Antonio de la Maza</strong> y <strong>Juan Tomás Díaz</strong> murieron en un tiroteo con agentes del SIM el 4 de junio en la avenida Bolívar.</div>
                     </div>
                 </div>
-                <div class="texto-bloque">
-                    <div class="texto-caja">
-                        <span class="bloque-titulo">Escenario internacional</span>
-                        <div class="bloque-parrafo">En 1953 Trujillo se presentó en la Asamblea de la ONU en Nueva York e hizo una donación de US$50 mil para el Fondo Internacional de Emergencia para la Infancia. Buscaba impresionar a la comunidad internacional. Hizo un lujoso viaje a España en 1954 para estrechar las relaciones con su amigo personal, el dictador español Francisco Franco.</div>
-                    </div>
-                </div>
-                <div class="texto-bloque">
-                    <div class="texto-caja">
-                        <span class="bloque-titulo">Feria de la Paz</span>
-                        <div class="bloque-parrafo">En 1955 celebró los 25 años de "La Era de Trujillo" con la inauguración de la "Feria de la Paz, de la Confraternidad y el Mundo Libre". La fiesta inaugural sirvió para coronar a su hija como "Angelita I". Los Trujillo querían formar parte de la nobleza internacional con el dinero de un país pobre. El costo de las obras y la fiesta alcanzaron la tercera parte del presupuesto, acabó hundiendo la economía nacional.</div>
-                    </div>
-                </div>
+
             </div>
         </section>
 
-        <!-- CAPÍTULO 4 · 1959-1960 -->
+        <!-- CAPÍTULO 4 · EL FINAL DE LA FAMILIA -->
         <section class="capitulo">
             <div class="capitulo-bg">
-                <img src="ins/e4.png" alt="1959-1961 declive" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
-                <div class="ph"><div><b>Falta imagen</b>ins/e4.png</div></div>
+                <img src="ins/unoche4.png" alt="Huida de Ramfis" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+                <div class="ph"><div><b>Falta imagen</b>ins/unoche2.png</div></div>
                 <div class="capitulo-veil"></div>
-                <span class="capitulo-numero">IV · IV</span>
+                <span class="capitulo-numero">4 de 4</span>
             </div>
-            <div class="capitulo-titulo">
-                <div class="texto-caja intro-grande">
-                    <div class="bloque-parrafo">DECLIVE</div>
-                    <div class="bloque-parrafo2">Desde 1959 a 1960</div>
-                </div>
-            </div>
-            <div class="capitulo-textos">
-                <div class="texto-bloque"></div>
+
                 <div class="texto-bloque">
                     <div class="texto-caja">
-                        <div class="bloque-parrafo">Después de la invasión rebelde de 1959, el país reaccionó. Se formó el movimiento político clandestino "14 de junio" compuesto por jóvenes dominicanos. El movimiento fue descubierto y perseguido por el Servico de Inteligencia Militar (SIM).</div>
+                        <span class="bloque-titulo">Capturados y ejecutados</span>
+                        <div class="bloque-parrafo">Huáscar Tejeda, Pedro Livio Cedeño, Modesto Díaz, Roberto Pastoriza, Luis Manuel Cáceres (Tunti) y Salvador Estrella fueron capturados vivos, torturados y ejecutados por orden de Ramfis el 18 de noviembre de 1961.</div>
                     </div>
                 </div>
                 <div class="texto-bloque">
                     <div class="texto-caja">
-                        <span class="bloque-titulo">Crisis y agresiones</span>
-                        <div class="bloque-parrafo2">Asesinatos, torturas, atentados, y agresiones de todo tipo crearon una crisis social. En el proceso hasta la iglesia católica fue agredida. El asesinato a las hermanas Mirabal, en noviembre de 1960, demostró que a los delincuentes no les importaba liquidar a las mujeres.</div>
+                        <span class="bloque-titulo">Los sobrevivientes</span>
+                        <div class="bloque-parrafo"><strong>Antonio Imbert Barreras</strong> y <strong>Luis Amiama Tió</strong> lograron sobrevivir ocultos en lugares diferentes durante meses, hasta que el país reaccionó y el contexto social estuvo más seguro.</div>
                     </div>
                 </div>
-                <div class="texto-bloque">
-                    <div class="texto-caja">
-                        <span class="bloque-titulo">Atentados y sanciones</span>
-                        <div class="bloque-parrafo">Trujillo era cada vez más intolerante y agresivo. El SIM actuaba a nivel internacional hasta que fue descubierto en un atentado al presidente venezolano Rómulo Betancourt. Ya tenía una larga lista de atentados. La ONU sancionó al régimen trujillista.</div>
-                    </div>
-                </div>
-            </div>
+
         </section>
-
-
-        <!-- CAPÍTULO 5 · 1961 -->
-        <section class="capitulo">
-            <div class="capitulo-bg">
-                <img src="ins/e5.png" alt="1961 caída" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
-                <div class="ph"><div><b>Falta imagen</b>ins/e4.png</div></div>
-                <div class="capitulo-veil"></div>
-                <span class="capitulo-numero">IV · IV</span>
-            </div>
-            <div class="capitulo-titulo">
-                <div class="texto-caja intro-grande">
-                    <div class="bloque-parrafo">CAÍDA</div>
-                    <div class="bloque-parrafo2">1961</div>
-                </div>
-            </div>
-            <div class="capitulo-textos">
-                <div class="texto-bloque"></div>
-                <div class="texto-bloque">
-                    <div class="texto-caja">
-                        <span class="bloque-titulo">Muerte del dictador</span>
-                        <div class="bloque-parrafo">Finalmente un grupo de colabordores cercanos al dictador le dió muerte la noche del 31.May.1961 en el actual malecón de Santo Domingo. Los complotados tenían un plan para acabar con el dictador pero no tenían un plan para derrocar la dictadura.</div>
-                    </div>
-                </div>
-                <div class="texto-bloque">
-                    <div class="texto-caja">
-                        <span class="bloque-titulo">Caída de la Familia Trujillo</span>
-                        <div class="bloque-parrafo">El hijo mayor del dictador, Ramfis Trujillo, y los organismos de seguridad persiguieron a los complotados, les atraparon, les torturaron y asesinaron a la mayoría.  Ramfis entendió que no tenía el control del país y huyó llevándose el cadáver de su padre.  El resto de los familiares, cómplices y políticos aliados tambien huyeron pues no estaban preparados para un país rebelde, más abierto y libre.</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-
 
     </div>
 
     <!-- ========== CIERRE ========== -->
     <div class="cierre-wrap">
-        <div class="cierre-card">Cinco etapas que marcaron la <b>Tiranía Trujillista</b>: consolidación, poder financiero, rearme, declive y caída. Un régimen que concentró el poder, la economía y el terror durante más de tres décadas pero que realmente tenía bases débiles.</div>
+        <div class="cierre-card">La noche del 30 de mayo de 1961 marcó el principio del fin de la <b>Era de Trujillo</b>. Un grupo de hombres, decidió terminar con el régimen dando muerte al dictador. Aunque casi todos pagaron con su vida, su acción precipitó la caída del régimen más largo y brutal de la República Dominicana.</div>
     </div>
 
-    <!-- ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== -->
+    <!-- ========== BOTÓN FLOTANTE ARRIBA ========== -->
     <button id="btn-top" class="btn-flotante" aria-label="Volver arriba">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 19V5M5 12l7-7 7 7" />
@@ -861,22 +801,16 @@
     </button>
 
     <script>
-        // Revela cada bloque de texto al entrar en la vista y lo fija en su posición
+        // Revela cada bloque de texto al entrar en la vista
         const cajas = document.querySelectorAll('.texto-caja');
         const observador = new IntersectionObserver((entradas) => {
             entradas.forEach((entrada) => {
                 const el = entrada.target;
-                // Solo aplicamos sticky a los que tienen clase intro-grande (títulos de etapa)
                 if (el.classList.contains('intro-grande')) {
-                    // Una vez que el título alcanza su posición, se queda sticky.
-                    // El propio position:sticky lo limita a su sección, así que al
-                    // salir de su capítulo se suelta solo y el siguiente título
-                    // (con mayor z-index) lo sustituye visualmente.
                     if (entrada.isIntersecting) {
                         el.classList.add('en-vista');
                     }
                 } else {
-                    // Para los textos normales, solo animamos la entrada
                     if (entrada.isIntersecting) {
                         el.classList.add('en-vista');
                     }
