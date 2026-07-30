@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Antecedentes</title>
+    <title>Antecedentes · Tiranía Trujillista</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
     <style>
-        /* ----- reset & base (copiado) ----- */
+        /* ----- reset & base ----- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -21,7 +21,8 @@
             font-family: 'Work Sans', sans-serif;
             background: #faf8f4;
             color: #0f1e38;
-            overflow-x: hidden;
+            overflow: hidden;
+            height: 100vh;
             -webkit-tap-highlight-color: transparent;
         }
         img {
@@ -45,8 +46,6 @@
             --gold-dim: #8d7745;
             --navy: #0f1e38;
             --navy-2: #16294a;
-            --orange: #e8592a;
-            --orange-dim: #c94a20;
             --gray: #5c6472;
             --gray-light: #8a91a0;
             --paper: #faf8f4;
@@ -62,8 +61,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            height: 15vh;
-            min-height: 80px;
+            height: 70px;
+            min-height: 70px;
             width: 100%;
             background: var(--bg-dark);
             color: var(--cream);
@@ -72,7 +71,7 @@
             justify-content: center;
             overflow: hidden;
             z-index: 300;
-            box-shadow: 0 12px 30px -14px rgba(0,0,0,0.6);
+            box-shadow: 0 8px 24px -10px rgba(0,0,0,0.6);
         }
         .portada-bg {
             position: absolute;
@@ -95,14 +94,14 @@
             justify-content: center;
             background: #2a2520;
             color: var(--gold-dim);
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             text-align: center;
-            padding: 1rem;
+            padding: 0.5rem;
         }
         .portada-bg .ph b {
             display: block;
             color: var(--cream);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
         }
         .portada-veil {
             position: absolute;
@@ -120,23 +119,23 @@
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 5vw;
+            padding: 0 4vw;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
+            gap: 0.6rem;
             flex-wrap: wrap;
         }
         .portada-left {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.6rem;
             flex-wrap: wrap;
         }
         .portada-eyebrow {
-            letter-spacing: 0.25em;
-            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            font-size: 0.5rem;
             color: var(--gold);
             text-transform: uppercase;
             font-weight: 600;
@@ -144,17 +143,17 @@
         .portada-title {
             font-family: var(--disp);
             font-weight: 700;
-            font-size: clamp(1rem, 2.2vw, 2rem);
+            font-size: clamp(0.9rem, 1.8vw, 1.6rem);
             line-height: 1.1;
             margin: 0;
-            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
             white-space: nowrap;
         }
         .portada-dates {
             font-family: var(--disp);
             color: var(--gold);
-            font-size: clamp(0.6rem, 1vw, 0.9rem);
-            letter-spacing: 0.1em;
+            font-size: clamp(0.5rem, 0.8vw, 0.8rem);
+            letter-spacing: 0.08em;
             margin: 0;
             white-space: nowrap;
         }
@@ -162,26 +161,26 @@
         /* ========== MENÚ HAMBURGUESA ========== */
         .menu-hamburguesa {
             position: fixed;
-            top: 1.2rem;
-            left: 1.2rem;
+            top: 0.8rem;
+            left: 0.8rem;
             z-index: 999;
             background: var(--navy);
             border: 1px solid var(--gold);
             border-radius: 6px;
-            padding: 0.5rem 0.7rem;
+            padding: 0.4rem 0.6rem;
             box-shadow: 0 4px 16px rgba(0,0,0,0.5);
             transition: background 0.2s;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
         .menu-hamburguesa:hover {
             background: var(--navy-2);
         }
         .menu-hamburguesa span {
             display: block;
-            width: 28px;
-            height: 3px;
+            width: 24px;
+            height: 2.5px;
             background: var(--cream);
             border-radius: 2px;
             transition: 0.2s;
@@ -228,14 +227,14 @@
         }
         .nav-lateral ul li {
             border-bottom: 1px solid #2f4a5a;
-            padding: 0.4rem 0;
+            padding: 0.3rem 0;
         }
         .nav-lateral ul li a {
             display: block;
             color: var(--cream);
             text-decoration: none;
-            font-size: 1.0rem;
-            padding: 0.35rem 0.5rem;
+            font-size: 0.9rem;
+            padding: 0.3rem 0.5rem;
             border-radius: 4px;
             transition: 0.15s;
             font-family: 'Work Sans', sans-serif;
@@ -265,318 +264,332 @@
 
         /* ========== CONTENIDO PRINCIPAL ========== */
         .contenido {
-            background: var(--paper);
-            padding: 0rem 5vw 5rem;
-            margin-top: 15vh;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            overflow: hidden;
         }
 
-        /* ===== EMBUDO / FUNNEL ===== */
+        /* fondo con imagen ins/FD0.PNG */
+        .contenido::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('ins/FD0.PNG') no-repeat center center / cover;
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .funnel-wrap {
-            max-width: 1100px;
-            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
         }
 
-        .funnel-card {
-            background: #fff;
-            border-radius: var(--radius);
-            border: 1px solid var(--line);
-            box-shadow: var(--shadow);
-            padding: 2.5rem 2rem;
+        /* ===== TEXTO INTRODUCTORIO DEBAJO DE LA PORTADA ===== */
+        .intro-text {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            padding: 0.8rem 2rem 0.3rem 2rem;
+            max-width: 800px;
             width: 100%;
-        }
-
-        .funnel-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.9rem;
-            margin-bottom: 2rem;
-        }
-        .funnel-header .material-symbols-outlined {
-            font-size: 2.6rem;
-            color: var(--gold);
             flex-shrink: 0;
-            line-height: 1;
-            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 40;
         }
-        .funnel-header-text h2 {
+        .intro-text h3 {
             font-family: var(--disp);
-            font-weight: 700;
-            font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+            font-weight: 600;
+            font-size: clamp(0.85rem, 1.3vw, 1.2rem);
             color: var(--navy);
-            letter-spacing: 0.02em;
-            border-bottom: 2px solid var(--gold);
-            padding-bottom: 0.6rem;
-            margin-bottom: 0.8rem;
+            letter-spacing: 0.04em;
+            margin: 0 0 0.2rem 0;
+            text-shadow: 0 1px 4px rgba(255,255,255,0.3);
         }
-        .funnel-header-text p {
-            font-size: 0.92rem;
-            line-height: 1.65;
-            color: var(--gray);
+        .intro-text p {
+            font-size: clamp(0.65rem, 0.9vw, 0.85rem);
+            color: var(--navy-2);
+            opacity: 0.85;
+            margin: 0;
+            letter-spacing: 0.02em;
             font-weight: 400;
-            width: 80%;
-            //*max-width: 68ch;*/
+            text-shadow: 0 1px 4px rgba(255,255,255,0.2);
         }
 
-        /* ---- lienzo general ---- */
         .funnel-canvas {
             position: relative;
             width: 100%;
-            min-height: 660px;
+            flex: 1;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            padding: 0.5rem 0.5rem 2rem;
-            overflow: visible;
+            justify-content: center;
+            min-height: 0;
         }
 
-        /* ---- silueta del embudo (basada en el icono filter_alt / FilterAltTwoTone) ---- */
-        .funnel-shape {
+        .interactive-area {
             position: relative;
-            width: min(560px, 94%);
-            height: 480px;
-            margin: 0 auto;
-        }
-        .funnel-fill {
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(180deg, rgba(205,170,92,0.16) 0%, rgba(205,170,92,0.06) 45%, rgba(15,30,56,0.05) 100%);
-            clip-path: polygon(3% 4%, 97% 4%, 64% 58%, 64% 92%, 36% 92%, 36% 58%);
-        }
-        .funnel-outline {
-            position: absolute;
-            inset: 0;
             width: 100%;
             height: 100%;
-        }
-        .funnel-outline polygon {
-            fill: none;
-            stroke: var(--gold);
-            stroke-width: 1.4;
-            stroke-linejoin: round;
-            opacity: 0.75;
-        }
-        .funnel-label-boca {
-            position: absolute;
-            top: -1.6rem;
-            left: 3%;
-            font-family: var(--disp);
-            font-size: 0.65rem;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: var(--gold-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
-        /* zona donde "caen" los círculos: coincide con la parte ancha del embudo */
-        .circles-area {
-            position: absolute;
-            inset: 0;
-            overflow: visible;
-        }
-
-        /* posicionador: ubica cada burbuja en su punto aleatorio dentro del embudo */
-        .bubble-pos {
-            position: absolute;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-        }
-        .bubble-pos:hover {
-            z-index: 9999;
-        }
-
-        /* círculo flotante: parecen caer y flotar dentro del embudo */
-        .bubble {
+        /* HEXÁGONO CENTRAL - siempre debajo de las pompas */
+        #central-hub {
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 000 !important; /* HEXÁGONO CENTRAL - siempre debajo de las pompas */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            text-align: center;
-            font-weight: 700;
-            font-size: 0.75rem;
-            color: #0f1e38;
-            box-shadow: 0 12px 24px -10px rgba(0,0,0,0.25);
-            transition: box-shadow 0.2s ease;
-            will-change: transform;
-            cursor: default;
-            aspect-ratio: 1/1;
-            padding: 0.2rem;
-            word-break: break-word;
-            line-height: 1.25;
-            flex-shrink: 0;
-            animation-name: floatBubble;
-            animation-timing-function: ease-in-out;
-            animation-iteration-count: infinite;
-            animation-direction: alternate;
-        }
-        .bubble .label {
-            font-size: 0.68rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            color: #0a1729;
-            background: rgba(255,255,240,0.3);
-            padding: 0.15rem 0.4rem;
-            border-radius: 40px;
-            backdrop-filter: blur(2px);
-            max-width: 84%;
-            display: block;
+            transform: scale(0.8);
             pointer-events: none;
-            text-shadow: 0 1px 4px rgba(255,255,240,0.5);
         }
-        .bubble .tooltip {
-            position: absolute;
-            bottom: calc(100% + 16px);
-            left: 50%;
-            transform: translateX(-50%) scale(0.9);
-            background: #1f2a3f;
-            color: #f2ead2;
-            padding: 0.9rem 1.2rem;
-            border-radius: 14px;
-            font-size: 0.75rem;
-            font-weight: 400;
-            line-height: 1.6;
-            width: 240px;
-            max-width: 80vw;
-            box-shadow: 0 20px 36px -12px rgba(0,0,0,0.5);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease, transform 0.2s ease;
-            text-align: left;
-            border: 1px solid var(--gold-dim);
-            z-index: 20;
-            font-family: 'Work Sans', sans-serif;
-            letter-spacing: 0.01em;
-        }
-        .bubble .tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 8px solid transparent;
-            border-top-color: #1f2a3f;
-        }
-        .bubble:hover .tooltip {
-            opacity: 1;
-            transform: translateX(-50%) scale(1);
-        }
-        .bubble:hover {
-            animation-play-state: paused;
-            transform: scale(1.08) !important;
-            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
-            z-index: 10;
-        }
-
-        /* flotación: amplitud/rotación variable por burbuja via variables CSS asignadas en JS */
-        @keyframes floatBubble {
-            0% { transform: translateY(0px) rotate(var(--rot-a, -4deg)); }
-            100% { transform: translateY(var(--float-y, -16px)) rotate(var(--rot-b, 4deg)); }
-        }
-
-        /* salida en hexágono, justo bajo la parte estrecha del embudo */
-        .hexagon-out {
-            margin-top: -0.6rem;
-            margin-bottom: 0.8rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .hexagon {
-            background: var(--navy);
+        .hexagon-shape {
+            background: rgba(15, 30, 56, 0.92);
+            backdrop-filter: blur(4px);
             color: var(--gold);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            padding: 1.2rem 2.6rem;
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            padding: 1.5rem 2.5rem;
             font-family: var(--disp);
             font-weight: 700;
-            font-size: clamp(1rem, 1.8vw, 1.5rem);
+            font-size: clamp(1rem, 2.2vw, 2rem);
             text-align: center;
-            letter-spacing: 0.08em;
-            box-shadow: 0 12px 24px -12px rgba(0,0,0,0.4);
+            letter-spacing: 0.06em;
+            box-shadow: 0 12px 32px -12px rgba(0,0,0,0.6);
             line-height: 1.2;
-            transition: transform 0.2s ease;
+            border: 1px solid var(--gold);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 240px;
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            pointer-events: auto;
+            cursor: default;
         }
-        .hexagon:hover {
-            transform: scale(1.02);
-        }
-        .hexagon small {
+        .hexagon-shape small {
             display: block;
             font-family: 'Work Sans', sans-serif;
             font-weight: 400;
             font-size: 0.5rem;
             letter-spacing: 0.15em;
             color: var(--gold-dim);
-            margin-top: 0.1rem;
+            margin-top: 0.2rem;
+        }
+        .hexagon-shape .sub {
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            color: var(--cream);
         }
 
-        @media (max-width: 760px) {
-            .funnel-card {
-                padding: 1.6rem 1rem;
-            }
-            .funnel-shape {
-                height: 560px;
-            }
-            .bubble .tooltip {
-                width: 180px;
-                font-size: 0.7rem;
-                padding: 0.7rem 0.9rem;
-            }
+        /* BURBUJAS - flotando alrededor del hexágono */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #0f1e38;
+            box-shadow: 0 12px 24px -10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.4s ease;
+            will-change: transform, left, top;
+            z-index: 50;
+            background: rgba(205, 170, 92, 0.25);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 215, 140, 0.5);
+            width: 80px;
+            height: 80px;
+            user-select: none;
+            text-shadow: 0 1px 4px rgba(255, 255, 240, 0.4);
         }
-
-        /* ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== */
-        .btn-flotante {
-            position: fixed;
+        .bubble:hover {
+            transform: scale(1.15) !important;
+            box-shadow: 0 20px 30px -8px rgba(0,0,0,0.4);
+            border-color: var(--gold);
+            background: rgba(205, 170, 92, 0.4);
             z-index: 100;
+        }
+        .bubble .numero {
+            font-family: var(--disp);
+            font-size: 1.6rem;
+            color: var(--navy);
+            background: rgba(255,255,240,0.3);
+            padding: 0.15rem 0.6rem;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+            pointer-events: none;
+            line-height: 1;
+        }
+
+        .bubble.pop {
+            animation: pop 0.5s forwards;
+            pointer-events: none;
+            cursor: default;
+        }
+        @keyframes pop {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.6); opacity: 0.6; filter: blur(2px); }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .modal-overlay.abierto {
+            display: flex;
+        }
+        .modal {
+            background: #faf8f4;
+            max-width: 820px;
+            width: 100%;
+            max-height: 90vh;
+            border-radius: var(--radius);
+            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.7);
+            border: 2px solid var(--gold);
+            overflow-y: auto;
+            padding: 2rem 2rem 1.5rem;
+            position: relative;
+        }
+        .modal .cerrar-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 2.2rem;
+            line-height: 1;
+            color: var(--navy);
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .modal .cerrar-modal:hover {
+            color: var(--gold);
+            transform: rotate(90deg);
+        }
+        .modal .modal-num {
+            font-family: var(--disp);
+            font-size: 0.8rem;
+            color: var(--gold-dim);
+            letter-spacing: 0.15em;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .modal .modal-title {
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--navy);
+            margin-bottom: 0.8rem;
+        }
+        .modal .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+            margin: 1.2rem 0 1.5rem;
+        }
+        .modal .modal-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #1f2a3f;
+        }
+        .modal .modal-text .nota {
+            margin-top: 1rem;
+            padding: 0.8rem 1rem;
+            background: rgba(205, 170, 92, 0.15);
+            border-left: 4px solid var(--gold);
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        .modal .modal-img {
+            background: #e7e2d6;
+            border-radius: 8px;
+            overflow: hidden;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal .modal-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            max-height: 300px;
+        }
+        .modal .modal-footer {
+            border-top: 1px solid var(--line);
+            padding-top: 1rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        .modal .modal-footer button {
             background: var(--navy);
             color: var(--cream);
             border: none;
-            border-radius: 999px;
-            padding: 0.85rem 1.3rem 0.85rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.55rem;
-            box-shadow: 0 14px 30px -10px rgba(15, 30, 56, 0.55);
-            font-size: 0.82rem;
+            padding: 0.5rem 1.8rem;
+            border-radius: 40px;
             font-weight: 600;
-            letter-spacing: 0.02em;
-            transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
-            cursor: pointer;
+            letter-spacing: 0.04em;
+            transition: background 0.2s;
         }
-        .btn-flotante svg {
-            width: 17px;
-            height: 17px;
-            stroke: var(--gold);
-            flex-shrink: 0;
-        }
-        .btn-flotante:hover {
-            background: var(--navy-2);
-            transform: translateY(-2px);
-        }
-        #btn-top {
-            right: 1.4rem;
-            bottom: 1.4rem;
+        .modal .modal-footer button:hover {
+            background: var(--gold);
+            color: var(--navy);
         }
 
-        @media (max-width: 640px) {
-            .btn-flotante span.txt {
-                display: none;
+        @media (max-width: 700px) {
+            .modal .modal-body {
+                grid-template-columns: 1fr;
             }
-            #btn-top {
-                right: 1rem;
-                bottom: 1rem;
-                padding: 0.85rem;
-                border-radius: 50%;
+            .modal .modal-img {
+                min-height: 140px;
+            }
+            .bubble {
+                width: 64px;
+                height: 64px;
+                font-size: 0.9rem;
+            }
+            .bubble .numero {
+                font-size: 1.2rem;
+            }
+            .intro-text {
+                padding: 0.4rem 1rem 0.2rem 1rem;
+            }
+            .intro-text h3 {
+                font-size: 0.7rem;
+            }
+            .intro-text p {
+                font-size: 0.55rem;
             }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            * {
-                transition-duration: 0.01ms !important;
-                animation-duration: 0.01ms !important;
-            }
+            * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
         }
     </style>
 </head>
@@ -590,7 +603,7 @@
                 <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
             </picture>
             <div class="ph">
-                <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
+                <div><b>Falta imagen</b>ins/001portadaL.png o ins/001portadaCv.png</div>
             </div>
             <div class="portada-veil"></div>
         </div>
@@ -605,9 +618,7 @@
 
     <!-- ========== MENÚ HAMBURGUESA ========== -->
     <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
     </button>
 
     <!-- ========== MENÚ LATERAL ========== -->
@@ -636,287 +647,384 @@
     <!-- ========== OVERLAY ========== -->
     <div class="overlay-menu" id="overlayMenu"></div>
 
-    <!-- ========== CONTENIDO EMBUDO ========== -->
+    <!-- ========== CONTENIDO PRINCIPAL ========== -->
     <div class="contenido">
         <div class="funnel-wrap">
-            <div class="funnel-card">
-                <div class="funnel-header">
-                    <!-- <span class="material-symbols-outlined">filter_alt</span>  -->
-                    <div class="funnel-header-text">
-                        <h2>¿Qué provocó el ascenso de Trujillo al poder?</h2>
-                        <p>No es una respuesta sencilla. El ascenso de Trujillo fue la mezcla de la geopolítica regional, inestabilidad política, la intervención militar extranjera y el colapso institucional de la República Dominicana.</p>
-                    </div>
-                </div>
-
-                <div class="funnel-canvas" id="funnelCanvas">
-                    <div class="funnel-shape">
-
-                        <div class="funnel-fill"></div>
-                        <svg class="funnel-outline" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <polygon points="3,4 97,4 64,58 64,92 36,92 36,58" />
-                        </svg>
-                        <!-- área de círculos que "caen" al embudo, en posiciones aleatorias -->
-                        <div class="circles-area" id="circlesArea"></div>
-                    </div>
-
-                    <!-- hexágono de salida (parte estrecha) -->
-                    <div class="hexagon-out">
-                        <div class="hexagon">
+            <!-- TEXTO INTRODUCTORIO DEBAJO DE LA PORTADA -->
+            <div class="intro-text">
+                <h3>¿Qué provocó el ascenso de Trujillo al poder?</h3>
+                <p>No es una respuesta sencilla. El ascenso de Trujillo fue la mezcla de varios elementos que se conjugaron para crear el ambiente perfecto. Descubre cuáles fueron.</p>
+            </div>
+            <div class="funnel-canvas">
+                <div class="interactive-area" id="interactiveArea">
+                    <!-- Hexágono central - siempre arriba -->
+                    <div id="central-hub" style="transform: scale(0.8);">
+                        <div class="hexagon-shape" id="hexagonShape">
                             TIRANÍA<br>TRUJILLISTA
                             <small>1930 · 1961</small>
+                            <span class="sub">Una historia tenebrosa</span>
                         </div>
                     </div>
+                    <!-- Burbujas generadas por JS -->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== -->
-    <button id="btn-top" class="btn-flotante" aria-label="Volver arriba">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 19V5M5 12l7-7 7 7" />
-        </svg>
-        <span class="txt">Arriba</span>
-    </button>
+    <!-- ========== MODAL ========== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="cerrar-modal" id="cerrarModal">✕</button>
+            <div class="modal-num" id="modalNum">01</div>
+            <div class="modal-title" id="modalTitulo">Título</div>
+            <div class="modal-body">
+                <div class="modal-text" id="modalTexto">
+                    <p id="modalParrafo">Contenido del fragmento.</p>
+                    <div class="nota" id="modalNota">IMAGEN · Fragmento de la colección clandestina</div>
+                </div>
+                <div class="modal-img">
+                    <img id="modalImagen" src="ins/FD0.PNG" alt="Imagen histórica" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cerrarModalBtn">Cerrar</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         (function() {
-            // ----- datos: cada círculo = título + texto desplegable (sin alterar) -----
+            // ===== DATOS CON IMÁGENES Y CONTENIDO INDIVIDUAL =====
             const items = [
-                {
-                    titulo: 'GEOPOLÍTICA REGIONAL',
-                    texto: 'GEOPOLÍTICA REGIONAL - Europa estaba envuelta en la 1GM y EUA aprovechó para aplicar su Doctrina Monroe y Corolario Roosevelt: "América para los americanos". EUA temía que Alemania tomara control. EUA ya había ocupado militarmente a Haití en 1915 sin ninguna consecuencia.'
+                { 
+                    id: 1, 
+                    titulo: 'GEOPOLÍTICA REGIONAL', 
+                    texto: 'Europa estaba envuelta en la Primera Guerra Mundial y Estados Unidos aprovechó para aplicar su Doctrina Monroe y el Corolario Roosevelt: "América para los americanos". Washington temía que Alemania tomara control en el Caribe. Ya había ocupado militarmente a Haití en 1915 sin ninguna consecuencia internacional. La región era vista como un patio trasero estratégico.',
+                    nota: 'IMAGEN · Doctrina Monroe 1823 · Corolario Roosevelt 1904',
+                    imagen: 'ins/ants1.png' 
                 },
-                {
-                    titulo: 'INESTABILIDAD POLÍTICA',
-                    texto: 'INESTABILIDAD POLÍTICA - El asesinato de Ramón "Mon" Cáceres en 1911 desató una guerra civil recurrente. El caudillo Desiderio Arias se rebeló en 1916 contra el presidente Jimenes, amenazando con otra guerra que impedía el desarrollo social y económico.'
+                { 
+                    id: 2, 
+                    titulo: 'INESTABILIDAD POLÍTICA', 
+                    texto: 'El asesinato de Ramón "Mon" Cáceres en 1911 desató una guerra civil recurrente que duró varios años. El caudillo Desiderio Arias se rebeló en 1916 contra el presidente Jimenes, amenazando con otra guerra que impedía el desarrollo social y económico. La inestabilidad era la norma, no la excepción.',
+                    nota: 'IMAGEN · Asesinato de Cáceres creó crisis política · 1911',
+                    imagen: 'ins/ants2.png' 
                 },
-                {
-                    titulo: 'IMPAGO DE LA DEUDA',
-                    texto: 'IMPAGO DE LA DEUDA - EUA presionaba para que RD pagara la deuda externa desde la "Convención de 1907". La inestabilidad interrumpía el pago a acreedores estadounidenses.'
+                { 
+                    id: 3, 
+                    titulo: 'IMPAGO DE LA DEUDA', 
+                    texto: 'Estados Unidos presionaba constantemente para que República Dominicana pagara la deuda externa contraída desde la "Convención de 1907". La inestabilidad política interrumpía frecuentemente el pago a los acreedores estadounidenses, creando tensiones diplomáticas y amenazas de intervención.',
+                    nota: 'IMAGEN · La inestabilidad política dificultó los pagos de la deuda y emujó la Convención de 1907',
+                    imagen: 'ins/ants3.png' 
                 },
-                {
-                    titulo: 'OCUPACIÓN MILITAR DE EUA',
-                    texto: 'OCUPACIÓN MILITAR DE EUA - Producto de una mezcla de geopolítica, inestabilidad y temor al impago de la deuda provocaron la ocupación militar de 1916.'
+                { 
+                    id: 4, 
+                    titulo: 'OCUPACIÓN MILITAR DE EUA', 
+                    texto: 'La mezcla de geopolítica, inestabilidad interna y temor al impago de la deuda provocaron la ocupación militar de 1916. Las tropas estadounidenses permanecieron en el país hasta 1924, dejando una profunda huella en la estructura política y militar dominicana.',
+                    nota: 'IMAGEN · Ocupación militar estadounidense aseguró los pagos de la deuda y controló la economía de RD · 1916-1924',
+                    imagen: 'ins/ants4.png' 
                 },
-                {
-                    titulo: 'DESOCUPACIÓN MILITAR',
-                    texto: 'DESOCUPACIÓN MILITAR - Las tropas de EUA salieron en 1924 dejando estructura favorable: país pacificado, desarme, ejército organizado a su imagen, aduanas controladas.'
+                { 
+                    id: 5, 
+                    titulo: 'DESOCUPACIÓN MILITAR', 
+                    texto: 'Las tropas de Estados Unidos salieron en 1924 dejando una estructura favorable a sus intereses: país pacificado, desarme de la población, un ejército organizado a su imagen y semejanza, y las aduanas bajo control estadounidense. Todo esto creó las condiciones para el futuro ascenso de Trujillo.',
+                    nota: 'IMAGEN · Tropas estadounidenses en RD',
+                    imagen: 'ins/ants5.png' 
                 },
-{
-                    titulo: 'PROLONGACIÓN DEL MANDATO',
-                    texto: 'PROLONGACIÓN DEL MANDATO - Horacio Vásquez provocó una crisis política al prolongar su mandato presidencial de 4 años a 6 años y con la posibilidad de reelegirse. El vicepresidente Federico Velásquez renunció en 1928, como medida de protesta.'
+                { 
+                    id: 6, 
+                    titulo: 'PROLONGACIÓN DEL MANDATO', 
+                    texto: 'Despues de 4 años en el poder, Horacio Vásquez provocó una crisis política al prolongar su mandato presidencial de 4 años a 6 años, y con la posibilidad de reelegirse. El vicepresidente Federico Velásquez renunció en 1928 como medida de protesta, mostrando el creciente descontento político.',
+                    nota: 'IMAGEN · Con su imprudencia, Vásques precipitó crisis política · 1928',
+                    imagen: 'ins/ants6.png' 
                 },
-                {
-                    titulo: 'VÁSQUEZ ENFERMO Y DÉBIL',
-                    texto: 'VÁSQUEZ ENFERMO Y DÉBIL - El presidente Vásquez enfermó en 1929 y viajó de emergencia a EUA. Esto provocó un vacío de poder que Trujillo aprovechó para desplazarlo usando sobornos y chantajes.'
+                { 
+                    id: 7, 
+                    titulo: 'VÁSQUEZ ENFERMO Y DÉBIL', 
+                    texto: 'El presidente Vásquez enfermó gravemente en 1929 y viajó de emergencia a Estados Unidos para recibir tratamiento. Esto provocó un vacío de poder que Trujillo aprovechó hábilmente para desplazarlo, usando sobornos, chantajes y maniobras políticas para consolidar su posición.',
+                    nota: 'IMAGEN · La enfermedad de Vásquez agrandó el hueco político · 1929',
+                    imagen: 'ins/ants7.png' 
                 },
-                {
-                    titulo: 'BANCARROTA EN NY y RD',
-                    texto: 'BANCARROTA EN NY y RD - La bancarrota de Nueva York de 1929 complicó la economía mundial y en RD se agravó con la bancarrota local del mismo año provocada por desfalcos.'
+                { 
+                    id: 8, 
+                    titulo: 'BANCARROTA EN NY y RD', 
+                    texto: 'La bancarrota de Nueva York en 1929 complicó severamente la economía mundial. En República Dominicana la situación se agravó con la bancarrota local del mismo año, provocada por desfalcos y mala administración. La crisis económica debilitó aún más al gobierno de Vásquez.',
+                    nota: 'IMAGEN · La bancarrota económica en RD fue revelada por el Informe Charles G. Dawes a solicitud del gobierno de RD · 1929',
+                    imagen: 'ins/ants8.png' 
                 },
-                {
-                    titulo: 'VÁSQUEZ CONFUSO',
-                    texto: 'VÁSQUEZ CONFUSO - El presidente Vásquez estuvo confuso en feb.1930, no entendía las maniobras Trujillistas y siguió confiando en él.'
+                { 
+                    id: 9, 
+                    titulo: 'VÁSQUEZ CONFUSO', 
+                    texto: 'El presidente Vásquez estuvo confuso durante febrero de 1930. No entendió las maniobras trujillistas que se estaban tejiendo a su alrededor.  Colaboradores cercanos le alertaron sobre Trujillo y aún así siguió confiando en él. Esta confianza resultó dañina para la democracia dominicana.',
+                    nota: 'IMAGEN · Horacio Vásquez',
+                    imagen: 'ins/ants9.png' 
                 }
             ];
 
-            const area = document.getElementById('circlesArea');
-            if (!area) return;
+            // ===== REFERENCIAS =====
+            const area = document.getElementById('interactiveArea');
+            const hub = document.getElementById('central-hub');
+            const hexagon = document.getElementById('hexagonShape');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalNum = document.getElementById('modalNum');
+            const modalTitulo = document.getElementById('modalTitulo');
+            const modalParrafo = document.getElementById('modalParrafo');
+            const modalNota = document.getElementById('modalNota');
+            const modalImagen = document.getElementById('modalImagen');
+            const cerrarModalBtns = [document.getElementById('cerrarModal'), document.getElementById('cerrarModalBtn')];
 
-            // paleta de colores armónicos (más variados)
-            const colores = [
-                '#FADADD', '#D4E9F7', '#D9E3D6', '#FCE8C8', '#E3D7F0',
-                '#F7D6C4', '#C8E3E8', '#F1D4D9', '#D6D9E6', '#E6D4B8',
-                '#C9D9D9', '#F5D7C6', '#DAC9E0', '#E8D5C4', '#C5D9E0',
-                '#FCE4D6', '#D4E6E0', '#F0D9D9', '#D9D1E6', '#E6D6C8'
-            ];
+            let poppedCount = 0;
+            const total = items.length;
+            let bubbles = [];
+            let animationId = null;
 
-            function getRandom(min, max) {
-                return Math.random() * (max - min) + min;
+            // ===== FUNCIONES =====
+            function abrirModal(data) {
+                modalNum.textContent = data.id.toString().padStart(2, '0');
+                modalTitulo.textContent = data.titulo;
+                modalParrafo.textContent = data.texto;
+                modalNota.textContent = data.nota || 'IMAGEN · Fragmento de la colección clandestina';
+                modalImagen.src = data.imagen || 'ins/ants1.png';
+                modalImagen.alt = data.titulo;
+                modalOverlay.classList.add('abierto');
             }
 
-            // ---- geometría de la silueta del embudo (coincide con el polygon del SVG) ----
-            // boca ancha: y=4 -> x de 3 a 97 | cuello: y=58 -> x de 36 a 64
-            const Y_TOP = 4;
-            const Y_NECK = 58;
-            const X_TOP_LEFT = 3, X_TOP_RIGHT = 97;
-            const X_NECK_LEFT = 36, X_NECK_RIGHT = 64;
-
-            function limitesEnY(yPercent) {
-                const y = Math.min(Math.max(yPercent, Y_TOP), Y_NECK);
-                const t = (y - Y_TOP) / (Y_NECK - Y_TOP);
-                const left = X_TOP_LEFT + (X_NECK_LEFT - X_TOP_LEFT) * t;
-                const right = X_TOP_RIGHT - (X_TOP_RIGHT - X_NECK_RIGHT) * t;
-                return { left, right };
+            function cerrarModal() {
+                modalOverlay.classList.remove('abierto');
             }
 
-            area.innerHTML = '';
-
-            // rango vertical donde "caen" las burbujas: la parte ancha superior del embudo
-            const Y_MIN = 12, Y_MAX = 46;
-
-            // posiciones aleatorias, no alineadas, evitando salirse del embudo
-            const usadas = [];
-
-            items.forEach((item, index) => {
-                // posición vertical aleatoria dentro de la boca del embudo
-                let y = getRandom(Y_MIN, Y_MAX);
-                const { left, right } = limitesEnY(y);
-                const margen = 9; // % de margen respecto a los bordes del embudo en ese nivel
-                let xMin = left + margen;
-                let xMax = right - margen;
-                if (xMax <= xMin) { xMin = left; xMax = right; }
-                let x = getRandom(xMin, xMax);
-
-                // pequeño reintento para reducir solapes evidentes con burbujas previas
-                for (let intento = 0; intento < 4; intento++) {
-                    const choca = usadas.some(p => Math.hypot(p.x - x, p.y - y) < 11);
-                    if (!choca) break;
-                    y = getRandom(Y_MIN, Y_MAX);
-                    const b2 = limitesEnY(y);
-                    x = getRandom(b2.left + margen, Math.max(b2.left + margen, b2.right - margen));
+            function actualizarHexagono() {
+                const factor = 0.8 + (poppedCount / total) * 3.4;
+                const scale = Math.min(factor, 4.2);
+                hub.style.transform = `scale(${scale})`;
+                if (poppedCount === total) {
+                    hexagon.style.background = 'rgba(15, 30, 56, 0.95)';
+                    hexagon.style.borderColor = '#cdaa5c';
+                    hexagon.style.boxShadow = '0 0 60px rgba(205,170,92,0.3)';
                 }
-                usadas.push({ x, y });
+            }
 
-                // ---- animación de entrada: la burbuja inicia en el lateral del embudo y luego se ubica en su punto final (x,y) ----
-                const ENTRANCE_TOTAL = 2.5; // segundos, duración total de la animación de entrada
-                const ENTRANCE_STAGGER = 0.6; // desfase máximo entre burbujas, todas terminan al mismo tiempo
-                const entranceDelay = items.length > 1 ? (index / (items.length - 1)) * ENTRANCE_STAGGER : 0;
-                const entranceDuration = ENTRANCE_TOTAL - entranceDelay;
+            function popBubble(el, data) {
+                if (el.classList.contains('pop')) return;
+                el.classList.add('pop');
+                poppedCount++;
+                actualizarHexagono();
 
-                // punto de partida: lateral izquierdo o derecho del embudo, según a qué mitad pertenezca su posición final
-                const startX = x < 50 ? -14 : 114;
+                const idx = bubbles.indexOf(el);
+                if (idx > -1) {
+                    bubbles.splice(idx, 1);
+                }
 
-                // contenedor posicionador (ubica la burbuja en el punto x,y del embudo)
-                const pos = document.createElement('div');
-                pos.className = 'bubble-pos';
-                pos.style.left = startX + '%';
-                pos.style.top = y + '%';
-                pos.style.opacity = '0';
-                pos.style.transition =
-                    `left ${entranceDuration}s cubic-bezier(0.22, 0.9, 0.32, 1) ${entranceDelay}s, ` +
-                    `top ${entranceDuration}s cubic-bezier(0.22, 0.9, 0.32, 1) ${entranceDelay}s, ` +
-                    `opacity ${Math.min(0.8, entranceDuration)}s ease-out ${entranceDelay}s`;
+                setTimeout(() => {
+                    abrirModal(data);
+                }, 350);
+            }
 
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
+            // ===== CALCULAR POSICIÓN ALREDEDOR DEL HEXÁGONO =====
+            function getHexagonCenter() {
+                const rect = area.getBoundingClientRect();
+                const hubRectLocal = hub.getBoundingClientRect();
+                
+                const centerX = hubRectLocal.left - rect.left + hubRectLocal.width / 2;
+                const centerY = hubRectLocal.top - rect.top + hubRectLocal.height / 2;
+                
+                return { x: centerX, y: centerY };
+            }
 
-                // tamaño aleatorio entre 68px y 118px (+5%)
-                const size = Math.floor(getRandom(68 * 1.05, 118 * 1.05));
-                bubble.style.width = size + 'px';
-                bubble.style.height = size + 'px';
+            // ===== REUBICAR BURBUJAS ALREDEDOR DEL HEXÁGONO =====
+            function reubicarBurbujas() {
+                const rect = area.getBoundingClientRect();
+                const w = rect.width;
+                const h = rect.height;
+                const center = getHexagonCenter();
+                
+                const radioBase = Math.min(w, h) * 0.25;
+                
+                let activas = bubbles.filter(b => !b.classList.contains('pop'));
+                activas.forEach((bubble, index) => {
+                    const totalActivas = activas.length;
+                    const angle = (index / totalActivas) * 2 * Math.PI - Math.PI / 2;
+                    
+                    const variacion = 0.8 + Math.random() * 0.4;
+                    const radio = radioBase * variacion;
+                    
+                    const size = bubble.offsetWidth || 80;
+                    const x = center.x + Math.cos(angle) * radio - size / 2;
+                    const y = center.y + Math.sin(angle) * radio - size / 2;
+                    
+                    const xFinal = Math.max(0, Math.min(w - size, x));
+                    const yFinal = Math.max(0, Math.min(h - size, y));
+                    
+                    bubble._x = xFinal;
+                    bubble._y = yFinal;
+                    bubble.style.left = xFinal + 'px';
+                    bubble.style.top = yFinal + 'px';
+                    
+                    bubble._vx = (Math.random() - 0.5) * 0.3;
+                    bubble._vy = (Math.random() - 0.5) * 0.3;
+                });
+            }
 
-                // color aleatorio al iniciar
-                const color = colores[Math.floor(Math.random() * colores.length)];
-                bubble.style.background = color;
+            // ===== FLOTACIÓN SUAVE ALREDEDOR DEL HEXÁGONO =====
+            function iniciarFlotacion() {
+                if (animationId) cancelAnimationFrame(animationId);
+                
+                setTimeout(reubicarBurbujas, 50);
 
-                // animación flotante: duración, retraso, amplitud y rotación aleatorias
-                // el retraso inicia después de que la burbuja termina de entrar al embudo (2.5s)
-                const dur = getRandom(3.0, 6.0);
-                const delay = ENTRANCE_TOTAL + getRandom(0, 1.2);
-                const amplitud = getRandom(-22, -10);
-                const rotA = getRandom(-9, 0);
-                const rotB = getRandom(0, 9);
-                bubble.style.animationDuration = dur + 's';
-                bubble.style.animationDelay = delay + 's';
-                bubble.style.setProperty('--float-y', amplitud + 'px');
-                bubble.style.setProperty('--rot-a', rotA + 'deg');
-                bubble.style.setProperty('--rot-b', rotB + 'deg');
+                function animar() {
+                    const rect = area.getBoundingClientRect();
+                    const w = rect.width;
+                    const h = rect.height;
+                    const center = getHexagonCenter();
+                    const radioBase = Math.min(w, h) * 0.25;
 
-                // título
-                const label = document.createElement('span');
-                label.className = 'label';
-                label.textContent = item.titulo;
-                bubble.appendChild(label);
-
-                // tooltip (texto desplegable al hover)
-                const tooltip = document.createElement('div');
-                tooltip.className = 'tooltip';
-                tooltip.textContent = item.texto;
-                bubble.appendChild(tooltip);
-
-                pos.appendChild(bubble);
-                area.appendChild(pos);
-
-                // forzar el layout inicial (posición lateral) antes de animar hacia la posición final
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        pos.style.left = x + '%';
-                        pos.style.top = y + '%';
-                        pos.style.opacity = '1';
+                    let activas = bubbles.filter(b => !b.classList.contains('pop'));
+                    
+                    activas.forEach((bubble, index) => {
+                        const totalActivas = activas.length;
+                        
+                        const size = bubble.offsetWidth || 80;
+                        const cx = bubble._x + size / 2;
+                        const cy = bubble._y + size / 2;
+                        
+                        const dx = cx - center.x;
+                        const dy = cy - center.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        const variacion = 0.85 + Math.sin(Date.now() / 2000 + index) * 0.15;
+                        const radioTarget = radioBase * variacion;
+                        
+                        if (dist > 0) {
+                            const fuerza = (dist - radioTarget) * 0.01;
+                            bubble._vx -= (dx / dist) * fuerza;
+                            bubble._vy -= (dy / dist) * fuerza;
+                        }
+                        
+                        const angulo = Math.atan2(dy, dx);
+                        bubble._vx += Math.cos(angulo + Math.PI / 2) * 0.02;
+                        bubble._vy += Math.sin(angulo + Math.PI / 2) * 0.02;
+                        
+                        const vel = Math.sqrt(bubble._vx * bubble._vx + bubble._vy * bubble._vy);
+                        if (vel > 1.5) {
+                            bubble._vx = (bubble._vx / vel) * 1.5;
+                            bubble._vy = (bubble._vy / vel) * 1.5;
+                        }
+                        
+                        bubble._x += bubble._vx;
+                        bubble._y += bubble._vy;
+                        
+                        if (bubble._x < 0) { bubble._x = 0; bubble._vx *= -0.8; }
+                        if (bubble._x + size > w) { bubble._x = w - size; bubble._vx *= -0.8; }
+                        if (bubble._y < 0) { bubble._y = 0; bubble._vy *= -0.8; }
+                        if (bubble._y + size > h) { bubble._y = h - size; bubble._vy *= -0.8; }
+                        
+                        bubble.style.left = bubble._x + 'px';
+                        bubble.style.top = bubble._y + 'px';
                     });
-                });
-            });
 
-        })();
-
-        // ===== BOTÓN ARRIBA =====
-        document.getElementById('btn-top').addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // ===== MENÚ HAMBURGUESA (toggle + overlay) =====
-        (function() {
-            const btnHamburguesa = document.getElementById('btnHamburguesa');
-            const menuLateral = document.getElementById('menuLateral');
-            const btnCerrarMenu = document.getElementById('btnCerrarMenu');
-            const overlayMenu = document.getElementById('overlayMenu');
-
-            function abrirMenu() {
-                menuLateral.classList.add('abierto');
-                overlayMenu.classList.add('activo');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function cerrarMenu() {
-                menuLateral.classList.remove('abierto');
-                overlayMenu.classList.remove('activo');
-                document.body.style.overflow = '';
-            }
-
-            if (btnHamburguesa) {
-                btnHamburguesa.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    abrirMenu();
-                });
-            }
-
-            if (btnCerrarMenu) {
-                btnCerrarMenu.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    cerrarMenu();
-                });
-            }
-
-            if (overlayMenu) {
-                overlayMenu.addEventListener('click', function() {
-                    cerrarMenu();
-                });
-            }
-
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    cerrarMenu();
+                    animationId = requestAnimationFrame(animar);
                 }
-            });
 
-            const enlacesMenu = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
-            enlacesMenu.forEach(function(enlace) {
-                enlace.addEventListener('click', function() {
-                    cerrarMenu();
+                animar();
+            }
+
+            // ===== CREAR BURBUJAS =====
+            function crearBurbujas() {
+                const colores = ['#FADADD', '#D4E9F7', '#D9E3D6', '#FCE8C8', '#E3D7F0', '#F7D6C4', '#C8E3E8', '#F1D4D9', '#D6D9E6'];
+
+                items.forEach((data, index) => {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'bubble';
+
+                    const rect = area.getBoundingClientRect();
+                    const w = rect.width || window.innerWidth;
+                    const h = rect.height || window.innerHeight;
+                    const size = Math.min(w, h) * 0.08;
+                    const sz = Math.max(64, Math.min(90, size));
+                    bubble.style.width = sz + 'px';
+                    bubble.style.height = sz + 'px';
+
+                    const left = Math.random() * (w - sz);
+                    const top = Math.random() * (h - sz);
+                    bubble.style.left = left + 'px';
+                    bubble.style.top = top + 'px';
+                    bubble._x = left;
+                    bubble._y = top;
+                    bubble._vx = (Math.random() - 0.5) * 0.3;
+                    bubble._vy = (Math.random() - 0.5) * 0.3;
+
+                    bubble.style.background = colores[index % colores.length];
+
+                    const numero = document.createElement('span');
+                    numero.className = 'numero';
+                    numero.textContent = data.id;
+                    bubble.appendChild(numero);
+
+                    bubble.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        popBubble(this, data);
+                    });
+
+                    area.appendChild(bubble);
+                    bubbles.push(bubble);
                 });
+
+                setTimeout(() => {
+                    reubicarBurbujas();
+                    iniciarFlotacion();
+                }, 200);
+            }
+
+            // ===== REUBICAR AL REDIMENSIONAR =====
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    reubicarBurbujas();
+                }, 300);
             });
 
-            let resizeTimer;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {
-                    if (window.innerWidth > 900 && menuLateral.classList.contains('abierto')) {
-                        cerrarMenu();
-                    }
-                }, 200);
+            // ===== INICIALIZAR =====
+            crearBurbujas();
+
+            // ===== EVENTOS MODAL =====
+            cerrarModalBtns.forEach(btn => {
+                btn.addEventListener('click', cerrarModal);
             });
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === this) cerrarModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') cerrarModal();
+            });
+
+            // ===== MENÚ HAMBURGUESA =====
+            (function() {
+                const btnHamburguesa = document.getElementById('btnHamburguesa');
+                const menuLateral = document.getElementById('menuLateral');
+                const btnCerrarMenu = document.getElementById('btnCerrarMenu');
+                const overlayMenu = document.getElementById('overlayMenu');
+
+                function abrirMenu() {
+                    menuLateral.classList.add('abierto');
+                    overlayMenu.classList.add('activo');
+                    document.body.style.overflow = 'hidden';
+                }
+                function cerrarMenu() {
+                    menuLateral.classList.remove('abierto');
+                    overlayMenu.classList.remove('activo');
+                    document.body.style.overflow = '';
+                }
+                if (btnHamburguesa) btnHamburguesa.addEventListener('click', abrirMenu);
+                if (btnCerrarMenu) btnCerrarMenu.addEventListener('click', cerrarMenu);
+                if (overlayMenu) overlayMenu.addEventListener('click', cerrarMenu);
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') cerrarMenu();
+                });
+                const enlaces = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
+                enlaces.forEach(el => el.addEventListener('click', cerrarMenu));
+            })();
+
         })();
     </script>
 
