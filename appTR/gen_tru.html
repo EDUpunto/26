@@ -269,13 +269,29 @@
     .contenido {
       background: var(--paper);
       padding: 2rem 5vw 5rem;
+      position: relative;
+      min-height: 100vh;
     }
+
+    /* fondo fijo con ins/fd0.png */
+    .contenido::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: #faf8f4 url('ins/fd0.png') center/cover no-repeat fixed;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
     .contenido-header {
       display: flex;
       flex-direction: column;
       gap: 0.2rem;
       margin-bottom: 1.8rem;
       text-align: center;
+      position: relative;
+      z-index: 2;
     }
     .contenido-header h2 {
       font-family: var(--disp);
@@ -283,7 +299,7 @@
       color: var(--navy);
     }
     .contenido-header p {
-      color: var(--gray);
+      color: var(--black);
       line-height: 1.6;
       font-size: 0.95rem;
       max-width: 720px;
@@ -294,6 +310,8 @@
       display: flex;
       justify-content: center;
       margin-bottom: 2.5rem;
+      position: relative;
+      z-index: 2;
     }
     .context-figure img {
       width: 90%;
@@ -307,12 +325,14 @@
 
     /* ===== ÁRBOL GENEALÓGICO ===== */
     .tree-wrap {
-      background: #fff;
+      /* background: #fff; */
       border-radius: 20px;
       padding: 2rem 1.5rem;
       box-shadow: var(--shadow);
       border: 1px solid var(--line);
       overflow-x: auto;
+      position: relative;
+      z-index: 2;
     }
     .tree-grid {
       display: flex;
@@ -327,7 +347,7 @@
     }
     .gen-label {
       font-family: var(--disp);
-      font-size: 1.1rem;
+      font-size: 1.4rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--gold-dim);
@@ -911,7 +931,7 @@
       <li><a href="etap_tir.html">Etapas de la Tiranía</a></li>
       <li><a href="elec_tru.html">Elecciones</a></li>
       <li><a href="reb_tru.html">Rebeldes</a></li>
-      <li><a href="casos_tru.html">Casos Famosos</a></li>
+      <li><a href="casos_tru.html">Terror</a></li>
       <li><a href="ultnoche.html">Última Noche</a></li>
       <li><a href="destru.html">Destrujillización</a></li>
       <li><a href="galr.html">Galería</a></li>
@@ -932,7 +952,7 @@
 
     <div class="contenido-header">
       <p>Analiza la estructura familiar del clan Trujillo, con sus matrimonios, descendencia y relaciones.</p>
-      <p style="font-size:0.8rem; color:var(--gray-light);"> Selecciona una tarjeta para revelar datos sobre el personaje</p>
+      <p style="font-size:0.8rem; color:var(--black);"> Selecciona una tarjeta para revelar datos sobre el personaje</p>
     </div>
 
     <div class="tree-wrap">

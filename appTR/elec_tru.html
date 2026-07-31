@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Elecciones · Tiranía Trujillista 1930-1961</title>
+    <title>Elecciones</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
@@ -267,9 +267,21 @@
             background: var(--paper);
             padding: 0rem 5vw 5rem;
             margin-top: 15vh;
+            position: relative;
+            min-height: 100vh;
         }
 
-        /* ========== CARRUSEL ========== */
+        /* fondo fijo con ins/fd0.png */
+        .contenido::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: #faf8f4 url('ins/fd0.png') center/cover no-repeat fixed;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
         .carrusel-wrap {
             max-width: 1100px;
             margin: 0 auto;
@@ -279,6 +291,7 @@
             border: 1px solid var(--line);
             box-shadow: var(--shadow);
             overflow: hidden;
+            z-index: 2;
         }
 
         .carrusel-slides {
@@ -549,7 +562,7 @@
             <li><a href="etap_tir.html">Etapas de la Tiranía</a></li>
             <li><a href="elec_tru.html" class="activo">Elecciones</a></li>
             <li><a href="reb_tru.html">Rebeldes</a></li>
-            <li><a href="casos_tru.html">Casos Famosos</a></li>
+            <li><a href="casos_tru.html">Terror</a></li>
             <li><a href="ultnoche.html">Última Noche</a></li>
             <li><a href="destru.html">Destrujillización</a></li>
             <li><a href="galr.html">Galería</a></li>

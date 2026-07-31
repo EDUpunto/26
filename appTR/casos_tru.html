@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Terror</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: #faf8f4;
+            color: #0f1e38;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        :root {
+            --bg-dark: #15130f;
+            --cream: #f2ead2;
+            --gold: #cdaa5c;
+            --gold-dim: #8d7745;
+            --navy: #0f1e38;
+            --navy-2: #16294a;
+            --orange: #e8592a;
+            --paper: #faf8f4;
+            --disp: 'Cinzel', serif;
+            --body: 'Work Sans', sans-serif;
+            --header-h: 100px;
+        }
+        @media (max-width: 820px) {
+            :root {
+                --header-h: 84px;
+            }
+        }
+        @media (max-width: 480px) {
+            :root {
+                --header-h: 68px;
+            }
+        }
+
+        /* ========== ENCABEZADO FIJO ========== */
+        #portada {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: var(--header-h);
+            width: 100%;
+            background: var(--bg-dark);
+            color: var(--cream);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 300;
+            box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.6);
+        }
+        .portada-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .portada-bg picture,
+        .portada-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+        .portada-bg .ph {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #2a2520;
+            color: var(--gold-dim);
+            font-size: 0.75rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .portada-bg .ph b {
+            display: block;
+            color: var(--cream);
+            margin-bottom: 0.25rem;
+        }
+        .portada-veil {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(21, 19, 15, 0.10) 0%, rgba(21, 19, 15, 0.35) 45%, rgba(21, 19, 15, 0.88) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .portada-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .portada-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .portada-eyebrow {
+            letter-spacing: 0.25em;
+            font-size: 0.6rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .portada-title {
+            font-family: var(--disp);
+            font-weight: 700;
+            font-size: clamp(1rem, 2.2vw, 2rem);
+            line-height: 1.1;
+            margin: 0;
+            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+        .portada-dates {
+            font-family: var(--disp);
+            color: var(--gold);
+            font-size: clamp(0.6rem, 1vw, 0.9rem);
+            letter-spacing: 0.1em;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        /* ========== MENÚ HAMBURGUESA ========== */
+        .menu-hamburguesa {
+            position: fixed;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 999;
+            background: var(--navy);
+            border: 1px solid var(--gold);
+            border-radius: 6px;
+            padding: 0.5rem 0.7rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+            transition: background 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .menu-hamburguesa:hover {
+            background: var(--navy-2);
+        }
+        .menu-hamburguesa span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: var(--cream);
+            border-radius: 2px;
+            transition: 0.2s;
+        }
+
+        /* ===== NAVEGACIÓN LATERAL ===== */
+        .nav-lateral {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: var(--navy);
+            border-right: 3px solid var(--gold);
+            padding: 2rem 1rem 1.5rem;
+            overflow-y: auto;
+            transition: left 0.35s ease;
+            z-index: 1000;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6);
+        }
+        .nav-lateral.abierto {
+            left: 0;
+        }
+        .nav-lateral .cerrar-menu {
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 2.2rem;
+            line-height: 1;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 1.2rem;
+            transition: 0.2s;
+        }
+        .nav-lateral .cerrar-menu:hover {
+            color: var(--gold);
+            transform: rotate(90deg);
+        }
+        .nav-lateral ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 1.8rem;
+            clear: both;
+        }
+        .nav-lateral ul li {
+            border-bottom: 1px solid #2f4a5a;
+            padding: 0.4rem 0;
+        }
+        .nav-lateral ul li a {
+            display: block;
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 1.0rem;
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            transition: 0.15s;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        .nav-lateral ul li a:hover {
+            background: #2a4a5a;
+            color: #f5efe0;
+            padding-left: 0.9rem;
+        }
+        .nav-lateral ul li a.activo {
+            background: var(--gold);
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        .overlay-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 998;
+        }
+        .overlay-menu.activo {
+            display: block;
+        }
+
+        /* ========== CONTENIDO ========== */
+        .contenido {
+            background: var(--paper);
+            padding-top: var(--header-h);
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* fondo fijo con ins/fd0.png */
+        .contenido::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: #faf8f4 url('ins/fd0.png') center/cover no-repeat fixed;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .contenido-sin-col {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem 6rem;
+            background: rgba(255, 252, 245, 0.88);
+            backdrop-filter: blur(2px);
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        .contenido-sin-col h2 {
+            font-family: var(--disp);
+            font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+            color: var(--navy);
+            margin: 0rem 0 0.8rem 0;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 0.4rem;
+        }
+        .contenido-sin-col h3 {
+            font-family: var(--disp);
+            font-size: 1.2rem;
+            color: var(--navy-2);
+            margin: 1.6rem 0 0.6rem 0;
+            font-weight: 600;
+        }
+        .contenido-sin-col h4 {
+            font-family: var(--disp);
+            font-size: 1rem;
+            color: var(--navy-2);
+            margin: 1.2rem 0 0.4rem 0;
+            font-weight: 600;
+        }
+        .contenido-sin-col p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #2a3440;
+            margin-bottom: 0.9rem;
+        }
+        .contenido-sin-col ul {
+            margin: 0.6rem 0 1.2rem 1.6rem;
+            list-style: disc;
+        }
+        .contenido-sin-col ul li {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #2a3440;
+            margin-bottom: 0.3rem;
+        }
+        .contenido-sin-col .destacado {
+            background: #f3ede4;
+            padding: 0.8rem 1.6rem;
+            border-left: 5px solid var(--orange);
+            margin: 1rem 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+        .contenido-sin-col .rotulo-seccion {
+            display: inline-block;
+            font-family: var(--disp);
+            font-size: 1.2rem;
+            letter-spacing: 0.18em;
+            color: var(--gold-dim);
+            text-transform: uppercase;
+            margin-bottom: 0rem;
+        }
+        .contenido-sin-col .bloque {
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .contenido-sin-col .bloque img {
+            float: left;
+            width: 40%;
+            max-width: 250px;
+            height: auto;
+            margin-right: 20px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            background: #f0ede7;
+        }
+        .contenido-sin-col .cita {
+            background: #eae5db;
+            padding: 1.2rem 1.8rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #1f2c3f;
+            border-left: 4px solid var(--gold);
+        }
+        .contenido-sin-col .cita strong {
+            font-style: normal;
+            color: var(--navy);
+        }
+
+        @media (max-width: 820px) {
+            .contenido-sin-col {
+                padding: 1.5rem 1.2rem 3rem;
+            }
+            .contenido-sin-col .bloque img {
+                float: none;
+                width: 100%;
+                max-width: 100%;
+                margin-right: 0;
+                margin-bottom: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contenido-sin-col {
+                padding: 1rem 1rem 2rem;
+            }
+            .contenido-sin-col p,
+            .contenido-sin-col ul li {
+                font-size: 14px;
+            }
+        }
+
+        /* ========== BOTÓN FLOTANTE ARRIBA ========== */
+        .btn-flotante {
+            position: fixed;
+            z-index: 250;
+            background: var(--navy);
+            color: var(--cream);
+            border: none;
+            border-radius: 999px;
+            padding: 0.85rem 1.3rem 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            box-shadow: 0 14px 30px -10px rgba(15, 30, 56, 0.55);
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-flotante svg {
+            width: 17px;
+            height: 17px;
+            stroke: var(--gold);
+            flex-shrink: 0;
+        }
+        .btn-flotante:hover {
+            background: var(--navy-2);
+            transform: translateY(-2px);
+        }
+        #btn-top {
+            right: 1.4rem;
+            bottom: 1.4rem;
+        }
+
+        @media (max-width: 640px) {
+            .btn-flotante span.txt {
+                display: none;
+            }
+            #btn-top {
+                right: 1rem;
+                bottom: 1rem;
+                padding: 0.85rem;
+                border-radius: 50%;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== ENCABEZADO (fijo) ========== -->
+    <section id="portada">
+        <div class="portada-bg">
+            <picture>
+                <source media="(max-width:640px)" srcset="ins/001portadaCv.png" />
+                <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
+            </picture>
+            <div class="ph">
+                <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
+            </div>
+            <div class="portada-veil"></div>
+        </div>
+        <div class="portada-content">
+            <div class="portada-left">
+                <span class="portada-eyebrow">Historia de la República Dominicana</span>
+                <h1 class="portada-title">TERROR</h1>
+                <h3 class="portada-dates">Tiranía Trujillista 1930-1961</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MENÚ HAMBURGUESA ========== -->
+    <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- ========== MENÚ LATERAL ========== -->
+    <nav class="nav-lateral" id="menuLateral" role="navigation">
+        <button class="cerrar-menu" id="btnCerrarMenu" aria-label="Cerrar menú">✕</button>
+        <ul>
+            <li><a href="ind0.html">INICIO</a></li>
+            <li><a href="lt_ctx.html">Línea de Tiempo</a></li>
+            <li><a href="bio_tru.html">Reseña Biográfica</a></li>
+            <li><a href="gen_tru.html">Genealogía</a></li>
+            <li><a href="antes_tru.html">Antecedentes</a></li>
+            <li><a href="glpe30.html">Golpe de Estado 1930</a></li>
+            <li><a href="maq_tir.html">Maquinaria de la Tiranía</a></li>
+            <li><a href="etap_tir.html">Etapas de la Tiranía</a></li>
+            <li><a href="elec_tru.html">Elecciones</a></li>
+            <li><a href="reb_tru.html">Rebeldes</a></li>
+            <li><a href="casos_tru.html" class="activo">Terror</a></li>
+            <li><a href="ultnoche.html">Última Noche</a></li>
+            <li><a href="destru.html">Destrujillización</a></li>
+            <li><a href="galr.html">Galería</a></li>
+            <li><a href="glos.html">Glosario</a></li>
+            <li><a href="not.html">Fuentes y Créditos</a></li>
+        </ul>
+    </nav>
+
+    <!-- ========== OVERLAY ========== -->
+    <div class="overlay-menu" id="overlayMenu"></div>
+
+    <!-- ========== CONTENIDO PRINCIPAL ========== -->
+    <div class="contenido">
+        <div class="contenido-sin-col">
+
+            <!-- ========== 1. MASACRE FRONTERIZA 1937 ========== -->
+            <div class="bloque">
+                <span class="rotulo-seccion">1937</span>
+                <h2>Masacre Fronteriza · El Perejil</h2>
+                <img src="ins/rdajabon.png" alt="Masacre del Perejil" onerror="this.style.display='none'">
+                <p>En 1937 una masacre de haitianos fue desatada en la frontera, al noroeste de la República Dominicana a pocos días del presidente Trujillo visitar la zona. Muchos autores afirman que la acción duró entre 36 y 48 horas.</p>
+                <p>El ejército dominicano y paramilitares desataron una masacre asesinando a miles de haitianos y familias que se habían establecido en la frontera noroeste, en las inmediaciones a Dajabón y Mao.</p><p>Los asesinatos se cometieron a garrotazos, puñaladas y machetazos. Murieron más de 12 mil según el gobierno haitiano del momento. El gobierno dominicano de Trujillo aceptó la cifra en 17 mil. El objetivo macabro era liberar el territorio dominicano ocupado por haitianos y el trujillismo actuó de la manera que mejor entendía, implantando el terror.</p>
+                <p>El gobierno de Haití sometió una demanda judicial que finalmente ganó. El gobierno de Trujillo tuvo que hacer varios pagos por el incidente. El episodio hoy se conoce como la <strong>"MASACRE DEL PEREJIL"</strong>.</p>
+                <p>El 2 de noviembre de 1934, Trujillo había visitado Haití y firmó un Tratado Fronterizo con el presidente Stenio Vincent, reconociendo el territorio de Hincha (oeste de la actual Bánica) como territorio haitiano.</p>
+                <H3>PEREJIL</H3>
+                <p>Los asesinos llevaban una rama de perejil en la mano y se la mostraban a los detenidos, pidiéndoles que pronunciaran la palabra "perejil". Si la persona no lograba pronunciar la palabra correctamente, según la fonética dominicana, era identificada como haitiana y ejecutada de inmediato.</p>
+            </div>
+
+            <!--                <h3>Contexto según John P. Augelli</h3>
+                <div class="cita">
+                    <p><strong>John P. Augelli</strong> — <em>Nationalization of Dominican Borderlands</em> (1980):</p>
+                    <ul>
+                        <li>A diferencia de muchos países de latinoamérica, la frontera dominico-haitiana separa grupos nacionales de culturas diferentes.</li>
+                        <li>Las diferencias histórico-culturales surgieron en el siglo 17 entre España - Francia y continuaron entre RD y Haití.</li>
+                        <li>En 1980, la población dominicana era de 5 millones y en Haití la densidad poblacional era de 260 personas por milla cuadrada.</li>
+                        <li>Los haitianos ocupan un territorio menor que RD, es muy montañoso, muy erosionado, muy seco.</li>
+                        <li>La pobreza extrema de supervivencia en Haití contrastaba con la economía agrícola próspera en RD.</li>
+                        <li>Este contexto creó tensiones e inestabilidad en la frontera.</li>
+                        <li>La política trujillista buscaba estabilizar la frontera para frenar la ocupación del territorio dominicano por los haitianos.</li>
+                    </ul>
+                </div>
+  -->
+
+            <!-- ========== 3. CASO MAURICIO BÁEZ ========== -->
+            <div class="bloque">
+                <span class="rotulo-seccion">7 de enero de 1946</span>
+                <h2>Mauricio Báez y la huelga de La Romana</h2>
+                <img src="ins/mbaez.png" alt="Mauricio Báez" onerror="this.style.display='none'">
+                <p>El 7 de enero de 1946 se produjo una huelga de trabajadores azucareros del Ingenio Azucarero de La Romana. Los trabajadores se lanzaron en una huelga indefinida exigiendo aumento salarial y el cumplimiento de la jornada por 8 horas de trabajo. La ley exigía que los obreros debían laborar 12 ó 14 horas a lo que se oponían los trabajadoress. También pedían el pago de las horas extras de trabajo.</p>
+                <p>La empresa azucarera de La Romana era estadounidense y la única extranjera que Trujillo respetó y no pudo comprar, ni chantajear.</p>
+                <p>Los obreros ganaron las negociaciones. Aunque en 1945 ya el fascismo había caído en Europa, Trujillo debía cuidar las formas pero no olvidó el hecho.</p>
+                <p>Los dirigentes obreros <strong>Mauricio Báez</strong>, Dato Pagán y Freddy Valdéz debieron asilarse en la Embajada de México para proteger sus vidas.</p>
+                <p><strong>Mauricio Báez</strong> fue secuestrado y desaparecido por matones de Trujillo el 10 de diciembre de 1950 en la Habana, Cuba.  Su cuerpo nunca apareció</p>
+            </div>
+
+            <!-- ========== 4. CASO GALÍNDEZ ========== -->
+            <div class="bloque">
+                <span class="rotulo-seccion">Marzo de 1956</span>
+                <h2>Secuestro de Manuel de Jesús Galíndez</h2>
+                <img src="ins/mgalindez.png" alt="Manuel de Jesús Galíndez" onerror="this.style.display='none'">
+                <p>El 12 de marzo de 1956, el abogado español <strong>Manuel de Jesús Galíndez Suárez</strong> fue secuestrado por 2 hombres en Nueva York y nunca más volvió a aparecer.</p>
+                <p>Galíndez nació en España en 1915, se graduó de abogado y durante la Guerra Civil Española huyó a Francia. Llegó a la República Dominicana el 19 de noviembre de 1939, acogiéndose a las facilidades que Trujillo ofrecía a los españoles que Francisco Franco expulsaba (opositores e inconformes). Trujillo quería "blanquear" el país y Franco no los quería en España.</p>
+                <p>Muchos refugiados fueron confinados en "colonias agrícolas" pero Galíndez, por sus cualidades, logró que lo nombraran profesor en la Escuela Diplomática de la Cancillería y luego trabajó en la Secretaría de Estado de Trabajo como Asesor Legal. También fue tutor personal de Ramfis Trujillo.</p>
+                <p>Durante un viaje a Cuba, el intelectual desertó y se estableció en Nueva York.</p>
+                <p>Galíndez presentó un trabajo de tesis en la Universidad de Columbia para su doctorado, se llamó <em>"La Era de Trujillo"</em>. La obra analiza y narra el desarrollo de los diferentes gobiernos trujillistas desde 1930 y donde se refirió a aspectos familiares de Trujillo.</p>
+                <p>Las reconstrucciones asumen que Trujillo encolerizó cuando se enteró.</p>
+                <p>Según la revista TIME (1957), las investigaciones del <strong>FBI</strong> y del senador Charles Porter demostraron que Galíndez fue secuestrado por 2 individuos que lo drogaron y posteriormente lo trasladaron a República Dominicana en un aero-taxi contratado al piloto estadounidense Gerald Lester Murphy.</p>
+                <p>Testigos afirmaron que Galíndez fue reanimado frente a Trujillo y este le hizo comer varias páginas antes de matarlo.  Su cuerpo nunca apareció.</p>
+                <p>El FBI implicó a <strong>Minerva Bernardino</strong>, embajadora dominicana en Washington; a su hermano Felix W. Bernardino; al General Arturo Espaillat (Navajita); al Teniente Ludovino Fernández; a Porfirio Rubirosa, entre otros.</p>
+                <H3>EPÍLOGO</H3>
+                <img src="ins/murphy_maza.png" alt="Murphy y De la Maza" onerror="this.style.display='none'">
+                <p>Resultó que el piloto estadounidense Murphy, era un borracho y bebedor y en una ocasión habló de más, alardeando de que el pasajero que trajo era Galíndez.  El 3.Dic.1956, Murphy desapareció. Su automóvil fue hallado abandonado en la costa, frente al mar Caribe frente a la ciudad.</p>
+                <p>El régimen acusó al piloto dominicano, Octavio de la Maza, quien era un supuesto amigo de haber asesinado a Murphy por una disputa, alegando que Murphy cayó al Mar Caribe.</p>
+                <p>El 7.Ene.1957, De la Maza apareció ahorcado en su celda con una nota de suicidio confesando el crimen. Sin embargo, las investigaciones de los estadounidenses determinaron que las tuberías donde supuestamente se colgó, no soportaban el peso de un cuerpo.  Octavio De la Maza (Tavito), era hermano de Antonio de la Maza, un ex militar que finalmente fue el principal promotor del asesinato de Trujillo.</p>
+            </div>
+
+            <!-- ========== 2. CASO CARLOS CASTILLO ARMAS ========== -->
+            <div class="bloque">
+                <span class="rotulo-seccion">26 de julio de 1957</span>
+                <h2>Asesinato de Carlos Castillo Armas</h2>
+                <img src="ins/ccarmas.png" alt="Carlos Castillo Armas" onerror="this.style.display='none'">
+                <p>El 26 de julio de 1957 asesinaron a balazos al presidente guatemalteco <strong>Carlos Castillo Armas</strong> en el mismo Palacio Presidencial de la Ciudad de Guatemala. Castillo Armas fue baleado dentro de la Casa Presidencial por un miembro de su guardia personal (identificado oficialmente como Romeo Vásquez Sánchez), quien luego apareció muerto.</p>
+                <p><strong>Johnny Abbes García,</strong> el jefe de la policía secreta de Trujillo y agente en Centroamérica, fue el encargado de coordinar el complot.</p>
+                <p>Trujillo financió y armó a Castillo Armas para derrocar al gobierno de Jacobo Árbenz en 1954. Trujillo le exigió a Castillo Armas una gran condecoración (la Orden del Quetzal) y la entrega de exiliados políticos dominicanos, a lo que Armas se negó tras asumir el poder. Ante los desplantes y la falta de agradecimiento, Trujillo ordenó su muerte.</p>
+            </div>
+
+
+            <!-- ========== 5. CASO MARRERO ARISTY ========== -->
+            <div class="bloque">
+                <span class="rotulo-seccion">17 de julio de 1959</span>
+                <h2>Ramón Marrero Aristy</h2>
+                <img src="ins/rmaristy.png" alt="Ramón Marrero Aristy" onerror="this.style.display='none'">
+                <p>El gobierno trujillista quería desmentir las noticias internacionales que divulgaban los asesinatos y torturas a los sobrevivientes de la <strong>Invasión Rebelde del 14 de junio de 1959.</strong></p>
+                <p>El Secretario de Trabajo, <strong>Ramón Marrero Aristy</strong> promovió la idea de traer al famoso periodista estadounidense Tad Szulc para aclarar el episodio. Se le permitió una investigación sin restricciones.</p>
+                <p>El 12 de julio de ese año, el periódico estadounidense <em>The New York Times</em> publicó un reportaje escrito por Szulc donde narraba los horrores y torturas en contra de los rebeldes.</p>
+                <p>Trujillo se enfadó y el viernes 17 de julio, aparecieron carbonizados dentro de su automóvil Ramón Marrero Aristy y su chofer. Supuestamente tuvieron un accidente cuando regresaban de Constanza.</p>
+                <p>Aristy fue un hombre inteligente y excelente escritor. Su obra más conocida se titula <em>"Over"</em> y en ella relata la vida de explotación laboral y la miseria de los obreros en los ingenios azucareros y los bateyes de la época.</p>
+            </div>
+
+            <!-- ========== 6. ATENTADO A BETANCOURT ========== -->
+            <div class="bloque">
+                <span class="rotulo-seccion">24 de junio de 1960</span>
+                <h2>Atentado a Rómulo Betancourt</h2>
+                <img src="ins/rbetancourt.png" alt="Atentado a Betancourt" onerror="this.style.display='none'">
+                <p>Un atentado contra el presidente venezolano <strong>Rómulo Betancourt</strong> por poco acaba con su vida el 24 de junio de 1960. El presidente se dirigía por la avenida de Los Próceres en Caracas, con destino a un desfile militar, cuando un vehículo a su lado explotó quemándole y desfigurándole el rostro.</p>
+                <p>Los investigadores atraparon a los autores físicos y revelaron que eran pagados con el SIM.</p>
+                <p>Betancourt atacaba públicamente en foros internacionales al gobierno dictatorial dominicano. Trujillo no toleraba a Betancourt y se hicieron enemigos políticos.</p>
+                <p>El 20 de agosto de 1960, en votación unánime la <strong>Organización de Estados Americanos (OEA)</strong> declaró culpable al gobierno trujillista de agresión en contra del presidente venezolano. En una sanción sin precedentes, muchos países suspendieron relaciones diplomáticas con la República Dominicana e interrumpieron las relaciones comerciales hasta un nuevo gobierno sin Trujillo.</p>
+            </div>
+
+            <!-- ========== 7. ASESINATO DE LAS HERMANAS MIRABAL ========== -->
+            <div class="bloque">
+                <span class="rotulo-seccion">25 de noviembre de 1960</span>
+                <h2>Asesinato de las Hermanas Mirabal</h2>
+                <img src="ins/mmirabal.png" alt="Hermanas Mirabal" onerror="this.style.display='none'">
+                <p>El 25 de noviembre de 1960, las hermanas <strong>Patria, Minerva y María Teresa Mirabal</strong> fueron asesinadas por agentes del SIM (Servicio de Inteligencia Militar) cuando regresaban de visitar a sus esposos presos en Puerto Plata.</p>
+                <p>Las hermanas Mirabal eran activistas opositoras al régimen de Trujillo y se habían convertido en un símbolo de la resistencia. Minerva, en particular, era abogada y había rechazado los avances del dictador, lo que desató su ira.</p>
+                <p>El régimen simuló un accidente de tránsito, pero las evidencias de golpes y estrangulamiento demostraron que fue un asesinato. Este crimen provocó una condena internacional masiva y aceleró el fin de la dictadura.</p>
+                <p>En la actualidad, cada 25 de noviembre es conmemorado en todo el mundo como el <strong>Día Internacional de la Eliminación de la Violencia contra la Mujer</strong>, en honor a las hermanas Mirabal.</p>
+                <H3>MINERVA LÍDER</H3>
+                <p>Minerva Mirabal era líder, desafió tanto el machismo patriarcal de la dictadura y el autoritarismo político. Fue una de las primeras mujeres en graduarse de abogado en el país.  A pesar de que alcanzó el grado <strong>Summa Cum Laude</strong> el dictador y sus esbirros le impidieron ejercer la profesión por su posición política.</p>
+                <p>Minerva fue líder y fundadora de primera fila del <strong>Movimiento Político 14 de Junio (1J4)</strong>.</p>
+                <p>Su vida encarnó la defensa de los derechos civiles y la libertad individual propios del pensamiento liberal.</p>
+            </div>
+
+        </div> <!-- /contenido-sin-col -->
+    </div> <!-- /contenido -->
+
+    <!-- ========== BOTÓN FLOTANTE ARRIBA ========== -->
+    <button id="btn-top" class="btn-flotante" aria-label="Volver arriba">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+        <span class="txt">Arriba</span>
+    </button>
+
+    <script>
+        // ===== MENÚ HAMBURGUESA (toggle + overlay) =====
+        (function() {
+            const btnHamburguesa = document.getElementById('btnHamburguesa');
+            const menuLateral = document.getElementById('menuLateral');
+            const btnCerrarMenu = document.getElementById('btnCerrarMenu');
+            const overlayMenu = document.getElementById('overlayMenu');
+
+            function abrirMenu() {
+                menuLateral.classList.add('abierto');
+                overlayMenu.classList.add('activo');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function cerrarMenu() {
+                menuLateral.classList.remove('abierto');
+                overlayMenu.classList.remove('activo');
+                document.body.style.overflow = '';
+            }
+
+            if (btnHamburguesa) {
+                btnHamburguesa.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    abrirMenu();
+                });
+            }
+
+            if (btnCerrarMenu) {
+                btnCerrarMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    cerrarMenu();
+                });
+            }
+
+            if (overlayMenu) {
+                overlayMenu.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    cerrarMenu();
+                }
+            });
+
+            const enlacesMenu = menuLateral ? menuLateral.querySelectorAll('ul li a') : [];
+            enlacesMenu.forEach(function(enlace) {
+                enlace.addEventListener('click', function() {
+                    cerrarMenu();
+                });
+            });
+
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth > 900 && menuLateral.classList.contains('abierto')) {
+                        cerrarMenu();
+                    }
+                }, 200);
+            });
+        })();
+
+        // botón arriba
+        document.getElementById('btn-top').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+
+</body>
+</html>

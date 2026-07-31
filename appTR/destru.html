@@ -267,12 +267,27 @@
             background: var(--paper);
             padding: 0rem 5vw 5rem;
             margin-top: 15vh;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* fondo fijo con ins/fd0.png */
+        .contenido::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: #faf8f4 url('ins/fd0.png') center/cover no-repeat fixed;
+            opacity: 0.5;
+            pointer-events: none;
         }
 
         /* ========== CONTENIDO: DESTRUJILLIZACIÓN ========== */
         .destru-wrap {
             max-width: 900px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
         .destru-card {
             background: #fff;
@@ -469,7 +484,7 @@
             <li><a href="etap_tir.html">Etapas de la Tiranía</a></li>
             <li><a href="elec_tru.html">Elecciones</a></li>
             <li><a href="reb_tru.html">Rebeldes</a></li>
-            <li><a href="casos_tru.html">Casos Famosos</a></li>
+            <li><a href="casos_tru.html">Terror</a></li>
             <li><a href="ultnoche.html">Última Noche</a></li>
             <li><a href="destru.html" class="activo">Destrujillización</a></li>
             <li><a href="galr.html">Galería</a></li>
