@@ -617,9 +617,27 @@
 
   <script>
     /* ======================================================
-       DATOS DEL GLOSARIO (igual que antes)
+       DATOS DEL GLOSARIO (orden alfabético)
        ====================================================== */
     const glossaryData = [
+      {term:"AJUSTICIAMIENTO DEL 30 DE MAYO", tyranny:true, def:[
+        "Nombre con el que se reconoce el asesinato de Trujillo el 30.Mayo.1961 y con el que inició el desmembramiento de la dictadura Trujillista que había iniciado en 1930.  Su muerte ocurrió mediante una emboscada realizada en la carretera Santo Domingo-San Cristóbal por un grupo de conspiradores en la que Trujillo fue abatido."
+      ]},
+      {term:"ATENTADO A RÓMULO BETANCOURT (1960)", tyranny:true, def:[
+        "Intento de magnicidio contra el presidente venezolano ordenado y financiado por Trujillo. El hecho llevó a la OEA a imponer sanciones económicas y diplomáticas severas a la República Dominicana."
+      ]},
+      {term:"BENEFACTOR DE LA PATRIA / GENERALÍSIMO", tyranny:true, def:[
+        "Títulos honoríficos oficiales otorgados a Trujillo para consolidar su figura de líder supremo e infalible."
+      ]},
+      {term:"CÁRCEL DE NIGUA", tyranny:true, def:[
+        "Prisión famosa por sus inhumanas condiciones de insalubridad y la brutalidad con la que se trataba a los presos políticos durante las primeras décadas del régimen."
+      ]},
+      {term:"CASO GALÍNDEZ (1956)", tyranny:true, def:[
+        "Secuestro en Nueva York y posterior asesinato del jurista hispano-vasco Jesús de Galíndez tras escribir una tesis doctoral crítica sobre el régimen trujillista."
+      ]},
+      {term:"CIUDAD TRUJILLO", tyranny:true, def:[
+        "Nombre oficial con el que se rebautizó a la ciudad de Santo Domingo entre 1936 y 1961 en honor al dictador.  La ciudad retomó su nombre en 1961."
+      ]},
       {term:"CLANDESTINO", tyranny:false, def:[
         "Se refiere a algo secreto, oculto y dicho o hecho en secreto por temor a la ley o a las autoridades."
       ]},
@@ -627,7 +645,7 @@
         "Confabulación entre dos o más personas contra otra u otras. Es una conspiración o entendimiento secreto entre varias personas para cambiar el estatus de otro grupo."
       ]},
       {term:"CRISIS", tyranny:false, def:[
-        "Se refiere a una situación mala o difícil. También se relaciona con un cambio profundo y de consecuencias importantes en un proceso o una situación, o en la manera en que estos son apreciados."
+        "Se refiere a una situación mala o difícil. También se relaciona con un cambio profundo y de consecuencias importantes en un proceso o una situación, o la manera en que estos son asumidos."
       ]},
       {term:"DEMOCRACIA", tyranny:false, def:[
         "La democracia es una forma de vida en la cual sus miembros son libres e iguales y las relaciones sociales se basan en la convivencia.",
@@ -638,48 +656,82 @@
         "Régimen político en el que una sola persona gobierna con poder total, sin someterse a ningún tipo de limitaciones y con la facultad de promulgar y modificar leyes a su voluntad.",
         "En este trabajo se utilizan indistintamente los términos dictadura y tiranía para referirse a la forma de gobierno antidemocrática practicada por Trujillo entre 1930 y 1961."
       ]},
-      {term:"FAD — Fuerza Aérea Dominicana", tyranny:true, def:[
+      {term:"DIOS Y TRUJILLO", tyranny:true, def:[
+        "Lema de propaganda estatal colocado en viviendas, placas públicas y periódicos para divinizar la figura del dictador e igualar su autoridad a la divina. "
+      ]},
+      {term:"DOMINICANIZACIÓN DE LA FRONTERA", tyranny:true, def:[
+        "Política estatal destinada a poblar, nacionalizar e ideologizar las provincias limítrofes con Haití mediante proyectos agrícolas, escuelas y presencia militar. Implicó medidas para blanquear la población."
+      ]},
+      {term:"EUA - ESTADOS UNIDOS DE AMÉRICA", tyranny:true, def:[
+        "Acrónimo en español para referirse a los Estados Unidos de América."
+      ]},
+      {term:"FAD — FUERZA AÉREA DOMINICANA", tyranny:true, def:[
         "El 5 de febrero de 1948, mediante el Decreto No. 4918, se crea el Cuerpo de Aviación Militar, que posteriormente se conocería como la Fuerza Aérea Dominicana (FAD).",
         "Igual que otros países de Latinoamérica, Trujillo adquirió los equipos y armas excedentes de los Estados Unidos luego de la Segunda Guerra Mundial."
       ]},
       {term:"FASCISMO", tyranny:false, def:[
-        "Doctrina política de carácter antidemocrático, totalitaria y nacionalista.",
-        "Movimiento político y social de carácter totalitario y nacionalista fundado en Italia por Benito Mussolini después de la Primera Guerra Mundial."
+        "Doctrina política de carácter antidemocrática, totalitaria y nacionalista.",
+        "Movimiento político y social de carácter totalitario y nacionalista fundado en Italia por Benito Mussolini después de la Primera Guerra Mundial en 1922."
       ]},
       {term:"FBI", tyranny:false, def:[
         "Acrónimo del inglés Federal Bureau of Investigation (Oficina Federal de Investigación).",
         "Es la principal agencia de investigación criminal del Departamento de Justicia de Estados Unidos."
       ]},
       {term:"GAVILLEROS", tyranny:false, def:[
-        "Hombres y mujeres, mal organizados, que hicieron frente a la intervención norteamericana de 1916-1924 en la región Este del país. Surgieron luego del despojo de tierras a los campesinos, ocurrido durante el apogeo de la industria azucarera extranjera iniciado a finales del siglo XIX y, posteriormente, al establecerse el sistema catastral de medición Torrens por los estadounidenses. Los invasores los llamaron «gavilleros» de manera despectiva y los acusaron de ladrones y saqueadores.",
+        "Hombres y mujeres, mal organizados, que hicieron frente a la intervención norteamericana de 1916-1924 en la región Este del país. Surgieron luego del despojo de tierras a los campesinos, ocurrido durante el apogeo de la industria azucarera extranjera iniciado a finales del siglo 19 y, posteriormente, al establecerse el sistema catastral de medición Torrens por los estadounidenses. Los invasores los llamaron «gavilleros» de manera despectiva y los acusaron de ladrones y saqueadores.",
         "Existieron dos tipos de gavilleros: los caudillistas y los cuatreros, estos últimos de menor incidencia y cuyos objetivos no iban más allá de robar ganado y vender la carne. Los ligados al fenómeno caudillista actuaban más ampliamente atacando a las autoridades y sus aliados; practicaban también el cobro de protección a los hacendados y merodeaban las localidades rurales y los ingenios azucareros. Este último grupo fue el que más se destacó y trascendió a través de los años. Finalmente, los gavilleros fueron asesinados o murieron mientras eran salvajemente torturados por los invasores."
       ]},
       {term:"GOLPE DE ESTADO", tyranny:false, def:[
         "Toma del poder político de repente y con violencia. El golpe de Estado viola todas las normas legales de sucesión en el poder."
       ]},
+      {term:"HERMANAS MIRABAL ('LAS MARIPOSAS')", tyranny:true, def:[
+        "Patria, Minerva y María Teresa Mirabal, opositoras al régimen cuyo asesinato el 25 de noviembre de 1960 provocó un repudio masivo nacional e internacional, acelerando el fin de la dictadura.  Minerva fue líder y fundadora del Movimiento Político \'14 de Junio\' (1J4) "
+      ]},
       {term:"HUELGA", tyranny:false, def:[
         "Forma de protesta de los trabajadores que consiste en detener el trabajo en conjunto. Las huelgas requieren un acuerdo entre los trabajadores con el fin de conseguir mejoras laborales o sociales; no se trata de realizar actividades violentas."
       ]},
-      {term:"INFAME", tyranny:false, def:[
+ /*     {term:"INFAME", tyranny:false, def:[
         "Persona muy malvada, que carece de honra, crédito y estimación."
+      ]}, */
+      {term:"LA 40 / EL 9", tyranny:true, def:[
+        "Centros clandestinos de detención y tortura en Santo Domingo donde el SIM interrogaba y ajusticiaba a disidentes políticos mediante sillas eléctricas y otros métodos vejatorios."
       ]},
       {term:"MASACRE DEL PEREJIL", tyranny:true, def:[
         "Matanza de haitianos en territorio dominicano, en los alrededores de Mao y Dajabón, iniciada el 2 de octubre de 1937. Los asesinatos se ejecutaron principalmente a garrotazos, ahorcamientos y puñaladas por miembros del Ejército y la Policía dominicana. Los asesinos obligaban a las víctimas a pronunciar la palabra «perejil»; si era mal pronunciada, procedían al asesinato. La acción duró entre 36 y 48 horas.",
         "La idea era liberar el territorio dominicano que se consideraba ocupado por haitianos. El gobierno de Haití sometió el caso ante cortes internacionales y logró que se condenara al gobierno de Trujillo, que tuvo que realizar varios pagos por el incidente."
       ]},
-      {term:"MISIÓN DAWES", tyranny:false, def:[
-        "Comisión estadounidense contratada por el gobierno de Horacio Vásquez en 1929, cuyo trabajo se concretó en certificar que el Estado dominicano se encontraba en bancarrota."
+      {term:"MASACRE DEL PEREJIL (1937)", tyranny:true, def:[
+        "Masacre ordenada por Trujillo en la que miles de personas de origen haitiano y dominico-haitianos fueron asesinadas en la zona fronteriza. Se usaba la pronunciación de la palabra 'perejil' para identificar a las víctimas."
+      ]},
+      {term:"MISIÓN o COMISIÓN DAWES", tyranny:false, def:[
+        "Comisión estadounidense fue un grupo de expertos estadounidense encabezado por el exvicepresidente de EUA Charles G. Dawes contratada por el gobierno de Horacio Vásquez en 1929, cuyo trabajo se concretó en certificar que el Estado dominicano se encontraba en bancarrota.", "La comisión encontró que el gobierno no tenía un presupuesto ni controles financieros, descurió desfalcos gigantes en el Ejército comandado por Trujillo y en Obras Públicas, el estado tenía muchas \'botellas\' o empleados que no trabajaban, entre otras."
+      ]},
+      {term:"MONOPOLIO ESTATAL / 'EMPRESAS DEL JEFE'", tyranny:true, def:[
+        "Sistema económico mediante el cual Trujillo y su familia se apoderaron de las principales industrias y empresas nacionales (azúcar, sal, cigarrillos, carne, calzado, cemento y seguros)."
+      ]},
+      {term:"MOVIMIENTO 14 DE JUNIO (1J4)", tyranny:true, def:[
+        "Organización clandestina de resistencia interna fundada a finales de los años 50 y liderada por Manolo Tavárez Justo y Minerva Mirabal."
       ]},
       {term:"PARAMILITARES", tyranny:false, def:[
         "Grupo armado que cumple una función similar a la de un ejército, pero que no forma parte de las fuerzas militares oficiales de un país. Son grupos ilegales."
       ]},
-      {term:"SIM — Servicio de Inteligencia Militar", tyranny:true, def:[
+      {term:"PARTIDO DOMINICANO", tyranny:true, def:[
+        "Único partido político legal durante el régimen 1930-1961. El carnet de afiliación (popularmente conocido como 'La Palmita') era requisito obligatorio para trabajar en el Estado, circular por el país o acceder a servicios públicos."
+      ]},
+      {term:"RAZA INMORTAL (EXPEDICIÓN DE JUNIO DE 1959)", tyranny:true, def:[
+        "Grupo de patriotas exiliados que desembarcaron por Constanza, Maimón y Estero Hondo con el objetivo de derrocar violentamente la tiranía. Aunque fracasaron militarmente, encendieron la chispa de la resistencia interna."
+      ]},
+      {term:"SIM — SERVICIO DE INTELIGENCIA MILITAR", tyranny:true, def:[
+        "Órgano de inteligencia y policía secreta dirigido por Johnny Abbes García. Fue el principal instrumento de espionaje, persecución, tortura y asesinato de opositores en la fase final de la dictadura.",
         "Organización de espionaje al servicio de Trujillo, clave durante los últimos años de su dictadura.",
         "Esta organización represiva aterrorizaba a la población y a funcionarios de todos los niveles; en su nómina figuraban miles de agentes secretos diseminados por todo el país."
       ]},
       {term:"TIRANÍA", tyranny:true, def:[
         "Forma de gobierno en la que el gobernante tiene un poder total o absoluto, no limitado por leyes, especialmente cuando lo obtiene por medios ilícitos, y abusa de él.",
         "En este trabajo se utilizan indistintamente los términos dictadura y tiranía para referirse a la forma de gobierno antidemocrática practicada por Trujillo entre 1930 y 1961."
+      ]},
+      {term:"TRATADO TRUJILLO-HULL (1940)", tyranny:true, def:[
+        "Acuerdo diplomático que devolvió al Estado dominicano el control directo de sus aduanas (hasta entonces administradas por EUA) en 24.Sep.1940 y realizó el pago que saldó la deuda externa del país el.Jul.1947. Haití también realizó su último pago el 1.Oct.1947."
       ]}
     ];
 
