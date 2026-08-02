@@ -738,7 +738,7 @@
     {id:"1942-05a", year:1942, stage:"financiera", fechaCompleta:"3.MAY.1942", titulo:"HUNDEN BARCO MERCANTE DOMINICANO", tipo:"internacional", p:["El submarino alemán U-125, comandado por Ulrich Folkers, hundió el buque mercante dominicano \"San Rafael\" que navegaba hacia Kingston, Jamaica desde Tampa."]},
     {id:"1942-05b", year:1942, stage:"financiera", fechaCompleta:"21.MAY.1942", titulo:"HUNDEN OTRO BARCO DE TRUJILLO", tipo:"internacional", p:["El submarino alemán U-156, al mando del capitán Werner Hartenstein, hundió el buque mercante dominicano \"Presidente Trujillo\" que navegaba hacia San Juan, Puerto Rico desde Fort-de-France, Martinica. Transportaba principalmente cerveza, maquinaria y forraje."]},
     {id:"1942-08", year:1942, stage:"financiera", fechaCompleta:"16.AGO.1942", titulo:"TRUJILLO PRESIDENTE", tipo:"local", p:["Trujillo se juramenta ante la Asamblea Nacional como presidente para el período 1942-1947. La mujer pudo ejercer el voto por vez primera en RD. Trujillo fue el único candidato presidencial y recibió el 100% de los votos."]},
-    {id:"1944-02", year:1944, stage:"financiera", fechaCompleta:"20.FEB.1944", titulo:"INAUGURAN MONUMENTO EN EL MALECÓN", tipo:"local", p:["El Monumento a la Independencia Financiera fue construido para celebrar el acuerdo Tratado Trujillo-Hull con Estados Unidos, que permitió el pago de la deuda externa de RD.  Representa dos alas y es conocido como el \"obelisco hembra\".  Su altura es de 20 metros."]},
+    {id:"1944-02a", year:1944, stage:"financiera", fechaCompleta:"20.FEB.1944", titulo:"INAUGURAN MONUMENTO EN EL MALECÓN", tipo:"local", p:["El Monumento a la Independencia Financiera fue construido para celebrar el acuerdo Tratado Trujillo-Hull con Estados Unidos, que permitió el pago de la deuda externa de RD.  Representa dos alas y es conocido como el \"obelisco hembra\".  Su altura es de 20 metros."]},
     {id:"1944-02b", year:1944, stage:"financiera", fechaCompleta:"27.FEB.1944", titulo:"100 ANIVERSARIO DE LA INDEPENDENCIA", tipo:"local", p:["Con un acto solemne, fueron trasladados los restos de los padres fundadores de la RD, Juan Pablo Duarte, Ramón Matías Mella y Francisco del Rosario Sánchez desde la catedral de Santo Domingo hacia el Baluarte del Conde en el Parque Independencia."]},
     {id:"1947-01", year:1947, stage:"amenazas", fechaCompleta:"10.ENE.1947", titulo:"MODIFICAN LA CONSTITUCIÓN", tipo:"local", p:["El Congreso Nacional aprueba la modificación de la constitución dominicana. Los cambios se concentraron en el aspecto monetario para ampliar la independencia en las finanzas dominicanas."]},
     {id:"1947-08a", year:1947, stage:"amenazas", fechaCompleta:"16.AGO.1947", titulo:"INAUGURAN EL PALACIO NACIONAL DOMINICANO", tipo:"local", p:["Fue diseñado como casa presidencial por el arquitecto italiano Guido D'Alessandro. Es un edificio de estilo ecléctico que combina influencias del neoclasicismo, el renacimiento italiano y el grecorromano. Cuenta con tres niveles.  Alberga oficinas de funcionarios cercanos al presidente y los salones de recepción más importantes, como el Salón de Embajadores y el Salón de las Cariátides. Es la sede del Poder Ejecutivo y un símbolo de la soberanía del país"]},
@@ -937,78 +937,6 @@
       });
     }
   })();
-
-  // -------------------------------------------------------------
-  // SCROLL CON INERCIA (iPod style)
-  // -------------------------------------------------------------
-  (function ipodScroll(el) {
-    let velocity = 0;
-    let raf = null;
-    const friction = 0.92;
-    const wheelGain = 0.55;
-
-    function step() {
-      if (Math.abs(velocity) < 0.3) { velocity = 0; raf = null; return; }
-      el.scrollTop += velocity;
-      velocity *= friction;
-      raf = requestAnimationFrame(step);
-    }
-
-    function kick(amount) {
-      velocity += amount;
-      velocity = Math.max(Math.min(velocity, 60), -60);
-      if (!raf) raf = requestAnimationFrame(step);
-    }
-
-    el.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      kick(e.deltaY * wheelGain);
-    }, { passive: false });
-
-    let dragging = false;
-    let lastY = 0;
-    let lastT = 0;
-    let dragVelocity = 0;
-
-    function pointerDown(y) {
-      dragging = true;
-      velocity = 0;
-      lastY = y;
-      lastT = performance.now();
-      dragVelocity = 0;
-    }
-    function pointerMove(y) {
-      if (!dragging) return;
-      const now = performance.now();
-      const dy = lastY - y;
-      const dt = Math.max(now - lastT, 1);
-      el.scrollTop += dy;
-      dragVelocity = dy / dt * 16;
-      lastY = y;
-      lastT = now;
-    }
-    function pointerUp() {
-      if (!dragging) return;
-      dragging = false;
-      kick(dragVelocity);
-    }
-
-    el.addEventListener('touchstart', (e) => pointerDown(e.touches[0].clientY), { passive: true });
-    el.addEventListener('touchmove', (e) => pointerMove(e.touches[0].clientY), { passive: true });
-    el.addEventListener('touchend', pointerUp);
-
-    let mouseDragging = false;
-    el.addEventListener('mousedown', (e) => {
-      mouseDragging = true;
-      pointerDown(e.clientY);
-    });
-    window.addEventListener('mousemove', (e) => {
-      if (mouseDragging) pointerMove(e.clientY);
-    });
-    window.addEventListener('mouseup', () => {
-      if (mouseDragging) { mouseDragging = false; pointerUp(); }
-    });
-  })(scrollEl);
 
   document.getElementById('btn-top').addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
