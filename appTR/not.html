@@ -6,6 +6,7 @@
     <title>Notas</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
     <style>
         /* ----- reset & base ----- */
         * {
@@ -156,6 +157,37 @@
             letter-spacing: 0.1em;
             margin: 0;
             white-space: nowrap;
+        }
+
+        /* ===== BOTÓN QUIZ (derecha arriba) ===== */
+        .btn-quiz {
+            position: fixed;
+            top: 1.2rem;
+            right: 1.2rem;
+            z-index: 999;
+            background: var(--navy);
+            color: var(--cream);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transition: 0.25s ease;
+            text-decoration: none;
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+        .btn-quiz:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: scale(1.08) rotate(8deg);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        }
+        .btn-quiz .material-symbols-outlined {
+            font-size: 1.8rem;
         }
 
         /* ========== MENÚ HAMBURGUESA ========== */
@@ -416,50 +448,43 @@
             color: var(--orange-dim);
         }
 
-        /* ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== */
-        .btn-flotante {
+        /* ===== BOTÓN ARRIBA (estilo galr.html) ===== */
+        .btn-arriba {
             position: fixed;
-            z-index: 100;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 900;
             background: var(--navy);
             color: var(--cream);
-            border: none;
-            border-radius: 999px;
-            padding: 0.85rem 1.3rem 0.85rem 1rem;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            font-size: 1.8rem;
             display: flex;
             align-items: center;
-            gap: 0.55rem;
-            box-shadow: 0 14px 30px -10px rgba(15, 30, 56, 0.55);
-            font-size: 0.82rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
-            cursor: pointer;
+            justify-content: center;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+            transition: 0.25s ease;
+            opacity: 0.9;
+            text-decoration: none;
+            font-weight: 700;
+            line-height: 1;
         }
-        .btn-flotante svg {
-            width: 17px;
-            height: 17px;
-            stroke: var(--gold);
-            flex-shrink: 0;
+        .btn-arriba:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 10px 32px rgba(0,0,0,0.5);
         }
-        .btn-flotante:hover {
-            background: var(--navy-2);
-            transform: translateY(-2px);
-        }
-        #btn-top {
-            right: 1.4rem;
-            bottom: 1.4rem;
+        .btn-arriba:active {
+            transform: scale(0.92);
         }
 
         @media (max-width: 640px) {
-            .btn-flotante span.txt {
-                display: none;
-            }
-            #btn-top {
-                right: 1rem;
-                bottom: 1rem;
-                padding: 0.85rem;
-                border-radius: 50%;
-            }
+            .btn-arriba { bottom: 1.2rem; right: 1.2rem; width: 46px; height: 46px; font-size: 1.4rem; }
+            .btn-quiz { top: 1rem; right: 1rem; width: 42px; height: 42px; font-size: 1.5rem; }
+            .btn-quiz .material-symbols-outlined { font-size: 1.5rem; }
             .creditos-box {
                 padding: 1.2rem 1.2rem;
             }
@@ -479,6 +504,9 @@
                 width: 270px;
                 left: -290px;
             }
+        }
+        @media (max-width: 480px) {
+            .btn-arriba { width: 42px; height: 42px; font-size: 1.2rem; bottom: 1rem; right: 1rem; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -510,6 +538,11 @@
       </div>
     </div>
     </section>
+
+    <!-- ========== BOTÓN QUIZ (derecha arriba) ========== -->
+    <a href="https://edupunto.com/2014/12/el-trujillismo-usaba-el-terror-contra/" target="_blank" class="btn-quiz" aria-label="Quiz">
+        <span class="material-symbols-outlined">quiz</span>
+    </a>
 
     <!-- ========== MENÚ HAMBURGUESA ========== -->
     <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
@@ -648,19 +681,15 @@
 
     </div>
 
-    <!-- ========== BOTÓN FLOTANTE ARRIBA (derecha abajo) ========== -->
-    <button id="btn-top" class="btn-flotante" aria-label="Volver arriba">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 19V5M5 12l7-7 7 7" />
-        </svg>
-        <span class="txt">Arriba</span>
-    </button>
+    <!-- ========== BOTÓN ARRIBA (estilo galr.html) ========== -->
+    <a href="#" class="btn-arriba" id="btnArriba" aria-label="Ir arriba">↑</a>
 
     <script>
         /* =========================================================
-           BOTÓN FLOTANTE "ARRIBA"
+           BOTÓN ARRIBA
            ========================================================= */
-        document.getElementById('btn-top').addEventListener('click', () => {
+        document.getElementById('btnArriba').addEventListener('click', (e) => {
+            e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 

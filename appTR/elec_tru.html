@@ -6,6 +6,7 @@
     <title>Elecciones</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
     <style>
         /* ----- reset & base ----- */
         * {
@@ -156,6 +157,37 @@
             letter-spacing: 0.1em;
             margin: 0;
             white-space: nowrap;
+        }
+
+        /* ===== BOTÓN QUIZ (derecha arriba) ===== */
+        .btn-quiz {
+            position: fixed;
+            top: 1.2rem;
+            right: 1.2rem;
+            z-index: 999;
+            background: var(--navy);
+            color: var(--cream);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transition: 0.25s ease;
+            text-decoration: none;
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+        .btn-quiz:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: scale(1.08) rotate(8deg);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        }
+        .btn-quiz .material-symbols-outlined {
+            font-size: 1.8rem;
         }
 
         /* ========== MENÚ HAMBURGUESA ========== */
@@ -471,6 +503,39 @@
             transform: scale(1.25);
         }
 
+        /* ===== BOTÓN ARRIBA (estilo galr.html) ===== */
+        .btn-arriba {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 900;
+            background: var(--navy);
+            color: var(--cream);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+            transition: 0.25s ease;
+            opacity: 0.9;
+            text-decoration: none;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .btn-arriba:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 10px 32px rgba(0,0,0,0.5);
+        }
+        .btn-arriba:active {
+            transform: scale(0.92);
+        }
+
         @media (max-width: 760px) {
             .slide {
                 flex-direction: column;
@@ -509,6 +574,32 @@
             .carrusel-slides {
                 min-height: 500px;
             }
+            .btn-quiz {
+                top: 1rem;
+                right: 1rem;
+                width: 42px;
+                height: 42px;
+                font-size: 1.5rem;
+            }
+            .btn-quiz .material-symbols-outlined {
+                font-size: 1.5rem;
+            }
+            .btn-arriba {
+                bottom: 1.2rem;
+                right: 1.2rem;
+                width: 46px;
+                height: 46px;
+                font-size: 1.4rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .btn-arriba {
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
+                bottom: 1rem;
+                right: 1rem;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -540,6 +631,11 @@
             </div>
         </div>
     </section>
+
+    <!-- ========== BOTÓN QUIZ (derecha arriba) ========== -->
+    <a href="https://edupunto.com/2014/12/el-trujillismo-usaba-el-terror-contra/" target="_blank" class="btn-quiz" aria-label="Quiz">
+        <span class="material-symbols-outlined">quiz</span>
+    </a>
 
     <!-- ========== MENÚ HAMBURGUESA ========== -->
     <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
@@ -588,6 +684,9 @@
             </div>
         </div>
     </div>
+
+    <!-- ========== BOTÓN ARRIBA (estilo galr.html) ========== -->
+    <a href="#" class="btn-arriba" id="btnArriba" aria-label="Ir arriba">↑</a>
 
     <script>
         // ============================================================
@@ -938,6 +1037,12 @@
         }
 
         initCarrusel();
+
+        // botón arriba
+        document.getElementById('btnArriba').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
 
         // ===== MENÚ HAMBURGUESA (toggle + overlay) =====
         (function() {

@@ -61,8 +61,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            height: 70px;
-            min-height: 70px;
+            height: 15vh;
+            min-height: 80px;
             width: 100%;
             background: var(--bg-dark);
             color: var(--cream);
@@ -71,7 +71,7 @@
             justify-content: center;
             overflow: hidden;
             z-index: 300;
-            box-shadow: 0 8px 24px -10px rgba(0,0,0,0.6);
+            box-shadow: 0 12px 30px -14px rgba(0,0,0,0.6);
         }
         .portada-bg {
             position: absolute;
@@ -94,14 +94,14 @@
             justify-content: center;
             background: #2a2520;
             color: var(--gold-dim);
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             text-align: center;
-            padding: 0.5rem;
+            padding: 1rem;
         }
         .portada-bg .ph b {
             display: block;
             color: var(--cream);
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.25rem;
         }
         .portada-veil {
             position: absolute;
@@ -119,23 +119,23 @@
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 4vw;
+            padding: 0 5vw;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            gap: 0.6rem;
+            gap: 1rem;
             flex-wrap: wrap;
         }
         .portada-left {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.8rem;
             flex-wrap: wrap;
         }
         .portada-eyebrow {
-            letter-spacing: 0.2em;
-            font-size: 0.5rem;
+            letter-spacing: 0.25em;
+            font-size: 0.6rem;
             color: var(--gold);
             text-transform: uppercase;
             font-weight: 600;
@@ -143,44 +143,75 @@
         .portada-title {
             font-family: var(--disp);
             font-weight: 700;
-            font-size: clamp(0.9rem, 1.8vw, 1.6rem);
+            font-size: clamp(1rem, 2.2vw, 2rem);
             line-height: 1.1;
             margin: 0;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 16px rgba(0,0,0,0.5);
             white-space: nowrap;
         }
         .portada-dates {
             font-family: var(--disp);
             color: var(--gold);
-            font-size: clamp(0.5rem, 0.8vw, 0.8rem);
-            letter-spacing: 0.08em;
+            font-size: clamp(0.6rem, 1vw, 0.9rem);
+            letter-spacing: 0.1em;
             margin: 0;
             white-space: nowrap;
+        }
+
+        /* ===== BOTÓN QUIZ (derecha arriba) ===== */
+        .btn-quiz {
+            position: fixed;
+            top: 1.2rem;
+            right: 1.2rem;
+            z-index: 999;
+            background: var(--navy);
+            color: var(--cream);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transition: 0.25s ease;
+            text-decoration: none;
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+        .btn-quiz:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: scale(1.08) rotate(8deg);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        }
+        .btn-quiz .material-symbols-outlined {
+            font-size: 1.8rem;
         }
 
         /* ========== MENÚ HAMBURGUESA ========== */
         .menu-hamburguesa {
             position: fixed;
-            top: 0.8rem;
-            left: 0.8rem;
+            top: 1.2rem;
+            left: 1.2rem;
             z-index: 999;
             background: var(--navy);
             border: 1px solid var(--gold);
             border-radius: 6px;
-            padding: 0.4rem 0.6rem;
+            padding: 0.5rem 0.7rem;
             box-shadow: 0 4px 16px rgba(0,0,0,0.5);
             transition: background 0.2s;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 5px;
         }
         .menu-hamburguesa:hover {
             background: var(--navy-2);
         }
         .menu-hamburguesa span {
             display: block;
-            width: 24px;
-            height: 2.5px;
+            width: 28px;
+            height: 3px;
             background: var(--cream);
             border-radius: 2px;
             transition: 0.2s;
@@ -227,14 +258,14 @@
         }
         .nav-lateral ul li {
             border-bottom: 1px solid #2f4a5a;
-            padding: 0.3rem 0;
+            padding: 0.4rem 0;
         }
         .nav-lateral ul li a {
             display: block;
             color: var(--cream);
             text-decoration: none;
-            font-size: 0.9rem;
-            padding: 0.3rem 0.5rem;
+            font-size: 1.0rem;
+            padding: 0.35rem 0.5rem;
             border-radius: 4px;
             transition: 0.15s;
             font-family: 'Work Sans', sans-serif;
@@ -265,7 +296,7 @@
         /* ========== CONTENIDO PRINCIPAL ========== */
         .contenido {
             position: fixed;
-            top: 70px;
+            top: 15vh;
             left: 0;
             right: 0;
             bottom: 0;
@@ -347,7 +378,7 @@
         /* HEXÁGONO CENTRAL - siempre debajo de las pompas */
         #central-hub {
             transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 000 !important; /* HEXÁGONO CENTRAL - siempre debajo de las pompas */
+            z-index: 000 !important;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -562,6 +593,39 @@
             color: var(--navy);
         }
 
+        /* ===== BOTÓN ARRIBA (estilo galr.html) ===== */
+        .btn-arriba {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 900;
+            background: var(--navy);
+            color: var(--cream);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+            transition: 0.25s ease;
+            opacity: 0.9;
+            text-decoration: none;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .btn-arriba:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 10px 32px rgba(0,0,0,0.5);
+        }
+        .btn-arriba:active {
+            transform: scale(0.92);
+        }
+
         @media (max-width: 700px) {
             .modal .modal-body {
                 grid-template-columns: 1fr;
@@ -586,6 +650,58 @@
             .intro-text p {
                 font-size: 0.55rem;
             }
+            .portada-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.2rem;
+                padding: 0 4vw;
+            }
+            .portada-title {
+                font-size: clamp(0.9rem, 3.5vw, 1.4rem);
+                white-space: normal;
+            }
+            .portada-dates {
+                font-size: 0.6rem;
+            }
+            .menu-hamburguesa {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.4rem 0.6rem;
+            }
+            .menu-hamburguesa span {
+                width: 24px;
+                height: 3px;
+            }
+            .nav-lateral {
+                width: 270px;
+                left: -290px;
+            }
+            .btn-quiz {
+                top: 1rem;
+                right: 1rem;
+                width: 42px;
+                height: 42px;
+                font-size: 1.5rem;
+            }
+            .btn-quiz .material-symbols-outlined {
+                font-size: 1.5rem;
+            }
+            .btn-arriba {
+                bottom: 1.2rem;
+                right: 1.2rem;
+                width: 46px;
+                height: 46px;
+                font-size: 1.4rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .btn-arriba {
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
+                bottom: 1rem;
+                right: 1rem;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -603,7 +719,7 @@
                 <img src="ins/001portadaL.png" alt="República Dominicana 1930-1961" onerror="this.style.display='none'; this.parentElement.querySelector('.ph').style.display='flex';" />
             </picture>
             <div class="ph">
-                <div><b>Falta imagen</b>ins/001portadaL.png o ins/001portadaCv.png</div>
+                <div><b>Falta imagen</b>Coloca aquí ins/001portadaL.png (laptop)<br />o ins/001portadaCv.png (celular, vertical)</div>
             </div>
             <div class="portada-veil"></div>
         </div>
@@ -615,6 +731,11 @@
             </div>
         </div>
     </section>
+
+    <!-- ========== BOTÓN QUIZ (derecha arriba) ========== -->
+    <a href="https://edupunto.com/2014/12/el-trujillismo-usaba-el-terror-contra/" target="_blank" class="btn-quiz" aria-label="Quiz">
+        <span class="material-symbols-outlined">quiz</span>
+    </a>
 
     <!-- ========== MENÚ HAMBURGUESA ========== -->
     <button class="menu-hamburguesa" id="btnHamburguesa" aria-label="Abrir menú">
@@ -670,6 +791,9 @@
             </div>
         </div>
     </div>
+
+    <!-- ========== BOTÓN ARRIBA ========== -->
+    <a href="#" class="btn-arriba" id="btnArriba" aria-label="Ir arriba">↑</a>
 
     <!-- ========== MODAL ========== -->
     <div class="modal-overlay" id="modalOverlay">
@@ -838,7 +962,7 @@
                 const h = rect.height;
                 const center = getHexagonCenter();
                 
-                const radioBase = Math.min(w, h) * 0.35;  // <--- CAMBIADO DE 0.25 a 0.35
+                const radioBase = Math.min(w, h) * 0.35;
                 
                 let activas = bubbles.filter(b => !b.classList.contains('pop'));
                 activas.forEach((bubble, index) => {
@@ -876,7 +1000,7 @@
                     const w = rect.width;
                     const h = rect.height;
                     const center = getHexagonCenter();
-                    const radioBase = Math.min(w, h) * 0.35;  // <--- CAMBIADO DE 0.25 a 0.35
+                    const radioBase = Math.min(w, h) * 0.35;
 
                     let activas = bubbles.filter(b => !b.classList.contains('pop'));
                     
