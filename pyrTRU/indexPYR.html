@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario de Historia Dominicana - Tiranía Trujillista</title>
+    <style>
+        :root {
+            --primary-color: #AE9150;
+            --primary-dark: #8a7340;
+            --secondary-color: #D4A843;
+            --light-gray: #f4f4f4;
+            --medium-gray: #ccc;
+            --dark-gray: #555;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --bg-overlay: rgba(0, 0, 0, 0.65);
+        }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: url('anx/fd0.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+        }
+        .quiz-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            border: 3px solid var(--primary-color);
+        }
+        .quiz-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 4px solid var(--secondary-color);
+        }
+        .quiz-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .quiz-body { padding: 2rem; }
+        #start-screen, #results-screen { text-align: center; }
+        #question-screen, #results-screen, #next-btn { display: none; }
+        #progress-container {
+            margin-bottom: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        #question-text {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            color: #333;
+        }
+        #answer-options { list-style-type: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+        .answer-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            background-color: white;
+            border: 2px solid var(--medium-gray);
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s, transform 0.1s;
+        }
+        .answer-btn:hover:not([disabled]) {
+            background-color: #fdf6e8;
+            border-color: var(--primary-color);
+        }
+        .answer-btn:disabled { cursor: not-allowed; }
+        .answer-btn.correct {
+            background-color: var(--correct-color);
+            border-color: var(--correct-color);
+            color: white;
+            animation: correctPulse 0.6s ease-in-out;
+        }
+        .answer-btn.incorrect {
+            background-color: var(--incorrect-color);
+            border-color: var(--incorrect-color);
+            color: white;
+            animation: incorrectShake 0.5s ease-in-out;
+        }
+        .controls { margin-top: 2rem; text-align: center; }
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .btn:hover {
+            transform: scale(1.03);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        }
+        #results-screen h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+        }
+        #score-text {
+            font-size: 1.5rem;
+            margin: 1.5rem 0;
+            color: var(--primary-dark);
+        }
+        .sound-controls {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            padding: .5rem;
+            /* background-color: #fdf6e8;
+            border-radius: 8px;
+            border: 1px solid var(--secondary-color); */
+        }
+        .sound-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+        .sound-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .credits-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s;
+            z-index: 10;
+        }
+        .credits-btn:hover { background-color: rgba(255, 255, 255, 0.5); }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 25px;
+            border: 3px solid var(--primary-color);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+        }
+        .modal-content h2 {
+            color: var(--primary-color);
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .close-btn:hover, .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .footer-credit {
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .star-icon {
+            display: inline-block;
+            margin-right: 12px;
+            font-size: 1.2rem;
+            animation: spin 2s linear infinite;
+        }
+        .animation-paused .star-icon {
+            animation-play-state: paused;
+        }
+
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes correctPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes incorrectShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        @media (max-width: 600px) {
+            .quiz-header h1 { font-size: 1.3rem; }
+            .quiz-body { padding: 1.2rem; }
+            #question-text { font-size: 1.1rem; }
+            .answer-btn { font-size: 1rem; padding: 0.8rem; }
+            .btn { padding: 0.8rem 1.2rem; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <button id="credits-btn" class="credits-btn">?</button>
+        <div class="quiz-header"><h1>Tiranía Trujillista</h1></div>
+        <div class="quiz-body">
+            <div id="start-screen">
+                <h2 style="color: var(--primary-color);">¡Pon a prueba tus conocimientos!</h2>
+                <p style="font-size: 1.1rem;">Seleccionamos <strong>20 preguntas aleatorias</strong> de nuestro banco.</p>
+                <p>Las preguntas se presentarán al azar en cada intento.</p>
+                <div class="sound-controls">
+                    <label class="sound-toggle">
+                        <input type="checkbox" id="sound-enabled" checked>
+                        🔊 Efectos de sonido activados
+                    </label>
+                </div>
+                <button class="btn" id="start-btn">Comenzar 🚀</button>
+            </div>
+            <div id="question-screen">
+                <div id="progress-container"><span id="question-counter"></span></div>
+                <h2 id="question-text"></h2>
+                <ul id="answer-options"></ul>
+                <div class="controls"><button class="btn" id="next-btn">Siguiente</button></div>
+            </div>
+            <div id="results-screen">
+                <h2>¡Cuestionario completo!</h2>
+                <p id="score-text"></p>
+                <button class="btn" id="restart-btn">Volver a Intentar 🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-credit"><p>EDUPUNTO - ago.2026</p></div>
+
+    <div id="credits-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Créditos</h2>
+            <p>Este cuestionario fue desarrollado por Juan Ernesto De Frías para EDUPUNTO</p>
+            <p>Santo Domingo, República Dominicana, 2026.</p>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // === MOTOR SCORM 1.2 INTEGRADO (INICIO) ===
+        // ==========================================
+        var SCORM = {
+            API: null,
+            isConnected: false,
+
+            findAPI: function(win) {
+                var findAPITries = 0;
+                while ((win.API == null) && (win.parent != null) && (win.parent != win)) {
+                    findAPITries++;
+                    if (findAPITries > 7) {
+                        return null;
+                    }
+                    win = win.parent;
+                }
+                return win.API;
+            },
+
+            init: function() {
+                this.API = this.findAPI(window);
+                if ((this.API == null) && (window.opener != null) && (typeof(window.opener) != "undefined")) {
+                    this.API = this.findAPI(window.opener);
+                }
+
+                if (this.API != null) {
+                    var result = this.API.LMSInitialize("");
+                    if (result == "true") {
+                        this.isConnected = true;
+                        console.log("SCORM: Conectado exitosamente.");
+                        this.set("cmi.core.lesson_status", "incomplete");
+                        this.save();
+                    } else {
+                        console.error("SCORM: Error al inicializar.");
+                    }
+                } else {
+                    console.warn("SCORM: No se encontró la API. Ejecutando en modo local.");
+                }
+            },
+
+            set: function(param, value) {
+                if (this.isConnected) {
+                    this.API.LMSSetValue(param, value);
+                }
+            },
+
+            save: function() {
+                if (this.isConnected) {
+                    this.API.LMSCommit("");
+                }
+            },
+
+            quit: function() {
+                if (this.isConnected) {
+                    this.API.LMSFinish("");
+                    this.isConnected = false;
+                }
+            }
+        };
+
+        window.onload = function() {
+            SCORM.init();
+        };
+
+        window.onunload = function() {
+            SCORM.quit();
+        };
+        // ==========================================
+        // === MOTOR SCORM 1.2 INTEGRADO (FIN) ===
+        // ==========================================
+
+        // --- 1. DATOS DEL CUESTIONARIO (BANCO COMPLETO) ---
+        const fullQuizData = [
+            {
+                question: "¿En qué año se inició la dictadura de Rafael Leónidas Trujillo Molina en la República Dominicana?",
+                answerOptions: [
+                    { text: "1924", isCorrect: false },
+                    { text: "1930", isCorrect: true },
+                    { text: "1937", isCorrect: false },
+                    { text: "1942", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué presidente dominicano fue derrocado en 1930 mediante el golpe de Estado apoyado por Trujillo?",
+                answerOptions: [
+                    { text: "Horacio Vásquez", isCorrect: true },
+                    { text: "Ramón Cáceres", isCorrect: false },
+                    { text: "Juan Bosch", isCorrect: false },
+                    { text: "Carlos Morales Languasco", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál fenómeno natural azotó Santo Domingo en septiembre de 1930 y facilitó las medidas que tomó Trujillo para consolidarse en el poder?",
+                answerOptions: [
+                    { text: "El Huracán Georges", isCorrect: false },
+                    { text: "Huracán San Zenón", isCorrect: true },
+                    { text: "El Huracán David", isCorrect: false },
+                    { text: "El Ciclón Inés", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué institución militar creada durante la ocupación estadounidense (1916-1924) sirvió de base para el ascenso de Trujillo?",
+                answerOptions: [
+                    { text: "La Policía Nacional Dominicana (llamada Guardia Nacional)", isCorrect: true },
+                    { text: "El Ejército de Liberación Nacional", isCorrect: false },
+                    { text: "La Marina de Guerra Imperial", isCorrect: false },
+                    { text: "La Fuerza Aérea Dominicana", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿En qué año se firmó el tratado que devolvió la administración de las aduanas dominicanas, conocido como Tratado Trujillo-Hull?",
+                answerOptions: [
+                    { text: "1930", isCorrect: false },
+                    { text: "1935", isCorrect: false },
+                    { text: "1940", isCorrect: true },
+                    { text: "1947", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué nombre recibió la ciudad de Santo Domingo en 1936?",
+                answerOptions: [
+                    { text: "Ciudad Trujillo", isCorrect: true },
+                    { text: "Villa Trujillo", isCorrect: false },
+                    { text: "Puerto Trujillo", isCorrect: false },
+                    { text: "San Cristóbal de Trujillo", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué político dominicano asumió la vicepresidencia junto a Trujillo en las elecciones de 1930?",
+                answerOptions: [
+                    { text: "Joaquín Balaguer", isCorrect: false },
+                    { text: "Rafael Estrella Ureña", isCorrect: true },
+                    { text: "Manuel de Jesús Troncoso", isCorrect: false },
+                    { text: "Jacinto Peynado", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál lema figuraba para alabar la tiranía en las placas de los automóviles y en letreros públicos durante el régimen trujillista?",
+                answerOptions: [
+                    { text: "Dios, Patria y Libertad", isCorrect: false },
+                    { text: "En esta casa Trujillo es el Jefe", isCorrect: false },
+                    { text: "Dios y Trujillo", isCorrect: true },
+                    { text: "Paz y Trabajo", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cómo se denominó la sangrienta matanza de miles de haitianos ordenada por Trujillo en la frontera en octubre de 1937?",
+                answerOptions: [
+                    { text: "La Matanza de Palma Sola", isCorrect: false },
+                    { text: "La Masacre del Perejil", isCorrect: true },
+                    { text: "La Noche Triste", isCorrect: false },
+                    { text: "El Bombardeo Fronterizo", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué palabra se utilizaba durante la masacre de 1937 para distinguir a las víctimas por su pronunciación?",
+                answerOptions: [
+                    { text: "Cacao", isCorrect: false },
+                    { text: "Perejil", isCorrect: true },
+                    { text: "Arroz", isCorrect: false },
+                    { text: "Azúcar", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál fue el principal servicio de inteligencia y aparato de terror del régimen a partir de 1957?",
+                answerOptions: [
+                    { text: "Servicio de Inteligencia Militar (SIM)", isCorrect: true },
+                    { text: "Agencia Central de Inteligencia (CIA)", isCorrect: false },
+                    { text: "Dirección General de Seguridad (DGS)", isCorrect: false },
+                    { text: "Cuerpo Especializado de Seguridad (CES)", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Quién estuvo al frente del nefasto Servicio de Inteligencia Militar (SIM) en 1960 bajo el mando directo de Trujillo?",
+                answerOptions: [
+                    { text: "Johnny Abbes García", isCorrect: true },
+                    { text: "Cándido Torres", isCorrect: false },
+                    { text: "Arturo Espaillat", isCorrect: false },
+                    { text: "Félix Bernardino", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál era la principal cárcel de tortura e interrogatorio político del régimen trujillista?",
+                answerOptions: [
+                    { text: "La Victoria", isCorrect: false },
+                    { text: "La Cárcel del '9'", isCorrect: false },
+                    { text: "La Cárcel de 'La 40'", isCorrect: true },
+                    { text: "El Castillo de San Felipe", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué único partido político legal existió formalmente durante casi toda la dictadura trujillista?",
+                answerOptions: [
+                    { text: "Partido Revolucionario Dominicano (PRD)", isCorrect: false },
+                    { text: "Partido Reformista (PR)", isCorrect: false },
+                    { text: "Partido Dominicano (PD)", isCorrect: true },
+                    { text: "Partido Liberal (PL)", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué título militar se otorgó Trujillo a sí mismo en 1933 para asegurar la jefatura?",
+                answerOptions: [
+                    { text: "Capitán General", isCorrect: false },
+                    { text: "Generalísimo", isCorrect: true },
+                    { text: "Comandante Supremo", isCorrect: false },
+                    { text: "Mariscal de Campo", isCorrect: false }
+                ]
+            },
+            {
+                question: "En 1946 se produjo una huelga de obreros cañeros en los ingenios azucareros de La Romana y San Pedro de Macorís ¿quién fue su líder sindical que tambien fue asesinado posteriormente por la dictadura?",
+                answerOptions: [
+                    { text: "Mauricio Báez", isCorrect: true },
+                    { text: "Manolo Tavárez Justo", isCorrect: false },
+                    { text: "Pedro Mir", isCorrect: false },
+                    { text: "Jesús de Galíndez", isCorrect: false }
+                ]
+            },
+            {
+                question: "En 1941 el Estado Dominicano compró el National City Bank of New York, que operaba en el país desde 1907 ¿qué institución bancaria oficial fue fundada utilizando esos bienes y recursos?",
+                answerOptions: [
+                    { text: "Banco Central de la República Dominicana", isCorrect: false },
+                    { text: "Banco de Reservas de la República Dominicana", isCorrect: true },
+                    { text: "Banco Agrícola", isCorrect: false },
+                    { text: "Banco de Crédito e Inversiones", isCorrect: false }
+                ]
+            },
+            {
+                question: "Después de la 2GM Rep. Dominicana pagó su deuda externa siendo proclamada como una gran hazaña del régimen, sin embargo; Haití también pagó su deuda poco tiempo despues, ¿En qué año saldó RD su deuda?",
+                answerOptions: [
+                    { text: "1937", isCorrect: false },
+                    { text: "1947", isCorrect: true },
+                    { text: "1955", isCorrect: false },
+                    { text: "1960", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué industria principal llegó a monopolizar casi en su totalidad la familia Trujillo?",
+                answerOptions: [
+                    { text: "La industria azucarera", isCorrect: true },
+                    { text: "La minería de oro", isCorrect: false },
+                    { text: "La producción de café y cacao exclusivamente", isCorrect: false },
+                    { text: "La industria textil fina", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué tipo de monopolio ejercía la familia Trujillo sobre la carne, la sal, el tabaco y el cemento?",
+                answerOptions: [
+                    { text: "Monopolio estatal descentralizado", isCorrect: false },
+                    { text: "Monopolio privado personal y familiar", isCorrect: true },
+                    { text: "Cooperativa nacional", isCorrect: false },
+                    { text: "Comercio libre sin aranceles", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cómo afectó el régimen el desarrollo de las obras públicas y carreteras en el país?",
+                answerOptions: [
+                    { text: "Las paralizó por completo", isCorrect: false },
+                    { text: "Las impulsó para interconectar el país, facilitar el control militar y económico", isCorrect: true },
+                    { text: "Solo construyó puentes en la capital", isCorrect: false },
+                    { text: "Dependió exclusivamente de capital extranjero no estatal", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué gran evento internacional organizó Trujillo en 1955 para celebrar los 25 años de su régimen?",
+                answerOptions: [
+                    { text: "La Feria de la Paz y Confraternidad del Mundo Libre", isCorrect: true },
+                    { text: "Exposición Universal de Santo Domingo", isCorrect: false },
+                    { text: "Juegos Panamericanos de 1955", isCorrect: false },
+                    { text: "Conferencia de Cancilleres Americanos", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué zona de la capital fue construida especialmente para albergar la Feria de la Paz en 1955?",
+                answerOptions: [
+                    { text: "La Ciudad Colonial", isCorrect: false },
+                    { text: "Un nuevo conjunto de edificios en la zona oeste de la ciudad", isCorrect: true },
+                    { text: "Ciudad Nueva", isCorrect: false },
+                    { text: "Gazcue", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué acuerdo internacional fue firmado en 1935 y buscó fijar definitivamente los límites fronterizos entre RD y Haití?",
+                answerOptions: [
+                    { text: "Protocolo de Revisión del Tratado de Fronteras (Trujillo-Stenio Vincent)", isCorrect: true },
+                    { text: "Pacto de la Habana", isCorrect: false },
+                    { text: "Tratado de Paz de San Juan", isCorrect: false },
+                    { text: "Acuerdo de Puerto Príncipe", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿A qué grupo de refugiados europeos dio asilo Trujillo a finales de la década de 1930, instalándolos en Sosúa?",
+                answerOptions: [
+                    { text: "Refugiados republicanos españoles y judíos que huían del nazismo", isCorrect: true },
+                    { text: "Inmigrantes italianos de la Segunda Guerra Mundial", isCorrect: false },
+                    { text: "Refugiados rusos blancos", isCorrect: false },
+                    { text: "Refugiados polacos católicos", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿En qué Conferencia Internacional de 1938 se ofreció Trujillo a recibir hasta 100 mil refugiados judíos?",
+                answerOptions: [
+                    { text: "Conferencia de Ginebra en Suiza", isCorrect: false },
+                    { text: "Conferencia de Evian en Francia", isCorrect: true },
+                    { text: "Conferencia de Yalta en Crimea URSS", isCorrect: false },
+                    { text: "Conferencia de Bretton Woods en EUA", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué acuerdo firmaron Trujillo y el Papa Pío XII en el Vaticano en 1954?",
+                answerOptions: [
+                    { text: "El Concordato entre la República Dominicana y la Santa Sede", isCorrect: true },
+                    { text: "El Tratado de San Pedro", isCorrect: false },
+                    { text: "La Bula Papal de Santo Domingo", isCorrect: false },
+                    { text: "El Pacto Católico Anticomunista", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué presidente venezolano sufrió un intento de asesinato con bomba ordenado por Trujillo en Caracas en junio de 1960?",
+                answerOptions: [
+                    { text: "Rómulo Betancourt", isCorrect: true },
+                    { text: "Marcos Pérez Jiménez", isCorrect: false },
+                    { text: "Rómulo Gallegos", isCorrect: false },
+                    { text: "Carlos Delgado Chalbaud", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué organización internacional aplicó duras sanciones económicas y diplomáticas a Trujillo en 1960 por el intento de asesinato al presidente venezolano Betancourt?",
+                answerOptions: [
+                    { text: "Organización de los Estados Americanos (OEA)", isCorrect: true },
+                    { text: "Organización de las Naciones Unidas (ONU)", isCorrect: false },
+                    { text: "Comercio del Caribe (CARICOM)", isCorrect: false },
+                    { text: "Unión Panamericana de San José", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué ideología internacional utilizó Trujillo como justificación de su régimen para mantener el apoyo de EUA en la Guerra Fría?",
+                answerOptions: [
+                    { text: "El Anticomunismo férreo", isCorrect: true },
+                    { text: "El Panamericanismo democrático", isCorrect: false },
+                    { text: "El Socialismo de Estado", isCorrect: false },
+                    { text: "El Anarquismo conservador", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál opositor e historiador español en el exilio fue secuestrado en Nueva York en 1956 y asesinado en RD por orden de Trujillo?",
+                answerOptions: [
+                    { text: "Jesús de Galíndez", isCorrect: true },
+                    { text: "José Almoina", isCorrect: false },
+                    { text: "German Ornes", isCorrect: false },
+                    { text: "Alberto Bayo", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál fue la frustrada expedición militar gestada en Cuba que intentó derrocar a Trujillo en 1947?",
+                answerOptions: [
+                    { text: "Expedición de Cayo Confites", isCorrect: true },
+                    { text: "Expedición de Luperón", isCorrect: false },
+                    { text: "Expedición de Constanza, Maimón y Estero Hondo", isCorrect: false },
+                    { text: "Desembarco de la Bahía de Cochinos", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál fue la expedición armada que acuátizó en la bahía de Luperón, Puerto Plata, en junio de 1949?",
+                answerOptions: [
+                    { text: "Expedición de Luperón", isCorrect: true },
+                    { text: "Expedición de Cayo Confites", isCorrect: false },
+                    { text: "Gesta del 14 de Junio", isCorrect: false },
+                    { text: "Operación Galíndez", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál era el objetivo de los expedicionarios que llegaron por Constanza, Maimón y Estero Hondo?",
+                answerOptions: [
+                    { text: "Derrocar la Dictadura Trujillista", isCorrect: true },
+                    { text: "Apoyar a Trujillo", isCorrect: false },
+                    { text: "Realizar ejercicios militares", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál movimiento clandestino se formó en enero de 1960 inspirado en la Expedición de 1959?",
+                answerOptions: [
+                    { text: "Movimiento Clandestino 14 de Junio (1j4)", isCorrect: true },
+                    { text: "Movimiento Popular Dominicano (MPD)", isCorrect: false },
+                    { text: "Unión Cívica Nacional (UCN)", isCorrect: false },
+                    { text: "Juventud Democrática", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Quiénes fueron los máximos líderes del Movimiento Clandestino 14 de Junio (1j4)?",
+                answerOptions: [
+                    { text: "Manuel Aurelio (Manolo) Tavárez Justo y Minerva Mirabal", isCorrect: true },
+                    { text: "Enrique Jiménez Moya y Poncio Pou Saleta", isCorrect: false },
+                    { text: "Virgilio Díaz Grullón", isCorrect: false },
+                    { text: "Juan Tomás Díaz y Antonio de la Maza", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué líder militar comandó el desembarco aéreo por Constanza en el avión C-46 en junio de 1959?",
+                answerOptions: [
+                    { text: "Enrique Jiménez Moya", isCorrect: true },
+                    { text: "Delio Gómez Ochoa", isCorrect: false },
+                    { text: "José Horacio Rodríguez", isCorrect: false },
+                    { text: "Mayobanex Vargas", isCorrect: false }
+                ]
+            },
+            {
+                question: "En vista de que era peligroso operar u oponerse a Trujillo en territorio nacional ¿Cuál organización fundaron los exiliados dominicanos en La Habana en 1939 para luchar contra la dictadura?",
+                answerOptions: [
+                    { text: "Partido Revolucionario Dominicano (PRD)", isCorrect: true },
+                    { text: "Frente Unido Pro-Liberación Dominicana", isCorrect: false },
+                    { text: "Comité de Exilados de Nueva York", isCorrect: false },
+                    { text: "Liga Antitrujillista Antillana", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuáles eran los nombres de las tres hermanas Mirabal asesinadas por el régimen trujillista en 1960?",
+                answerOptions: [
+                    { text: "Patria, Minerva y María Teresa", isCorrect: true },
+                    { text: "Patria, Dedé y Minerva", isCorrect: false },
+                    { text: "María, Isabel y Minerva", isCorrect: false },
+                    { text: "Josefina, Patria y Teresa", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿En qué fecha fueron emboscadas y asesinadas las hermanas Mirabal?",
+                answerOptions: [
+                    { text: "25 de noviembre de 1960", isCorrect: true },
+                    { text: "30 de mayo de 1961", isCorrect: false },
+                    { text: "14 de junio de 1959", isCorrect: false },
+                    { text: "27 de febrero de 1960", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál de los siguientes documentos fue leído en todas las Iglesias Católicas del país y marcó el rompimiento definitivo entre la Iglesia y Trujillo?",
+                answerOptions: [
+                    { text: "La Carta Pastoral del 25 de enero de 1960", isCorrect: true },
+                    { text: "La Encíclica Rerum Novarum", isCorrect: false },
+                    { text: "El Manifiesto de los Obispos de Santiago", isCorrect: false },
+                    { text: "La Bula de Excomunión", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Quién era el obispo de la Vega y que destacó por su firme defensa de los derechos humanos frente al tirano en 1960?",
+                answerOptions: [
+                    { text: "Monseñor Francisco Panal Ramírez", isCorrect: true },
+                    { text: "Monseñor Octavio Antonio Beras", isCorrect: false },
+                    { text: "Monseñor Ricardo Pittini", isCorrect: false },
+                    { text: "Monseñor Hugo Polanco Brito", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué obispo extranjero de San Juan de la Maguana y que también firmó la célebre Pastoral de 1960 criticando los arrestos del régimen?",
+                answerOptions: [
+                    { text: "Monseñor Tomás F. Reilly", isCorrect: true },
+                    { text: "Monseñor Antonio Flores", isCorrect: false },
+                    { text: "Monseñor Juan Félix Pepén", isCorrect: false },
+                    { text: "Monseñor Roque Adames", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál de las cuatro (4) hermanas Mirabal sobrevivió al ataque por no viajar ese día y se dedicó a criar a los hijos de sus hermanas y preservar su memoria?",
+                answerOptions: [
+                    { text: "Bélgica Adela (Dedé) Mirabal", isCorrect: true },
+                    { text: "Minerva Mirabal", isCorrect: false },
+                    { text: "Patria Mirabal", isCorrect: false },
+                    { text: "María Teresa Mirabal", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué provincia dominicana fue rebautizada con el nombre de 'Hermanas Mirabal' en su honor?",
+                answerOptions: [
+                    { text: "Provincia Salcedo", isCorrect: true },
+                    { text: "Provincia Espaillat", isCorrect: false },
+                    { text: "Provincia Duarte", isCorrect: false },
+                    { text: "Provincia Sánchez Ramírez", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué ritmo musical folclórico fue elevado y promovido por el régimen trujillista en los salones de alta sociedad?",
+                answerOptions: [
+                    { text: "El Merengue", isCorrect: true },
+                    { text: "La Bachata", isCorrect: false },
+                    { text: "El Son", isCorrect: false },
+                    { text: "El Mambo", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál de los siguientes lemas se autoatribuyó Trujillo y fue promocionado por sus colaboradores?",
+                answerOptions: [
+                    { text: "El Benefactor de la Patria y Padre de la Patria Nueva", isCorrect: true },
+                    { text: "El Protector de las Américas", isCorrect: false },
+                    { text: "El Gran Libertador", isCorrect: false },
+                    { text: "El Supremo Restaurador", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cómo se llamaba el periódico oficialista de mayor circulación que apoyaba incondicionalmente a la dictadura en sus primeros 15 años?",
+                answerOptions: [
+                    { text: "El Caribe", isCorrect: false },
+                    { text: "Listín Diario", isCorrect: false },
+                    { text: "La Nación", isCorrect: true },
+                    { text: "El Mundo", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cual montaña más alta de las Antillas fue renombrada durante la dictadura para alabar a Trujillo?",
+                answerOptions: [
+                    { text: "Pico Duarte por Pico Trujillo", isCorrect: true },
+                    { text: "Pico Benefactor por Pico Duarte", isCorrect: false },
+                    { text: "Pico San Cristóbal", isCorrect: false },
+                    { text: "Pico El Generalísimo por Pico Duarte", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué libro de alabanza servía como texto de enseñanza patriótica en las escuelas primarias?",
+                answerOptions: [
+                    { text: "La Cartilla Trujillista", isCorrect: true },
+                    { text: "El Silabario de la Libertad", isCorrect: false },
+                    { text: "Cantar Antillano", isCorrect: false },
+                    { text: "Manual de Moral Cívica", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué miembro de la familia Trujillo ostentaba el rango de Coronel a la temprana edad de cuatro (4) años?",
+                answerOptions: [
+                    { text: "Rafael Leónidas Trujillo Martínez (Ramfis)", isCorrect: true },
+                    { text: "Rhadamés Trujillo", isCorrect: false },
+                    { text: "Héctor Bienvenido Trujillo", isCorrect: false },
+                    { text: "Petán Trujillo", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué miembro de la familia Trujillo ostentaba el rango de General de Brigada a la temprana edad de nueve (9) años?",
+                answerOptions: [
+                    { text: "Rafael Leónidas Trujillo Martínez (Ramfis)", isCorrect: true },
+                    { text: "Rhadamés Trujillo", isCorrect: false },
+                    { text: "Héctor Bienvenido Trujillo", isCorrect: false },
+                    { text: "Petán Trujillo", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál hermano de Trujillo ejerció como presidente títere o nominal de la República entre 1952 y 1960?",
+                answerOptions: [
+                    { text: "Héctor Bienvenido Trujillo ('Negro')", isCorrect: true },
+                    { text: "José Arismendy Trujillo ('Petán')", isCorrect: false },
+                    { text: "Virgilio Trujillo", isCorrect: false },
+                    { text: "Aníbal Trujillo", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué emisora radial creada por Petán Trujillo en Bonao fue pionera en la televisión dominicana luego de su transformación?",
+                answerOptions: [
+                    { text: "La Voz del Yuna (luego La Voz Dominicana)", isCorrect: true },
+                    { text: "Radio Santo Domingo Radiofonía", isCorrect: false },
+                    { text: "Emisora Central", isCorrect: false },
+                    { text: "Radio Caribe", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿En qué fecha cayó sin vida Rafael Leónidas Trujillo Molina?",
+                answerOptions: [
+                    { text: "30 de mayo de 1961", isCorrect: true },
+                    { text: "25 de noviembre de 1960", isCorrect: false },
+                    { text: "14 de junio de 1959", isCorrect: false },
+                    { text: "27 de febrero de 1962", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿En qué lugar exacto fue emboscado el vehículo en el que viajaba Trujillo la noche de su ajusticiamiento?",
+                answerOptions: [
+                    { text: "Carretera a San Cristóbal (hoy Autopista 30 de Mayo)", isCorrect: true },
+                    { text: "Avenida George Washington", isCorrect: false },
+                    { text: "Carretera Mella", isCorrect: false },
+                    { text: "Avenida Máximo Gómez", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Quién fue el chofer de Trujillo que sobrevivió al tiroteo del 30 de mayo de 1961?",
+                answerOptions: [
+                    { text: "Zacarías de la Cruz", isCorrect: true },
+                    { text: "Rufino de la Cruz", isCorrect: false },
+                    { text: "Amado García Guerrero", isCorrect: false },
+                    { text: "Antonio Imbert Barrera", isCorrect: false }
+                ]
+            },
+            {
+                question: "La noche en que cayó Trujillo un Ayudante Militar, confirmó que Trujillo saldría sin escolta, lo que permitió concretar el ataque en la carretera a San Cristóbal. ¿Quién fue ese héroe que también participó directamente en la emboscada?",
+                answerOptions: [
+                    { text: "Teniente Amado García Guerrero", isCorrect: true },
+                    { text: "General José René Román (Pupo)", isCorrect: false },
+                    { text: "Luis Amiama Tió", isCorrect: false },
+                    { text: "Antonio de la Maza", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuáles fueron los dos únicos sobrevivientes del grupo de complotados que ajusticiaron a Trujillo?",
+                answerOptions: [
+                    { text: "Antonio Imbert Barrera y Luis Amiama Tió", isCorrect: true },
+                    { text: "Antonio de la Maza y Salvador Estrella Sadhalá", isCorrect: false },
+                    { text: "Huáscar Tejeda y Roberto Pastoriza", isCorrect: false },
+                    { text: "Pedro Livio Cedeño y Modesto Díaz", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál de  los complotados de la noche del 30 de mayo juró vengar la muerte de su hermano Octavio de la Maza (Tavito), asesinado previamente por la dictadura?",
+                answerOptions: [
+                    { text: "Antonio de la Maza", isCorrect: true },
+                    { text: "Salvador Estrella Sadhalá", isCorrect: false },
+                    { text: "Juan Tomás Díaz", isCorrect: false },
+                    { text: "Pedro Livio Cedeño", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál hecho cometió Ramfis Trujillo antes de huir del país en noviembre de 1961?",
+                answerOptions: [
+                    { text: "El asesinato de los complotados que mataron al dictador y tirano", isCorrect: true },
+                    { text: "El crimen de La 40", isCorrect: false },
+                    { text: "La matanza del km 9", isCorrect: false },
+                    { text: "La ejecución de Nigua", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Quién fue el presidente de la República que quedó a cargo del gobierno tras la muerte de Trujillo?",
+                answerOptions: [
+                    { text: "Joaquín Balaguer", isCorrect: true },
+                    { text: "Juan Bosch", isCorrect: false },
+                    { text: "Rafael Bonnelly", isCorrect: false },
+                    { text: "Héctor García Godoy", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿En qué mes y año abandonó definitivamente la familia Trujillo el país, poniendo fin a la presencia de la dinastía?",
+                answerOptions: [
+                    { text: "Noviembre de 1961", isCorrect: true },
+                    { text: "Mayo de 1961", isCorrect: false },
+                    { text: "Diciembre de 1962", isCorrect: false },
+                    { text: "Enero de 1960", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cómo se llamó el gobierno provisional en inicios de 1962 que convocó las primeras elecciones libres desde 1930?",
+                answerOptions: [
+                    { text: "El 2do. Consejo de Estado", isCorrect: true },
+                    { text: "La Junta Militar de Gobierno", isCorrect: false },
+                    { text: "El Triunvirato", isCorrect: false },
+                    { text: "El Congreso Constituyente", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿En cuál río de la frontera en 1937 murieron miles de trabajadores agrícolas haitianos?",
+                answerOptions: [
+                    { text: "Río Masacre o Dajabón", isCorrect: true },
+                    { text: "Río Artibonito", isCorrect: false },
+                    { text: "Río Yaque del Norte", isCorrect: false },
+                    { text: "Río Ozama", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué hermano de Trujillo, dominaba con puño de hierro la región de Bonao y dirigía la Voz Dominicana?",
+                answerOptions: [
+                    { text: "José Arismendy Trujillo (Petán)", isCorrect: true },
+                    { text: "Héctor Bienvenido Trujillo", isCorrect: false },
+                    { text: "Virgilio Trujillo", isCorrect: false },
+                    { text: "Pedro Trujillo", isCorrect: false }
+                ]
+            },
+            {
+                question: "Un destacado historiador y diplomático exiliado español escribió en EUA 'La era de Trujillo' criticando al régimen ¿quién fue?",
+                answerOptions: [
+                    { text: "Jesús de Galíndez", isCorrect: true },
+                    { text: "José Almoina", isCorrect: false },
+                    { text: "Javier Malagón", isCorrect: false },
+                    { text: "Constancio Bernaldo de Quirós", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Estaban obligados todos los empleados públicos dominicanos a aportar una parte del sueldo mensual al Partido Dominicano?",
+                answerOptions: [
+                    { text: "SI, era el 10% del sueldo", isCorrect: true },
+                    { text: "NO, era un aporte voluntario", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué destacado militar fue Secretario de las Fuerzas Armadas durante el ajusticiamiento y estuvo involucrado ambiguamente en el complot?",
+                answerOptions: [
+                    { text: "General José René Román Fernández (Pupo)", isCorrect: true },
+                    { text: "General Arturo Espaillat", isCorrect: false },
+                    { text: "General Santos Melido Marte", isCorrect: false },
+                    { text: "General Félix Hermida", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿En cuál edificio de la zona colonial se alojó el temido tribunal y sede militar durante la tiranía?",
+                answerOptions: [
+                    { text: "Fortaleza Ozama", isCorrect: true },
+                    { text: "Alcázar de Colón", isCorrect: false },
+                    { text: "Baluarte del Conde", isCorrect: false },
+                    { text: "Fuerte San José", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Dónde se encuentran en 2026 los restos de Rafael Leónidas Trujillo Molina tras ser sacados de la República Dominicana en 1961?",
+                answerOptions: [
+                    { text: "Primero en París y luego en Madrid", isCorrect: true },
+                    { text: "Catedral Primada de América en Santo Domingo", isCorrect: false },
+                    { text: "Panteón de la Patria de Madrid", isCorrect: false },
+                    { text: "Primero en Madrid y luego en París", isCorrect: false }
+                ]
+            },
+
+            {
+                question: "¿Cómo logró el régimen consolidar su control absoluto sobre la población en los primeros años de la tiranía?",
+                answerOptions: [
+                    { text: "Promoviendo el libre debate ideológico en las universidades.", isCorrect: false },
+                    { text: "Neutralizando de manera progresiva a toda la oposición interna y articulando el Estado alrededor de la figura del dictador.", isCorrect: true },
+                    { text: "Descentralizando las decisiones políticas hacia los gobiernos locales.", isCorrect: false },
+                    { text: "Permitiendo la creación de múltiples partidos con representación en el Congreso.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿De qué manera la política fronteriza derivó en violencia estatal durante la primera etapa de la tiranía?",
+                answerOptions: [
+                    { text: "Ante la falta de acuerdos formales, se recurrió al terror de Estado como mecanismo para imponer control territorial. La 'Macacre del Perejil'", isCorrect: true },
+                    { text: "Se privatizaron las tierras de la frontera para entregarlas a empresas extranjeras.", isCorrect: false },
+                    { text: "Se armó a la población civil fronteriza para que gestionara el comercio informal.", isCorrect: false },
+                    { text: "Se cerraron indefinidamente los puertos marítimos del norte.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál fue el propósito central de la creación del Banco Central y de la moneda nacional durante la etapa de consolidación financiera?",
+                answerOptions: [
+                    { text: "Financiar a los grupos de oposición en el exilio.", isCorrect: false },
+                    { text: "Eliminar los monopolios comerciales existentes.", isCorrect: false },
+                    { text: "Estructurar un sistema bancario nacional que fortaleciera el monopolio económico y financiero de la familia Trujillo.", isCorrect: true },
+                    { text: "Fomentar la inversión de capitales extranjeros sin regulación estatal.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué estrategia económica utilizó el régimen para apoderarse de sectores clave como el tabaco y el cemento?",
+                answerOptions: [
+                    { text: "La libre competencia en el mercado abierto.", isCorrect: false },
+                    { text: "La expropiación por consulta popular.", isCorrect: false },
+                    { text: "El uso del poder estatal y la presión mediante chantajes para forzar la venta de empresas privadas.", isCorrect: true },
+                    { text: "El otorgamiento de subsidios ilimitados a pequeños empresarios.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cómo se financiaba el Partido Dominicano durante la dictadura?",
+                answerOptions: [
+                    { text: "Mediante donaciones voluntarias de organismos internacionales.", isCorrect: false },
+                    { text: "A través del descuento obligatorio del 10% del salario de los empleados públicos.", isCorrect: true },
+                    { text: "Por medio de impuestos cobrados únicamente a las empresas transnacionales.", isCorrect: false },
+                    { text: "Con la venta de bienes confiscados en el extranjero.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Por qué el crecimiento de las empresas pertenecientes al dictador perjudicaba la economía nacional?",
+                answerOptions: [
+                    { text: "Porque las ganancias se distribuían equitativamente entre los trabajadores.", isCorrect: false },
+                    { text: "Porque el país progresaba como una empresa privada personal y no como una nación con diversidad productiva.", isCorrect: true },
+                    { text: "Porque obligaba a importar todos los bienes de consumo básico.", isCorrect: false },
+                    { text: "Porque impedía el cobro de cualquier tipo de impuesto en el país.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál fue el objetivo principal de implantar el Servicio Militar Obligatorio a finales de la década de 1940?",
+                answerOptions: [
+                    { text: "Preparar a la población para expediciones de conquista militar en Sudamérica.", isCorrect: false },
+                    { text: "Disuadir y contrarrestar los intentos de invasión de los grupos rebeldes en el exilio.", isCorrect: true },
+                    { text: "Reducir el gasto público destinado al equipamiento bélico.", isCorrect: false },
+                    { text: "Fomentar el empleo profesional en el sector privado.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué papel desempeñaba la armería de San Cristóbal dentro de la estrategia bélica del régimen?",
+                answerOptions: [
+                    { text: "Vender armas de fuego a países aliados de la región.", isCorrect: false },
+                    { text: "Garantizar el autosuficiente abastecimiento de armamento y pertrechos para las fuerzas represivas del Estado.", isCorrect: true },
+                    { text: "Proveer de herramientas a la industria minera nacional.", isCorrect: false },
+                    { text: "Ensamblar vehículos agrícolas para la exportación.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué trasfondo económico y social tuvo la organización de grandes eventos internacionales y ferias durante el régimen?",
+                answerOptions: [
+                    { text: "Proyectar una imagen de prosperidad y consolidación mientras se dilapidaban recursos que debilitaron la economía.", isCorrect: true },
+                    { text: "Distribuir la riqueza acumulada entre las clases trabajadoras.", isCorrect: false },
+                    { text: "Atraer financiamiento de la OEA para obras de infraestructura social.", isCorrect: false },
+                    { text: "Promover la diversidad cultural y el pensamiento crítico en la sociedad.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿De qué manera las acciones violentas en el exterior de la dictadura terminaron afectando su propia estabilidad en 1960?",
+                answerOptions: [
+                    { text: "Provocó el aislamiento diplomático y la imposición de sanciones económicas internacionales.", isCorrect: true },
+                    { text: "Ocasionó la renuncia inmediata del mando militar represivo.", isCorrect: false },
+                    { text: "Forzó la integración inmediata del país a acuerdos de libre comercio.", isCorrect: false },
+                    { text: "Derivó en la pérdida de la soberanía sobre los puertos nacionales.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál fue el fallo o error táctico de los complotados de la noche del 30.mayo.1961 para lograr un cambio de régimen inmediato?",
+                answerOptions: [
+                    { text: "No contar con el armamento adecuado para el enfrentamiento.", isCorrect: false },
+                    { text: "Carecer de un plan estructurado para derrocar las estructuras de la dictadura tras eliminar al líder.", isCorrect: true },
+                    { text: "Intentar huir inmediatamente del país sin confirmar el suceso.", isCorrect: false },
+                    { text: "Confiar la toma del poder a organismos internacionales.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Por qué los familiares de Trujillo no pudieron sostener el poder tras la muerte del dictador?",
+                answerOptions: [
+                    { text: "Por la falta de respaldo de los aparatos de seguridad e inteligencia.", isCorrect: false },
+                    { text: "Debido a la incapacidad de controlar a una población movilizada, más abierta y dispuesta a la rebeldía.", isCorrect: true },
+                    { text: "Por haber agotado las reservas de armamento en el extranjero.", isCorrect: false },
+                    { text: "Debido a una orden judicial emitida por tribunales internacionales.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué función cumplían las agrupaciones paramilitares o bandas civiles al servicio del régimen?",
+                answerOptions: [
+                    { text: "Reemplazar a la diplomacia en las embajadas internacionales.", isCorrect: false },
+                    { text: "Amedrentar, golpear opositores y disolver manifestaciones para sembrar el terror en la población.", isCorrect: true },
+                    { text: "Recaudar los impuestos en las zonas agrícolas apartadas.", isCorrect: false },
+                    { text: "Organizar los censos de población y vivienda.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cómo afectó la creación del SIM a las demás instituciones gubernamentales y militares?",
+                answerOptions: [
+                    { text: "Les otorgó autonomía absoluta para tomar decisiones tácticas.", isCorrect: false },
+                    { text: "Generó un ambiente de vigilancia interna masiva donde incluso funcionarios y militares temían ser espiados.", isCorrect: true },
+                    { text: "Eliminó la necesidad de mantener patrullajes en las calles.", isCorrect: false },
+                    { text: "Desmanteló el sistema de prisiones estatales.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué mecanismo utilizó el Estado para neutralizar y controlar al movimiento obrero?",
+                answerOptions: [
+                    { text: "La prohibición total de cualquier tipo de trabajo asalariado.", isCorrect: false },
+                    { text: "La creación de centrales sindicales oficiales que servían como fachada de propaganda y desmovilizaban protestas.", isCorrect: true },
+                    { text: "La entrega de las fábricas a administraciones internacionales.", isCorrect: false },
+                    { text: "El otorgamiento de pensiones garantizadas a todos los líderes sindicales.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál era el objetivo educativo de incorporar textos de adoctrinamiento en las escuelas públicas?",
+                answerOptions: [
+                    { text: "Desarrollar el pensamiento crítico en los estudiantes secundarios.", isCorrect: false },
+                    { text: "Moldear la conciencia cívica de la población para glorificar la imagen del régimen y sus líderes.", isCorrect: true },
+                    { text: "Promover el aprendizaje de lenguas extranjeras.", isCorrect: false },
+                    { text: "Fomentar el estudio de las ciencias puras sobre la historia social.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cómo manipuló a su favor el régimen la historia oficial dominicana?",
+                answerOptions: [
+                    { text: "Presentando el pasado nacional como una época caótica y la era del régimen como un período de paz y progreso.", isCorrect: true },
+                    { text: "Negando la existencia de los héroes de la independencia nacional.", isCorrect: false },
+                    { text: "Prohibiendo la enseñanza de la historia en los niveles universitarios.", isCorrect: false },
+                    { text: "Eliminando el uso del idioma español en los documentos públicos.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Por qué la Expedición de Luperón en 1949 procedente desde el exterior fracasó al tocar tierra?",
+                answerOptions: [
+                    { text: "Por la falta de armamento pesado en la embarcación.", isCorrect: false },
+                    { text: "Por la rápida respuesta de las fuerzas gubernamentales y la falta de refuerzos planeados que nunca llegaron.", isCorrect: true },
+                    { text: "Porque la población local se unió de inmediato al ejército represivo.", isCorrect: false },
+                    { text: "Debido a una epidemia que afectó a la tripulación en alta mar.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál fue la trascendencia histórica de la Expedición Aérea y Marítima de Constanza, Maimón y Estero Hondo en 1959, a pesar de su derrota militar?",
+                answerOptions: [
+                    { text: "Logró la rendición inmediata del alto mando militar.", isCorrect: false },
+                    { text: "Sembró la semilla de la conciencia política clandestina y dio origen a nuevos movimientos internos de resistencia.", isCorrect: true },
+                    { text: "Obligó al dictador a convocar elecciones libres ese mismo año.", isCorrect: false },
+                    { text: "Provocó la intervención directa de tropas extranjeras en el territorio nacional.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cómo reaccionaron las fuerzas de seguridad del régimen al capturar a los expedicionarios sobrevivientes de las diferentes invasiones armadas?",
+                answerOptions: [
+                    { text: "Los integraron de inmediato como diplomáticos en el exterior.", isCorrect: false },
+                    { text: "Los sometieron a intensas torturas y ejecuciones extrajudiciales.", isCorrect: true },
+                    { text: "Los juzgaron bajo el código civil y los liberaron bajo fianza.", isCorrect: false },
+                    { text: "Les otorgaron asilo político en bases militares neutrales.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué error táctico facilitó la desarticulación del principal movimiento político clandestino juvenil surgido a inicios de 1960?",
+                answerOptions: [
+                    { text: "Realizar protestas armadas sin entrenamiento previo.", isCorrect: false },
+                    { text: "La infiltración involuntaria de un informante al servicio de los organismos de inteligencia del régimen.", isCorrect: true },
+                    { text: "Publicar sus nombres en la prensa escrita internacional.", isCorrect: false },
+                    { text: "Operar únicamente desde el exilio sin apoyo interno.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Por qué la persecución contra el movimiento clandestino 1j4 afectó la postura de la sociedad católica tradicional?",
+                answerOptions: [
+                    { text: "Porque el régimen prohibió las misas en todo el país.", isCorrect: false },
+                    { text: "Debido al encarcelamiento masivo de jóvenes de familias acomodadas y la posterior postura crítica de la jerarquía eclesiástica.", isCorrect: true },
+                    { text: "Porque los líderes rebeldes tomaron el control de los templos religiosos.", isCorrect: false },
+                    { text: "Debido al cierre de los colegios privados internacionales.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿De qué manera la postura pública de las autoridades eclesiásticas impactó al régimen a principios de la década de 1960?",
+                answerOptions: [
+                    { text: "Evidenció la pérdida de respaldo de una institución clave y generó mayor tensión social.", isCorrect: true },
+                    { text: "Provocó el desarme inmediato de los cuerpos policiales.", isCorrect: false },
+                    { text: "Garantizó la liberación de todos los presos políticos del país.", isCorrect: false },
+                    { text: "Derivó en la expulsión de los embajadores europeos.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué efecto tuvo el asesinato de las hermanas Mirabal en la percepción pública sobre el régimen?",
+                answerOptions: [
+                    { text: "Consolidó la imagen de invencibilidad y justicia del Estado.", isCorrect: false },
+                    { text: "Demostró la falta de límites éticos del régimen y desató la indignación generalizada de la sociedad.", isCorrect: true },
+                    { text: "Logró desmantelar para siempre la oposición interna.", isCorrect: false },
+                    { text: "Provocó la intervención económica inmediata de la banca internacional.", isCorrect: false }
+                ]
+            },
+            {
+                question: "El 16.Ene.1962 sucedió un Golpe de Estado al gobierno provisional para la democracia (1er. Consejo de Estado) para restablecer un gobierno neotrujillista. ¿Quienes fueron sus líderes?",
+                answerOptions: [
+                    { text: "Rafael Bonelly y Augusto Lora.", isCorrect: false },
+                    { text: "Joaquín Balaguer y el General Rodríguez Echavarría", isCorrect: true },
+                    { text: "Juan Bosch y Balaguer.", isCorrect: false },
+                    { text: "Negro y Petán Trujillo.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué se entiende conceptualmente por el proceso de \"destrujillización\"?",
+                answerOptions: [
+                    { text: "La reconstrucción de las obras públicas dañadas por eventos naturales.", isCorrect: false },
+                    { text: "El desmonte de las estructuras políticas, económicas, militares y culturales heredadas de la dictadura.", isCorrect: true },
+                    { text: "La venta de las empresas estatales a inversionistas extranjeros.", isCorrect: false },
+                    { text: "El traslado de la capital hacia el centro del territorio nacional.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué destino legal tuvieron la gran mayoría de las propiedades e industrias acumuladas por la familia del dictador tras el colapso del régimen?",
+                answerOptions: [
+                    { text: "Fueron vendidas en subasta a monopolios internacionales.", isCorrect: false },
+                    { text: "Se devolvieron en su totalidad a los antiguos dueños del siglo XIX.", isCorrect: false },
+                    { text: "Fueron recuperadas y confiscadas por el Estado mediante legislación oficial.", isCorrect: true },
+                    { text: "Quedaron abandonadas sin ningún tipo de administración.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué acción de carácter simbólico llevó a cabo la población de manera autónoma al caer la dictadura?",
+                answerOptions: [
+                    { text: "El cambio de moneda nacional por divisas extranjeras.", isCorrect: false },
+                    { text: "La destrucción de bustos, estatuas y placas que rendían culto a la personalidad del dictador.", isCorrect: true },
+                    { text: "El cierre de todos los centros educativos públicos.", isCorrect: false },
+                    { text: "La quema de las sedes de las empresas privadas.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Por qué se considera que la desintegración del partido único fue un paso clave en la transición política?",
+                answerOptions: [
+                    { text: "Porque permitió el pluralismo democrático y diversas opciones políticas.", isCorrect: true },
+                    { text: "Porque redujo los costos financieros del sistema judicial.", isCorrect: false },
+                    { text: "Porque eliminó la necesidad de realizar elecciones periódicas.", isCorrect: false },
+                    { text: "Porque garantizó la permanencia del gabinete militar en el poder.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál es la crítica central que sostienen historiadores sobre el alcance del proceso de destrujillización?",
+                answerOptions: [
+                    { text: "Que se realizó de forma demasiado rápida sin respetar los símbolos patrios.", isCorrect: false },
+                    { text: "Que fue un proceso incompleto porque dejó intactas estructuras autoritarias y prácticas represivas en algunas instituciones como la Policía Nacional.", isCorrect: true },
+                    { text: "Que imposibilitó el desarrollo económico comercial de la nación.", isCorrect: false },
+                    { text: "Que eliminó por completo el sistema legal y la constitución.", isCorrect: false }
+                ]
+            }
+        ];
+
+        const TOTAL_QUESTIONS_PER_ATTEMPT = 20;  //cantidad de preguntas por intento
+
+        const startScreen = document.getElementById('start-screen'), questionScreen = document.getElementById('question-screen'), resultsScreen = document.getElementById('results-screen');
+        const startBtn = document.getElementById('start-btn'), nextBtn = document.getElementById('next-btn'), restartBtn = document.getElementById('restart-btn');
+        const questionCounterEl = document.getElementById('question-counter'), questionTextEl = document.getElementById('question-text'), answerOptionsEl = document.getElementById('answer-options'), scoreTextEl = document.getElementById('score-text');
+        const soundEnabledCheckbox = document.getElementById('sound-enabled');
+        const creditsModal = document.getElementById('credits-modal'), creditsBtn = document.getElementById('credits-btn'), closeBtn = document.querySelector('.close-btn');
+        let shuffledQuestions = [], currentQuestionIndex = 0, score = 0;
+        
+        class SoundManager { 
+            constructor() { 
+                this.audioContext = null; 
+                this.enabled = true; 
+                this.initAudioContext(); 
+            } 
+            async initAudioContext() { 
+                try { 
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); 
+                } catch (error) { 
+                    console.warn('Audio context not supported:', error); 
+                } 
+            } 
+            async playCorrectSound() { 
+                if (!this.enabled || !this.audioContext) return; 
+                try { 
+                    const frequencies = [523.25, 659.25, 783.99]; 
+                    for (let i = 0; i < frequencies.length; i++) { 
+                        setTimeout(() => { 
+                            this.playTone(frequencies[i], 0.2, 0.1); 
+                        }, i * 80); 
+                    } 
+                } catch (error) { 
+                    console.warn('Error playing correct sound:', error); 
+                } 
+            } 
+            async playIncorrectSound() { 
+                if (!this.enabled || !this.audioContext) return; 
+                try { 
+                    const frequencies = [400, 300, 200]; 
+                    for (let i = 0; i < frequencies.length; i++) { 
+                        setTimeout(() => { 
+                            this.playTone(frequencies[i], 0.15, 0.8); 
+                        }, i * 100); 
+                    } 
+                } catch (error) { 
+                    console.warn('Error playing incorrect sound:', error); 
+                } 
+            } 
+            playTone(frequency, duration, volume = 0.1) { 
+                if (!this.audioContext) return; 
+                const oscillator = this.audioContext.createOscillator(); 
+                const gainNode = this.audioContext.createGain(); 
+                oscillator.connect(gainNode); 
+                gainNode.connect(this.audioContext.destination); 
+                oscillator.frequency.value = frequency; 
+                oscillator.type = 'sine'; 
+                gainNode.gain.setValueAtTime(0, this.audioContext.currentTime); 
+                gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 0.01); 
+                gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration); 
+                oscillator.start(this.audioContext.currentTime); 
+                oscillator.stop(this.audioContext.currentTime + duration); 
+            } 
+            setEnabled(enabled) { 
+                this.enabled = enabled; 
+            } 
+        }
+
+        function vibrateDevice(pattern) { 
+            if (!navigator.vibrate) { 
+                return; 
+            } 
+            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); 
+            if (isMobile) { 
+                try { 
+                    navigator.vibrate(pattern); 
+                } catch (error) { 
+                    console.error('Error en vibración:', error); 
+                } 
+            } 
+        }
+        
+        function vibrateIncorrect() {
+            const strongPattern = [300, 100, 300, 100, 300];
+            vibrateDevice(strongPattern);
+        }
+        
+        function vibrateCorrect() {
+            const gentlePattern = [100, 50, 100];
+            vibrateDevice(gentlePattern);
+        }
+        
+        const soundManager = new SoundManager();
+        
+        function shuffleArray(array) { 
+            for (let i = array.length - 1; i > 0; i--) { 
+                const j = Math.floor(Math.random() * (i + 1)); 
+                [array[i], array[j]] = [array[j], array[i]]; 
+            } 
+        }
+
+        // Selecciona aleatoriamente N preguntas del banco completo
+        function selectRandomQuestions(questionBank, count) {
+            const shuffled = [...questionBank];
+            shuffleArray(shuffled);
+            return shuffled.slice(0, count);
+        }
+        
+        function startQuiz() { 
+            startScreen.style.display = 'none'; 
+            resultsScreen.style.display = 'none'; 
+            questionScreen.style.display = 'block'; 
+            
+            // Seleccionar 20 preguntas aleatorias del banco completo
+            const selectedQuestions = selectRandomQuestions(fullQuizData, TOTAL_QUESTIONS_PER_ATTEMPT);
+            shuffledQuestions = selectedQuestions;
+            // Ya vienen mezcladas por selectRandomQuestions, pero mezclamos nuevamente por si acaso
+            shuffleArray(shuffledQuestions);
+            
+            currentQuestionIndex = 0; 
+            score = 0; 
+            showQuestion(); 
+            if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') { 
+                soundManager.audioContext.resume(); 
+            } 
+        }
+        
+        function showQuestion() {
+            resetState();
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            
+            questionCounterEl.innerText = `Pregunta ${currentQuestionIndex + 1} de ${shuffledQuestions.length}`;
+            
+            let questionHTML = '';
+            if (currentQuestion.imageSrc) {
+                questionHTML += `<img src="${currentQuestion.imageSrc}" alt="Imagen de la pregunta" class="question-image">`;
+            }
+            questionHTML += currentQuestion.question;
+            questionTextEl.innerHTML = questionHTML;
+
+            const shuffledAnswers = [...currentQuestion.answerOptions];
+            shuffleArray(shuffledAnswers);
+
+            shuffledAnswers.forEach(answer => {
+                const button = document.createElement('button');
+                const star = document.createElement('span');
+                star.classList.add('star-icon');
+                star.innerText = '⭐';
+                
+                const answerText = document.createTextNode(` ${answer.text}`);
+                
+                button.appendChild(star);
+                button.appendChild(answerText);
+                
+                button.classList.add('answer-btn');
+                button.dataset.correct = answer.isCorrect;
+                button.addEventListener('click', selectAnswer);
+                answerOptionsEl.appendChild(button);
+            });
+        }
+
+        function resetState() { 
+            nextBtn.style.display = 'none'; 
+            while (answerOptionsEl.firstChild) { 
+                answerOptionsEl.removeChild(answerOptionsEl.firstChild); 
+            } 
+        }
+
+        function selectAnswer(e) {
+            Array.from(answerOptionsEl.children).forEach(btn => {
+                btn.classList.add('animation-paused');
+            });
+
+            const selectedButton = e.currentTarget;
+            const isCorrect = selectedButton.dataset.correct === "true";
+            
+            if (isCorrect) {
+                score++;
+                selectedButton.classList.add('correct');
+                soundManager.playCorrectSound();
+                vibrateCorrect(); 
+            } else {
+                selectedButton.classList.add('incorrect');
+                soundManager.playIncorrectSound();
+                vibrateIncorrect(); 
+            }
+            
+            Array.from(answerOptionsEl.children).forEach(button => {
+                if (button.dataset.correct === "true") {
+                    button.classList.add('correct');
+                }
+                button.disabled = true;
+            });
+            
+            if (shuffledQuestions.length > currentQuestionIndex + 1) {
+                nextBtn.style.display = 'block';
+            } else {
+                setTimeout(showResults, 1200);
+                nextBtn.style.display = 'none';
+            }
+        }
+        
+        function showResults() { 
+            questionScreen.style.display = 'none'; 
+            resultsScreen.style.display = 'block'; 
+            
+            const percentage = Math.round((score / shuffledQuestions.length) * 100); 
+            
+            scoreTextEl.innerHTML = `
+                Tu puntuación final es <strong>${score}</strong> de ${shuffledQuestions.length} (<strong>${percentage}%</strong>).
+                <br><small style="color: #888;">(De un banco de ${fullQuizData.length} preguntas)</small>
+            `; 
+
+            console.log("Enviando notas a SCORM. Puntos:", percentage);
+            SCORM.set("cmi.core.score.raw", percentage);
+            SCORM.set("cmi.core.score.min", "0");
+            SCORM.set("cmi.core.score.max", "100");
+            
+            if (percentage >= 80) {
+                SCORM.set("cmi.core.lesson_status", "passed");
+                setTimeout(() => soundManager.playCorrectSound(), 300);
+            } else {
+                SCORM.set("cmi.core.lesson_status", "completed"); 
+                if (percentage >= 60) { 
+                    setTimeout(() => soundManager.playTone(440, 0.5, 0.2), 300); 
+                }
+            }
+            SCORM.save();
+        }
+        
+        function handleNextButton() { 
+            currentQuestionIndex++; 
+            showQuestion(); 
+        }
+        
+        startBtn.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', handleNextButton);
+        
+        restartBtn.addEventListener('click', () => {
+             startQuiz();
+        });
+        
+        soundEnabledCheckbox.addEventListener('change', (e) => { soundManager.setEnabled(e.target.checked); });
+        creditsBtn.onclick = function() { creditsModal.style.display = "block"; }
+        closeBtn.onclick = function() { creditsModal.style.display = "none"; }
+        window.onclick = function(event) { if (event.target == creditsModal) { creditsModal.style.display = "none"; } }
+        document.addEventListener('click', () => { if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') { soundManager.audioContext.resume(); } }, { once: true });
+    </script>
+</body>
+</html>
