@@ -272,8 +272,8 @@
         <div class="quiz-body">
             <div id="start-screen">
                 <h2 style="color: var(--primary-color);">¡Pon a prueba tus conocimientos!</h2>
-                <p style="font-size: 1.1rem;">Seleccionamos <strong>20 preguntas aleatorias</strong> de nuestro banco.</p>
-                <p>Las preguntas se presentarán al azar en cada intento.</p>
+                <p style="font-size: 1.1rem;">Seleccionamos <strong>20 preguntas al azar de nuestro banco.</strong></p>
+                <p> </p>
                 <div class="sound-controls">
                     <label class="sound-toggle">
                         <input type="checkbox" id="sound-enabled" checked>
@@ -296,13 +296,13 @@
         </div>
     </div>
 
-    <div class="footer-credit"><p>EDUPUNTO - ago.2026</p></div>
+    <div class="footer-credit"><p> <a href="https://edupunto.com/" target="_blank">EDUPUNTO</a> - ago.2026</p></div>
 
     <div id="credits-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h2>Créditos</h2>
-            <p>Este cuestionario fue desarrollado por Juan Ernesto De Frías para EDUPUNTO</p>
+            <p>Este cuestionario fue desarrollado por Juan Ernesto De Frías para <a href="https://edupunto.com/" target="_blank">EDUPUNTO</a> </p>
             <p>Santo Domingo, República Dominicana, 2026.</p>
         </div>
     </div>
@@ -1499,7 +1499,7 @@
             
             scoreTextEl.innerHTML = `
                 Tu puntuación final es <strong>${score}</strong> de ${shuffledQuestions.length} (<strong>${percentage}%</strong>).
-                <br><small style="color: #888;">(De un banco de ${fullQuizData.length} preguntas)</small>
+
             `; 
 
             console.log("Enviando notas a SCORM. Puntos:", percentage);
