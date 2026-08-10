@@ -133,7 +133,6 @@
         }
         .checkbox-opcion input { accent-color: #2980b9; width: 14px; height: 14px; cursor: pointer; }
 
-        /* Estilo para las etiquetas de clima sobre los polígonos */
         .clima-label {
             font-weight: bold;
             font-size: 10px;
@@ -669,39 +668,38 @@
         var climaImage = null;
         var climaUrl = 'anx/climaKPSD2026_1km_KoppenGeiger_COG.tif';
 
-        // Correspondencia exacta valor -> clase -> descripción -> color RGB
-        // según legend.txt del conjunto Köppen-Geiger.
+        // Clasificación completa con descripciones en español
         var clasesKoppen = {
-            1:{codigo:'Af',nombre:'Tropical, rainforest',color:'#0000FF'},
-            2:{codigo:'Am',nombre:'Tropical, monsoon',color:'#0078FF'},
-            3:{codigo:'Aw',nombre:'Tropical, savannah',color:'#46AAFA'},
-            4:{codigo:'BWh',nombre:'Arid, desert, hot',color:'#FF0000'},
-            5:{codigo:'BWk',nombre:'Arid, desert, cold',color:'#FF9696'},
-            6:{codigo:'BSh',nombre:'Arid, steppe, hot',color:'#F5A500'},
-            7:{codigo:'BSk',nombre:'Arid, steppe, cold',color:'#FFDC64'},
-            8:{codigo:'Csa',nombre:'Temperate, dry summer, hot summer',color:'#FFFF00'},
-            9:{codigo:'Csb',nombre:'Temperate, dry summer, warm summer',color:'#C8C800'},
-            10:{codigo:'Csc',nombre:'Temperate, dry summer, cold summer',color:'#969600'},
-            11:{codigo:'Cwa',nombre:'Temperate, dry winter, hot summer',color:'#96FF96'},
-            12:{codigo:'Cwb',nombre:'Temperate, dry winter, warm summer',color:'#64C864'},
-            13:{codigo:'Cwc',nombre:'Temperate, dry winter, cold summer',color:'#329632'},
-            14:{codigo:'Cfa',nombre:'Temperate, no dry season, hot summer',color:'#C8FF50'},
-            15:{codigo:'Cfb',nombre:'Temperate, no dry season, warm summer',color:'#64FF50'},
-            16:{codigo:'Cfc',nombre:'Temperate, no dry season, cold summer',color:'#32C800'},
-            17:{codigo:'Dsa',nombre:'Cold, dry summer, hot summer',color:'#FF00FF'},
-            18:{codigo:'Dsb',nombre:'Cold, dry summer, warm summer',color:'#C800C8'},
-            19:{codigo:'Dsc',nombre:'Cold, dry summer, cold summer',color:'#963296'},
-            20:{codigo:'Dsd',nombre:'Cold, dry summer, very cold winter',color:'#966496'},
-            21:{codigo:'Dwa',nombre:'Cold, dry winter, hot summer',color:'#AAAFFF'},
-            22:{codigo:'Dwb',nombre:'Cold, dry winter, warm summer',color:'#5A78DC'},
-            23:{codigo:'Dwc',nombre:'Cold, dry winter, cold summer',color:'#4B50B4'},
-            24:{codigo:'Dwd',nombre:'Cold, dry winter, very cold winter',color:'#320087'},
-            25:{codigo:'Dfa',nombre:'Cold, no dry season, hot summer',color:'#00FFFF'},
-            26:{codigo:'Dfb',nombre:'Cold, no dry season, warm summer',color:'#37C8FF'},
-            27:{codigo:'Dfc',nombre:'Cold, no dry season, cold summer',color:'#007D7D'},
-            28:{codigo:'Dfd',nombre:'Cold, no dry season, very cold winter',color:'#00465F'},
+            1:{codigo:'Af',nombre:'Tropical, selva tropical',color:'#0000FF'},
+            2:{codigo:'Am',nombre:'Tropical, monzónico',color:'#0078FF'},
+            3:{codigo:'Aw',nombre:'Tropical, sabana',color:'#46AAFA'},
+            4:{codigo:'BWh',nombre:'Árido, desértico cálido',color:'#FF0000'},
+            5:{codigo:'BWk',nombre:'Árido, desértico frío',color:'#FF9696'},
+            6:{codigo:'BSh',nombre:'Árido, estepario cálido',color:'#F5A500'},
+            7:{codigo:'BSk',nombre:'Árido, estepario frío',color:'#FFDC64'},
+            8:{codigo:'Csa',nombre:'Templado, verano seco y cálido',color:'#FFFF00'},
+            9:{codigo:'Csb',nombre:'Templado, verano seco y templado',color:'#C8C800'},
+            10:{codigo:'Csc',nombre:'Templado, verano seco y frío',color:'#969600'},
+            11:{codigo:'Cwa',nombre:'Templado, invierno seco y verano cálido',color:'#96FF96'},
+            12:{codigo:'Cwb',nombre:'Templado, invierno seco y verano templado',color:'#64C864'},
+            13:{codigo:'Cwc',nombre:'Templado, invierno seco y verano frío',color:'#329632'},
+            14:{codigo:'Cfa',nombre:'Templado, sin estación seca y verano cálido',color:'#C8FF50'},
+            15:{codigo:'Cfb',nombre:'Templado, sin estación seca y verano templado',color:'#64FF50'},
+            16:{codigo:'Cfc',nombre:'Templado, sin estación seca y verano frío',color:'#32C800'},
+            17:{codigo:'Dsa',nombre:'Frío, verano seco y cálido',color:'#FF00FF'},
+            18:{codigo:'Dsb',nombre:'Frío, verano seco y templado',color:'#C800C8'},
+            19:{codigo:'Dsc',nombre:'Frío, verano seco y frío',color:'#963296'},
+            20:{codigo:'Dsd',nombre:'Frío, verano seco e invierno muy frío',color:'#966496'},
+            21:{codigo:'Dwa',nombre:'Frío, invierno seco y verano cálido',color:'#AAAFFF'},
+            22:{codigo:'Dwb',nombre:'Frío, invierno seco y verano templado',color:'#5A78DC'},
+            23:{codigo:'Dwc',nombre:'Frío, invierno seco y verano frío',color:'#4B50B4'},
+            24:{codigo:'Dwd',nombre:'Frío, invierno seco e invierno muy frío',color:'#320087'},
+            25:{codigo:'Dfa',nombre:'Frío, sin estación seca y verano cálido',color:'#00FFFF'},
+            26:{codigo:'Dfb',nombre:'Frío, sin estación seca y verano templado',color:'#37C8FF'},
+            27:{codigo:'Dfc',nombre:'Frío, sin estación seca y verano frío',color:'#007D7D'},
+            28:{codigo:'Dfd',nombre:'Frío, sin estación seca e invierno muy frío',color:'#00465F'},
             29:{codigo:'ET',nombre:'Polar, tundra',color:'#B2B2B2'},
-            30:{codigo:'EF',nombre:'Polar, frost',color:'#666666'}
+            30:{codigo:'EF',nombre:'Polar, hielo perpetuo',color:'#666666'}
         };
 
         function getClaseKoppen(valor){
@@ -824,10 +822,22 @@
                 cargarClima();
                 return;
             }
+            // Si ya está cargado, alternamos visibilidad (mostrar/ocultar)
+            // pero si hay selección previa, al mostrar se mantiene resaltado.
             climaVisible=!climaVisible;
             if(capaClima){
-                if(climaVisible) capaClima.addTo(map);
-                else map.removeLayer(capaClima);
+                if(climaVisible) {
+                    capaClima.addTo(map);
+                    // Si hay selección, se aplica el resaltado; si no, se muestra completa.
+                    if(selectedKoppen!==null) {
+                        actualizarEstilosClima();
+                    } else {
+                        // Asegurar que se vea completa (sin grisado)
+                        actualizarEstilosClima();
+                    }
+                } else {
+                    map.removeLayer(capaClima);
+                }
             }
             if(btn) btn.classList.toggle('active',climaVisible);
         };
@@ -838,7 +848,12 @@
             var valor=obtenerValorClima(e.latlng);
             var clase=getClaseKoppen(valor);
             if(!clase) return;
-            selectedKoppen=(selectedKoppen===clase.codigo)?null:clase.codigo;
+            // Toggle selección: si se hace clic en el mismo código, se deselecciona.
+            if(selectedKoppen===clase.codigo) {
+                selectedKoppen=null;
+            } else {
+                selectedKoppen=clase.codigo;
+            }
             actualizarEstilosClima();
             L.popup()
                 .setLatLng(e.latlng)
@@ -856,9 +871,6 @@
         var ciclonesCargado = false;
         var ciclonesVisible = false;
 
-        // Paleta de colores distintivos para las rutas de ciclones.
-        // Si hay más rutas que colores en la lista, se generan colores
-        // adicionales automáticamente mediante rotación de tono (HSL).
         var paletaCiclones = [
             '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
             '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
@@ -868,12 +880,10 @@
 
         function getColorCiclon(indice) {
             if (indice < paletaCiclones.length) return paletaCiclones[indice];
-            // Genera colores adicionales distribuidos uniformemente en el círculo de tono
-            var hue = (indice * 137.508) % 360; // ángulo dorado para máxima separación
+            var hue = (indice * 137.508) % 360;
             return 'hsl(' + hue + ', 70%, 50%)';
         }
 
-        // Carga el GeoJSON y crea la capa de rutas de ciclones
         function cargarCiclones() {
             if (ciclonesCargado) return;
             fetch('anx/rutaCICLONES.geojson')
@@ -884,7 +894,7 @@
                 .then(function(data) {
                     var indiceRuta = 0;
                     capaCiclones = L.geoJSON(data, {
-                        pane: 'ciclonesPane', // capa por debajo de comunidadesPane, por encima de climaPane
+                        pane: 'ciclonesPane',
                         style: function(feature) {
                             var color = getColorCiclon(indiceRuta);
                             indiceRuta++;
@@ -908,7 +918,6 @@
                                 '<b>Descripción:</b> ' + descripcion
                             );
 
-                            // Resalta la ruta seleccionada al pasar el mouse / hacer clic
                             layer.on('mouseover', function() {
                                 layer.setStyle({ weight: 6 });
                                 layer.bringToFront();
@@ -931,7 +940,6 @@
                 });
         }
 
-        // Alternar visibilidad de la capa de rutas de ciclones
         window.toggleCiclones = function() {
             var btn = document.getElementById('btn-ciclones');
             if (!ciclonesCargado) {
@@ -966,15 +974,23 @@
                 map.addLayer(capaFrontera);
             }
 
-            // Clima: ocultar si está visible y limpiar selección
-            if (climaVisible && capaClima) {
-                map.removeLayer(capaClima);
-                climaVisible = false;
-                document.getElementById('btn-clima').classList.remove('active');
-            }
-            if (selectedKoppen !== null) {
-                selectedKoppen = null;
-                if (capaClima) actualizarEstilosClima();
+            // Clima: asegurar que esté visible y sin selección
+            if (!climaCargado) {
+                // Forzar carga y mostrar
+                climaVisible = true;
+                document.getElementById('btn-clima').classList.add('active');
+                cargarClima();
+            } else {
+                // Si ya está cargado, mostrar capa y limpiar selección
+                if (!climaVisible) {
+                    climaVisible = true;
+                    if (capaClima) capaClima.addTo(map);
+                    document.getElementById('btn-clima').classList.add('active');
+                }
+                if (selectedKoppen !== null) {
+                    selectedKoppen = null;
+                    actualizarEstilosClima();
+                }
             }
 
             // Ciclones: ocultar si está visible
