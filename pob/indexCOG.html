@@ -356,7 +356,6 @@
             <p style="font-size: 9px;">Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022.<br> https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de-poblacion-y-vivienda-2022/.</p>
             <p style="font-size: 9px;">Raifer, M. (s. f.). Overpass Turbo [Aplicación web]. https://overpass-turbo.eu/</p>
 
-
             <button class="btn-cerrar-modal" onclick="cerrarModalCreditos()">Cerrar</button>
         </div>
     </div>
@@ -483,6 +482,7 @@
                     capaPobRD = new GeoRasterLayer({
                         georaster: georaster,
                         opacity: 0.7,  // ← AQUÍ se configura la opacidad de la capa de población RD (0 = invisible, 1 = totalmente opaca)
+                        pane: 'overlayPane',  // fuerza que quede SIEMPRE por encima de capaDibujo/capaSatelite (ambas usan 'tilePane')
                         resolution: 256,
                         pixelValuesToColorFn: function(values) {
                             var dn = values[0];
@@ -519,6 +519,7 @@
                     capaPobHT = new GeoRasterLayer({
                         georaster: georaster,
                         opacity: 0.7,  // ← AQUÍ se configura la opacidad de la capa de población HT (0 = invisible, 1 = totalmente opaca)
+                        pane: 'overlayPane',  // fuerza que quede SIEMPRE por encima de capaDibujo/capaSatelite (ambas usan 'tilePane')
                         resolution: 256,
                         pixelValuesToColorFn: function(values) {
                             var dn = values[0];
