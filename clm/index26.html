@@ -6,6 +6,7 @@
     <title>Clima SD</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/geotiff@2.1.3/dist-browser/geotiff.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/georaster@1.6.0/dist/georaster.browser.bundle.min.js"></script>
     <script src="https://unpkg.com/georaster-layer-for-leaflet/dist/georaster-layer-for-leaflet.min.js"></script>
     <style>
@@ -662,180 +663,193 @@
         var climaCargado = false;
         var climaVisible = false;
         var selectedKoppen = null;
-        var georasterClima = null;
+        var climaRaster = null;
+        var climaCanvas = null;
+        var climaCanvasLayer = null;
+        var climaImage = null;
         var climaUrl = 'anx/climaKPSD2026_1km_KoppenGeiger_COG.tif';
 
         // Correspondencia exacta valor -> clase -> descripción -> color RGB
-        // según legend.txt del conjunto de datos Köppen-Geiger.
+        // según legend.txt del conjunto Köppen-Geiger.
         var clasesKoppen = {
-            1:  { codigo:'Af',  nombre:'Tropical, rainforest',                  color:'#0000FF' },
-            2:  { codigo:'Am',  nombre:'Tropical, monsoon',                     color:'#0078FF' },
-            3:  { codigo:'Aw',  nombre:'Tropical, savannah',                    color:'#46AAFA' },
-            4:  { codigo:'BWh', nombre:'Arid, desert, hot',                     color:'#FF0000' },
-            5:  { codigo:'BWk', nombre:'Arid, desert, cold',                    color:'#FF9696' },
-            6:  { codigo:'BSh', nombre:'Arid, steppe, hot',                     color:'#F5A500' },
-            7:  { codigo:'BSk', nombre:'Arid, steppe, cold',                    color:'#FFDC64' },
-            8:  { codigo:'Csa', nombre:'Temperate, dry summer, hot summer',     color:'#FFFF00' },
-            9:  { codigo:'Csb', nombre:'Temperate, dry summer, warm summer',    color:'#C8C800' },
-            10: { codigo:'Csc', nombre:'Temperate, dry summer, cold summer',    color:'#969600' },
-            11: { codigo:'Cwa', nombre:'Temperate, dry winter, hot summer',     color:'#96FF96' },
-            12: { codigo:'Cwb', nombre:'Temperate, dry winter, warm summer',    color:'#64C864' },
-            13: { codigo:'Cwc', nombre:'Temperate, dry winter, cold summer',    color:'#329632' },
-            14: { codigo:'Cfa', nombre:'Temperate, no dry season, hot summer',  color:'#C8FF50' },
-            15: { codigo:'Cfb', nombre:'Temperate, no dry season, warm summer', color:'#64FF50' },
-            16: { codigo:'Cfc', nombre:'Temperate, no dry season, cold summer', color:'#32C800' },
-            17: { codigo:'Dsa', nombre:'Cold, dry summer, hot summer',          color:'#FF00FF' },
-            18: { codigo:'Dsb', nombre:'Cold, dry summer, warm summer',         color:'#C800C8' },
-            19: { codigo:'Dsc', nombre:'Cold, dry summer, cold summer',          color:'#963296' },
-            20: { codigo:'Dsd', nombre:'Cold, dry summer, very cold winter',     color:'#966496' },
-            21: { codigo:'Dwa', nombre:'Cold, dry winter, hot summer',           color:'#AA AFFF'.replace(' ', '') },
-            22: { codigo:'Dwb', nombre:'Cold, dry winter, warm summer',          color:'#5A78DC' },
-            23: { codigo:'Dwc', nombre:'Cold, dry winter, cold summer',          color:'#4B50B4' },
-            24: { codigo:'Dwd', nombre:'Cold, dry winter, very cold winter',     color:'#320087' },
-            25: { codigo:'Dfa', nombre:'Cold, no dry season, hot summer',       color:'#00FFFF' },
-            26: { codigo:'Dfb', nombre:'Cold, no dry season, warm summer',      color:'#37C8FF' },
-            27: { codigo:'Dfc', nombre:'Cold, no dry season, cold summer',      color:'#007D7D' },
-            28: { codigo:'Dfd', nombre:'Cold, no dry season, very cold winter',  color:'#00465F' },
-            29: { codigo:'ET',  nombre:'Polar, tundra',                         color:'#B2B2B2' },
-            30: { codigo:'EF',  nombre:'Polar, frost',                          color:'#666666' }
+            1:{codigo:'Af',nombre:'Tropical, rainforest',color:'#0000FF'},
+            2:{codigo:'Am',nombre:'Tropical, monsoon',color:'#0078FF'},
+            3:{codigo:'Aw',nombre:'Tropical, savannah',color:'#46AAFA'},
+            4:{codigo:'BWh',nombre:'Arid, desert, hot',color:'#FF0000'},
+            5:{codigo:'BWk',nombre:'Arid, desert, cold',color:'#FF9696'},
+            6:{codigo:'BSh',nombre:'Arid, steppe, hot',color:'#F5A500'},
+            7:{codigo:'BSk',nombre:'Arid, steppe, cold',color:'#FFDC64'},
+            8:{codigo:'Csa',nombre:'Temperate, dry summer, hot summer',color:'#FFFF00'},
+            9:{codigo:'Csb',nombre:'Temperate, dry summer, warm summer',color:'#C8C800'},
+            10:{codigo:'Csc',nombre:'Temperate, dry summer, cold summer',color:'#969600'},
+            11:{codigo:'Cwa',nombre:'Temperate, dry winter, hot summer',color:'#96FF96'},
+            12:{codigo:'Cwb',nombre:'Temperate, dry winter, warm summer',color:'#64C864'},
+            13:{codigo:'Cwc',nombre:'Temperate, dry winter, cold summer',color:'#329632'},
+            14:{codigo:'Cfa',nombre:'Temperate, no dry season, hot summer',color:'#C8FF50'},
+            15:{codigo:'Cfb',nombre:'Temperate, no dry season, warm summer',color:'#64FF50'},
+            16:{codigo:'Cfc',nombre:'Temperate, no dry season, cold summer',color:'#32C800'},
+            17:{codigo:'Dsa',nombre:'Cold, dry summer, hot summer',color:'#FF00FF'},
+            18:{codigo:'Dsb',nombre:'Cold, dry summer, warm summer',color:'#C800C8'},
+            19:{codigo:'Dsc',nombre:'Cold, dry summer, cold summer',color:'#963296'},
+            20:{codigo:'Dsd',nombre:'Cold, dry summer, very cold winter',color:'#966496'},
+            21:{codigo:'Dwa',nombre:'Cold, dry winter, hot summer',color:'#AAAFFF'},
+            22:{codigo:'Dwb',nombre:'Cold, dry winter, warm summer',color:'#5A78DC'},
+            23:{codigo:'Dwc',nombre:'Cold, dry winter, cold summer',color:'#4B50B4'},
+            24:{codigo:'Dwd',nombre:'Cold, dry winter, very cold winter',color:'#320087'},
+            25:{codigo:'Dfa',nombre:'Cold, no dry season, hot summer',color:'#00FFFF'},
+            26:{codigo:'Dfb',nombre:'Cold, no dry season, warm summer',color:'#37C8FF'},
+            27:{codigo:'Dfc',nombre:'Cold, no dry season, cold summer',color:'#007D7D'},
+            28:{codigo:'Dfd',nombre:'Cold, no dry season, very cold winter',color:'#00465F'},
+            29:{codigo:'ET',nombre:'Polar, tundra',color:'#B2B2B2'},
+            30:{codigo:'EF',nombre:'Polar, frost',color:'#666666'}
         };
-        clasesKoppen[21].color = '#AAAFFF';
 
-        function getClaseKoppen(valor) {
-            var n = Math.round(Number(valor));
-            return clasesKoppen[n] || null;
+        function getClaseKoppen(valor){
+            var n=Math.round(Number(valor));
+            return clasesKoppen[n]||null;
         }
 
-        function getColorKoppenValor(valor) {
-            var clase = getClaseKoppen(valor);
-            if (!clase) return null;
-            if (selectedKoppen !== null && clase.codigo !== selectedKoppen) {
-                return 'rgba(0,0,0,0.06)';
-            }
-            return clase.color;
+        function hexToRgb(hex){
+            var h=hex.replace('#','');
+            return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)];
         }
 
-        function reconstruirCapaClima() {
-            if (!georasterClima) return;
-            if (capaClima && map.hasLayer(capaClima)) map.removeLayer(capaClima);
-
-            capaClima = new GeoRasterLayer({
-                georaster: georasterClima,
-                pane: 'climaPane',
-                opacity: 0.72,
-                resolution: 128,
-                pixelValuesToColorFn: function(values) {
-                    var valor = values && values.length ? values[0] : null;
-                    return getColorKoppenValor(valor);
+        // Dibuja el raster categórico respetando exactamente los colores del legend.txt.
+        function dibujarClima(){
+            if(!climaRaster || !climaCanvas) return;
+            var ctx=climaCanvas.getContext('2d');
+            var w=climaRaster.width, h=climaRaster.height;
+            var img=ctx.createImageData(w,h);
+            var data=img.data;
+            var valores=climaRaster.values;
+            for(var i=0;i<w*h;i++){
+                var v=Array.isArray(valores)?valores[i]:valores[i];
+                var clase=getClaseKoppen(v);
+                var p=i*4;
+                if(!clase || v===0 || v===null || Number.isNaN(Number(v))){
+                    data[p]=0; data[p+1]=0; data[p+2]=0; data[p+3]=0;
+                    continue;
                 }
+                var rgb=hexToRgb(clase.color);
+                if(selectedKoppen!==null && clase.codigo!==selectedKoppen){
+                    data[p]=245; data[p+1]=245; data[p+2]=245; data[p+3]=45;
+                }else{
+                    data[p]=rgb[0]; data[p+1]=rgb[1]; data[p+2]=rgb[2]; data[p+3]=185;
+                }
+            }
+            ctx.putImageData(img,0,0);
+            if(climaCanvasLayer) climaCanvasLayer.setOpacity(climaVisible?1:0);
+        }
+
+        function crearCapaClima(){
+            if(!climaRaster) return;
+            if(climaCanvasLayer && map.hasLayer(climaCanvasLayer)) map.removeLayer(climaCanvasLayer);
+            climaCanvas=document.createElement('canvas');
+            climaCanvas.width=climaRaster.width;
+            climaCanvas.height=climaRaster.height;
+            dibujarClima();
+            var bounds=[[climaRaster.bottom,climaRaster.left],[climaRaster.top,climaRaster.right]];
+            climaCanvasLayer=L.imageOverlay(climaCanvas.toDataURL('image/png'),bounds,{
+                opacity:1,
+                interactive:false,
+                pane:'climaPane'
             });
+            capaClima=climaCanvasLayer;
+            if(climaVisible) capaClima.addTo(map);
+        }
 
-            if (climaVisible) {
-                capaClima.addTo(map);
+        function actualizarEstilosClima(){
+            dibujarClima();
+            if(climaCanvasLayer){
+                climaCanvasLayer.setUrl(climaCanvas.toDataURL('image/png'));
             }
         }
 
-        function actualizarEstilosClima() {
-            reconstruirCapaClima();
+        function obtenerValorClima(latlng){
+            if(!climaRaster) return null;
+            var xres=(climaRaster.right-climaRaster.left)/climaRaster.width;
+            var yres=(climaRaster.top-climaRaster.bottom)/climaRaster.height;
+            var col=Math.floor((latlng.lng-climaRaster.left)/xres);
+            var row=Math.floor((climaRaster.top-latlng.lat)/yres);
+            if(row<0||col<0||row>=climaRaster.height||col>=climaRaster.width) return null;
+            return climaRaster.values[row*climaRaster.width+col];
         }
 
-        // Obtiene el valor de la celda raster en la posición del clic.
-        function obtenerValorClima(latlng) {
-            if (!georasterClima) return Promise.resolve(null);
-            var xmin = georasterClima.xmin;
-            var ymax = georasterClima.ymax;
-            var xres = Math.abs(georasterClima.pixelWidth);
-            var yres = Math.abs(georasterClima.pixelHeight);
-            var col = Math.floor((latlng.lng - xmin) / xres);
-            var row = Math.floor((ymax - latlng.lat) / yres);
-            if (row < 0 || col < 0 || row >= georasterClima.height || col >= georasterClima.width) return Promise.resolve(null);
-            if (typeof georasterClima.getValues === 'function') {
-                return georasterClima.getValues({
-                    left: col, top: row, right: col + 1, bottom: row + 1,
-                    width: 1, height: 1, resampleMethod: 'nearest'
-                }).then(function(values) {
-                    return values && values[0] && values[0][0] ? values[0][0][0] : null;
-                });
-            }
-            return georasterClima.values && georasterClima.values[0] ? georasterClima.values[0][row][col] : null;
-        }
-
-        // Carga el Cloud Optimized GeoTIFF y crea la capa raster.
-        function cargarClima() {
-            if (climaCargado) return;
-
-            parseGeoraster(climaUrl)
-                .then(function(georaster) {
-                    georasterClima = georaster;
-                    climaCargado = true;
-                    reconstruirCapaClima();
-
-                    if (climaVisible && capaClima && !map.hasLayer(capaClima)) {
-                        map.addLayer(capaClima);
-                    }
-
-                    console.log('Capa Köppen-Geiger COG cargada correctamente.');
-                    console.log('Resolución:', georaster.width, 'x', georaster.height);
+        // Carga completa del COG. El archivo es pequeño y esta vía evita problemas de Range/COG
+        // en servidores que no manejan correctamente las solicitudes HTTP Range.
+        function cargarClima(){
+            if(climaCargado) return;
+            fetch(climaUrl)
+                .then(function(response){
+                    if(!response.ok) throw new Error('HTTP '+response.status+' al cargar '+climaUrl);
+                    return response.arrayBuffer();
                 })
-                .catch(function(error) {
-                    console.warn('Error cargando ' + climaUrl + ':', error.message);
-                    alert('No se pudo cargar la capa climática. Verifica que el archivo COG esté en la carpeta anx/.');
+                .then(function(buffer){
+                    return GeoTIFF.fromArrayBuffer(buffer);
+                })
+                .then(function(tiff){
+                    return tiff.getImage();
+                })
+                .then(function(image){
+                    return image.readRasters({interleave:true}).then(function(values){
+                        climaRaster={
+                            width:image.getWidth(),
+                            height:image.getHeight(),
+                            values:values,
+                            left:image.getBoundingBox()[0],
+                            bottom:image.getBoundingBox()[1],
+                            right:image.getBoundingBox()[2],
+                            top:image.getBoundingBox()[3]
+                        };
+                        climaCargado=true;
+                        crearCapaClima();
+                        console.log('Köppen-Geiger cargado correctamente:',climaRaster.width+' x '+climaRaster.height);
+                        console.log('Extensión:',climaRaster.left,climaRaster.bottom,climaRaster.right,climaRaster.top);
+                    });
+                })
+                .catch(function(error){
+                    console.error('Error cargando '+climaUrl,error);
+                    alert('No se pudo cargar la capa climática.\n\n'+error.message+'\n\nVerifica que index.html y la carpeta anx/ estén publicados juntos y que el servidor permita cargar archivos .tif.');
+                    climaVisible=false;
+                    var btn=document.getElementById('btn-clima');
+                    if(btn) btn.classList.remove('active');
                 });
         }
 
-        // Alternar visibilidad de la capa climática
-        window.toggleClima = function() {
-            var btn = document.getElementById('btn-clima');
-            if (!climaCargado) {
-                climaVisible = true;
-                btn.classList.add('active');
+        window.toggleClima=function(){
+            var btn=document.getElementById('btn-clima');
+            if(!climaCargado){
+                climaVisible=true;
+                if(btn) btn.classList.add('active');
                 cargarClima();
-            } else {
-                if (climaVisible) {
-                    if (capaClima) map.removeLayer(capaClima);
-                    climaVisible = false;
-                    btn.classList.remove('active');
-                } else {
-                    if (capaClima) map.addLayer(capaClima);
-                    climaVisible = true;
-                    btn.classList.add('active');
-                }
-            }
-        };
-
-        // Al hacer clic sobre el raster se identifica la clase Köppen-Geiger.
-        map.on('click', function(e) {
-            if (!climaVisible || !georasterClima) {
-                if (selectedKoppen !== null) {
-                    selectedKoppen = null;
-                    actualizarEstilosClima();
-                }
                 return;
             }
+            climaVisible=!climaVisible;
+            if(capaClima){
+                if(climaVisible) capaClima.addTo(map);
+                else map.removeLayer(capaClima);
+            }
+            if(btn) btn.classList.toggle('active',climaVisible);
+        };
 
-            obtenerValorClima(e.latlng).then(function(valor) {
-                var clase = getClaseKoppen(valor);
-
-                if (clase) {
-                    selectedKoppen = (selectedKoppen === clase.codigo) ? null : clase.codigo;
-                    actualizarEstilosClima();
-
-                    L.popup()
-                        .setLatLng(e.latlng)
-                        .setContent('<b>Clase climática Köppen-Geiger:</b> ' + clase.codigo + '<br>' +
-                                    '<b>Descripción:</b> ' + clase.nombre + '<br>' +
-                                    '<b>Valor raster:</b> ' + Math.round(Number(valor)))
-                        .openOn(map);
-                } else {
-                    selectedKoppen = null;
-                    actualizarEstilosClima();
-                }
-            }).catch(function(error) {
-                console.warn('No fue posible consultar el píxel climático:', error);
-            });
+        // Clic sobre cualquier punto: consulta la celda de 1 km y muestra su clase.
+        map.on('click',function(e){
+            if(!climaVisible || !climaRaster) return;
+            var valor=obtenerValorClima(e.latlng);
+            var clase=getClaseKoppen(valor);
+            if(!clase) return;
+            selectedKoppen=(selectedKoppen===clase.codigo)?null:clase.codigo;
+            actualizarEstilosClima();
+            L.popup()
+                .setLatLng(e.latlng)
+                .setContent('<b>Clasificación Köppen-Geiger</b><br>'+
+                    '<b>Clase:</b> '+clase.codigo+'<br>'+
+                    '<b>Descripción:</b> '+clase.nombre+'<br>'+
+                    '<b>Valor raster:</b> '+Math.round(Number(valor)))
+                .openOn(map);
         });
 
-        // ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
         // 5.1 RUTA DE CICLONES (1900-2026)
         // ═══════════════════════════════════════════════════════════
         var capaCiclones = null;
