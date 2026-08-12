@@ -939,7 +939,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             var grupo = L.layerGroup();
             datos.forEach(function(a) {
                 var marker = L.marker([a.lat, a.lng], { icon: iconAltura });
-                marker.bindPopup("<b>⛰️ " + a.nombre + "</b><br>Altitud: " + a.altitud + "<br>Sierra: " + a.sierra + "<br>Coordenadas: " + a.lat.toFixed(4) + ", " + a.lng.toFixed(4));
+                marker.bindPopup("<b>⛰️ " + a.nombre + "</b><br>Altitud: " + a.altitud + "<br>Sistema: " + a.sierra + "<br>Coordenadas: " + a.lat.toFixed(4) + ", " + a.lng.toFixed(4));
                 marker.addTo(grupo);
             });
             return grupo;
