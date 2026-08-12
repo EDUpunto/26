@@ -143,22 +143,130 @@
             box-shadow: none;
         }
 
+        /* Modal Créditos - Estilos mejorados */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 2000; display: none;
+            background: rgba(0,0,0,0.6); z-index: 2000; display: none;
             align-items: center; justify-content: center;
+            padding: 20px;
         }
         .modal-overlay.active { display: flex; }
         .modal-content {
-            background: white; padding: 24px; border-radius: 12px;
-            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            min-width: 250px;
+            background: white; 
+            padding: 30px 35px; 
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-height: 85vh;
+            overflow-y: auto;
+            min-width: 320px;
+            max-width: 720px;
+            width: 90%;
+            text-align: left;
+            position: relative;
         }
-        .modal-content h3 { margin: 0 0 8px 0; color: #1a5276; font-size: 18px; }
-        .modal-content p { color: #555; margin-bottom: 10px; font-size: 16px; font-weight: 600; }
+
+        .modal-content .creditos-header {
+            text-align: center;
+            border-bottom: 3px solid #2980b9;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .modal-content .creditos-header h2 {
+            font-size: 22px;
+            color: #1a5276;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+        .modal-content .creditos-header .subtitulo {
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 600;
+            margin: 4px 0 6px 0;
+        }
+        .modal-content .creditos-header h1 {
+            font-size: 20px;
+            color: #1a5276;
+            margin: 8px 0 0 0;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        .modal-content .creditos-seccion {
+            margin-bottom: 20px;
+        }
+        .modal-content .creditos-seccion h3 {
+            font-size: 14px;
+            color: #1a5276;
+            margin: 0 0 6px 0;
+            border-left: 4px solid #2980b9;
+            padding-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .modal-content .creditos-seccion p {
+            font-size: 13px;
+            color: #2c3e50;
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+        .modal-content .creditos-seccion.declaracion p {
+            font-style: italic;
+            background: #f0f7fb;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border-left: 3px solid #2980b9;
+        }
+        .modal-content .creditos-seccion.autores {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 12px 0;
+            border-radius: 6px;
+        }
+        .modal-content .creditos-seccion.autores .autor {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a5276;
+        }
+        .modal-content .creditos-seccion.autores .ubicacion {
+            font-size: 13px;
+            color: #555;
+        }
+        .modal-content .creditos-seccion.mensaje {
+            background: #eaf2f8;
+            padding: 14px 18px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .modal-content .creditos-seccion.mensaje p {
+            margin: 4px 0;
+        }
+        .modal-content .creditos-seccion.mensaje a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .modal-content .creditos-seccion.mensaje a:hover {
+            text-decoration: underline;
+        }
+        .modal-content .creditos-seccion.equipo {
+            text-align: center;
+            border-top: 1px solid #ddd;
+            padding-top: 16px;
+            margin-top: 10px;
+        }
+
         .btn-cerrar-modal {
-            background: #2980b9; color: white; border: none; padding: 8px 20px;
-            border-radius: 6px; cursor: pointer; font-weight: 600;
+            background: #2980b9; 
+            color: white; 
+            border: none; 
+            padding: 10px 30px;
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600;
+            font-size: 14px;
+            display: block;
+            margin: 10px auto 0 auto;
+            transition: background 0.2s;
         }
         .btn-cerrar-modal:hover { background: #1f618d; }
 
@@ -194,6 +302,22 @@
             order: 0;
         }
 
+        /* Scroll personalizado para el modal */
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #b0c4de;
+            border-radius: 3px;
+        }
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #8aadc9;
+        }
+
         @media (max-width: 768px) {
             #panel-titulo {
                 top: 10px; left: 10px; right: 10px; width: auto;
@@ -203,9 +327,24 @@
                 top: 70px; right: 10px; width: 260px;
                 max-height: 70vh;
             }
+            .modal-content {
+                padding: 20px;
+                min-width: auto;
+                max-height: 80vh;
+            }
         }
         @media (max-width: 480px) {
             #panel-controles { width: calc(100vw - 20px); right: 10px; }
+            .modal-content {
+                padding: 15px;
+                width: 95%;
+            }
+            .modal-content .creditos-header h1 {
+                font-size: 17px;
+            }
+            .modal-content .creditos-seccion p {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -272,43 +411,98 @@
         </div>
     </div>
 
-    <!-- Modal Créditos -->
+    <!-- Modal Créditos - REORGANIZADO -->
     <div id="modal-creditos" class="modal-overlay" onclick="cerrarModalCreditos(event)">
         <div class="modal-content">
-            <h3><strong>I S F O D O S U</strong></h3>
-            <p>DIGICON</p>
-            <p><strong>ZONAS CLIMÁTICAS DE LA ISLA DE<br>SANTO DOMINGO</strong></p>
-            <p style="font-size: 12px;">Juan Ernesto De Frías,<br>José Alberto Santos y Carlos Gabriel Tapia<br>
-            Santo Domingo, República Dominicana<br>
-            Inicio de maquetación 31.junio.2026</p>
 
-            <p style="font-size: 10px;">Detrás de este recurso hay varios meses de investigación y trabajo.<br>Tu opinión es fundamental: si ves algún punto que se pueda mejorar, ¡no dudes en escribirme!<br>edefrias@gmail.com</p>
-            <p style="font-size: 10px;">Este trabajo fue creado con asistencia de IA.</p>
-            
-            <h3>CONSIDERACIONES</h3>
-            <p style="font-size: 9px;">El sistema de Köppen, es considerado el más difundido a nivel mundial<br>
-            por su simplicidad y su estrecha relación entre clima y vegetación.<br>
-            Este es un mapa realizado con visión y propósitos educativos.<br>
-            El mapa está basado en los trabajos de Beck et al. (2018) y posee una precisión de 1km².<br>
-            .</p>
+            <!-- ENCABEZADO PRINCIPAL -->
+            <div class="creditos-header">
+                <h2><strong>I S F O D O S U</strong></h2>
+                <p class="subtitulo">DIGICON</p>
+                <h1>ZONAS CLIMÁTICAS DE LA ISLA DE<br>SANTO DOMINGO</h1>
+            </div>
 
-            <h3>FUENTES</h3>
-            <p style="font-size: 9px;">Beck, H. E., Zimmermann, N. E., McVicar, T. R., Vergopolan, N., Berg, A., & Wood, E. F. (2018).<br>
-            Present and future Köppen-Geiger climate classification maps at 1-km resolution. Scientific Data, *5*(1), 180214.<br>
-            https://doi.org/10.1038/sdata.2018.214</p>
-            <p style="font-size: 9px;">Del Rosario, P. J., Morrobel, J., & Escarramán, A. (2013). Territorios rurales<br>
-            y adaptación al cambio climático en República Dominicana. Instituto Dominicano de Investigaciones Agropecuarias<br>
-            y Forestales (IDIAF).</p>
-            <p style="font-size: 9px;">Jury, M. R., & Chiao, S. (2011). Mesocirculation Associated with Summer Convection<br>
-            over the Central Antilles. Earth Interactions, 15(25), 1-19. https://doi.org/10.1175/2011EI391.1</p>
-            <p style="font-size: 9px;">Peel, M. C., Finlayson, B. L., & McMahon, T. A. (2007). Updated World Map of the <br>
-            Köppen-Geiger Climate Classification. Hydrology and Earth System Sciences</p>
-            <p style="font-size: 9px;">Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de <br>
-            Población y Vivienda 2022.<br> https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de<br>
-            poblacion-y-vivienda-2022/.</p>
-            
+            <!-- SECCIÓN: CONSIDERACIONES -->
+            <div class="creditos-seccion">
+                <h3>CONSIDERACIONES</h3>
+                <p>El sistema de Köppen, es considerado el más difundido a nivel mundial por su simplicidad y su estrecha relación entre clima y vegetación.<br>
+                Este es un mapa realizado con visión y propósitos educativos.<br>
+                El mapa climático está basado principalmente en los trabajos de Beck et al. (2018) y Peel et al.(2007).</p>
+            </div>
 
+            <!-- SECCIÓN: FUENTES -->
+            <div class="creditos-seccion">
+                <h3>FUENTES</h3>
+                <p>Beck, H. E., Zimmermann, N. E., McVicar, T. R., Vergopolan, N., Berg, A., & Wood, E. F. (2018).<br>
+                Present and future Köppen-Geiger climate classification maps at 1-km resolution. Scientific Data, *5*(1), 180214.<br>
+                https://doi.org/10.1038/sdata.2018.214</p><br>
+                <p>Peel, M. C., Finlayson, B. L., & McMahon, T. A. (2007). Updated World Map of the Köppen-Geiger Climate Classification. Hydrology and Earth System Sciences</p><br>
+                <p>Del Rosario, P. J., Morrobel, J., & Escarramán, A. (2013). Territorios rurales y adaptación al cambio climático en República Dominicana.<br>Instituto Dominicano de Investigaciones Agropecuarias y Forestales (IDIAF).</p><br>
+                <p>Jury, M. R., & Chiao, S. (2011). Mesocirculation Associated with Summer Convection over the Central Antilles. Earth Interactions, 15(25), 1-19. https://doi.org/10.1175/2011EI391.1</p><br>
+                <p>Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022. https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de poblacion-y-vivienda-2022/.</p>
+            </div>
+
+            <!-- SECCIÓN: ORIGEN DEL PROYECTO -->
+            <div class="creditos-seccion">
+                <h3>ORIGEN DEL PROYECTO</h3>
+                <p>Este proyecto surgió de la necesidad de ofrecer un mapa interactivo orientado a las aulas dominicanas. Hubo un primer esfuerzo muy elemental entre 2007 y 2012, con tecnología Flash, que fue publicado en el portal www.educando.edu.do del MINERD y que caducó en el tiempo.</p>
+            </div>
+
+            <!-- SECCIÓN: DESARROLLO -->
+            <div class="creditos-seccion">
+                <h3>DESARROLLO</h3>
+                <p>En esta oportunidad hemos utilizado la tecnología Leaflet, la plataforma OpenStreetMaps y otras para hacer realidad el recurso. La ingeniería y maquetación de este documento comenzó el 31.Junio.2026.</p>
+            </div>
+
+            <!-- SECCIÓN: HERRAMIENTAS UTILIZADAS -->
+            <div class="creditos-seccion">
+                <h3>HERRAMIENTAS UTILIZADAS</h3>
+                <p>Para el desarrollo de este proyecto empleé las siguientes herramientas de inteligencia artificial disponibles y en sus versiones gratuitas: DeepSeek, ChatGPT, Perplexity, Gemini y Claude.</p>
+            </div>
+
+            <!-- SECCIÓN: PROPÓSITO DE LA IA -->
+            <div class="creditos-seccion">
+                <h3>PROPÓSITO DE LA IA</h3>
+                <p>El uso de la inteligencia artificial se orientó principalmente a la generación de código de programación. También se empleó para la verificación de fechas, la localización precisa de documentación y, en menor medida, para la mejora de la redacción.</p>
+            </div>
+
+            <!-- SECCIÓN: INTERVENCIÓN Y APORTE HUMANO -->
+            <div class="creditos-seccion">
+                <h3>INTERVENCIÓN Y APORTE HUMANO</h3>
+                <p>Estimo que un 85% de la redacción es de mi propiedad. Mi aporte en el código HTML5 fue del 10% o menos. Mis principales intervenciones consistieron en suministrar los textos, los marcadores y los criterios orientadores. La IA generaba código estructurado que yo evaluaba y ajustaba hasta alcanzar el resultado deseado.</p>
+            </div>
+
+            <!-- SECCIÓN: DECLARACIÓN DE AUTORÍA -->
+            <div class="creditos-seccion declaracion">
+                <h3>DECLARACIÓN DE AUTORÍA</h3>
+                <p><em>"Certifico que el trabajo presentado es el resultado de un proceso de investigación, edición, curaduría, creación y esfuerzo. La IA fue utilizada como herramienta de apoyo, no como sustituta de mi criterio."</em></p>
+            </div>
+
+            <!-- SECCIÓN: AUTORÍA Y PRODUCCIÓN -->
+            <div class="creditos-seccion autores">
+                <p class="ubicacion">Redacción, diseño y producción general</p>
+                <p class="autor">Juan Ernesto De Frías</p>
+            </div>
+
+            <!-- SECCIÓN: MENSAJE / CONTACTO -->
+            <div class="creditos-seccion mensaje">
+                <p>Detrás de este recurso hay muchas horas de investigación y trabajo.</p>
+                <p>Tu opinión es fundamental: si observas algún punto que se pueda mejorar, ¡no dudes en escribirme!</p>
+                <p style="font-size: 0.8rem;">
+                    <a href="mailto:edefrias@gmail.com">edefrias@gmail.com</a>
+                </p>
+            </div>
+
+            <!-- SECCIÓN: EQUIPO DE TRABAJO -->
+            <div class="creditos-seccion equipo">
+                <h3>EQUIPO DE TRABAJO DIGICON</h3>
+                <p>Juan Ernesto De Frías,<br>José Alberto Santos y Carlos Gabriel Tapia<br>
+                Santo Domingo, República Dominicana</p>
+            </div>
+
+            <!-- BOTÓN CERRAR -->
             <button class="btn-cerrar-modal" onclick="cerrarModalCreditos()">Cerrar</button>
+
         </div>
     </div>
 
@@ -867,7 +1061,7 @@
                 .openOn(map);
         });
 
-// ═══════════════════════════════════════════════════════════
+        // ═══════════════════════════════════════════════════════════
         // 5.1 RUTA DE CICLONES (1900-2026)
         // ═══════════════════════════════════════════════════════════
         var capaCiclones = null;
