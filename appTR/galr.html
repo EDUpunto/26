@@ -6,6 +6,7 @@
     <title>Galería</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
     <style>
         /* ========== RESET Y BASE  ========== */
         * {
@@ -454,6 +455,37 @@
             text-decoration: underline;
         }
 
+        /* ========== BOTÓN QUIZ (derecha arriba) ========== */
+        .btn-quiz {
+            position: fixed;
+            top: 1.2rem;
+            right: 1.2rem;
+            z-index: 999;
+            background: var(--navy);
+            color: var(--cream);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            transition: 0.25s ease;
+            text-decoration: none;
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+        .btn-quiz:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: scale(1.08) rotate(8deg);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        }
+        .btn-quiz .material-symbols-outlined {
+            font-size: 1.8rem;
+        }
+
         /* ========== RESPONSIVE ========== */
         @media (max-width: 760px) {
             .galeria-grid {
@@ -495,6 +527,16 @@
                 width: 46px;
                 height: 46px;
                 font-size: 1.4rem;
+            }
+            .btn-quiz {
+                top: 1rem;
+                right: 1rem;
+                width: 42px;
+                height: 42px;
+                font-size: 1.5rem;
+            }
+            .btn-quiz .material-symbols-outlined {
+                font-size: 1.5rem;
             }
         }
         @media (max-width: 480px) {
@@ -546,6 +588,11 @@
         </div>
     </section>
 
+    <!-- ========== BOTÓN QUIZ (derecha arriba) ========== -->
+    <a href="https://edupunto.com/2026/08/preguntas-y-respuestas-sobre-la-tirania-trujillista/" target="_blank" class="btn-quiz" aria-label="PyR">
+        <span class="material-symbols-outlined">quiz</span>
+    </a>
+
     <!-- ========== CONTENIDO ========== -->
     <div class="contenido">
         <div class="galeria-wrap">
@@ -561,7 +608,7 @@
 
     <!-- ========== PIE DE PÁGINA ========== -->
     <footer class="site-footer">
-        <p>© 2026 · <a href="not.html">Fuentes y Créditos</a> · Galería de imágenes</p>
+        <p>© 2026 · <a href="not.html">Fuentes y Declaración</a> · Galería de imágenes</p>
     </footer>
 
     <!-- ========== BOTÓN ARRIBA ========== -->
@@ -593,7 +640,7 @@
             <li><a href="destru.html">Destrujillización</a></li>
             <li><a href="galr.html" class="activo">Galería</a></li>
             <li><a href="glos.html">Glosario</a></li>
-            <li><a href="not.html">Fuentes y Créditos</a></li>
+            <li><a href="not.html">Fuentes y Declaración</a></li>
         </ul>
     </nav>
 
