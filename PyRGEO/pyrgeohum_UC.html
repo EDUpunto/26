@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyR - Población, Economía y Medioambiente</title>
+    <style>
+        :root {
+            --primary-color: #66CCCC;
+            --primary-dark: #8a7340;
+            --secondary-color: #D4A843;
+            --light-gray: #f4f4f4;
+            --medium-gray: #ccc;
+            --dark-gray: #555;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --bg-overlay: rgba(0, 0, 0, 0.65);
+        }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: url('anx/fd0.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+        }
+        .quiz-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            border: 3px solid var(--primary-color);
+        }
+        .quiz-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 4px solid var(--secondary-color);
+        }
+        .quiz-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .quiz-body { padding: 2rem; }
+        #start-screen, #results-screen { text-align: center; }
+        #question-screen, #results-screen, #next-btn { display: none; }
+        #progress-container {
+            margin-bottom: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        #question-text {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            color: #333;
+        }
+        #answer-options { list-style-type: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+        .answer-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            background-color: white;
+            border: 2px solid var(--medium-gray);
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s, transform 0.1s;
+        }
+        .answer-btn:hover:not([disabled]) {
+            background-color: #fdf6e8;
+            border-color: var(--primary-color);
+        }
+        .answer-btn:disabled { cursor: not-allowed; }
+        .answer-btn.correct {
+            background-color: var(--correct-color);
+            border-color: var(--correct-color);
+            color: white;
+            animation: correctPulse 0.6s ease-in-out;
+        }
+        .answer-btn.incorrect {
+            background-color: var(--incorrect-color);
+            border-color: var(--incorrect-color);
+            color: white;
+            animation: incorrectShake 0.5s ease-in-out;
+        }
+        .controls { margin-top: 2rem; text-align: center; }
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .btn:hover {
+            transform: scale(1.03);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        }
+        #results-screen h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+        }
+        #score-text {
+            font-size: 1.5rem;
+            margin: 1.5rem 0;
+            color: var(--primary-dark);
+        }
+        .sound-controls {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            padding: .5rem;
+        }
+        .sound-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+        .sound-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .credits-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s;
+            z-index: 10;
+        }
+        .credits-btn:hover { background-color: rgba(255, 255, 255, 0.5); }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 25px;
+            border: 3px solid var(--primary-color);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+        }
+        .modal-content h2 {
+            color: var(--primary-color);
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .close-btn:hover, .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .footer-credit {
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .star-icon {
+            display: inline-block;
+            margin-right: 12px;
+            font-size: 1.2rem;
+            animation: spin 2s linear infinite;
+        }
+        .animation-paused .star-icon {
+            animation-play-state: paused;
+        }
+
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes correctPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes incorrectShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        @media (max-width: 600px) {
+            .quiz-header h1 { font-size: 1.3rem; }
+            .quiz-body { padding: 1.2rem; }
+            #question-text { font-size: 1.1rem; }
+            .answer-btn { font-size: 1rem; padding: 0.8rem; }
+            .btn { padding: 0.8rem 1.2rem; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <button id="credits-btn" class="credits-btn">?</button>
+        <div class="quiz-header"><h1>Población y Economía</h1></div>
+        <div class="quiz-body">
+            <div id="start-screen">
+                <h2 style="color: var(--primary-color);">¡Pon a prueba tus conocimientos!</h2>
+                <p style="font-size: 1.1rem;">Seleccionamos <strong>10 preguntas al azar de nuestro banco.</strong></p>
+                <div class="sound-controls">
+                    <label class="sound-toggle">
+                        <input type="checkbox" id="sound-enabled" checked>
+                        🔊 Efectos de sonido activados
+                    </label>
+                </div>
+                <button class="btn" id="start-btn">Comenzar 🚀</button>
+            </div>
+            <div id="question-screen">
+                <div id="progress-container"><span id="question-counter"></span></div>
+                <h2 id="question-text"></h2>
+                <ul id="answer-options"></ul>
+                <div class="controls"><button class="btn" id="next-btn">Siguiente</button></div>
+            </div>
+            <div id="results-screen">
+                <h2>¡Cuestionario completo!</h2>
+                <p id="score-text"></p>
+                <button class="btn" id="restart-btn">Volver a Intentar 🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-credit"><p> <a href="https://edupunto.com/" target="_blank">EDUPUNTO</a> - ago.2026</p></div>
+
+    <div id="credits-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Créditos</h2>
+            <p>Este cuestionario fue desarrollado por Juan Ernesto De Frías para <a href="https://edupunto.com/" target="_blank">EDUPUNTO</a> </p>
+            <p>Santo Domingo, República Dominicana, 2026.</p>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // === MOTOR SCORM 1.2 INTEGRADO (INICIO) ===
+        // ==========================================
+        var SCORM = {
+            API: null,
+            isConnected: false,
+
+            findAPI: function(win) {
+                var findAPITries = 0;
+                while ((win.API == null) && (win.parent != null) && (win.parent != win)) {
+                    findAPITries++;
+                    if (findAPITries > 7) {
+                        return null;
+                    }
+                    win = win.parent;
+                }
+                return win.API;
+            },
+
+            init: function() {
+                this.API = this.findAPI(window);
+                if ((this.API == null) && (window.opener != null) && (typeof(window.opener) != "undefined")) {
+                    this.API = this.findAPI(window.opener);
+                }
+
+                if (this.API != null) {
+                    var result = this.API.LMSInitialize("");
+                    if (result == "true") {
+                        this.isConnected = true;
+                        console.log("SCORM: Conectado exitosamente.");
+                        this.set("cmi.core.lesson_status", "incomplete");
+                        this.save();
+                    } else {
+                        console.error("SCORM: Error al inicializar.");
+                    }
+                } else {
+                    console.warn("SCORM: No se encontró la API. Ejecutando en modo local.");
+                }
+            },
+
+            set: function(param, value) {
+                if (this.isConnected) {
+                    this.API.LMSSetValue(param, value);
+                }
+            },
+
+            save: function() {
+                if (this.isConnected) {
+                    this.API.LMSCommit("");
+                }
+            },
+
+            quit: function() {
+                if (this.isConnected) {
+                    this.API.LMSFinish("");
+                    this.isConnected = false;
+                }
+            }
+        };
+
+        window.onload = function() {
+            SCORM.init();
+        };
+
+        window.onunload = function() {
+            SCORM.quit();
+        };
+        // ==========================================
+        // === MOTOR SCORM 1.2 INTEGRADO (FIN) ===
+        // ==========================================
+
+        // --- 1. DATOS DEL CUESTIONARIO (BANCO COMPLETO) ---
+        const fullQuizData = [
+            {
+                question: "¿Cuál fue la población total de la República Dominicana según el X Censo (2022)?",
+                answerOptions: [
+                    { text: "9,459,236 habitantes", isCorrect: false },
+                    { text: "10,773,983 habitantes", isCorrect: true },
+                    { text: "11,314,747 habitantes", isCorrect: false },
+                    { text: "12,000,000 habitantes", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuál es la edad promedio de la población dominicana según datos de 2022?",
+                answerOptions: [
+                    { text: "26.7 años", isCorrect: false },
+                    { text: "28.7 años", isCorrect: true },
+                    { text: "30.5 años", isCorrect: false },
+                    { text: "32.3 años", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué porcentaje de la población dominicana vive en zonas urbanas?",
+                answerOptions: [
+                    { text: "75.5%", isCorrect: false },
+                    { text: "80.2%", isCorrect: false },
+                    { text: "84.5%", isCorrect: true },
+                    { text: "88.1%", isCorrect: false }
+                ]
+            },
+            {
+                question: "Según la pirámide poblacional de 2022, ¿cuántas personas conforman la PET (Población en Edad de Trabajar 15-64 años) en República Dominicana?",
+                answerOptions: [
+                    { text: "5,794,196 personas", isCorrect: false },
+                    { text: "6,812,450 personas", isCorrect: false },
+                    { text: "7,626,194 personas", isCorrect: true },
+                    { text: "8,123,567 personas", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué indica que la edad promedio aumente constantemente en una población?",
+                answerOptions: [
+                    { text: "Aumento de la natalidad", isCorrect: false },
+                    { text: "Envejecimiento poblacional", isCorrect: true },
+                    { text: "Disminución de la mortalidad infantil", isCorrect: false },
+                    { text: "Crecimiento económico acelerado", isCorrect: false }
+                ]
+            },
+            {
+                question: "Según la ONU, ¿cuál es la línea de pobreza extrema internacional desde 2017?",
+                answerOptions: [
+                    { text: "US$1.25 por persona al día", isCorrect: false },
+                    { text: "US$1.90 por persona al día", isCorrect: false },
+                    { text: "US$2.15 por persona al día", isCorrect: true },
+                    { text: "US$3.50 por persona al día", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Qué implica el envejecimiento progresivo de la población dominicana para el sistema de salud?",
+                answerOptions: [
+                    { text: "Menor presión sobre el sistema de salud", isCorrect: false },
+                    { text: "Mayor presión sobre el sistema de salud y pensiones", isCorrect: true },
+                    { text: "Reducción automática de costos médicos", isCorrect: false },
+                    { text: "Eliminación de enfermedades crónicas", isCorrect: false }
+                ]
+            },
+            {
+                question: "Imagina dos países: el País X tiene un PIB total de US$ 500 mil millones y 50 millones de habitantes. El País Y tiene un PIB total de US$ 100 mil millones y 5 millones de habitantes. ¿Qué indicador revela mejor la productividad económica individual y el potencial de nivel de vida promedio, y cuál es el resultado?",
+                answerOptions: [
+                    { text: "El PIB total; el País X es más rico.", isCorrect: false },
+                    { text: "El PIB per cápita; el País Y es más productivo y rico por habitante (US$ 20,000) que el País X (US$ 10,000).", isCorrect: true },
+                    { text: "La densidad poblacional; el País X tiene más ventaja.", isCorrect: false },
+                    { text: "Ninguno, porque el PIB no mide la economía.", isCorrect: false }
+                ]
+            },
+            {
+                question: "Los datos muestran que la edad promedio en la RD está aumentando (de 26.7 en 2020 a 28.7 en 2026). ¿Cuál sector de la infraestructura pública enfrentará la presión en la próxima década debido a este cambio etario?",
+                answerOptions: [
+                    { text: "La construcción de nuevas escuelas primarias.", isCorrect: false },
+                    { text: "El sistema de salud, específicamente en la atención de enfermedades crónicas, degenerativas y la necesidad de geriatría.", isCorrect: true },
+                    { text: "Los programas de alimentación escolar.", isCorrect: false },
+                    { text: "La expansión de la educación universitaria de pregrado.", isCorrect: false }
+                ]
+            },
+            {
+                question: "En la RD, la ONE define 'área urbana' como la cabecera municipal/distrital y 'área rural' como secciones y parajes. ¿Cuál es el principal riesgo de utilizar esta definición para asignar presupuestos de desarrollo territorial?",
+                answerOptions: [
+                    { text: "Que se gaste demasiado dinero en las capitales de provincia.", isCorrect: false },
+                    { text: "Que se ignoren 'parajes' o secciones que, por dinámica migratoria y económica, han alcanzado densidades y complejidad de servicios propios de áreas urbanas, privándolos de inversión en infraestructura adecuada.", isCorrect: true },
+                    { text: "Que la población rural disminuya demasiado rápido.", isCorrect: false },
+                    { text: "Que el censo no pueda contar a las personas mayores de 100 años.", isCorrect: false }
+                ]
+            },
+            {
+                question: "Un hogar en la República Dominicana tiene un ingreso per cápita diario de US$ 3.50 (por encima de la línea de pobreza extrema). Sin embargo, no tiene acceso a agua potable, saneamiento adecuado y sus niños no asisten a la escuela secundaria. ¿cómo se clasifica esta situación?",
+                answerOptions: [
+                    { text: "No es pobreza, ya que superan el umbral monetario internacional.", isCorrect: false },
+                    { text: "Pobreza multidimensional, ya que la privación severa en capacidades básicas (salud, educación, vivienda) persiste a pesar de superar la línea monetaria extrema.", isCorrect: true },
+                    { text: "Riqueza relativa, porque tienen más de US$ 2.15.", isCorrect: false },
+                    { text: "Pobreza extrema absoluta, por definición del Banco Mundial.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Que es exactamente lo que se mide con el Índice de Desarrollo Humano (IDH) y el coeficiente de Gini?",
+                answerOptions: [
+                    { text: "El IDH mide la desigualdad en la distribución de la riqueza, mientras que el coeficiente de Gini evalúa el crecimiento del PIB.", isCorrect: false },
+                    { text: "Ambos indicadores miden exclusivamente la productividad industrial de un territorio.", isCorrect: false },
+                    { text: "El IDH evalúa el desarrollo (salud, educación e ingresos), mientras que el coeficiente de Gini mide la desigualdad social.", isCorrect: true },
+                    { text: "El coeficiente de Gini mide la esperanza de vida, y el IDH mide la presión arterial económica de un país", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Cuáles son las tres dimensiones que mide el Índice de Desarrollo Humano (IDH)?",
+                answerOptions: [
+                    { text: "PIB total, tasa de inflación y balanza comercial.", isCorrect: false },
+                    { text: "Salud, educación e ingresos.", isCorrect: true },
+                    { text: "Densidad poblacional, esperanza de vida y exportaciones.", isCorrect: false },
+                    { text: "Inversión extranjera, tasa de desempleo y ahorro nacional.", isCorrect: false }
+                ]
+            },
+            {
+                question: "¿Por qué se necesita utilizar varias técnicas para estudiar la pobreza y el bienestar humano de un territorio?",
+                answerOptions: [
+                    { text: "Porque los economistas internacionales no se ponen de acuerdo en un solo método de cálculo.", isCorrect: false },
+                    { text: "Porque es la única forma de calcular el PIB per cápita de un país de manera precisa.", isCorrect: false },
+                    { text: "Porque la pobreza posee múltiples ángulos de estudio y un solo indicador no puede capturar la realidad completa de las privaciones que enfrenta la población.", isCorrect: true },
+                    { text: "Porque el Banco Mundial lo exige como requisito obligatorio para otorgar préstamos a países en desarrollo", isCorrect: false }
+                ]
+            }
+        ];
+
+        const TOTAL_QUESTIONS_PER_ATTEMPT = 10;  //cantidad de preguntas por intento
+
+        const startScreen = document.getElementById('start-screen'), questionScreen = document.getElementById('question-screen'), resultsScreen = document.getElementById('results-screen');
+        const startBtn = document.getElementById('start-btn'), nextBtn = document.getElementById('next-btn'), restartBtn = document.getElementById('restart-btn');
+        const questionCounterEl = document.getElementById('question-counter'), questionTextEl = document.getElementById('question-text'), answerOptionsEl = document.getElementById('answer-options'), scoreTextEl = document.getElementById('score-text');
+        const soundEnabledCheckbox = document.getElementById('sound-enabled');
+        const creditsModal = document.getElementById('credits-modal'), creditsBtn = document.getElementById('credits-btn'), closeBtn = document.querySelector('.close-btn');
+        let shuffledQuestions = [], currentQuestionIndex = 0, score = 0;
+        
+        class SoundManager { 
+            constructor() { 
+                this.audioContext = null; 
+                this.enabled = true; 
+                this.initAudioContext(); 
+            } 
+            async initAudioContext() { 
+                try { 
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); 
+                } catch (error) { 
+                    console.warn('Audio context not supported:', error); 
+                } 
+            } 
+            async playCorrectSound() { 
+                if (!this.enabled || !this.audioContext) return; 
+                try { 
+                    const frequencies = [523.25, 659.25, 783.99]; 
+                    for (let i = 0; i < frequencies.length; i++) { 
+                        setTimeout(() => { 
+                            this.playTone(frequencies[i], 0.2, 0.1); 
+                        }, i * 80); 
+                    } 
+                } catch (error) { 
+                    console.warn('Error playing correct sound:', error); 
+                } 
+            } 
+            async playIncorrectSound() { 
+                if (!this.enabled || !this.audioContext) return; 
+                try { 
+                    const frequencies = [400, 300, 200]; 
+                    for (let i = 0; i < frequencies.length; i++) { 
+                        setTimeout(() => { 
+                            this.playTone(frequencies[i], 0.15, 0.8); 
+                        }, i * 100); 
+                    } 
+                } catch (error) { 
+                    console.warn('Error playing incorrect sound:', error); 
+                } 
+            } 
+            playTone(frequency, duration, volume = 0.1) { 
+                if (!this.audioContext) return; 
+                const oscillator = this.audioContext.createOscillator(); 
+                const gainNode = this.audioContext.createGain(); 
+                oscillator.connect(gainNode); 
+                gainNode.connect(this.audioContext.destination); 
+                oscillator.frequency.value = frequency; 
+                oscillator.type = 'sine'; 
+                gainNode.gain.setValueAtTime(0, this.audioContext.currentTime); 
+                gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 0.01); 
+                gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration); 
+                oscillator.start(this.audioContext.currentTime); 
+                oscillator.stop(this.audioContext.currentTime + duration); 
+            } 
+            setEnabled(enabled) { 
+                this.enabled = enabled; 
+            } 
+        }
+
+        function vibrateDevice(pattern) { 
+            if (!navigator.vibrate) { 
+                return; 
+            } 
+            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); 
+            if (isMobile) { 
+                try { 
+                    navigator.vibrate(pattern); 
+                } catch (error) { 
+                    console.error('Error en vibración:', error); 
+                } 
+            } 
+        }
+        
+        function vibrateIncorrect() {
+            const strongPattern = [300, 100, 300, 100, 300];
+            vibrateDevice(strongPattern);
+        }
+        
+        function vibrateCorrect() {
+            const gentlePattern = [100, 50, 100];
+            vibrateDevice(gentlePattern);
+        }
+        
+        const soundManager = new SoundManager();
+        
+        function shuffleArray(array) { 
+            for (let i = array.length - 1; i > 0; i--) { 
+                const j = Math.floor(Math.random() * (i + 1)); 
+                [array[i], array[j]] = [array[j], array[i]]; 
+            } 
+        }
+
+        // Selecciona aleatoriamente N preguntas del banco completo
+        function selectRandomQuestions(questionBank, count) {
+            const shuffled = [...questionBank];
+            shuffleArray(shuffled);
+            return shuffled.slice(0, count);
+        }
+        
+        function startQuiz() { 
+            startScreen.style.display = 'none'; 
+            resultsScreen.style.display = 'none'; 
+            questionScreen.style.display = 'block'; 
+            
+            // Seleccionar 10 preguntas aleatorias del banco completo
+            const selectedQuestions = selectRandomQuestions(fullQuizData, TOTAL_QUESTIONS_PER_ATTEMPT);
+            shuffledQuestions = selectedQuestions;
+            // Ya vienen mezcladas por selectRandomQuestions, pero mezclamos nuevamente por si acaso
+            shuffleArray(shuffledQuestions);
+            
+            currentQuestionIndex = 0; 
+            score = 0; 
+            showQuestion(); 
+            if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') { 
+                soundManager.audioContext.resume(); 
+            } 
+        }
+        
+        function showQuestion() {
+            resetState();
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            
+            questionCounterEl.innerText = `Pregunta ${currentQuestionIndex + 1} de ${shuffledQuestions.length}`;
+            
+            let questionHTML = '';
+            if (currentQuestion.imageSrc) {
+                questionHTML += `<img src="${currentQuestion.imageSrc}" alt="Imagen de la pregunta" class="question-image">`;
+            }
+            questionHTML += currentQuestion.question;
+            questionTextEl.innerHTML = questionHTML;
+
+            const shuffledAnswers = [...currentQuestion.answerOptions];
+            shuffleArray(shuffledAnswers);
+
+            shuffledAnswers.forEach(answer => {
+                const button = document.createElement('button');
+                const star = document.createElement('span');
+                star.classList.add('star-icon');
+                star.innerText = '⭐';
+                
+                const answerText = document.createTextNode(` ${answer.text}`);
+                
+                button.appendChild(star);
+                button.appendChild(answerText);
+                
+                button.classList.add('answer-btn');
+                button.dataset.correct = answer.isCorrect;
+                button.addEventListener('click', selectAnswer);
+                answerOptionsEl.appendChild(button);
+            });
+        }
+
+        function resetState() { 
+            nextBtn.style.display = 'none'; 
+            while (answerOptionsEl.firstChild) { 
+                answerOptionsEl.removeChild(answerOptionsEl.firstChild); 
+            } 
+        }
+
+        function selectAnswer(e) {
+            Array.from(answerOptionsEl.children).forEach(btn => {
+                btn.classList.add('animation-paused');
+            });
+
+            const selectedButton = e.currentTarget;
+            const isCorrect = selectedButton.dataset.correct === "true";
+            
+            if (isCorrect) {
+                score++;
+                selectedButton.classList.add('correct');
+                soundManager.playCorrectSound();
+                vibrateCorrect(); 
+            } else {
+                selectedButton.classList.add('incorrect');
+                soundManager.playIncorrectSound();
+                vibrateIncorrect(); 
+            }
+            
+            Array.from(answerOptionsEl.children).forEach(button => {
+                if (button.dataset.correct === "true") {
+                    button.classList.add('correct');
+                }
+                button.disabled = true;
+            });
+            
+            if (shuffledQuestions.length > currentQuestionIndex + 1) {
+                nextBtn.style.display = 'block';
+            } else {
+                setTimeout(showResults, 1200);
+                nextBtn.style.display = 'none';
+            }
+        }
+        
+        function showResults() { 
+            questionScreen.style.display = 'none'; 
+            resultsScreen.style.display = 'block'; 
+            
+            const percentage = Math.round((score / shuffledQuestions.length) * 100); 
+            
+            scoreTextEl.innerHTML = `
+                Tu puntuación final es <strong>${score}</strong> de ${shuffledQuestions.length} (<strong>${percentage}%</strong>).
+
+            `; 
+
+            console.log("Enviando notas a SCORM. Puntos:", percentage);
+            SCORM.set("cmi.core.score.raw", percentage);
+            SCORM.set("cmi.core.score.min", "0");
+            SCORM.set("cmi.core.score.max", "100");
+            
+            if (percentage >= 80) {
+                SCORM.set("cmi.core.lesson_status", "passed");
+                setTimeout(() => soundManager.playCorrectSound(), 300);
+            } else {
+                SCORM.set("cmi.core.lesson_status", "completed"); 
+                if (percentage >= 60) { 
+                    setTimeout(() => soundManager.playTone(440, 0.5, 0.2), 300); 
+                }
+            }
+            SCORM.save();
+        }
+        
+        function handleNextButton() { 
+            currentQuestionIndex++; 
+            showQuestion(); 
+        }
+        
+        startBtn.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', handleNextButton);
+        
+        restartBtn.addEventListener('click', () => {
+             startQuiz();
+        });
+        
+        soundEnabledCheckbox.addEventListener('change', (e) => { soundManager.setEnabled(e.target.checked); });
+        creditsBtn.onclick = function() { creditsModal.style.display = "block"; }
+        closeBtn.onclick = function() { creditsModal.style.display = "none"; }
+        window.onclick = function(event) { if (event.target == creditsModal) { creditsModal.style.display = "none"; } }
+        document.addEventListener('click', () => { if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') { soundManager.audioContext.resume(); } }, { once: true });
+    </script>
+</body>
+</html>
