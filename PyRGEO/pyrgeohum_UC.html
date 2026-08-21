@@ -17,6 +17,7 @@
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --bg-overlay: rgba(0, 0, 0, 0.65);
         }
+        * { box-sizing: border-box; }
         body {
             font-family: var(--font-family);
             background-color: var(--light-gray);
@@ -29,9 +30,8 @@
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
-            background-image: url('anx/fd0.png');
-            background-size: cover;
-            background-position: center;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDgwIDgwIj48cmVjdCB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IiNlZWVlZWUiLz48cGF0aCBkPSJNMzAgMjBhMTAgMTAgMCAwIDEgMjAgMCAxMCAxMCAwIDAgMS0yMCAweiIgZmlsbD0iI2NjYyIgb3BhY2l0eT0iMC4yIi8+PC9zdmc+');
+            background-size: 80px 80px;
             background-attachment: fixed;
             position: relative;
         }
@@ -59,7 +59,7 @@
         .quiz-header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 2rem;
+            padding: 1.5rem 2rem;
             text-align: center;
             border-bottom: 4px solid var(--secondary-color);
         }
@@ -78,6 +78,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
         #timer-container {
             font-size: 1.2rem;
@@ -175,7 +177,6 @@
             height: 18px;
             accent-color: var(--primary-color);
         }
-
         .credits-btn {
             position: absolute;
             top: 15px;
@@ -196,7 +197,6 @@
             z-index: 10;
         }
         .credits-btn:hover { background-color: rgba(255, 255, 255, 0.5); }
-
         .modal {
             display: none;
             position: fixed;
@@ -219,9 +219,7 @@
             max-width: 500px;
             position: relative;
         }
-        .modal-content h2 {
-            color: var(--primary-color);
-        }
+        .modal-content h2 { color: var(--primary-color); }
         .close-btn {
             color: #aaa;
             float: right;
@@ -236,7 +234,6 @@
             text-decoration: none;
             cursor: pointer;
         }
-
         .footer-credit {
             margin-top: 20px;
             color: rgba(255, 255, 255, 0.8);
@@ -246,17 +243,13 @@
             z-index: 1;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
         }
-
         .star-icon {
             display: inline-block;
             margin-right: 12px;
             font-size: 1.2rem;
             animation: spin 2s linear infinite;
         }
-        .animation-paused .star-icon {
-            animation-play-state: paused;
-        }
-
+        .animation-paused .star-icon { animation-play-state: paused; }
         .question-image {
             max-width: 100%;
             height: auto;
@@ -266,12 +259,10 @@
             margin-left: auto;
             margin-right: auto;
         }
-
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
         @keyframes correctPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         @keyframes incorrectShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-
         @media (max-width: 600px) {
             .quiz-header h1 { font-size: 1.3rem; }
             .quiz-body { padding: 1.2rem; }
@@ -279,17 +270,93 @@
             .answer-btn { font-size: 1rem; padding: 0.8rem; }
             .btn { padding: 0.8rem 1.2rem; font-size: 1rem; }
         }
+
+        /* Estilos para el nombre y certificado */
+        .name-input-area {
+            margin: 1.5rem 0;
+        }
+        .name-input-area input {
+            padding: 0.8rem 1.2rem;
+            font-size: 1.1rem;
+            border: 2px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .name-input-area input:focus {
+            border-color: var(--primary-color);
+        }
+        .certificate-container {
+            background: #fff8e7;
+            border: 4px double var(--secondary-color);
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .certificate-container h3 {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            margin: 0.2rem 0;
+            letter-spacing: 2px;
+        }
+        .certificate-container .cert-name {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 3px dashed var(--secondary-color);
+            display: inline-block;
+            padding: 0 20px 8px;
+            margin: 10px 0;
+        }
+        .certificate-container .cert-score {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            background: rgba(212, 168, 67, 0.15);
+            padding: 0.3rem 1.5rem;
+            border-radius: 40px;
+            display: inline-block;
+        }
+        .certificate-container .cert-footer {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .certificate-container .stamp {
+            position: absolute;
+            bottom: 15px;
+            right: 25px;
+            font-size: 2.8rem;
+            opacity: 0.4;
+            transform: rotate(-15deg);
+        }
+        .btn-download {
+            background: #2c3e50;
+            margin-top: 0.5rem;
+        }
+        .btn-download:hover {
+            background: #1a2a3a;
+        }
     </style>
 </head>
 <body>
     <div class="quiz-container">
         <button id="credits-btn" class="credits-btn">?</button>
-        <div class="quiz-header"><h1>Población, Economía y Medioambiente</h1></div>
+        <div class="quiz-header"><h1>🌍 Población, Economía y Medioambiente</h1></div>
         <div class="quiz-body">
+            <!-- START -->
             <div id="start-screen">
-                <h2 style="color: var(--primary-color);">¡Pon a prueba tus conocimientos!</h2>
-                <p style="font-size: 1.1rem;">Seleccionamos <strong>10 preguntas al azar de nuestro banco.</strong></p>
-                <p style="font-size: 1rem; color: var(--primary-dark);">⏱️ Tienes <strong>2 minutos</strong> para responder.</p> // ⬅️ Cambia este valor (en segundos) para ajustar el tiempo
+                <h2 style="color: var(--primary-color);">📋 Pon a prueba tus conocimientos</h2>
+                <p style="font-size: 1.1rem;">Seleccionamos <strong>10 preguntas al azar</strong> de nuestro banco.</p>
+                <p style="font-size: 1rem; color: var(--primary-dark);">⏱️ Tienes <strong>2 minutos</strong> para responder.</p>
+                <div class="name-input-area">
+                    <p><strong>✍️ Escribe tu nombre para el certificado:</strong></p>
+                    <input type="text" id="participant-name" placeholder="Tu nombre completo" maxlength="60" value="">
+                </div>
                 <div class="sound-controls">
                     <label class="sound-toggle">
                         <input type="checkbox" id="sound-enabled" checked>
@@ -298,30 +365,48 @@
                 </div>
                 <button class="btn" id="start-btn">Comenzar 🚀</button>
             </div>
+            <!-- QUESTION -->
             <div id="question-screen">
                 <div id="progress-container">
                     <span id="question-counter"></span>
-                    <span id="timer-container">⏱️ <span id="timer-display">60</span>s</span>
+                    <span id="timer-container">⏱️ <span id="timer-display">120</span>s</span>
                 </div>
                 <h2 id="question-text"></h2>
                 <ul id="answer-options"></ul>
-                <div class="controls"><button class="btn" id="next-btn">Siguiente</button></div>
+                <div class="controls"><button class="btn" id="next-btn">Siguiente ➜</button></div>
             </div>
+            <!-- RESULTS + CERTIFICATE -->
             <div id="results-screen">
-                <h2>¡Cuestionario completo!</h2>
-                <p id="score-text"></p>
-                <button class="btn" id="restart-btn">Volver a Intentar 🔄</button>
+                <h2>🏁 ¡Cuestionario completo!</h2>
+                <div id="result-message"></div>
+                <div id="certificate-area" style="display: none;">
+                    <div class="certificate-container" id="certificate-box">
+                        <div style="text-align: center;">
+                            <h3>🎓 CERTIFICADO DE PARTICIPACIÓN</h3>
+                            <p style="font-size: 1rem; color: #555;">Este certificado se otorga a</p>
+                            <div class="cert-name" id="cert-name-display">—</div>
+                            <p style="font-size: 1rem; color: #555;">por haber completado el cuestionario sobre</p>
+                            <p style="font-weight: bold; color: var(--primary-dark);">Población, Economía y Medioambiente</p>
+                            <p>con un puntaje de</p>
+                            <div class="cert-score" id="cert-score-display">0%</div>
+                            <div class="cert-footer">📅 Santo Domingo, República Dominicana · 2026</div>
+                            <div class="stamp">🏅</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-download" id="download-cert-btn">⬇️ Descargar Certificado</button>
+                </div>
+                <button class="btn" id="restart-btn" style="margin-top: 1rem;">Volver a Intentar 🔄</button>
             </div>
         </div>
     </div>
+    <div class="footer-credit"><p> <a href="https://edupunto.com/" target="_blank" style="color: #ddd;">EDUPUNTO</a> · ago.2026</p></div>
 
-    <div class="footer-credit"><p> <a href="https://edupunto.com/" target="_blank">EDUPUNTO</a> - ago.2026</p></div>
-
+    <!-- MODAL CREDITOS -->
     <div id="credits-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h2>Créditos</h2>
-            <p>Este cuestionario fue desarrollado por Juan Ernesto De Frías para <a href="https://edupunto.com/" target="_blank">EDUPUNTO</a> </p>
+            <p>Desarrollado por Juan Ernesto De Frías para <a href="https://edupunto.com/" target="_blank">EDUPUNTO</a></p>
             <p>Santo Domingo, República Dominicana, 2026.</p>
         </div>
     </div>
@@ -333,25 +418,20 @@
         var SCORM = {
             API: null,
             isConnected: false,
-
             findAPI: function(win) {
                 var findAPITries = 0;
                 while ((win.API == null) && (win.parent != null) && (win.parent != win)) {
                     findAPITries++;
-                    if (findAPITries > 7) {
-                        return null;
-                    }
+                    if (findAPITries > 7) return null;
                     win = win.parent;
                 }
                 return win.API;
             },
-
             init: function() {
                 this.API = this.findAPI(window);
                 if ((this.API == null) && (window.opener != null) && (typeof(window.opener) != "undefined")) {
                     this.API = this.findAPI(window.opener);
                 }
-
                 if (this.API != null) {
                     var result = this.API.LMSInitialize("");
                     if (result == "true") {
@@ -363,502 +443,161 @@
                         console.error("SCORM: Error al inicializar.");
                     }
                 } else {
-                    console.warn("SCORM: No se encontró la API. Ejecutando en modo local.");
+                    console.warn("SCORM: No se encontró la API. Modo local.");
                 }
             },
-
-            set: function(param, value) {
-                if (this.isConnected) {
-                    this.API.LMSSetValue(param, value);
-                }
-            },
-
-            save: function() {
-                if (this.isConnected) {
-                    this.API.LMSCommit("");
-                }
-            },
-
-            quit: function() {
-                if (this.isConnected) {
-                    this.API.LMSFinish("");
-                    this.isConnected = false;
-                }
-            }
+            set: function(param, value) { if (this.isConnected) this.API.LMSSetValue(param, value); },
+            save: function() { if (this.isConnected) this.API.LMSCommit(""); },
+            quit: function() { if (this.isConnected) { this.API.LMSFinish(""); this.isConnected = false; } }
         };
-
-        window.onload = function() {
-            SCORM.init();
-        };
-
-        window.onunload = function() {
-            SCORM.quit();
-        };
+        window.onload = function() { SCORM.init(); };
+        window.onunload = function() { SCORM.quit(); };
         // ==========================================
         // === MOTOR SCORM 1.2 INTEGRADO (FIN) ===
         // ==========================================
 
-        // --- 1. DATOS DEL CUESTIONARIO (BANCO COMPLETO) ---
+        // --- BANCO DE PREGUNTAS (completo) ---
         const fullQuizData = [
-            {
-                question: "¿Cuál fue la población total de la República Dominicana según el X Censo (2022)?",
-                answerOptions: [
-                    { text: "9,459,236 habitantes", isCorrect: false },
-                    { text: "10,773,983 habitantes", isCorrect: true },
-                    { text: "11,314,747 habitantes", isCorrect: false },
-                    { text: "12,000,000 habitantes", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Cuál es la edad promedio de la población dominicana según datos de 2022?",
-                answerOptions: [
-                    { text: "26.7 años", isCorrect: false },
-                    { text: "28.7 años", isCorrect: true },
-                    { text: "30.5 años", isCorrect: false },
-                    { text: "32.3 años", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Qué porcentaje de la población dominicana vive en zonas urbanas?",
-                answerOptions: [
-                    { text: "75.5%", isCorrect: false },
-                    { text: "80.2%", isCorrect: false },
-                    { text: "84.5%", isCorrect: true },
-                    { text: "88.1%", isCorrect: false }
-                ]
-            },
-            {
-                question: "Según la pirámide poblacional de 2022, ¿cuántas personas conforman la PET (Población en Edad de Trabajar 15-64 años) en República Dominicana?",
-                answerOptions: [
-                    { text: "5,794,196 personas", isCorrect: false },
-                    { text: "6,812,450 personas", isCorrect: false },
-                    { text: "7,626,194 personas", isCorrect: true },
-                    { text: "8,123,567 personas", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Qué indica que la edad promedio aumente constantemente en una población?",
-                answerOptions: [
-                    { text: "Aumento de la natalidad", isCorrect: false },
-                    { text: "Envejecimiento poblacional", isCorrect: true },
-                    { text: "Disminución de la mortalidad infantil", isCorrect: false },
-                    { text: "Crecimiento económico acelerado", isCorrect: false }
-                ]
-            },
-            {
-                question: "Según la ONU, ¿cuál es la línea de pobreza extrema internacional desde 2017?",
-                answerOptions: [
-                    { text: "US$1.25 por persona al día", isCorrect: false },
-                    { text: "US$1.90 por persona al día", isCorrect: false },
-                    { text: "US$2.15 por persona al día", isCorrect: true },
-                    { text: "US$3.50 por persona al día", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Qué implica el envejecimiento progresivo de la población dominicana para el sistema de salud?",
-                answerOptions: [
-                    { text: "Menor presión sobre el sistema de salud", isCorrect: false },
-                    { text: "Mayor presión sobre el sistema de salud y pensiones", isCorrect: true },
-                    { text: "Reducción automática de costos médicos", isCorrect: false },
-                    { text: "Eliminación de enfermedades crónicas", isCorrect: false }
-                ]
-            },
-            {
-                question: "Imagina dos países: el País AAA tiene un PIB total de US$ 500 mil millones y 50 millones de habitantes. El País BBB tiene un PIB total de US$ 100 mil millones y 5 millones de habitantes. ¿Qué indicador revela mejor la productividad económica individual y el potencial de nivel de vida promedio, y cuál es el resultado?",
-                answerOptions: [
-                    { text: "El PIB total; el País AAA es más rico.", isCorrect: false },
-                    { text: "El PIB per cápita; el País BBB es más productivo y rico por habitante (US$ 20,000) que el País AAA (US$ 10,000).", isCorrect: true },
-                    { text: "La densidad poblacional; el País AAA tiene más ventaja.", isCorrect: false },
-                    { text: "Ninguno, porque el PIB no mide la economía.", isCorrect: false }
-                ]
-            },
-            {
-                question: "Los datos muestran que la edad promedio en la RD está aumentando (de 26.7 en 2020 a 28.7 en 2026). ¿Cuál sector de la infraestructura pública enfrentará la presión en la próxima década debido a este cambio etario?",
-                answerOptions: [
-                    { text: "La construcción de nuevas escuelas primarias.", isCorrect: false },
-                    { text: "El sistema de salud, específicamente en la atención de enfermedades crónicas, degenerativas y la necesidad de geriatría.", isCorrect: true },
-                    { text: "Los programas de alimentación escolar.", isCorrect: false },
-                    { text: "La expansión de la educación universitaria de pregrado.", isCorrect: false }
-                ]
-            },
-            {
-                question: "En la RD, la ONE define 'área urbana' como la cabecera municipal/distrital y 'área rural' como secciones y parajes. ¿Cuál es el principal riesgo de utilizar esta definición para asignar presupuestos de desarrollo territorial?",
-                answerOptions: [
-                    { text: "Que se gaste demasiado dinero en las capitales de provincia.", isCorrect: false },
-                    { text: "Que se ignoren 'parajes' o secciones que, por dinámica migratoria y económica, han alcanzado densidades y complejidad de servicios propios de áreas urbanas, privándolos de inversión en infraestructura adecuada.", isCorrect: true },
-                    { text: "Que la población rural disminuya demasiado rápido.", isCorrect: false },
-                    { text: "Que el censo no pueda contar a las personas mayores de 100 años.", isCorrect: false }
-                ]
-            },
-            {
-                question: "Un hogar en la República Dominicana tiene un ingreso per cápita diario de US$ 3.50 (por encima de la línea de pobreza extrema). Sin embargo, no tiene acceso a agua potable, saneamiento adecuado y sus niños no asisten a la escuela secundaria. ¿cómo se clasifica esta situación?",
-                answerOptions: [
-                    { text: "No es pobreza, ya que superan el umbral monetario internacional.", isCorrect: false },
-                    { text: "Pobreza multidimensional, ya que la privación severa en capacidades básicas (salud, educación, vivienda) persiste a pesar de superar la línea monetaria extrema.", isCorrect: true },
-                    { text: "Riqueza relativa, porque tienen más de US$ 2.15.", isCorrect: false },
-                    { text: "Pobreza extrema absoluta, por definición del Banco Mundial.", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Que es exactamente lo que se mide con el Índice de Desarrollo Humano (IDH) y el coeficiente de Gini?",
-                answerOptions: [
-                    { text: "El IDH mide la desigualdad en la distribución de la riqueza, mientras que el coeficiente de Gini evalúa el crecimiento del PIB.", isCorrect: false },
-                    { text: "Ambos indicadores miden exclusivamente la productividad industrial de un territorio.", isCorrect: false },
-                    { text: "El IDH evalúa el desarrollo (salud, educación e ingresos), mientras que el coeficiente de Gini mide la desigualdad social.", isCorrect: true },
-                    { text: "El coeficiente de Gini mide la esperanza de vida, y el IDH mide la presión arterial económica de un país", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Cuáles son las tres dimensiones que mide el Índice de Desarrollo Humano (IDH)?",
-                answerOptions: [
-                    { text: "PIB total, tasa de inflación y balanza comercial.", isCorrect: false },
-                    { text: "Salud, educación e ingresos.", isCorrect: true },
-                    { text: "Densidad poblacional, esperanza de vida y exportaciones.", isCorrect: false },
-                    { text: "Inversión extranjera, tasa de desempleo y ahorro nacional.", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Por qué se necesita utilizar varias técnicas para estudiar la pobreza y el bienestar humano de un territorio?",
-                answerOptions: [
-                    { text: "Porque los economistas internacionales no se ponen de acuerdo en un solo método de cálculo.", isCorrect: false },
-                    { text: "Porque es la única forma de calcular el PIB per cápita de un país de manera precisa.", isCorrect: false },
-                    { text: "Porque la pobreza posee múltiples ángulos de estudio y un solo indicador no puede capturar la realidad completa de las privaciones que enfrenta la población.", isCorrect: true },
-                    { text: "Porque el Banco Mundial lo exige como requisito obligatorio para otorgar préstamos a países en desarrollo", isCorrect: false }
-                ]
-            },
-            {
-                question: "De acuerdo con la definición planteada por Gro Harlem Brundtland, ¿cuál es el principio fundamental del desarrollo sostenible?",
-                answerOptions: [
-                    { text: "Maximizar el uso de los recursos naturales para acelerar la industrialización actual.", isCorrect: false },
-                    { text: "Prohibir por completo la explotación de los suelos e infraestructura urbana.", isCorrect: false },
-                    { text: "Satisfacer las necesidades del presente sin comprometer los recursos de las futuras generaciones.", isCorrect: true },
-                    { text: "Reducir el consumo de agua dulce sustituyéndola únicamente por agua desalinizada.", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Cómo se recargan los acuíferos subterráneos en la naturaleza?",
-                answerOptions: [
-                    { text: "Por la evaporación directa del agua proveniente de los lagos y mares.", isCorrect: false },
-                    { text: "Exclusivamente a través del vertido directo de cauces superficiales.", isCorrect: false },
-                    { text: "Mediante la infiltración natural de la lluvia en el suelo poroso.", isCorrect: true },
-                    { text: "A través de la inyección artificial de químicos en la corteza terrestre.", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Por qué las aguas subterráneas se consideran un recurso vital de igual importancia que los lagos y cauces?",
-                answerOptions: [
-                    { text: "Porque son la única fuente existente de energía hidroeléctrica.", isCorrect: false },
-                    { text: "Porque impiden el proceso de evaporación en la atmósfera.", isCorrect: false },
-                    { text: "Porque de ellas surgen los ríos y se alimentan lagos y otros cuerpos de agua.", isCorrect: true },
-                    { text: "Porque sustituyen totalmente la necesidad del agua de lluvia.", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Qué químico se menciona expresamente como coagulante para ayudar a agrupar sedimentos en las Plantas de Tratamiento de Aguas Residuales (PTAR)?",
-                answerOptions: [
-                    { text: "Cloruro de sodio", isCorrect: false },
-                    { text: "Carbonato de calcio", isCorrect: false },
-                    { text: "Sulfato de aluminio", isCorrect: true },
-                    { text: "Nitrato de potasio", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Cuál es una de las principales consecuencias ambientales que causa la acumulación masiva y descomposición del sargazo cercano a las costas?",
-                answerOptions: [
-                    { text: "Aumenta la visibilidad submarina promoviendo el crecimiento de corales profundos.", isCorrect: false },
-                    { text: "Reduce los niveles de salinidad del mar transformándolo en agua dulce.", isCorrect: false },
-                    { text: "Bloquea la luz solar e impide la fotosíntesis, afectando los arrecifes de coral y la vida marina.", isCorrect: true },
-                    { text: "Previene la erosión de las playas al compactar la arena de la orilla.", isCorrect: false }
-                ]
-            },
-            {
-                question: "Durante la descomposición del sargazo en las playas, ¿cuál de los siguientes químicos o gases nocivos se libera impactando el ambiente y la salud?",
-                answerOptions: [
-                    { text: "Monóxido de nitrógeno y helio.", isCorrect: false },
-                    { text: "Oxígeno puro y ozono.", isCorrect: false },
-                    { text: "Arsénico.", isCorrect: true },
-                    { text: "Clorofluorocarbonos (CFC).", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Cuál de los siguientes sectores económicos de la República Dominicana y el Caribe resulta directamente más afectado por la llegada masiva del sargazo?",
-                answerOptions: [
-                    { text: "La industria de la aviación comercial.", isCorrect: false },
-                    { text: "El sector de desarrollo de tecnologías de la información.", isCorrect: false },
-                    { text: "El turismo costero y la pesca artesanal.", isCorrect: true },
-                    { text: "La minería de extracción subterránea.", isCorrect: false }
-                ]
-            },
-            {
-                question: "Según datos del sector hídrico dominicano, ¿qué actividad económica representa el mayor consumo de agua dulce en el país, generando a la vez desafíos ambientales por la escorrentía de agroquímicos?",
-                answerOptions: [
-                    { text: "La industria manufacturera de Zonas Francas", isCorrect: false },
-                    { text: "El turismo hotelero y campos de golf.", isCorrect: false },
-                    { text: "La agricultura y la ganadería.", isCorrect: true },
-                    { text: "La generación de energía hidroeléctrica.", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Cuál es el principal desafío ambiental relacionado con las Plantas de Tratamiento de Aguas Residuales (PTAR) en la República Dominicana en la actualidad?",
-                answerOptions: [
-                    { text: "El exceso de capacidad instalada que permanece inactiva por falta de personal.", isCorrect: false },
-                    { text: "El uso exclusivo de tecnología de ósmosis inversa en todas las plantas del país.", isCorrect: false },
-                    { text: "La baja cobertura de tratamiento, vertiéndose la mayoría de las aguas residuales domésticas e industriales directamente a ríos, mares y sumideros.", isCorrect: true },
-                    { text: "La prohibición legal de construir nuevas plantas de tratamiento cerca de zonas urbanas.", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Qué institución es la principal responsable de la operación, mantenimiento y expansión de los acueductos y alcantarillados del Gran Santo Domingo, incluyendo la gestión de sus plantas de tratamiento?",
-                answerOptions: [
-                    { text: "Instituto Nacional de Recursos Hidráulicos (INDRHI).", isCorrect: false },
-                    { text: "Ministerio de Medio Ambiente y Recursos Naturales.", isCorrect: false },
-                    { text: "La Corporación de Acueducto y Alcantarillado de Santo Domingo (CAASD).", isCorrect: true },
-                    { text: "Consejo Estatal del Azúcar (CEA).", isCorrect: false }
-                ]
-            },
-            {
-                question: "El río Yaque del Norte, vital para la agricultura en la región del Cibao, enfrenta un grave problema de degradación ambiental debido principalmente a:",
-                answerOptions: [
-                    { text: "La sobrepesca de especies endémicas en su cauce.", isCorrect: false },
-                    { text: "La construcción excesiva de plantas de tratamiento de última generación que alteran su caudal.", isCorrect: false },
-                    { text: "La contaminación por vertidos de aguas residuales sin tratar y la escorrentía agrícola con altos niveles de fertilizantes y pesticidas.", isCorrect: true },
-                    { text: "La deforestación acelerada de la Loma La Pelona, que aumenta su salinidad.", isCorrect: false }
-                ]
-            },
-            {
-                question: "Desde una perspectiva medioambiental, ¿cuál es la función principal de una Planta de Tratamiento de Aguas Residuales (PTAR) antes de devolver el efluente a un cuerpo de agua natural?",
-                answerOptions: [
-                    { text: "Aumentar la temperatura del agua para evitar la proliferación de algas nocivas.", isCorrect: false },
-                    { text: "Añadir cloro en cantidades masivas para esterilizar completamente el río o el mar", isCorrect: false },
-                    { text: "Eliminar contaminantes físicos, químicos y biológicos para reducir la carga orgánica y proteger los ecosistemas acuáticos receptores.", isCorrect: true },
-                    { text: "Convertir el agua residual en agua salada para su liberación controlada.", isCorrect: false }
-                ]
-            },
-            {
-                question: "En regiones turísticas del este, como Bávaro-Punta Cana, la sobreexplotación de los acuíferos subterráneos para abastecer hoteles, residenciales y campos de golf ha provocado como principal consecuencia ambiental:",
-                answerOptions: [
-                    { text: "El aumento desmedido de la población de peces de agua dulce en las fuentes naturales.", isCorrect: false },
-                    { text: "La depuración de los mantos acuíferos debido a la alteración de la presión atmosférica.", isCorrect: false },
-                    { text: "La intrusión salina, que contamina las reservas de agua dulce con agua de mar, inutilizando los pozos.", isCorrect: true },
-                    { text: "El desbordamiento constante de los ríos locales por el exceso de agua subterránea.", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Qué ley de la República Dominicana establece el marco legal general para la gestión ambiental, incluyendo la protección de los recursos hídricos, las zonas de veda de los ríos y la regulación de vertidos contaminantes?",
-                answerOptions: [
-                    { text: "Ley 17-19 de Cambio Climático.", isCorrect: false },
-                    { text: "Ley 5852 del Instituto Nacional de Recursos Hidráulicos.", isCorrect: false },
-                    { text: "Ley 64-00 General sobre Medio Ambiente y Recursos Naturales.", isCorrect: true },
-                    { text: "Ley 20-00 sobre Propiedad Industrial.", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Por qué se prohíbe el vertido de agua de lluvia en las redes de alcantarillado sanitario (cloacales)?",
-                answerOptions: [
-                    { text: "Porque el agua de lluvia contiene altos niveles de cloro y químicos que corroen inmediatamente las tuberías de concreto y PVC del sistema.", isCorrect: false },
-                    { text: "Porque las plantas de tratamiento de aguas residuales utilizan el agua de lluvia como su principal fuente de energía para operar las bombas de succión.", isCorrect: false },
-                    { text: "Porque el sistema de alcantarillado sanitario está diseñado para un caudal específico de aguas residuales; la entrada de agua de lluvia causa sobrecarga hidráulica, desbordamientos, reflujo de aguas servidas a las calles y altera los procesos biológicos en las plantas de tratamiento.", isCorrect: true },
-                    { text: "Porque la ley clasifica el agua de lluvia como un 'residuo peligroso' que debe ser tratado en incineradores especiales antes de ser desechada.", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿A que nos referimos con el término 'Especie invasora'?",
-                answerOptions: [
-                    { text: "A cualquier animal o planta endémica que crece de manera abrumadora debido a cambios climáticos naturales.", isCorrect: false },
-                    { text: "A una especie nativa que ha sido criada en cautiverio y luego liberada en su propia región.", isCorrect: false },
-                    { text: "A un organismo exótico introducido fuera de su hábitat natural que se adapta, se multiplica y causa impacto negativo en la biodiversidad local.", isCorrect: true },
-                    { text: "A los cultivos agrícolas tradicionales creados mediante selección artificial para consumo humano.", isCorrect: false }
-                ]
-            },
-            {
-                question: "¿Cuál de las siguientes afirmaciones es correcta respecto al «Pez Diablo» (Amphilophus citrinellus)?",
-                answerOptions: [
-                    { text: "Es un alga flotante que bloquea la luz solar en las costas del Caribe.", isCorrect: false },
-                    { text: "Es una especie endémica protegida en la República Dominicana.", isCorrect: false },
-                    { text: "Es una especie exótica invasora con un severo impacto negativo en la biodiversidad de ríos y lagos de agua dulce.", isCorrect: true },
-                    { text: "Es un organismo marino utilizado comercialmente en las PTAR.", isCorrect: false }
-                ]
-            }
-
+            { question: "¿Cuál fue la población total de la República Dominicana según el X Censo (2022)?", answerOptions: [ { text: "9,459,236 habitantes", isCorrect: false }, { text: "10,773,983 habitantes", isCorrect: true }, { text: "11,314,747 habitantes", isCorrect: false }, { text: "12,000,000 habitantes", isCorrect: false } ] },
+            { question: "¿Cuál es la edad promedio de la población dominicana según datos de 2022?", answerOptions: [ { text: "26.7 años", isCorrect: false }, { text: "28.7 años", isCorrect: true }, { text: "30.5 años", isCorrect: false }, { text: "32.3 años", isCorrect: false } ] },
+            { question: "¿Qué porcentaje de la población dominicana vive en zonas urbanas?", answerOptions: [ { text: "75.5%", isCorrect: false }, { text: "80.2%", isCorrect: false }, { text: "84.5%", isCorrect: true }, { text: "88.1%", isCorrect: false } ] },
+            { question: "Según la pirámide poblacional de 2022, ¿cuántas personas conforman la PET (Población en Edad de Trabajar 15-64 años) en República Dominicana?", answerOptions: [ { text: "5,794,196 personas", isCorrect: false }, { text: "6,812,450 personas", isCorrect: false }, { text: "7,626,194 personas", isCorrect: true }, { text: "8,123,567 personas", isCorrect: false } ] },
+            { question: "¿Qué indica que la edad promedio aumente constantemente en una población?", answerOptions: [ { text: "Aumento de la natalidad", isCorrect: false }, { text: "Envejecimiento poblacional", isCorrect: true }, { text: "Disminución de la mortalidad infantil", isCorrect: false }, { text: "Crecimiento económico acelerado", isCorrect: false } ] },
+            { question: "Según la ONU, ¿cuál es la línea de pobreza extrema internacional desde 2017?", answerOptions: [ { text: "US$1.25 por persona al día", isCorrect: false }, { text: "US$1.90 por persona al día", isCorrect: false }, { text: "US$2.15 por persona al día", isCorrect: true }, { text: "US$3.50 por persona al día", isCorrect: false } ] },
+            { question: "¿Qué implica el envejecimiento progresivo de la población dominicana para el sistema de salud?", answerOptions: [ { text: "Menor presión sobre el sistema de salud", isCorrect: false }, { text: "Mayor presión sobre el sistema de salud y pensiones", isCorrect: true }, { text: "Reducción automática de costos médicos", isCorrect: false }, { text: "Eliminación de enfermedades crónicas", isCorrect: false } ] },
+            { question: "Imagina dos países: el País AAA tiene un PIB total de US$ 500 mil millones y 50 millones de habitantes. El País BBB tiene un PIB total de US$ 100 mil millones y 5 millones de habitantes. ¿Qué indicador revela mejor la productividad económica individual y el potencial de nivel de vida promedio, y cuál es el resultado?", answerOptions: [ { text: "El PIB total; el País AAA es más rico.", isCorrect: false }, { text: "El PIB per cápita; el País BBB es más productivo y rico por habitante (US$ 20,000) que el País AAA (US$ 10,000).", isCorrect: true }, { text: "La densidad poblacional; el País AAA tiene más ventaja.", isCorrect: false }, { text: "Ninguno, porque el PIB no mide la economía.", isCorrect: false } ] },
+            { question: "Los datos muestran que la edad promedio en la RD está aumentando (de 26.7 en 2020 a 28.7 en 2026). ¿Cuál sector de la infraestructura pública enfrentará la presión en la próxima década debido a este cambio etario?", answerOptions: [ { text: "La construcción de nuevas escuelas primarias.", isCorrect: false }, { text: "El sistema de salud, específicamente en la atención de enfermedades crónicas, degenerativas y la necesidad de geriatría.", isCorrect: true }, { text: "Los programas de alimentación escolar.", isCorrect: false }, { text: "La expansión de la educación universitaria de pregrado.", isCorrect: false } ] },
+            { question: "En la RD, la ONE define 'área urbana' como la cabecera municipal/distrital y 'área rural' como secciones y parajes. ¿Cuál es el principal riesgo de utilizar esta definición para asignar presupuestos de desarrollo territorial?", answerOptions: [ { text: "Que se gaste demasiado dinero en las capitales de provincia.", isCorrect: false }, { text: "Que se ignoren 'parajes' o secciones que, por dinámica migratoria y económica, han alcanzado densidades y complejidad de servicios propios de áreas urbanas, privándolos de inversión en infraestructura adecuada.", isCorrect: true }, { text: "Que la población rural disminuya demasiado rápido.", isCorrect: false }, { text: "Que el censo no pueda contar a las personas mayores de 100 años.", isCorrect: false } ] },
+            { question: "Un hogar en la República Dominicana tiene un ingreso per cápita diario de US$ 3.50 (por encima de la línea de pobreza extrema). Sin embargo, no tiene acceso a agua potable, saneamiento adecuado y sus niños no asisten a la escuela secundaria. ¿cómo se clasifica esta situación?", answerOptions: [ { text: "No es pobreza, ya que superan el umbral monetario internacional.", isCorrect: false }, { text: "Pobreza multidimensional, ya que la privación severa en capacidades básicas (salud, educación, vivienda) persiste a pesar de superar la línea monetaria extrema.", isCorrect: true }, { text: "Riqueza relativa, porque tienen más de US$ 2.15.", isCorrect: false }, { text: "Pobreza extrema absoluta, por definición del Banco Mundial.", isCorrect: false } ] },
+            { question: "¿Que es exactamente lo que se mide con el Índice de Desarrollo Humano (IDH) y el coeficiente de Gini?", answerOptions: [ { text: "El IDH mide la desigualdad en la distribución de la riqueza, mientras que el coeficiente de Gini evalúa el crecimiento del PIB.", isCorrect: false }, { text: "Ambos indicadores miden exclusivamente la productividad industrial de un territorio.", isCorrect: false }, { text: "El IDH evalúa el desarrollo (salud, educación e ingresos), mientras que el coeficiente de Gini mide la desigualdad social.", isCorrect: true }, { text: "El coeficiente de Gini mide la esperanza de vida, y el IDH mide la presión arterial económica de un país", isCorrect: false } ] },
+            { question: "¿Cuáles son las tres dimensiones que mide el Índice de Desarrollo Humano (IDH)?", answerOptions: [ { text: "PIB total, tasa de inflación y balanza comercial.", isCorrect: false }, { text: "Salud, educación e ingresos.", isCorrect: true }, { text: "Densidad poblacional, esperanza de vida y exportaciones.", isCorrect: false }, { text: "Inversión extranjera, tasa de desempleo y ahorro nacional.", isCorrect: false } ] },
+            { question: "¿Por qué se necesita utilizar varias técnicas para estudiar la pobreza y el bienestar humano de un territorio?", answerOptions: [ { text: "Porque los economistas internacionales no se ponen de acuerdo en un solo método de cálculo.", isCorrect: false }, { text: "Porque es la única forma de calcular el PIB per cápita de un país de manera precisa.", isCorrect: false }, { text: "Porque la pobreza posee múltiples ángulos de estudio y un solo indicador no puede capturar la realidad completa de las privaciones que enfrenta la población.", isCorrect: true }, { text: "Porque el Banco Mundial lo exige como requisito obligatorio para otorgar préstamos a países en desarrollo", isCorrect: false } ] },
+            { question: "De acuerdo con la definición planteada por Gro Harlem Brundtland, ¿cuál es el principio fundamental del desarrollo sostenible?", answerOptions: [ { text: "Maximizar el uso de los recursos naturales para acelerar la industrialización actual.", isCorrect: false }, { text: "Prohibir por completo la explotación de los suelos e infraestructura urbana.", isCorrect: false }, { text: "Satisfacer las necesidades del presente sin comprometer los recursos de las futuras generaciones.", isCorrect: true }, { text: "Reducir el consumo de agua dulce sustituyéndola únicamente por agua desalinizada.", isCorrect: false } ] },
+            { question: "¿Cómo se recargan los acuíferos subterráneos en la naturaleza?", answerOptions: [ { text: "Por la evaporación directa del agua proveniente de los lagos y mares.", isCorrect: false }, { text: "Exclusivamente a través del vertido directo de cauces superficiales.", isCorrect: false }, { text: "Mediante la infiltración natural de la lluvia en el suelo poroso.", isCorrect: true }, { text: "A través de la inyección artificial de químicos en la corteza terrestre.", isCorrect: false } ] },
+            { question: "¿Por qué las aguas subterráneas se consideran un recurso vital de igual importancia que los lagos y cauces?", answerOptions: [ { text: "Porque son la única fuente existente de energía hidroeléctrica.", isCorrect: false }, { text: "Porque impiden el proceso de evaporación en la atmósfera.", isCorrect: false }, { text: "Porque de ellas surgen los ríos y se alimentan lagos y otros cuerpos de agua.", isCorrect: true }, { text: "Porque sustituyen totalmente la necesidad del agua de lluvia.", isCorrect: false } ] },
+            { question: "¿Qué químico se menciona expresamente como coagulante para ayudar a agrupar sedimentos en las Plantas de Tratamiento de Aguas Residuales (PTAR)?", answerOptions: [ { text: "Cloruro de sodio", isCorrect: false }, { text: "Carbonato de calcio", isCorrect: false }, { text: "Sulfato de aluminio", isCorrect: true }, { text: "Nitrato de potasio", isCorrect: false } ] },
+            { question: "¿Cuál es una de las principales consecuencias ambientales que causa la acumulación masiva y descomposición del sargazo cercano a las costas?", answerOptions: [ { text: "Aumenta la visibilidad submarina promoviendo el crecimiento de corales profundos.", isCorrect: false }, { text: "Reduce los niveles de salinidad del mar transformándolo en agua dulce.", isCorrect: false }, { text: "Bloquea la luz solar e impide la fotosíntesis, afectando los arrecifes de coral y la vida marina.", isCorrect: true }, { text: "Previene la erosión de las playas al compactar la arena de la orilla.", isCorrect: false } ] },
+            { question: "Durante la descomposición del sargazo en las playas, ¿cuál de los siguientes químicos o gases nocivos se libera impactando el ambiente y la salud?", answerOptions: [ { text: "Monóxido de nitrógeno y helio.", isCorrect: false }, { text: "Oxígeno puro y ozono.", isCorrect: false }, { text: "Arsénico.", isCorrect: true }, { text: "Clorofluorocarbonos (CFC).", isCorrect: false } ] },
+            { question: "¿Cuál de los siguientes sectores económicos de la República Dominicana y el Caribe resulta directamente más afectado por la llegada masiva del sargazo?", answerOptions: [ { text: "La industria de la aviación comercial.", isCorrect: false }, { text: "El sector de desarrollo de tecnologías de la información.", isCorrect: false }, { text: "El turismo costero y la pesca artesanal.", isCorrect: true }, { text: "La minería de extracción subterránea.", isCorrect: false } ] },
+            { question: "Según datos del sector hídrico dominicano, ¿qué actividad económica representa el mayor consumo de agua dulce en el país, generando a la vez desafíos ambientales por la escorrentía de agroquímicos?", answerOptions: [ { text: "La industria manufacturera de Zonas Francas", isCorrect: false }, { text: "El turismo hotelero y campos de golf.", isCorrect: false }, { text: "La agricultura y la ganadería.", isCorrect: true }, { text: "La generación de energía hidroeléctrica.", isCorrect: false } ] },
+            { question: "¿Cuál es el principal desafío ambiental relacionado con las Plantas de Tratamiento de Aguas Residuales (PTAR) en la República Dominicana en la actualidad?", answerOptions: [ { text: "El exceso de capacidad instalada que permanece inactiva por falta de personal.", isCorrect: false }, { text: "El uso exclusivo de tecnología de ósmosis inversa en todas las plantas del país.", isCorrect: false }, { text: "La baja cobertura de tratamiento, vertiéndose la mayoría de las aguas residuales domésticas e industriales directamente a ríos, mares y sumideros.", isCorrect: true }, { text: "La prohibición legal de construir nuevas plantas de tratamiento cerca de zonas urbanas.", isCorrect: false } ] },
+            { question: "¿Qué institución es la principal responsable de la operación, mantenimiento y expansión de los acueductos y alcantarillados del Gran Santo Domingo, incluyendo la gestión de sus plantas de tratamiento?", answerOptions: [ { text: "Instituto Nacional de Recursos Hidráulicos (INDRHI).", isCorrect: false }, { text: "Ministerio de Medio Ambiente y Recursos Naturales.", isCorrect: false }, { text: "La Corporación de Acueducto y Alcantarillado de Santo Domingo (CAASD).", isCorrect: true }, { text: "Consejo Estatal del Azúcar (CEA).", isCorrect: false } ] },
+            { question: "El río Yaque del Norte, vital para la agricultura en la región del Cibao, enfrenta un grave problema de degradación ambiental debido principalmente a:", answerOptions: [ { text: "La sobrepesca de especies endémicas en su cauce.", isCorrect: false }, { text: "La construcción excesiva de plantas de tratamiento de última generación que alteran su caudal.", isCorrect: false }, { text: "La contaminación por vertidos de aguas residuales sin tratar y la escorrentía agrícola con altos niveles de fertilizantes y pesticidas.", isCorrect: true }, { text: "La deforestación acelerada de la Loma La Pelona, que aumenta su salinidad.", isCorrect: false } ] },
+            { question: "Desde una perspectiva medioambiental, ¿cuál es la función principal de una Planta de Tratamiento de Aguas Residuales (PTAR) antes de devolver el efluente a un cuerpo de agua natural?", answerOptions: [ { text: "Aumentar la temperatura del agua para evitar la proliferación de algas nocivas.", isCorrect: false }, { text: "Añadir cloro en cantidades masivas para esterilizar completamente el río o el mar", isCorrect: false }, { text: "Eliminar contaminantes físicos, químicos y biológicos para reducir la carga orgánica y proteger los ecosistemas acuáticos receptores.", isCorrect: true }, { text: "Convertir el agua residual en agua salada para su liberación controlada.", isCorrect: false } ] },
+            { question: "En regiones turísticas del este, como Bávaro-Punta Cana, la sobreexplotación de los acuíferos subterráneos para abastecer hoteles, residenciales y campos de golf ha provocado como principal consecuencia ambiental:", answerOptions: [ { text: "El aumento desmedido de la población de peces de agua dulce en las fuentes naturales.", isCorrect: false }, { text: "La depuración de los mantos acuíferos debido a la alteración de la presión atmosférica.", isCorrect: false }, { text: "La intrusión salina, que contamina las reservas de agua dulce con agua de mar, inutilizando los pozos.", isCorrect: true }, { text: "El desbordamiento constante de los ríos locales por el exceso de agua subterránea.", isCorrect: false } ] },
+            { question: "¿Qué ley de la República Dominicana establece el marco legal general para la gestión ambiental, incluyendo la protección de los recursos hídricos, las zonas de veda de los ríos y la regulación de vertidos contaminantes?", answerOptions: [ { text: "Ley 17-19 de Cambio Climático.", isCorrect: false }, { text: "Ley 5852 del Instituto Nacional de Recursos Hidráulicos.", isCorrect: false }, { text: "Ley 64-00 General sobre Medio Ambiente y Recursos Naturales.", isCorrect: true }, { text: "Ley 20-00 sobre Propiedad Industrial.", isCorrect: false } ] },
+            { question: "¿Por qué se prohíbe el vertido de agua de lluvia en las redes de alcantarillado sanitario (cloacales)?", answerOptions: [ { text: "Porque el agua de lluvia contiene altos niveles de cloro y químicos que corroen inmediatamente las tuberías de concreto y PVC del sistema.", isCorrect: false }, { text: "Porque las plantas de tratamiento de aguas residuales utilizan el agua de lluvia como su principal fuente de energía para operar las bombas de succión.", isCorrect: false }, { text: "Porque el sistema de alcantarillado sanitario está diseñado para un caudal específico de aguas residuales; la entrada de agua de lluvia causa sobrecarga hidráulica, desbordamientos, reflujo de aguas servidas a las calles y altera los procesos biológicos en las plantas de tratamiento.", isCorrect: true }, { text: "Porque la ley clasifica el agua de lluvia como un 'residuo peligroso' que debe ser tratado en incineradores especiales antes de ser desechada.", isCorrect: false } ] },
+            { question: "¿A que nos referimos con el término 'Especie invasora'?", answerOptions: [ { text: "A cualquier animal o planta endémica que crece de manera abrumadora debido a cambios climáticos naturales.", isCorrect: false }, { text: "A una especie nativa que ha sido criada en cautiverio y luego liberada en su propia región.", isCorrect: false }, { text: "A un organismo exótico introducido fuera de su hábitat natural que se adapta, se multiplica y causa impacto negativo en la biodiversidad local.", isCorrect: true }, { text: "A los cultivos agrícolas tradicionales creados mediante selección artificial para consumo humano.", isCorrect: false } ] },
+            { question: "¿Cuál de las siguientes afirmaciones es correcta respecto al «Pez Diablo» (Amphilophus citrinellus)?", answerOptions: [ { text: "Es un alga flotante que bloquea la luz solar en las costas del Caribe.", isCorrect: false }, { text: "Es una especie endémica protegida en la República Dominicana.", isCorrect: false }, { text: "Es una especie exótica invasora con un severo impacto negativo en la biodiversidad de ríos y lagos de agua dulce.", isCorrect: true }, { text: "Es un organismo marino utilizado comercialmente en las PTAR.", isCorrect: false } ] }
         ];
 
         const TOTAL_QUESTIONS_PER_ATTEMPT = 10;
-        // ==========================================
-        // === CONFIGURACIÓN DEL TEMPORIZADOR ===
-        // ==========================================
-        const TIEMPO_LIMITE = 120; // ⬅️ Cambia este valor (en segundos) para ajustar el tiempo
-        // ==========================================
+        const TIEMPO_LIMITE = 120; // segundos
 
-        const startScreen = document.getElementById('start-screen'), questionScreen = document.getElementById('question-screen'), resultsScreen = document.getElementById('results-screen');
-        const startBtn = document.getElementById('start-btn'), nextBtn = document.getElementById('next-btn'), restartBtn = document.getElementById('restart-btn');
-        const questionCounterEl = document.getElementById('question-counter'), questionTextEl = document.getElementById('question-text'), answerOptionsEl = document.getElementById('answer-options'), scoreTextEl = document.getElementById('score-text');
+        // DOM refs
+        const startScreen = document.getElementById('start-screen');
+        const questionScreen = document.getElementById('question-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const startBtn = document.getElementById('start-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const questionCounterEl = document.getElementById('question-counter');
+        const questionTextEl = document.getElementById('question-text');
+        const answerOptionsEl = document.getElementById('answer-options');
+        const scoreTextEl = document.getElementById('score-text');
+        const resultMessageEl = document.getElementById('result-message');
         const soundEnabledCheckbox = document.getElementById('sound-enabled');
-        const creditsModal = document.getElementById('credits-modal'), creditsBtn = document.getElementById('credits-btn'), closeBtn = document.querySelector('.close-btn');
+        const creditsModal = document.getElementById('credits-modal');
+        const creditsBtn = document.getElementById('credits-btn');
+        const closeBtn = document.querySelector('.close-btn');
         const timerDisplay = document.getElementById('timer-display');
         const timerContainer = document.getElementById('timer-container');
-        let shuffledQuestions = [], currentQuestionIndex = 0, score = 0;
+        const participantNameInput = document.getElementById('participant-name');
+        const certificateArea = document.getElementById('certificate-area');
+        const certNameDisplay = document.getElementById('cert-name-display');
+        const certScoreDisplay = document.getElementById('cert-score-display');
+        const downloadCertBtn = document.getElementById('download-cert-btn');
+
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
         let timerInterval = null;
         let tiempoRestante = TIEMPO_LIMITE;
         let tiempoAgotado = false;
         let cuestionarioFinalizado = false;
-        
-        class SoundManager { 
-            constructor() { 
-                this.audioContext = null; 
-                this.enabled = true; 
-                this.initAudioContext(); 
-            } 
-            async initAudioContext() { 
-                try { 
-                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); 
-                } catch (error) { 
-                    console.warn('Audio context not supported:', error); 
-                } 
-            } 
-            async playCorrectSound() { 
-                if (!this.enabled || !this.audioContext) return; 
-                try { 
-                    const frequencies = [523.25, 659.25, 783.99]; 
-                    for (let i = 0; i < frequencies.length; i++) { 
-                        setTimeout(() => { 
-                            this.playTone(frequencies[i], 0.2, 0.1); 
-                        }, i * 80); 
-                    } 
-                } catch (error) { 
-                    console.warn('Error playing correct sound:', error); 
-                } 
-            } 
-            async playIncorrectSound() { 
-                if (!this.enabled || !this.audioContext) return; 
-                try { 
-                    const frequencies = [400, 300, 200]; 
-                    for (let i = 0; i < frequencies.length; i++) { 
-                        setTimeout(() => { 
-                            this.playTone(frequencies[i], 0.15, 0.8); 
-                        }, i * 100); 
-                    } 
-                } catch (error) { 
-                    console.warn('Error playing incorrect sound:', error); 
-                } 
-            } 
-            playTone(frequency, duration, volume = 0.1) { 
-                if (!this.audioContext) return; 
-                const oscillator = this.audioContext.createOscillator(); 
-                const gainNode = this.audioContext.createGain(); 
-                oscillator.connect(gainNode); 
-                gainNode.connect(this.audioContext.destination); 
-                oscillator.frequency.value = frequency; 
-                oscillator.type = 'sine'; 
-                gainNode.gain.setValueAtTime(0, this.audioContext.currentTime); 
-                gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 0.01); 
-                gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration); 
-                oscillator.start(this.audioContext.currentTime); 
-                oscillator.stop(this.audioContext.currentTime + duration); 
-            } 
-            setEnabled(enabled) { 
-                this.enabled = enabled; 
-            } 
-        }
+        let nombreParticipante = '';
 
-        function vibrateDevice(pattern) { 
-            if (!navigator.vibrate) { 
-                return; 
-            } 
-            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); 
-            if (isMobile) { 
-                try { 
-                    navigator.vibrate(pattern); 
-                } catch (error) { 
-                    console.error('Error en vibración:', error); 
-                } 
-            } 
-        }
-        
-        function vibrateIncorrect() {
-            const strongPattern = [300, 100, 300, 100, 300];
-            vibrateDevice(strongPattern);
-        }
-        
-        function vibrateCorrect() {
-            const gentlePattern = [100, 50, 100];
-            vibrateDevice(gentlePattern);
-        }
-        
-        const soundManager = new SoundManager();
-        
-        function shuffleArray(array) { 
-            for (let i = array.length - 1; i > 0; i--) { 
-                const j = Math.floor(Math.random() * (i + 1)); 
-                [array[i], array[j]] = [array[j], array[i]]; 
-            } 
-        }
-
-        function selectRandomQuestions(questionBank, count) {
-            const shuffled = [...questionBank];
-            shuffleArray(shuffled);
-            return shuffled.slice(0, count);
-        }
-        
-        // ==========================================
-        // === FUNCIONES DEL TEMPORIZADOR ===
-        // ==========================================
-        function iniciarTemporizador() {
-            tiempoRestante = TIEMPO_LIMITE;
-            tiempoAgotado = false;
-            cuestionarioFinalizado = false;
-            actualizarDisplayTemporizador();
-            timerContainer.classList.remove('warning');
-            
-            if (timerInterval) {
-                clearInterval(timerInterval);
+        // --- Sound Manager ---
+        class SoundManager {
+            constructor() { this.audioContext = null; this.enabled = true; this.initAudioContext(); }
+            async initAudioContext() { try { this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+            async playCorrectSound() {
+                if (!this.enabled || !this.audioContext) return;
+                try { const freqs = [523.25, 659.25, 783.99]; freqs.forEach((f,i) => setTimeout(() => this.playTone(f, 0.2, 0.1), i*80)); } catch(e) {}
             }
-            
+            async playIncorrectSound() {
+                if (!this.enabled || !this.audioContext) return;
+                try { const freqs = [400, 300, 200]; freqs.forEach((f,i) => setTimeout(() => this.playTone(f, 0.15, 0.8), i*100)); } catch(e) {}
+            }
+            playTone(frequency, duration, volume = 0.1) {
+                if (!this.audioContext) return;
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                oscillator.connect(gainNode); gainNode.connect(this.audioContext.destination);
+                oscillator.frequency.value = frequency; oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + duration);
+            }
+            setEnabled(enabled) { this.enabled = enabled; }
+        }
+        const soundManager = new SoundManager();
+
+        function vibrateDevice(pattern) {
+            if (!navigator.vibrate) return;
+            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) try { navigator.vibrate(pattern); } catch(e) {}
+        }
+        function vibrateCorrect() { vibrateDevice([100, 50, 100]); }
+        function vibrateIncorrect() { vibrateDevice([300, 100, 300, 100, 300]); }
+
+        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
+        function selectRandomQuestions(questionBank, count) { const shuffled = [...questionBank]; shuffleArray(shuffled); return shuffled.slice(0, count); }
+
+        // --- Temporizador ---
+        function iniciarTemporizador() {
+            tiempoRestante = TIEMPO_LIMITE; tiempoAgotado = false; cuestionarioFinalizado = false;
+            actualizarDisplayTemporizador(); timerContainer.classList.remove('warning');
+            if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 tiempoRestante--;
                 actualizarDisplayTemporizador();
-                
-                // Advertencia visual cuando quedan 10 segundos o menos
-                if (tiempoRestante <= 10) {
-                    timerContainer.classList.add('warning');
-                }
-                
+                if (tiempoRestante <= 10) timerContainer.classList.add('warning');
                 if (tiempoRestante <= 0) {
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-                    tiempoAgotado = true;
-                    // Forzar finalización del cuestionario
+                    clearInterval(timerInterval); timerInterval = null; tiempoAgotado = true;
                     if (!cuestionarioFinalizado) {
                         cuestionarioFinalizado = true;
-                        // Deshabilitar todos los botones de respuesta
-                        Array.from(answerOptionsEl.children).forEach(btn => {
-                            btn.disabled = true;
-                        });
-                        // Mostrar resultados con mensaje de tiempo agotado
+                        Array.from(answerOptionsEl.children).forEach(btn => btn.disabled = true);
                         mostrarResultadosConMensaje("⏰ ¡Se acabó el tiempo!");
                     }
                 }
             }, 1000);
         }
-        
-        function actualizarDisplayTemporizador() {
-            timerDisplay.textContent = tiempoRestante;
-        }
-        
-        function detenerTemporizador() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-            timerContainer.classList.remove('warning');
-        }
-        
+        function actualizarDisplayTemporizador() { timerDisplay.textContent = tiempoRestante; }
+        function detenerTemporizador() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } timerContainer.classList.remove('warning'); }
+
+        // --- Mostrar resultados con certificado ---
         function mostrarResultadosConMensaje(mensajeAdicional = "") {
             detenerTemporizador();
             questionScreen.style.display = 'none';
             resultsScreen.style.display = 'block';
             
-            const percentage = Math.round((score / shuffledQuestions.length) * 100);
+            // Obtener nombre
+            nombreParticipante = participantNameInput.value.trim() || 'Participante';
             
+            const percentage = Math.round((score / shuffledQuestions.length) * 100);
             let mensajeTiempo = "";
             if (tiempoAgotado) {
                 mensajeTiempo = `⏰ <strong>Tiempo agotado</strong>. Respondiste ${score} de ${shuffledQuestions.length} preguntas.`;
@@ -866,85 +605,71 @@
                 mensajeTiempo = `Completaste el cuestionario en <strong>${TIEMPO_LIMITE - tiempoRestante}</strong> segundos.`;
             }
             
-            scoreTextEl.innerHTML = `
+            // Mostrar mensaje
+            resultMessageEl.innerHTML = `
                 ${mensajeAdicional ? `<p style="color: #dc3545; font-size: 1.2rem;">${mensajeAdicional}</p>` : ''}
                 <p>${mensajeTiempo}</p>
                 <p>Tu puntuación final es <strong>${score}</strong> de ${shuffledQuestions.length} (<strong>${percentage}%</strong>).</p>
             `;
-
-            console.log("Enviando notas a SCORM. Puntos:", percentage);
+            
+            // Mostrar certificado
+            certificateArea.style.display = 'block';
+            certNameDisplay.textContent = nombreParticipante;
+            certScoreDisplay.textContent = `${percentage}%`;
+            
+            // SCORM
             SCORM.set("cmi.core.score.raw", percentage);
             SCORM.set("cmi.core.score.min", "0");
             SCORM.set("cmi.core.score.max", "100");
-            
-            if (percentage >= 80) {
-                SCORM.set("cmi.core.lesson_status", "passed");
-                setTimeout(() => soundManager.playCorrectSound(), 300);
-            } else {
-                SCORM.set("cmi.core.lesson_status", "completed"); 
-                if (percentage >= 60) { 
-                    setTimeout(() => soundManager.playTone(440, 0.5, 0.2), 300); 
-                }
-            }
+            if (percentage >= 80) { SCORM.set("cmi.core.lesson_status", "passed"); setTimeout(() => soundManager.playCorrectSound(), 300); }
+            else { SCORM.set("cmi.core.lesson_status", "completed"); if (percentage >= 60) setTimeout(() => soundManager.playTone(440,0.5,0.2), 300); }
             SCORM.save();
         }
-        
-        // Función original showResults se reemplaza para usar la nueva
-        function showResults() { 
-            cuestionarioFinalizado = true;
-            detenerTemporizador();
-            mostrarResultadosConMensaje();
-        }
-        // ==========================================
-        
-        function startQuiz() { 
-            startScreen.style.display = 'none'; 
-            resultsScreen.style.display = 'none'; 
-            questionScreen.style.display = 'block'; 
-            
+
+        function showResults() { cuestionarioFinalizado = true; detenerTemporizador(); mostrarResultadosConMensaje(); }
+
+        // --- Funciones del quiz ---
+        function startQuiz() {
+            // Validar nombre
+            const name = participantNameInput.value.trim();
+            if (!name) {
+                alert('Por favor, escribe tu nombre para obtener tu certificado.');
+                return;
+            }
+            startScreen.style.display = 'none';
+            resultsScreen.style.display = 'none';
+            questionScreen.style.display = 'block';
+            certificateArea.style.display = 'none';
+
             const selectedQuestions = selectRandomQuestions(fullQuizData, TOTAL_QUESTIONS_PER_ATTEMPT);
             shuffledQuestions = selectedQuestions;
             shuffleArray(shuffledQuestions);
-            
-            currentQuestionIndex = 0; 
-            score = 0; 
+            currentQuestionIndex = 0;
+            score = 0;
             tiempoAgotado = false;
             cuestionarioFinalizado = false;
-            showQuestion(); 
-            iniciarTemporizador(); // Iniciar el temporizador al comenzar
-            
-            if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') { 
-                soundManager.audioContext.resume(); 
-            } 
+            showQuestion();
+            iniciarTemporizador();
+            if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') soundManager.audioContext.resume();
         }
-        
+
         function showQuestion() {
             resetState();
             const currentQuestion = shuffledQuestions[currentQuestionIndex];
-            
             questionCounterEl.innerText = `Pregunta ${currentQuestionIndex + 1} de ${shuffledQuestions.length}`;
-            
-            let questionHTML = '';
-            if (currentQuestion.imageSrc) {
-                questionHTML += `<img src="${currentQuestion.imageSrc}" alt="Imagen de la pregunta" class="question-image">`;
-            }
-            questionHTML += currentQuestion.question;
-            questionTextEl.innerHTML = questionHTML;
+            let qHTML = currentQuestion.question;
+            if (currentQuestion.imageSrc) qHTML = `<img src="${currentQuestion.imageSrc}" class="question-image">` + qHTML;
+            questionTextEl.innerHTML = qHTML;
 
             const shuffledAnswers = [...currentQuestion.answerOptions];
             shuffleArray(shuffledAnswers);
-
             shuffledAnswers.forEach(answer => {
                 const button = document.createElement('button');
                 const star = document.createElement('span');
                 star.classList.add('star-icon');
                 star.innerText = '⭐';
-                
-                const answerText = document.createTextNode(` ${answer.text}`);
-                
-                button.appendChild(star);
-                button.appendChild(answerText);
-                
+                const textNode = document.createTextNode(` ${answer.text}`);
+                button.appendChild(star); button.appendChild(textNode);
                 button.classList.add('answer-btn');
                 button.dataset.correct = answer.isCorrect;
                 button.addEventListener('click', selectAnswer);
@@ -952,78 +677,91 @@
             });
         }
 
-        function resetState() { 
-            nextBtn.style.display = 'none'; 
-            while (answerOptionsEl.firstChild) { 
-                answerOptionsEl.removeChild(answerOptionsEl.firstChild); 
-            } 
+        function resetState() {
+            nextBtn.style.display = 'none';
+            while (answerOptionsEl.firstChild) answerOptionsEl.removeChild(answerOptionsEl.firstChild);
         }
 
         function selectAnswer(e) {
-            // Si el tiempo ya se agotó, no permitir respuestas
             if (tiempoAgotado || cuestionarioFinalizado) return;
-            
-            Array.from(answerOptionsEl.children).forEach(btn => {
-                btn.classList.add('animation-paused');
-            });
-
+            Array.from(answerOptionsEl.children).forEach(btn => btn.classList.add('animation-paused'));
             const selectedButton = e.currentTarget;
             const isCorrect = selectedButton.dataset.correct === "true";
-            
-            if (isCorrect) {
-                score++;
-                selectedButton.classList.add('correct');
-                soundManager.playCorrectSound();
-                vibrateCorrect(); 
-            } else {
-                selectedButton.classList.add('incorrect');
-                soundManager.playIncorrectSound();
-                vibrateIncorrect(); 
-            }
+            if (isCorrect) { score++; selectedButton.classList.add('correct'); soundManager.playCorrectSound(); vibrateCorrect(); }
+            else { selectedButton.classList.add('incorrect'); soundManager.playIncorrectSound(); vibrateIncorrect(); }
             
             Array.from(answerOptionsEl.children).forEach(button => {
-                if (button.dataset.correct === "true") {
-                    button.classList.add('correct');
-                }
+                if (button.dataset.correct === "true") button.classList.add('correct');
                 button.disabled = true;
             });
             
             if (shuffledQuestions.length > currentQuestionIndex + 1) {
                 nextBtn.style.display = 'block';
             } else {
-                // Última pregunta, mostrar resultados
                 cuestionarioFinalizado = true;
                 detenerTemporizador();
                 setTimeout(showResults, 1200);
                 nextBtn.style.display = 'none';
             }
         }
-        
-        function handleNextButton() { 
-            // Si el tiempo se agotó, no avanzar
+
+        function handleNextButton() {
             if (tiempoAgotado || cuestionarioFinalizado) return;
-            
-            // Verificar si alguna respuesta fue seleccionada (por si acaso)
             const algunaSeleccionada = Array.from(answerOptionsEl.children).some(btn => btn.disabled);
             if (!algunaSeleccionada) return;
-            
-            currentQuestionIndex++; 
-            showQuestion(); 
+            currentQuestionIndex++;
+            showQuestion();
         }
-        
+
+        // --- Descargar certificado como imagen ---
+        function descargarCertificado() {
+            const certificado = document.getElementById('certificate-box');
+            // Usamos html2canvas si está disponible, si no, alerta de descarga simple
+            if (typeof html2canvas === 'undefined') {
+                // Cargar librería dinámicamente
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                script.onload = () => {
+                    generarYDescargar();
+                };
+                document.head.appendChild(script);
+            } else {
+                generarYDescargar();
+            }
+        }
+
+        function generarYDescargar() {
+            const elemento = document.getElementById('certificate-box');
+            html2canvas(elemento, {
+                scale: 2,
+                backgroundColor: '#fff8e7',
+                allowTaint: false,
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                const enlace = document.createElement('a');
+                enlace.download = `certificado_${nombreParticipante.replace(/\s/g, '_')}.png`;
+                enlace.href = canvas.toDataURL('image/png');
+                enlace.click();
+            }).catch(err => {
+                alert('No se pudo generar la imagen. Puedes tomar una captura de pantalla del certificado.');
+                console.warn(err);
+            });
+        }
+
+        // --- Event listeners ---
         startBtn.addEventListener('click', startQuiz);
         nextBtn.addEventListener('click', handleNextButton);
-        
-        restartBtn.addEventListener('click', () => {
-             detenerTemporizador();
-             startQuiz();
-        });
-        
-        soundEnabledCheckbox.addEventListener('change', (e) => { soundManager.setEnabled(e.target.checked); });
-        creditsBtn.onclick = function() { creditsModal.style.display = "block"; }
-        closeBtn.onclick = function() { creditsModal.style.display = "none"; }
-        window.onclick = function(event) { if (event.target == creditsModal) { creditsModal.style.display = "none"; } }
-        document.addEventListener('click', () => { if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') { soundManager.audioContext.resume(); } }, { once: true });
+        restartBtn.addEventListener('click', () => { detenerTemporizador(); startQuiz(); });
+        soundEnabledCheckbox.addEventListener('change', (e) => soundManager.setEnabled(e.target.checked));
+        creditsBtn.onclick = () => { creditsModal.style.display = "block"; };
+        closeBtn.onclick = () => { creditsModal.style.display = "none"; };
+        window.onclick = (event) => { if (event.target == creditsModal) creditsModal.style.display = "none"; };
+        document.addEventListener('click', () => { if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') soundManager.audioContext.resume(); }, { once: true });
+        downloadCertBtn.addEventListener('click', descargarCertificado);
+
+        // Inicializar con nombre por defecto
+        participantNameInput.value = '';
     </script>
 </body>
 </html>
