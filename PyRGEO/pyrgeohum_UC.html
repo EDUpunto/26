@@ -75,6 +75,25 @@
             margin-bottom: 1rem;
             font-weight: bold;
             color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #timer-container {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            background: #f0f0f0;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+        }
+        #timer-container.warning {
+            color: #dc3545;
+            animation: timerPulse 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes timerPulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
         }
         #question-text {
             font-size: 1.4rem;
@@ -270,6 +289,7 @@
             <div id="start-screen">
                 <h2 style="color: var(--primary-color);">¡Pon a prueba tus conocimientos!</h2>
                 <p style="font-size: 1.1rem;">Seleccionamos <strong>10 preguntas al azar de nuestro banco.</strong></p>
+                <p style="font-size: 1rem; color: var(--primary-dark);">⏱️ Tienes <strong>1 minuto y medio</strong> para responder.</p>
                 <div class="sound-controls">
                     <label class="sound-toggle">
                         <input type="checkbox" id="sound-enabled" checked>
@@ -279,7 +299,10 @@
                 <button class="btn" id="start-btn">Comenzar 🚀</button>
             </div>
             <div id="question-screen">
-                <div id="progress-container"><span id="question-counter"></span></div>
+                <div id="progress-container">
+                    <span id="question-counter"></span>
+                    <span id="timer-container">⏱️ <span id="timer-display">60</span>s</span>
+                </div>
                 <h2 id="question-text"></h2>
                 <ul id="answer-options"></ul>
                 <div class="controls"><button class="btn" id="next-btn">Siguiente</button></div>
@@ -659,14 +682,25 @@
 
         ];
 
-        const TOTAL_QUESTIONS_PER_ATTEMPT = 10;  //cantidad de preguntas por intento
+        const TOTAL_QUESTIONS_PER_ATTEMPT = 10;
+        // ==========================================
+        // === CONFIGURACIÓN DEL TEMPORIZADOR ===
+        // ==========================================
+        const TIEMPO_LIMITE = 90; // ⬅️ Cambia este valor (en segundos) para ajustar el tiempo
+        // ==========================================
 
         const startScreen = document.getElementById('start-screen'), questionScreen = document.getElementById('question-screen'), resultsScreen = document.getElementById('results-screen');
         const startBtn = document.getElementById('start-btn'), nextBtn = document.getElementById('next-btn'), restartBtn = document.getElementById('restart-btn');
         const questionCounterEl = document.getElementById('question-counter'), questionTextEl = document.getElementById('question-text'), answerOptionsEl = document.getElementById('answer-options'), scoreTextEl = document.getElementById('score-text');
         const soundEnabledCheckbox = document.getElementById('sound-enabled');
         const creditsModal = document.getElementById('credits-modal'), creditsBtn = document.getElementById('credits-btn'), closeBtn = document.querySelector('.close-btn');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerContainer = document.getElementById('timer-container');
         let shuffledQuestions = [], currentQuestionIndex = 0, score = 0;
+        let timerInterval = null;
+        let tiempoRestante = TIEMPO_LIMITE;
+        let tiempoAgotado = false;
+        let cuestionarioFinalizado = false;
         
         class SoundManager { 
             constructor() { 
@@ -759,27 +793,126 @@
             } 
         }
 
-        // Selecciona aleatoriamente N preguntas del banco completo
         function selectRandomQuestions(questionBank, count) {
             const shuffled = [...questionBank];
             shuffleArray(shuffled);
             return shuffled.slice(0, count);
         }
         
+        // ==========================================
+        // === FUNCIONES DEL TEMPORIZADOR ===
+        // ==========================================
+        function iniciarTemporizador() {
+            tiempoRestante = TIEMPO_LIMITE;
+            tiempoAgotado = false;
+            cuestionarioFinalizado = false;
+            actualizarDisplayTemporizador();
+            timerContainer.classList.remove('warning');
+            
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            timerInterval = setInterval(() => {
+                tiempoRestante--;
+                actualizarDisplayTemporizador();
+                
+                // Advertencia visual cuando quedan 10 segundos o menos
+                if (tiempoRestante <= 10) {
+                    timerContainer.classList.add('warning');
+                }
+                
+                if (tiempoRestante <= 0) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    tiempoAgotado = true;
+                    // Forzar finalización del cuestionario
+                    if (!cuestionarioFinalizado) {
+                        cuestionarioFinalizado = true;
+                        // Deshabilitar todos los botones de respuesta
+                        Array.from(answerOptionsEl.children).forEach(btn => {
+                            btn.disabled = true;
+                        });
+                        // Mostrar resultados con mensaje de tiempo agotado
+                        mostrarResultadosConMensaje("⏰ ¡Se acabó el tiempo!");
+                    }
+                }
+            }, 1000);
+        }
+        
+        function actualizarDisplayTemporizador() {
+            timerDisplay.textContent = tiempoRestante;
+        }
+        
+        function detenerTemporizador() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            timerContainer.classList.remove('warning');
+        }
+        
+        function mostrarResultadosConMensaje(mensajeAdicional = "") {
+            detenerTemporizador();
+            questionScreen.style.display = 'none';
+            resultsScreen.style.display = 'block';
+            
+            const percentage = Math.round((score / shuffledQuestions.length) * 100);
+            
+            let mensajeTiempo = "";
+            if (tiempoAgotado) {
+                mensajeTiempo = `⏰ <strong>Tiempo agotado</strong>. Respondiste ${score} de ${shuffledQuestions.length} preguntas.`;
+            } else {
+                mensajeTiempo = `Completaste el cuestionario en <strong>${TIEMPO_LIMITE - tiempoRestante}</strong> segundos.`;
+            }
+            
+            scoreTextEl.innerHTML = `
+                ${mensajeAdicional ? `<p style="color: #dc3545; font-size: 1.2rem;">${mensajeAdicional}</p>` : ''}
+                <p>${mensajeTiempo}</p>
+                <p>Tu puntuación final es <strong>${score}</strong> de ${shuffledQuestions.length} (<strong>${percentage}%</strong>).</p>
+            `;
+
+            console.log("Enviando notas a SCORM. Puntos:", percentage);
+            SCORM.set("cmi.core.score.raw", percentage);
+            SCORM.set("cmi.core.score.min", "0");
+            SCORM.set("cmi.core.score.max", "100");
+            
+            if (percentage >= 80) {
+                SCORM.set("cmi.core.lesson_status", "passed");
+                setTimeout(() => soundManager.playCorrectSound(), 300);
+            } else {
+                SCORM.set("cmi.core.lesson_status", "completed"); 
+                if (percentage >= 60) { 
+                    setTimeout(() => soundManager.playTone(440, 0.5, 0.2), 300); 
+                }
+            }
+            SCORM.save();
+        }
+        
+        // Función original showResults se reemplaza para usar la nueva
+        function showResults() { 
+            cuestionarioFinalizado = true;
+            detenerTemporizador();
+            mostrarResultadosConMensaje();
+        }
+        // ==========================================
+        
         function startQuiz() { 
             startScreen.style.display = 'none'; 
             resultsScreen.style.display = 'none'; 
             questionScreen.style.display = 'block'; 
             
-            // Seleccionar 10 preguntas aleatorias del banco completo
             const selectedQuestions = selectRandomQuestions(fullQuizData, TOTAL_QUESTIONS_PER_ATTEMPT);
             shuffledQuestions = selectedQuestions;
-            // Ya vienen mezcladas por selectRandomQuestions, pero mezclamos nuevamente por si acaso
             shuffleArray(shuffledQuestions);
             
             currentQuestionIndex = 0; 
             score = 0; 
+            tiempoAgotado = false;
+            cuestionarioFinalizado = false;
             showQuestion(); 
+            iniciarTemporizador(); // Iniciar el temporizador al comenzar
+            
             if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') { 
                 soundManager.audioContext.resume(); 
             } 
@@ -827,6 +960,9 @@
         }
 
         function selectAnswer(e) {
+            // Si el tiempo ya se agotó, no permitir respuestas
+            if (tiempoAgotado || cuestionarioFinalizado) return;
+            
             Array.from(answerOptionsEl.children).forEach(btn => {
                 btn.classList.add('animation-paused');
             });
@@ -855,40 +991,22 @@
             if (shuffledQuestions.length > currentQuestionIndex + 1) {
                 nextBtn.style.display = 'block';
             } else {
+                // Última pregunta, mostrar resultados
+                cuestionarioFinalizado = true;
+                detenerTemporizador();
                 setTimeout(showResults, 1200);
                 nextBtn.style.display = 'none';
             }
         }
         
-        function showResults() { 
-            questionScreen.style.display = 'none'; 
-            resultsScreen.style.display = 'block'; 
-            
-            const percentage = Math.round((score / shuffledQuestions.length) * 100); 
-            
-            scoreTextEl.innerHTML = `
-                Tu puntuación final es <strong>${score}</strong> de ${shuffledQuestions.length} (<strong>${percentage}%</strong>).
-
-            `; 
-
-            console.log("Enviando notas a SCORM. Puntos:", percentage);
-            SCORM.set("cmi.core.score.raw", percentage);
-            SCORM.set("cmi.core.score.min", "0");
-            SCORM.set("cmi.core.score.max", "100");
-            
-            if (percentage >= 80) {
-                SCORM.set("cmi.core.lesson_status", "passed");
-                setTimeout(() => soundManager.playCorrectSound(), 300);
-            } else {
-                SCORM.set("cmi.core.lesson_status", "completed"); 
-                if (percentage >= 60) { 
-                    setTimeout(() => soundManager.playTone(440, 0.5, 0.2), 300); 
-                }
-            }
-            SCORM.save();
-        }
-        
         function handleNextButton() { 
+            // Si el tiempo se agotó, no avanzar
+            if (tiempoAgotado || cuestionarioFinalizado) return;
+            
+            // Verificar si alguna respuesta fue seleccionada (por si acaso)
+            const algunaSeleccionada = Array.from(answerOptionsEl.children).some(btn => btn.disabled);
+            if (!algunaSeleccionada) return;
+            
             currentQuestionIndex++; 
             showQuestion(); 
         }
@@ -897,6 +1015,7 @@
         nextBtn.addEventListener('click', handleNextButton);
         
         restartBtn.addEventListener('click', () => {
+             detenerTemporizador();
              startQuiz();
         });
         
