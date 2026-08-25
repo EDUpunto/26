@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyR - Medioambiente RD</title>
+    <style>
+        :root {
+            --primary-color: #66CCCC;
+            --primary-dark: #8a7340;
+            --secondary-color: #D4A843;
+            --light-gray: #f4f4f4;
+            --medium-gray: #ccc;
+            --dark-gray: #555;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --bg-overlay: rgba(0, 0, 0, 0.65);
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDgwIDgwIj48cmVjdCB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IiNlZWVlZWUiLz48cGF0aCBkPSJNMzAgMjBhMTAgMTAgMCAwIDEgMjAgMCAxMCAxMCAwIDAgMS0yMCAweiIgZmlsbD0iI2NjYyIgb3BhY2l0eT0iMC4yIi8+PC9zdmc+');
+            background-size: 80px 80px;
+            background-attachment: fixed;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+        }
+        .quiz-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            border: 3px solid var(--primary-color);
+        }
+        .quiz-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            border-bottom: 4px solid var(--secondary-color);
+        }
+        .quiz-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .quiz-body { padding: 2rem; }
+        #start-screen, #results-screen { text-align: center; }
+        #question-screen, #results-screen, #next-btn { display: none; }
+        #progress-container {
+            margin-bottom: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        #timer-container {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            background: #f0f0f0;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+        }
+        #timer-container.warning {
+            color: #dc3545;
+            animation: timerPulse 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes timerPulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+        #question-text {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            color: #333;
+        }
+        #answer-options { list-style-type: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+        .answer-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            background-color: white;
+            border: 2px solid var(--medium-gray);
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s, transform 0.1s;
+        }
+        .answer-btn:hover:not([disabled]) {
+            background-color: #fdf6e8;
+            border-color: var(--primary-color);
+        }
+        .answer-btn:disabled { cursor: not-allowed; }
+        .answer-btn.correct {
+            background-color: var(--correct-color);
+            border-color: var(--correct-color);
+            color: white;
+            animation: correctPulse 0.6s ease-in-out;
+        }
+        .answer-btn.incorrect {
+            background-color: var(--incorrect-color);
+            border-color: var(--incorrect-color);
+            color: white;
+            animation: incorrectShake 0.5s ease-in-out;
+        }
+        .controls { margin-top: 2rem; text-align: center; }
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .btn:hover {
+            transform: scale(1.03);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        }
+        #results-screen h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+        }
+        #score-text {
+            font-size: 1.5rem;
+            margin: 1.5rem 0;
+            color: var(--primary-dark);
+        }
+        .sound-controls {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            padding: .5rem;
+        }
+        .sound-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+        .sound-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+        .credits-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s;
+            z-index: 10;
+        }
+        .credits-btn:hover { background-color: rgba(255, 255, 255, 0.5); }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 25px;
+            border: 3px solid var(--primary-color);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .modal-content h2 { color: var(--primary-color); }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .close-btn:hover, .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .footer-credit {
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+        .star-icon {
+            display: inline-block;
+            margin-right: 12px;
+            font-size: 1.2rem;
+            animation: spin 2s linear infinite;
+        }
+        .animation-paused .star-icon { animation-play-state: paused; }
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes correctPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes incorrectShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @media (max-width: 600px) {
+            .quiz-header h1 { font-size: 1.3rem; }
+            .quiz-body { padding: 1.2rem; }
+            #question-text { font-size: 1.1rem; }
+            .answer-btn { font-size: 1rem; padding: 0.8rem; }
+            .btn { padding: 0.8rem 1.2rem; font-size: 1rem; }
+            .modal-content { margin: 5% auto; width: 95%; top: 40%; transform: translateY(-40%); }
+        }
+
+        /* Estilos para el nombre y certificado */
+        .name-input-area {
+            margin: 1.5rem 0;
+        }
+        .name-input-area input {
+            padding: 0.8rem 1.2rem;
+            font-size: 1.1rem;
+            border: 2px solid var(--medium-gray);
+            border-radius: 30px;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .name-input-area input:focus {
+            border-color: var(--primary-color);
+        }
+        .certificate-container {
+            background: #fff8e7;
+            border: 4px double var(--secondary-color);
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .certificate-container h3 {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            margin: 0.2rem 0;
+            letter-spacing: 2px;
+        }
+        .certificate-container .cert-name {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 3px dashed var(--secondary-color);
+            display: inline-block;
+            padding: 0 20px 8px;
+            margin: 10px 0;
+        }
+        .certificate-container .cert-score {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            background: rgba(212, 168, 67, 0.15);
+            padding: 0.3rem 1.5rem;
+            border-radius: 40px;
+            display: inline-block;
+        }
+        .certificate-container .cert-footer {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #555;
+            font-weight: 500;
+        }
+        .certificate-container .stamp {
+            position: absolute;
+            bottom: 15px;
+            right: 25px;
+            font-size: 2.8rem;
+            opacity: 0.4;
+            transform: rotate(-15deg);
+        }
+        .btn-download {
+            background: #2c3e50;
+            margin-top: 0.5rem;
+        }
+        .btn-download:hover {
+            background: #1a2a3a;
+        }
+        
+        /* Estilos para las estrellas en el certificado - SOLO LAS GANADAS */
+        .stars-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 10px 0;
+            min-height: 3rem;
+            font-size: 2.8rem;
+        }
+        .star-earned {
+            color: #f1c40f;
+            text-shadow: 0 0 15px rgba(241, 196, 15, 0.6);
+            animation: starPulse 1s ease-in-out infinite alternate;
+        }
+        @keyframes starPulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.15); }
+        }
+
+        /* Estilos para el modal de felicitación - CENTRADO */
+        .congrats-modal .modal-content {
+            text-align: center;
+            border-color: #f1c40f;
+            background: linear-gradient(135deg, #fff8e7, #fff5d6);
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            margin: 0 auto;
+            padding: 30px 25px;
+        }
+        .congrats-modal .modal-content h2 {
+            color: #f1c40f;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .congrats-modal .modal-content .big-star {
+            font-size: 4rem;
+            animation: starPulse 0.8s ease-in-out infinite alternate;
+        }
+        .congrats-modal .modal-content .congrats-message {
+            font-size: 1.2rem;
+            color: #333;
+            margin: 1rem 0;
+        }
+        .congrats-modal .modal-content .stars-counter {
+            font-size: 2.5rem;
+            margin: 0.5rem 0;
+        }
+        .congrats-modal .modal-content .btn-close-congrats {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 1rem;
+        }
+        .congrats-modal .modal-content .btn-close-congrats:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <button id="credits-btn" class="credits-btn">?</button>
+        <div class="quiz-header"><h1>🌍 Medioambiente RD</h1></div>
+        <div class="quiz-body">
+            <!-- START -->
+            <div id="start-screen">
+                <h2 style="color: var(--primary-color);">📋 Pon a prueba tus conocimientos</h2>
+                <p style="font-size: 1.1rem;">Seleccionamos <strong>10 preguntas al azar</strong> de nuestro banco.</p>
+                <p style="font-size: 1rem; color: var(--primary-dark);">⏱️ Tienes <strong>2 minutos</strong> para responder.</p>
+                <div class="name-input-area">
+                    <p><strong>✍️ Escribe tu nombre para el certificado:</strong></p>
+                    <input type="text" id="participant-name" placeholder="Tu nombre completo" maxlength="60" value="">
+                </div>
+                <div class="sound-controls">
+                    <label class="sound-toggle">
+                        <input type="checkbox" id="sound-enabled" checked>
+                        🔊 Efectos de sonido activados
+                    </label>
+                </div>
+                <button class="btn" id="start-btn">Comenzar 🚀</button>
+            </div>
+            <!-- QUESTION -->
+            <div id="question-screen">
+                <div id="progress-container">
+                    <span id="question-counter"></span>
+                    <span id="timer-container">⏱️ <span id="timer-display">120</span>s</span>
+                </div>
+                <div id="stars-progress" style="text-align: center; font-size: 1.5rem; margin-bottom: 0.5rem; min-height: 2.5rem;">
+                    <!-- Se mostrarán las estrellas ganadas -->
+                </div>
+                <h2 id="question-text"></h2>
+                <ul id="answer-options"></ul>
+                <div class="controls"><button class="btn" id="next-btn">Siguiente ➜</button></div>
+            </div>
+            <!-- RESULTS + CERTIFICATE -->
+            <div id="results-screen">
+                <h2>🏁 ¡Cuestionario completo!</h2>
+                <div id="result-message"></div>
+                <div id="certificate-area" style="display: none;">
+                    <div class="certificate-container" id="certificate-box">
+                        <div style="text-align: center;">
+                            <h3>🎓 CERTIFICADO DE PARTICIPACIÓN</h3>
+                            <p style="font-size: 1rem; color: #555;">Este certificado se otorga a</p>
+                            <div class="cert-name" id="cert-name-display">—</div>
+                            <!-- Estrellas acumuladas - SOLO LAS GANADAS -->
+                            <div id="cert-stars-display" class="stars-container"></div>
+                            <p style="font-size: 1rem; color: #555;">por haber completado el cuestionario sobre</p>
+                            <p style="font-weight: bold; color: var(--primary-dark);">Medioambiente</p>
+                            <p>con un puntaje de</p>
+                            <div class="cert-score" id="cert-score-display">0%</div>
+                            <div class="cert-footer" id="cert-date-display">📅 Santo Domingo, República Dominicana · 22.AGO.2026</div>
+                            <div class="stamp">🏅</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-download" id="download-cert-btn">⬇️ Descargar Certificado</button>
+                </div>
+                <button class="btn" id="restart-btn" style="margin-top: 1rem;">Volver a Intentar 🔄</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer-credit"><p> <a href="https://edupunto.com/" target="_blank" style="color: #ddd;">EDUPUNTO</a> · ago.2026</p></div>
+
+    <!-- MODAL CREDITOS -->
+    <div id="credits-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Créditos</h2>
+            <p>Desarrollado por Juan Ernesto De Frías para <a href="https://edupunto.com/" target="_blank">EDUPUNTO</a></p>
+            <p>Santo Domingo, República Dominicana, 2026.</p>
+        </div>
+    </div>
+
+    <!-- MODAL DE FELICITACIÓN POR ESTRELLA - CENTRADO -->
+    <div id="congrats-modal" class="modal congrats-modal">
+        <div class="modal-content">
+            <div class="big-star">⭐</div>
+            <h2>🎉 ¡Felicitaciones!</h2>
+            <p class="congrats-message">Has respondido <strong>3 preguntas correctas seguidas</strong>.</p>
+            <p class="congrats-message">¡Ganas una estrella!</p>
+            <div class="stars-counter" id="congrats-stars-counter"></div>
+            <p style="color: #888; font-size: 0.9rem;">Estrella <span id="congrats-star-number">1</span> de 3</p>
+            <button class="btn-close-congrats" id="close-congrats-btn">✨ ¡Genial! Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // === MOTOR SCORM 1.2 INTEGRADO (INICIO) ===
+        // ==========================================
+        var SCORM = {
+            API: null,
+            isConnected: false,
+            findAPI: function(win) {
+                var findAPITries = 0;
+                while ((win.API == null) && (win.parent != null) && (win.parent != win)) {
+                    findAPITries++;
+                    if (findAPITries > 7) return null;
+                    win = win.parent;
+                }
+                return win.API;
+            },
+            init: function() {
+                this.API = this.findAPI(window);
+                if ((this.API == null) && (window.opener != null) && (typeof(window.opener) != "undefined")) {
+                    this.API = this.findAPI(window.opener);
+                }
+                if (this.API != null) {
+                    var result = this.API.LMSInitialize("");
+                    if (result == "true") {
+                        this.isConnected = true;
+                        console.log("SCORM: Conectado exitosamente.");
+                        this.set("cmi.core.lesson_status", "incomplete");
+                        this.save();
+                    } else {
+                        console.error("SCORM: Error al inicializar.");
+                    }
+                } else {
+                    console.warn("SCORM: No se encontró la API. Modo local.");
+                }
+            },
+            set: function(param, value) { if (this.isConnected) this.API.LMSSetValue(param, value); },
+            save: function() { if (this.isConnected) this.API.LMSCommit(""); },
+            quit: function() { if (this.isConnected) { this.API.LMSFinish(""); this.isConnected = false; } }
+        };
+        window.onload = function() { SCORM.init(); };
+        window.onunload = function() { SCORM.quit(); };
+        // ==========================================
+        // === MOTOR SCORM 1.2 INTEGRADO (FIN) ===
+        // ==========================================
+
+        // --- BANCO DE PREGUNTAS MEDIOAMBIENTE  ---
+        const fullQuizData = [
+ { question: "¿Cómo se recargan los acuíferos subterráneos en la naturaleza?", answerOptions: [ { text: "Por la evaporación directa del agua proveniente de los lagos y mares.", isCorrect: false }, { text: "Exclusivamente a través del vertido directo de cauces superficiales.", isCorrect: false }, { text: "Mediante la infiltración natural de la lluvia en el suelo poroso.", isCorrect: true }, { text: "A través de la inyección artificial de químicos en la corteza terrestre.", isCorrect: false } ] }, 
+  
+ { question: "De acuerdo con la definición planteada por la señora Gro Harlem Brundtland, ¿cuál es el principio fundamental del desarrollo sostenible?", answerOptions: [ { text: "Maximizar el uso de los recursos naturales para acelerar la industrialización actual.", isCorrect: false }, { text: "Prohibir por completo la explotación de los suelos e infraestructura urbana.", isCorrect: false }, { text: "Satisfacer las necesidades del presente sin comprometer los recursos de las futuras generaciones.", isCorrect: true }, { text: "Reducir el consumo de agua dulce sustituyéndola únicamente por agua desalinizada.", isCorrect: false } ] }, 
+
+{ question: "¿Por qué las aguas subterráneas se consideran un recurso vital de igual importancia que los lagos y cauces?", answerOptions: [ { text: "Porque son la única fuente existente de energía hidroeléctrica.", isCorrect: false }, { text: "Porque impiden el proceso de evaporación en la atmósfera.", isCorrect: false }, { text: "Porque de ellas surgen los ríos y se alimentan lagos y otros cuerpos de agua.", isCorrect: true }, { text: "Porque sustituyen totalmente la necesidad del agua de lluvia.", isCorrect: false } ] },
+
+{ question: "¿Qué químico se menciona expresamente como coagulante para ayudar a agrupar sedimentos en las Plantas de Tratamiento de Aguas Residuales (PTAR)?", answerOptions: [ { text: "Cloruro de sodio", isCorrect: false }, { text: "Carbonato de calcio", isCorrect: false }, { text: "Sulfato de aluminio", isCorrect: true }, { text: "Nitrato de potasio", isCorrect: false } ] },
+            
+{ question: "¿Cuál es una de las principales consecuencias ambientales que causa la acumulación masiva y descomposición del sargazo cercano a las costas?", answerOptions: [ { text: "Aumenta la visibilidad submarina promoviendo el crecimiento de corales profundos.", isCorrect: false }, { text: "Reduce los niveles de salinidad del mar transformándolo en agua dulce.", isCorrect: false }, { text: "Bloquea la luz solar e impide la fotosíntesis, afectando los arrecifes de coral y la vida marina.", isCorrect: true }, { text: "Previene la erosión de las playas al compactar la arena de la orilla.", isCorrect: false } ] },
+
+{ question: "Durante la descomposición del sargazo en las playas, ¿cuál de los siguientes químicos o gases nocivos se libera impactando el ambiente y la salud?", answerOptions: [ { text: "Monóxido de nitrógeno y helio.", isCorrect: false }, { text: "Oxígeno puro y ozono.", isCorrect: false }, { text: "Arsénico.", isCorrect: true }, { text: "Clorofluorocarbonos (CFC).", isCorrect: false } ] }, 
+
+{ question: "¿Cuál es el principal desafío ambiental relacionado con las Plantas de Tratamiento de Aguas Residuales (PTAR) en la República Dominicana en la actualidad?", answerOptions: [ { text: "El exceso de capacidad instalada que permanece inactiva por falta de personal.", isCorrect: false }, { text: "El uso exclusivo de tecnología de ósmosis inversa en todas las plantas del país.", isCorrect: false }, { text: "La baja cobertura de tratamiento, vertiéndose la mayoría de las aguas residuales domésticas e industriales directamente a ríos, mares y sumideros.", isCorrect: true }, { text: "La prohibición legal de construir nuevas plantas de tratamiento cerca de zonas urbanas.", isCorrect: false } ] },
+            
+{ question: "¿Qué institución es la principal responsable de la operación, mantenimiento y expansión de los acueductos y alcantarillados del Gran Santo Domingo, incluyendo la gestión de sus plantas de tratamiento?", answerOptions: [ { text: "Instituto Nacional de Recursos Hidráulicos (INDRHI).", isCorrect: false }, { text: "Ministerio de Medio Ambiente y Recursos Naturales.", isCorrect: false }, { text: "La Corporación de Acueducto y Alcantarillado de Santo Domingo (CAASD).", isCorrect: true }, { text: "Consejo Estatal del Azúcar (CEA).", isCorrect: false } ] },
+
+{ question: "¿Qué es el balance hídrico?", answerOptions: [ { text: "Es la cantidad total de agua almacenada exclusivamente en los océanos y mares.", isCorrect: false }, { text: "La medida de la cantidad de agua potable disponible únicamente para el consumo humano.", isCorrect: false }, { text: "Es el equilibrio entre la cantidad de agua que llega y la que sale en una fuente durante un tiempo.", isCorrect: true }, { text: "Es el proceso mediante el cual el agua de los ríos se transforma en agua subterránea.", isCorrect: false } ] },
+
+{ question: "Según los ejemplos ¿dónde NO hay balance hídrico?", answerOptions: [ { text: "Un acuífero subterráneo sobreexplotado: la extracción mediante pozos es mayor que la cantidad de agua que se infiltra y lo recarga. Sale más agua de la que entra.", isCorrect: false }, { text: "Un río después de una tormenta: recibe grandes cantidades de lluvia en poco tiempo, mientras el agua tarda más en salir por la desembocadura. Entra más agua de la que sale", isCorrect: false }, { text: "Una laguna durante una sequía: recibe poca lluvia y escorrentía, mientras la evaporación continúa siendo elevada. Sale más agua de la que entra.", isCorrect: true }, { text: "Un embalse durante una temporada de lluvias intensas: recibe grandes cantidades de agua de los ríos y la lluvia, pero libera poca agua. Entra más agua de la que sale.", isCorrect: false } ] },
+
+{ question: "El río Yaque del Norte, vital para la agricultura en la región del Cibao;s sin embargo, enfrenta un grave problema de degradación ambiental debido principalmente a:", answerOptions: [ { text: "La sobrepesca de especies endémicas en su cauce.", isCorrect: false }, { text: "La construcción excesiva de plantas de tratamiento de última generación que alteran su caudal.", isCorrect: false }, { text: "La contaminación por vertidos de aguas residuales sin tratar y la escorrentía agrícola con altos niveles de fertilizantes y pesticidas.", isCorrect: true }, { text: "La deforestación acelerada de la Loma La Pelona, que aumenta su salinidad.", isCorrect: false } ] },
+            
+{ question: "Desde una perspectiva medioambiental, ¿cuál es la función principal de una Planta de Tratamiento de Aguas Residuales (PTAR) antes de devolver el efluente a un cuerpo de agua natural?", answerOptions: [ { text: "Aumentar la temperatura del agua para evitar la proliferación de algas nocivas.", isCorrect: false }, { text: "Añadir cloro en cantidades masivas para esterilizar completamente el río o el mar", isCorrect: false }, { text: "Eliminar contaminantes físicos, químicos y biológicos para reducir la carga orgánica y proteger los ecosistemas acuáticos receptores.", isCorrect: true }, { text: "Convertir el agua residual en agua salada para su liberación controlada.", isCorrect: false } ] }, 
+
+{ question: "¿Qué institución es la principal responsable de la operación, mantenimiento y expansión de los acueductos y alcantarillados de SANTIAGO, incluyendo la gestión de sus plantas de tratamiento?", answerOptions: [ { text: "Instituto Nacional de Recursos Hidráulicos (INDRHI).", isCorrect: false }, { text: "Ministerio de Medio Ambiente y Recursos Naturales.", isCorrect: false }, { text: "La Corporación del Acueducto y Alcantarillado de Santiago (CORAASAN).", isCorrect: true }, { text: "La Corporación de Acueducto y Alcantarillado de Santo Domingo (CAASD).", isCorrect: false } ] },
+
+            { question: "¿Qué institución es la principal responsable de la operación, mantenimiento y expansión de los acueductos y alcantarillados de la mayoría de las comunidades de la República Dominicana, incluyendo la gestión de sus plantas de tratamiento?", answerOptions: [ { text: "Instituto Nacional de Recursos Hidráulicos (INDRHI).", isCorrect: false }, { text: "Ministerio de Medio Ambiente y Recursos Naturales.", isCorrect: false }, { text: "El Instituto Nacional de Aguas Potables y Alcantarillados (INAPA).", isCorrect: true }, { text: "La Corporación de Acueducto y Alcantarillado de Santo Domingo (CAASD).", isCorrect: false } ] },
+
+            { question: "En regiones turísticas del este, como Bávaro-Punta Cana, la sobreexplotación de los acuíferos subterráneos para abastecer hoteles, residenciales y campos de golf ha provocado como principal consecuencia ambiental:", answerOptions: [ { text: "El aumento desmedido de la población de peces de agua dulce en las fuentes naturales.", isCorrect: false }, { text: "La depuración de los mantos acuíferos debido a la alteración de la presión atmosférica.", isCorrect: false }, { text: "La intrusión salina, que contamina las reservas de agua dulce con agua de mar, inutilizando los pozos.", isCorrect: true }, { text: "El desbordamiento constante de los ríos locales por el exceso de agua subterránea.", isCorrect: false } ] },
+
+            { question: "¿Qué ley de la República Dominicana establece el marco legal general para la gestión ambiental, incluyendo la protección de los recursos hídricos, las zonas de veda de los ríos y la regulación de vertidos contaminantes?", answerOptions: [ { text: "Ley 17-19 de Cambio Climático.", isCorrect: false }, { text: "Ley 5852 del Instituto Nacional de Recursos Hidráulicos.", isCorrect: false }, { text: "Ley 64-00 General sobre Medio Ambiente y Recursos Naturales.", isCorrect: true }, { text: "Ley 20-00 sobre Propiedad Industrial.", isCorrect: false } ] },
+
+            { question: "¿Por qué se prohíbe el vertido de agua de lluvia en las redes de alcantarillado sanitario (cloacales)?", answerOptions: [ { text: "Porque el agua de lluvia contiene altos niveles de cloro y químicos que corroen inmediatamente las tuberías de concreto y PVC del sistema.", isCorrect: false }, { text: "Porque las plantas de tratamiento de aguas residuales utilizan el agua de lluvia como su principal fuente de energía para operar las bombas de succión.", isCorrect: false }, { text: "Porque el sistema de alcantarillado sanitario está diseñado para un caudal específico de aguas residuales; la entrada de agua de lluvia causa sobrecarga hidráulica, desbordamientos, reflujo de aguas servidas a las calles y altera los procesos biológicos en las plantas de tratamiento.", isCorrect: true }, { text: "Porque la ley clasifica el agua de lluvia como un 'residuo peligroso' que debe ser tratado en incineradores especiales antes de ser desechada.", isCorrect: false } ] },
+
+            { question: "¿A que nos referimos con el término 'Especie invasora'?", answerOptions: [ { text: "A cualquier animal o planta endémica que crece de manera abrumadora debido a cambios climáticos naturales.", isCorrect: false }, { text: "A una especie nativa que ha sido criada en cautiverio y luego liberada en su propia región.", isCorrect: false }, { text: "A un organismo exótico introducido fuera de su hábitat natural que se adapta, se multiplica y causa impacto negativo en la biodiversidad local.", isCorrect: true }, { text: "A los cultivos agrícolas tradicionales creados mediante selección artificial para consumo humano.", isCorrect: false } ] },
+            
+            { question: "¿Cuál de las siguientes afirmaciones es correcta respecto al «Pez Diablo» (Amphilophus citrinellus)?", answerOptions: [ { text: "Es un alga flotante que bloquea la luz solar en las costas del Caribe.", isCorrect: false }, { text: "Es una especie endémica protegida en la República Dominicana.", isCorrect: false }, { text: "Es una especie exótica invasora con un severo impacto negativo en la biodiversidad de ríos y lagos de agua dulce.", isCorrect: true }, { text: "Es un organismo marino utilizado comercialmente en las PTAR.", isCorrect: false } ] }
+        ];
+        const TOTAL_QUESTIONS_PER_ATTEMPT = 10;
+        const TIEMPO_LIMITE = 120; // segundos
+        const MAX_STARS = 3;
+
+        // DOM refs
+        const startScreen = document.getElementById('start-screen');
+        const questionScreen = document.getElementById('question-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const startBtn = document.getElementById('start-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const questionCounterEl = document.getElementById('question-counter');
+        const questionTextEl = document.getElementById('question-text');
+        const answerOptionsEl = document.getElementById('answer-options');
+        const resultMessageEl = document.getElementById('result-message');
+        const soundEnabledCheckbox = document.getElementById('sound-enabled');
+        const creditsModal = document.getElementById('credits-modal');
+        const creditsBtn = document.getElementById('credits-btn');
+        const closeBtn = document.querySelector('.close-btn');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerContainer = document.getElementById('timer-container');
+        const participantNameInput = document.getElementById('participant-name');
+        const certificateArea = document.getElementById('certificate-area');
+        const certNameDisplay = document.getElementById('cert-name-display');
+        const certScoreDisplay = document.getElementById('cert-score-display');
+        const certStarsDisplay = document.getElementById('cert-stars-display');
+        const certDateDisplay = document.getElementById('cert-date-display');
+        const downloadCertBtn = document.getElementById('download-cert-btn');
+        const starsProgress = document.getElementById('stars-progress');
+        const congratsModal = document.getElementById('congrats-modal');
+        const closeCongratsBtn = document.getElementById('close-congrats-btn');
+        const congratsStarsCounter = document.getElementById('congrats-stars-counter');
+        const congratsStarNumber = document.getElementById('congrats-star-number');
+
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timerInterval = null;
+        let tiempoRestante = TIEMPO_LIMITE;
+        let tiempoAgotado = false;
+        let cuestionarioFinalizado = false;
+        let nombreParticipante = '';
+
+        // Variables para el sistema de estrellas
+        let starsEarned = 0; // Estrellas acumuladas (máx 3)
+        let consecutiveCorrect = 0; // Conteo de respuestas correctas seguidas
+        let isWaitingForCongrats = false; // Para evitar que se dispare múltiples veces
+        let pendingNextAction = null; // Acción pendiente después de cerrar el modal
+
+        // --- Función para formatear fecha en DD.MMM.AAAA ---
+        function formatearFecha() {
+            const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+            const fecha = new Date();
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const mes = meses[fecha.getMonth()];
+            const anio = fecha.getFullYear();
+            return `${dia}.${mes}.${anio}`;
+        }
+
+        // --- Sound Manager ---
+        class SoundManager {
+            constructor() { this.audioContext = null; this.enabled = true; this.initAudioContext(); }
+            async initAudioContext() { try { this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+            async playCorrectSound() {
+                if (!this.enabled || !this.audioContext) return;
+                try { const freqs = [523.25, 659.25, 783.99]; freqs.forEach((f,i) => setTimeout(() => this.playTone(f, 0.2, 0.1), i*80)); } catch(e) {}
+            }
+            async playIncorrectSound() {
+                if (!this.enabled || !this.audioContext) return;
+                try { const freqs = [400, 300, 200]; freqs.forEach((f,i) => setTimeout(() => this.playTone(f, 0.15, 0.8), i*100)); } catch(e) {}
+            }
+            async playStarSound() {
+                if (!this.enabled || !this.audioContext) return;
+                try {
+                    const freqs = [523.25, 659.25, 783.99, 1046.50];
+                    freqs.forEach((f,i) => setTimeout(() => this.playTone(f, 0.25, 0.15), i*120));
+                } catch(e) {}
+            }
+            playTone(frequency, duration, volume = 0.1) {
+                if (!this.audioContext) return;
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                oscillator.connect(gainNode); gainNode.connect(this.audioContext.destination);
+                oscillator.frequency.value = frequency; oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + duration);
+            }
+            setEnabled(enabled) { this.enabled = enabled; }
+        }
+        const soundManager = new SoundManager();
+
+        function vibrateDevice(pattern) {
+            if (!navigator.vibrate) return;
+            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) try { navigator.vibrate(pattern); } catch(e) {}
+        }
+        function vibrateCorrect() { vibrateDevice([100, 50, 100]); }
+        function vibrateIncorrect() { vibrateDevice([300, 100, 300, 100, 300]); }
+        function vibrateStar() { vibrateDevice([100, 50, 100, 50, 200, 100, 200]); }
+
+        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
+        function selectRandomQuestions(questionBank, count) { const shuffled = [...questionBank]; shuffleArray(shuffled); return shuffled.slice(0, count); }
+
+        // --- Actualizar visualización de estrellas ---
+        function updateStarsDisplay() {
+            let html = '';
+            for (let i = 0; i < MAX_STARS; i++) {
+                if (i < starsEarned) {
+                    html += '<span style="color: #f1c40f; font-size: 1.8rem;">⭐</span>';
+                } else {
+                    html += '<span style="color: #ddd; font-size: 1.8rem;">☆</span>';
+                }
+            }
+            starsProgress.innerHTML = html;
+        }
+
+        // --- Mostrar modal de felicitación (centrado) ---
+        function showCongratsModal() {
+            isWaitingForCongrats = true;
+            detenerTemporizador(); // Pausar el tiempo
+            
+            congratsStarsCounter.textContent = '⭐'.repeat(starsEarned) + '☆'.repeat(MAX_STARS - starsEarned);
+            congratsStarNumber.textContent = starsEarned;
+            congratsModal.style.display = 'block';
+            
+            soundManager.playStarSound();
+            vibrateStar();
+        }
+
+        // --- Cerrar modal de felicitación y continuar ---
+        function closeCongratsModalAndContinue() {
+            congratsModal.style.display = 'none';
+            isWaitingForCongrats = false;
+            
+            // Reanudar el temporizador si no ha terminado el cuestionario
+            if (!cuestionarioFinalizado && !tiempoAgotado) {
+                iniciarTemporizador();
+            }
+            
+            // Ejecutar la acción pendiente
+            if (pendingNextAction) {
+                const action = pendingNextAction;
+                pendingNextAction = null;
+                action();
+            }
+        }
+
+        // --- Temporizador ---
+        function iniciarTemporizador() {
+            if (tiempoAgotado || cuestionarioFinalizado) return;
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                tiempoRestante--;
+                actualizarDisplayTemporizador();
+                if (tiempoRestante <= 10) timerContainer.classList.add('warning');
+                if (tiempoRestante <= 0) {
+                    clearInterval(timerInterval); timerInterval = null; tiempoAgotado = true;
+                    if (!cuestionarioFinalizado && !isWaitingForCongrats) {
+                        cuestionarioFinalizado = true;
+                        Array.from(answerOptionsEl.children).forEach(btn => btn.disabled = true);
+                        mostrarResultadosConMensaje("⏰ ¡Se acabó el tiempo!");
+                    }
+                }
+            }, 1000);
+        }
+        function actualizarDisplayTemporizador() { timerDisplay.textContent = tiempoRestante; }
+        function detenerTemporizador() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } timerContainer.classList.remove('warning'); }
+
+        // --- Mostrar resultados con certificado ---
+        function mostrarResultadosConMensaje(mensajeAdicional = "") {
+            detenerTemporizador();
+            questionScreen.style.display = 'none';
+            resultsScreen.style.display = 'block';
+            
+            nombreParticipante = participantNameInput.value.trim() || 'Participante';
+            
+            const percentage = Math.round((score / shuffledQuestions.length) * 100);
+            let mensajeTiempo = "";
+            if (tiempoAgotado) {
+                mensajeTiempo = `⏰ <strong>Tiempo agotado</strong>. Respondiste ${score} de ${shuffledQuestions.length} preguntas.`;
+            } else {
+                mensajeTiempo = `Completaste el cuestionario en <strong>${TIEMPO_LIMITE - tiempoRestante}</strong> segundos.`;
+            }
+            
+            // Mostrar mensaje con estrellas
+            let starsMessage = '';
+            if (starsEarned > 0) {
+                starsMessage = `<p style="font-size: 1.5rem; color: #f1c40f;">⭐ × ${starsEarned} ${starsEarned === MAX_STARS ? '🏆 ¡Perfecto!' : ''}</p>`;
+            }
+            
+            resultMessageEl.innerHTML = `
+                ${mensajeAdicional ? `<p style="color: #dc3545; font-size: 1.2rem;">${mensajeAdicional}</p>` : ''}
+                ${starsMessage}
+                <p>${mensajeTiempo}</p>
+                <p>Tu puntuación final es <strong>${score}</strong> de ${shuffledQuestions.length} (<strong>${percentage}%</strong>).</p>
+            `;
+            
+            // Mostrar certificado con estrellas
+            certificateArea.style.display = 'block';
+            certNameDisplay.textContent = nombreParticipante;
+            certScoreDisplay.textContent = `${percentage}%`;
+            
+            // Mostrar estrellas en el certificado - SOLO LAS GANADAS, SIN SOMBRAS
+            if (starsEarned > 0) {
+                let starsHtml = '';
+                for (let i = 0; i < starsEarned; i++) {
+                    starsHtml += `<span class="star-earned">⭐</span>`;
+                }
+                certStarsDisplay.innerHTML = starsHtml;
+            } else {
+                // Si no hay estrellas, mostrar un espacio vacío o un mensaje sutil
+                certStarsDisplay.innerHTML = '';
+            }
+            
+            // Mostrar fecha formateada en el certificado
+            const fechaFormateada = formatearFecha();
+            certDateDisplay.textContent = `📅 Santo Domingo, República Dominicana · ${fechaFormateada}`;
+            
+            // SCORM
+            SCORM.set("cmi.core.score.raw", percentage);
+            SCORM.set("cmi.core.score.min", "0");
+            SCORM.set("cmi.core.score.max", "100");
+            if (percentage >= 80) { SCORM.set("cmi.core.lesson_status", "passed"); setTimeout(() => soundManager.playCorrectSound(), 300); }
+            else { SCORM.set("cmi.core.lesson_status", "completed"); if (percentage >= 60) setTimeout(() => soundManager.playTone(440,0.5,0.2), 300); }
+            SCORM.save();
+        }
+
+        function showResults() { 
+            if (cuestionarioFinalizado) return;
+            cuestionarioFinalizado = true; 
+            detenerTemporizador(); 
+            mostrarResultadosConMensaje(); 
+        }
+
+        // --- Función para reiniciar completamente el juego ---
+        function resetAndRestartQuiz() {
+            // Detener el temporizador actual
+            detenerTemporizador();
+            
+            // Resetear todas las variables
+            shuffledQuestions = [];
+            currentQuestionIndex = 0;
+            score = 0;
+            tiempoRestante = TIEMPO_LIMITE;
+            tiempoAgotado = false;
+            cuestionarioFinalizado = false;
+            
+            // Resetear variables de estrellas
+            starsEarned = 0;
+            consecutiveCorrect = 0;
+            isWaitingForCongrats = false;
+            pendingNextAction = null;
+            
+            // Ocultar modal de felicitación si está visible
+            congratsModal.style.display = 'none';
+            
+            // Ocultar resultados y mostrar la pantalla de preguntas
+            resultsScreen.style.display = 'none';
+            questionScreen.style.display = 'block';
+            certificateArea.style.display = 'none';
+            
+            // Actualizar display de estrellas
+            updateStarsDisplay();
+            
+            // Seleccionar NUEVAS 10 preguntas al azar
+            const selectedQuestions = selectRandomQuestions(fullQuizData, TOTAL_QUESTIONS_PER_ATTEMPT);
+            shuffledQuestions = selectedQuestions;
+            shuffleArray(shuffledQuestions);
+            
+            // Resetear el contador de preguntas y mostrar la primera
+            currentQuestionIndex = 0;
+            showQuestion();
+            
+            // Iniciar el temporizador desde cero
+            timerDisplay.textContent = TIEMPO_LIMITE;
+            timerContainer.classList.remove('warning');
+            iniciarTemporizador();
+        }
+
+        // --- Funciones del quiz ---
+        function startQuiz() {
+            const name = participantNameInput.value.trim();
+            if (!name) {
+                alert('Por favor, escribe tu nombre para obtener tu certificado.');
+                return;
+            }
+            // Resetear variables de estrellas
+            starsEarned = 0;
+            consecutiveCorrect = 0;
+            isWaitingForCongrats = false;
+            pendingNextAction = null;
+            
+            startScreen.style.display = 'none';
+            resultsScreen.style.display = 'none';
+            questionScreen.style.display = 'block';
+            certificateArea.style.display = 'none';
+            congratsModal.style.display = 'none';
+
+            const selectedQuestions = selectRandomQuestions(fullQuizData, TOTAL_QUESTIONS_PER_ATTEMPT);
+            shuffledQuestions = selectedQuestions;
+            shuffleArray(shuffledQuestions);
+            currentQuestionIndex = 0;
+            score = 0;
+            tiempoAgotado = false;
+            cuestionarioFinalizado = false;
+            
+            updateStarsDisplay();
+            showQuestion();
+            iniciarTemporizador();
+            if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') soundManager.audioContext.resume();
+        }
+
+        function showQuestion() {
+            resetState();
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            questionCounterEl.innerText = `Pregunta ${currentQuestionIndex + 1} de ${shuffledQuestions.length}`;
+            let qHTML = currentQuestion.question;
+            if (currentQuestion.imageSrc) qHTML = `<img src="${currentQuestion.imageSrc}" class="question-image">` + qHTML;
+            questionTextEl.innerHTML = qHTML;
+
+            const shuffledAnswers = [...currentQuestion.answerOptions];
+            shuffleArray(shuffledAnswers);
+            shuffledAnswers.forEach(answer => {
+                const button = document.createElement('button');
+                const star = document.createElement('span');
+                star.classList.add('star-icon');
+                star.innerText = '⭐';
+                const textNode = document.createTextNode(` ${answer.text}`);
+                button.appendChild(star); button.appendChild(textNode);
+                button.classList.add('answer-btn');
+                button.dataset.correct = answer.isCorrect;
+                button.addEventListener('click', selectAnswer);
+                answerOptionsEl.appendChild(button);
+            });
+        }
+
+        function resetState() {
+            nextBtn.style.display = 'none';
+            while (answerOptionsEl.firstChild) answerOptionsEl.removeChild(answerOptionsEl.firstChild);
+        }
+
+        function selectAnswer(e) {
+            if (tiempoAgotado || cuestionarioFinalizado || isWaitingForCongrats) return;
+            
+            // Detener el temporizador al responder
+            detenerTemporizador();
+            
+            Array.from(answerOptionsEl.children).forEach(btn => btn.classList.add('animation-paused'));
+            const selectedButton = e.currentTarget;
+            const isCorrect = selectedButton.dataset.correct === "true";
+            
+            if (isCorrect) { 
+                score++; 
+                selectedButton.classList.add('correct'); 
+                soundManager.playCorrectSound(); 
+                vibrateCorrect();
+                
+                // Incrementar contador de respuestas correctas consecutivas
+                consecutiveCorrect++;
+                
+                // Verificar si se ganó una estrella (cada 3 correctas seguidas)
+                if (consecutiveCorrect % 3 === 0 && starsEarned < MAX_STARS) {
+                    starsEarned++;
+                    updateStarsDisplay();
+                    
+                    // Marcar que ya se respondió la pregunta
+                    Array.from(answerOptionsEl.children).forEach(button => {
+                        if (button.dataset.correct === "true") button.classList.add('correct');
+                        button.disabled = true;
+                    });
+                    
+                    // Guardar la acción pendiente
+                    if (shuffledQuestions.length > currentQuestionIndex + 1) {
+                        pendingNextAction = () => {
+                            currentQuestionIndex++;
+                            showQuestion();
+                            // Reanudar el temporizador al mostrar la siguiente pregunta
+                            if (!cuestionarioFinalizado && !tiempoAgotado) {
+                                iniciarTemporizador();
+                            }
+                        };
+                    } else {
+                        pendingNextAction = () => {
+                            cuestionarioFinalizado = true;
+                            detenerTemporizador();
+                            setTimeout(mostrarResultadosConMensaje, 500);
+                        };
+                    }
+                    
+                    // Mostrar modal de felicitación
+                    setTimeout(() => showCongratsModal(), 400);
+                    return;
+                }
+            } else { 
+                selectedButton.classList.add('incorrect'); 
+                soundManager.playIncorrectSound(); 
+                vibrateIncorrect();
+                // Reiniciar el contador de respuestas correctas consecutivas
+                consecutiveCorrect = 0;
+            }
+            
+            Array.from(answerOptionsEl.children).forEach(button => {
+                if (button.dataset.correct === "true") button.classList.add('correct');
+                button.disabled = true;
+            });
+            
+            // Si no se mostró modal de felicitación, mostrar siguiente
+            if (!isWaitingForCongrats) {
+                if (shuffledQuestions.length > currentQuestionIndex + 1) {
+                    nextBtn.style.display = 'block';
+                } else {
+                    // Última pregunta - mostrar resultados automáticamente
+                    cuestionarioFinalizado = true;
+                    detenerTemporizador();
+                    setTimeout(mostrarResultadosConMensaje, 800);
+                    nextBtn.style.display = 'none';
+                }
+            }
+        }
+
+        function handleNextButton() {
+            if (tiempoAgotado || cuestionarioFinalizado || isWaitingForCongrats) return;
+            const algunaSeleccionada = Array.from(answerOptionsEl.children).some(btn => btn.disabled);
+            if (!algunaSeleccionada) return;
+            currentQuestionIndex++;
+            showQuestion();
+            // Reanudar el temporizador al mostrar la siguiente pregunta
+            if (!cuestionarioFinalizado && !tiempoAgotado) {
+                iniciarTemporizador();
+            }
+        }
+
+        // --- Descargar certificado como imagen ---
+        function descargarCertificado() {
+            const certificado = document.getElementById('certificate-box');
+            if (typeof html2canvas === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                script.onload = () => { generarYDescargar(); };
+                document.head.appendChild(script);
+            } else {
+                generarYDescargar();
+            }
+        }
+
+        function generarYDescargar() {
+            const elemento = document.getElementById('certificate-box');
+            html2canvas(elemento, {
+                scale: 2,
+                backgroundColor: '#fff8e7',
+                allowTaint: false,
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                const enlace = document.createElement('a');
+                enlace.download = `certificado_${nombreParticipante.replace(/\s/g, '_')}.png`;
+                enlace.href = canvas.toDataURL('image/png');
+                enlace.click();
+            }).catch(err => {
+                alert('No se pudo generar la imagen. Puedes tomar una captura de pantalla del certificado.');
+                console.warn(err);
+            });
+        }
+
+        // --- Event listeners ---
+        startBtn.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', handleNextButton);
+        
+        // Botón "Volver a Intentar" - ahora usa resetAndRestartQuiz
+        restartBtn.addEventListener('click', resetAndRestartQuiz);
+        
+        soundEnabledCheckbox.addEventListener('change', (e) => soundManager.setEnabled(e.target.checked));
+        creditsBtn.onclick = () => { creditsModal.style.display = "block"; };
+        closeBtn.onclick = () => { creditsModal.style.display = "none"; };
+        window.onclick = (event) => { if (event.target == creditsModal) creditsModal.style.display = "none"; };
+        document.addEventListener('click', () => { if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') soundManager.audioContext.resume(); }, { once: true });
+        downloadCertBtn.addEventListener('click', descargarCertificado);
+        
+        // Eventos para el modal de felicitación
+        closeCongratsBtn.addEventListener('click', closeCongratsModalAndContinue);
+        window.addEventListener('click', (event) => {
+            if (event.target == congratsModal) {
+                closeCongratsModalAndContinue();
+            }
+        });
+
+        // Inicializar
+        participantNameInput.value = '';
+        updateStarsDisplay();
+        
+        // Establecer la fecha inicial en el certificado (se actualizará al mostrar resultados)
+        const fechaInicial = formatearFecha();
+        certDateDisplay.textContent = `📅 Santo Domingo, República Dominicana · ${fechaInicial}`;
+    </script>
+</body>
+</html>
