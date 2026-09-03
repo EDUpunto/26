@@ -422,6 +422,13 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🌍 Frontera RD-Haití
                 </label>
+                <!-- NUEVAS CAPAS: REGIONES ÚNICAS Y MACROREGIONES -->
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-regiones-unicas" onchange="toggleRegionesUnicas()"> 📋 Regiones Únicas de Planificación
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chk-macroregiones" onchange="toggleMacroregiones()"> 📊 Macroregiones de Planificación
+                </label>
             </div>
 
             <!-- Enlaces -->
@@ -461,6 +468,7 @@
                 <p>Peakery. (s. f.). Peakery: Your basecamp for the world's mountains. Recuperado el 22.jun.2026, de Peakery.com</p>
                 <p>Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022.
 https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de-poblacion-y-vivienda-2022/.</p>
+                <p>República Dominicana. Congreso Nacional. (2022). Ley núm. 345-22, Orgánica de Regiones Únicas de Planificación. Gaceta Oficial de la República Dominicana.</p>
             </div>
 
             <!-- SECCIÓN: ORIGEN DEL PROYECTO -->
@@ -594,6 +602,10 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         var capaAlturasRD = null;
         var capaAlturasHT = null;
         var capaSeleccionada = null;
+
+        // CAPAS NUEVAS
+        var capaRegionesUnicas = null;
+        var capaMacroregiones = null;
 
         // Iconos
         var iconComunidad = L.divIcon({
@@ -1195,7 +1207,9 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                 'chk-comunidades-rd',
                 'chk-comunidades-ht',
                 'chk-alturas-rd',
-                'chk-alturas-ht'
+                'chk-alturas-ht',
+                'chk-regiones-unicas',
+                'chk-macroregiones'
             ];
             checkboxes.forEach(function(id) {
                 var chk = document.getElementById(id);
@@ -1205,6 +1219,9 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     chk.dispatchEvent(evt);
                 }
             });
+            // Asegurar que las capas nuevas se quiten
+            if (capaRegionesUnicas && map.hasLayer(capaRegionesUnicas)) map.removeLayer(capaRegionesUnicas);
+            if (capaMacroregiones && map.hasLayer(capaMacroregiones)) map.removeLayer(capaMacroregiones);
         };
 
         // ═══════════════════════════════════════════════════════════
@@ -1292,6 +1309,113 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         if (document.getElementById('chk-frontera').checked) {
             cargarFrontera();
         }
+
+        // ═══════════════════════════════════════════════════════════
+        // 11. CAPAS NUEVAS: REGIONES ÚNICAS Y MACROREGIONES (SIN RELLENO)
+        // ═══════════════════════════════════════════════════════════
+
+        // 11.1 Regiones Únicas (Ley 345-22)
+        function cargarRegionesUnicas() {
+            if (capaRegionesUnicas) return; // ya cargada
+            fetch(encodeURI('anx/regionesunicasRD.geojson'))
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    capaRegionesUnicas = L.geoJSON(data, {
+                        style: {
+                            color: '#FF8C00',    // naranja oscuro
+                            weight: 2,
+                            fill: false,         // sin relleno
+                            opacity: 0.8
+                        },
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NOMBRE', 'NAME', 'name']) || 'Región Única';
+                            layer.bindPopup("<b>📋 " + nombre + "</b>");
+                        }
+                    });
+                    // Si el checkbox está marcado, añadir al mapa
+                    if (document.getElementById('chk-regiones-unicas').checked) {
+                        map.addLayer(capaRegionesUnicas);
+                    }
+                    console.log('Regiones Únicas cargadas correctamente.');
+                })
+                .catch(function(error) {
+                    console.warn('Error cargando Regiones Únicas:', error.message);
+                });
+        }
+
+        window.toggleRegionesUnicas = function() {
+            var chk = document.getElementById('chk-regiones-unicas');
+            if (chk.checked) {
+                if (!capaRegionesUnicas) {
+                    cargarRegionesUnicas();
+                } else {
+                    map.addLayer(capaRegionesUnicas);
+                }
+            } else {
+                if (capaRegionesUnicas) {
+                    map.removeLayer(capaRegionesUnicas);
+                }
+            }
+        };
+
+        // 11.2 Macroregiones de Planificación
+        function cargarMacroregiones() {
+            if (capaMacroregiones) return;
+            fetch(encodeURI('anx/macroregionesRD.geojson'))
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    capaMacroregiones = L.geoJSON(data, {
+                        style: {
+                            color: '#2E86C1',    // azul
+                            weight: 2,
+                            fill: false,
+                            opacity: 0.8
+                        },
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NOMBRE', 'NAME', 'name']) || 'Macroregión';
+                            layer.bindPopup("<b>📊 " + nombre + "</b>");
+                        }
+                    });
+                    if (document.getElementById('chk-macroregiones').checked) {
+                        map.addLayer(capaMacroregiones);
+                    }
+                    console.log('Macroregiones cargadas correctamente.');
+                })
+                .catch(function(error) {
+                    console.warn('Error cargando Macroregiones:', error.message);
+                });
+        }
+
+        window.toggleMacroregiones = function() {
+            var chk = document.getElementById('chk-macroregiones');
+            if (chk.checked) {
+                if (!capaMacroregiones) {
+                    cargarMacroregiones();
+                } else {
+                    map.addLayer(capaMacroregiones);
+                }
+            } else {
+                if (capaMacroregiones) {
+                    map.removeLayer(capaMacroregiones);
+                }
+            }
+        };
+
+        // Cargar las capas si los checkboxes están marcados por defecto (no lo están)
+        // pero por si acaso:
+        if (document.getElementById('chk-regiones-unicas').checked) {
+            cargarRegionesUnicas();
+        }
+        if (document.getElementById('chk-macroregiones').checked) {
+            cargarMacroregiones();
+        }
+
     </script>
 </body>
 </html>
