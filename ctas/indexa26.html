@@ -1049,7 +1049,21 @@
             });
         }
 
-        function crearIconoEstrella(colorHex) {
+        // Icono para Playas y Manglares (tamaño reducido, mismo que accidentes)
+        function crearIconoPoligono(colorHex, bordeColor) {
+            bordeColor = bordeColor || colorHex;
+            return L.divIcon({
+                className: 'custom-polygon-marker',
+                html: `<svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3));">
+                    <rect x="2" y="2" width="20" height="20" rx="3" fill="${colorHex}" stroke="${bordeColor}" stroke-width="1.5" />
+                </svg>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12],
+                popupAnchor: [0, -12]
+            });
+        }
+
+        var iconoEstrella = function(colorHex) {
             colorHex = colorHex || '#F4B09F';
             const svg = `<svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.5));">
                 <path d="M12 2L15 9L22 9L17 14L19 21L12 17L5 21L7 14L2 9L9 9Z" fill="${colorHex}" stroke="#333333" stroke-width="1.2"/>
@@ -1061,12 +1075,16 @@
                 iconAnchor: [18, 18],
                 popupAnchor: [0, -20]
             });
-        }
+        };
 
         var iconoRD = crearApuntadorSVG('#8E44AD');
         var iconoHaiti = crearApuntadorSVG('#8E44AD');
-        var iconoEstrellaRD = crearIconoEstrella('#F4B09F');
-        var iconoEstrellaHT = crearIconoEstrella('#F4B09F');
+        var iconoEstrellaRD = iconoEstrella('#F4B09F');
+        var iconoEstrellaHT = iconoEstrella('#F4B09F');
+
+        // Iconos para Playas y Manglares (con colores específicos y tamaño reducido)
+        var iconoPlaya = crearIconoPoligono('#F4D03F', '#B7950B');
+        var iconoManglar = crearIconoPoligono('#2E7D32', '#1B5E20');
 
         // Capas existentes
         var layerAccidentesRD = L.layerGroup().addTo(map);
@@ -1180,34 +1198,78 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 6. CARGAR CAPAS GEOJSON - SIN RELLENO
+        // 6. CARGAR CAPAS GEOJSON - Con iconos personalizados para Playas y Manglares
         // ═══════════════════════════════════════════════════════════
 
-        // Playas RD
-        cargarGeoJSON('anx/PLAYASDOM.geojson', layerPlayasRD, {
-            color: '#F4D03F',
-            weight: 1,
-            fillColor: '#F4D03F',
-            fillOpacity: 0.6
-        }, 'Name');
+        // Función para cargar puntos de playa y manglar con iconos personalizados
+        function cargarGeoJSONConIconos(url, capa, icono, popupProp) {
+            fetch(url)
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    // Si es un FeatureCollection, procesamos cada feature
+                    var features = data.features || data;
+                    if (!Array.isArray(features)) {
+                        features = [features];
+                    }
+                    features.forEach(function(feature) {
+                        var geom = feature.geometry;
+                        if (!geom) return;
+                        var coords = geom.coordinates;
+                        var lat, lng;
+                        if (geom.type === 'Point') {
+                            lng = coords[0];
+                            lat = coords[1];
+                        } else if (geom.type === 'Polygon' || geom.type === 'MultiPolygon') {
+                            // Tomamos el centroide del polígono
+                            var centroid = getCentroid(geom);
+                            lat = centroid[1];
+                            lng = centroid[0];
+                        } else {
+                            return;
+                        }
+                        var nombre = feature.properties ? (feature.properties.Name || feature.properties.NOMBRE || '') : '';
+                        var popupContent = nombre ? '<strong>' + nombre + '</strong>' : '';
+                        L.marker([lat, lng], { icon: icono })
+                            .bindPopup(popupContent)
+                            .addTo(capa);
+                    });
+                    console.log('Cargados puntos con iconos desde: ' + url);
+                })
+                .catch(function(error) {
+                    console.warn('Error cargando ' + url + ': ' + error.message);
+                });
+        }
 
-        // Playas HT
-        cargarGeoJSON('anx/PLAYASHT.geojson', layerPlayasHT, {
-            color: '#F4D03F',
-            weight: 2,
-            fillColor: '#F4D03F',
-            fillOpacity: 0.6
-        }, 'Name');
+        // Función auxiliar para calcular centroide de un polígono
+        function getCentroid(geom) {
+            var coords = geom.coordinates;
+            if (geom.type === 'Polygon') {
+                coords = coords[0];
+            } else if (geom.type === 'MultiPolygon') {
+                // Tomamos el primer polígono
+                coords = coords[0][0];
+            }
+            var sumX = 0, sumY = 0, count = 0;
+            coords.forEach(function(coord) {
+                sumX += coord[0];
+                sumY += coord[1];
+                count++;
+            });
+            return [sumX / count, sumY / count];
+        }
 
-        // Manglares
-        cargarGeoJSON('anx/manglaresSD.geojson', layerManglares, {
-            color: '#2E7D32',
-            weight: 2,
-            fillColor: '#2E7D32',
-            fillOpacity: 0.5
-        }, 'Name');
+        // Playas RD con icono personalizado
+        cargarGeoJSONConIconos('anx/PLAYASDOM.geojson', layerPlayasRD, iconoPlaya, 'Name');
+        // Playas HT con icono personalizado
+        cargarGeoJSONConIconos('anx/PLAYASHT.geojson', layerPlayasHT, iconoPlaya, 'Name');
 
-        // Corales
+        // Manglares con icono personalizado
+        cargarGeoJSONConIconos('anx/manglaresSD.geojson', layerManglares, iconoManglar, 'Name');
+
+        // Corales - se mantienen como polígonos con estilo (no hay icono específico)
         cargarGeoJSON('anx/coralesSD.geojson', layerCorales, {
             color: '#008B8B',
             weight: 2,
