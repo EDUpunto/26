@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactivo TyT</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; width: 90%; max-width: 600px; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
+        .hidden { display: none; }
+        
+        /* Estilos para Imagen 1:1 */
+        .img-container {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto 20px auto;
+            background-color: #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Asegura que llene el cuadro 1:1 */
+        }
+
+        h2 { color: #333; font-size: 1.2em; margin-bottom: 20px; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        button { padding: 12px; border: none; background: #007bff; color: white; border-radius: 5px; cursor: pointer; font-size: 1em; transition: background 0.3s; }
+        button:hover { background: #0056b3; }
+        button.selected { background: #004494; border: 2px solid #002a5c; }
+        
+        #feedback { margin-top: 15px; font-weight: bold; height: 20px; }
+        .correct { color: green; }
+        .incorrect { color: red; }
+
+        #controls { margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
+        .btn-nav { background: #6c757d; }
+        .btn-nav:hover { background: #5a6268; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="quiz-container">
+    <div id="start-screen">
+        <h1>Diferenciando técnica y tecnología</h1>
+        <p>Responde a las preguntas.</p>
+        <button onclick="startQuiz()">Comenzar</button>
+    </div>
+
+    <div id="question-screen" class="hidden">
+        <div id="progress">Pregunta <span id="current-q">1</span> de 10</div>
+        
+        <div class="img-container">
+            <img id="q-image" src="" alt="Gráfica de la pregunta">
+        </div>
+        
+        <h2 id="q-text">Texto de la pregunta</h2>
+        <div class="options" id="options-container">
+            </div>
+        <div id="feedback"></div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <h2>Resultados</h2>
+        <p>Tu puntuación: <span id="final-score">0</span> / 100</p>
+        <p id="status-msg"></p>
+        <button onclick="closeCourse()">Salir / Finalizar</button>
+    </div>
+</div>
+
+<script>
+    // --- DATOS DEL CUESTIONARIO (EDITA ESTO) ---
+    // Asegúrate de que los nombres de imagen coincidan con los de tu carpeta /anx
+    const quizData = [
+        {
+            question: "¿Cuál es la técnica?",
+            image: "anx/001.gif", // Reemplaza con el nombre real
+            options: ["Bajar la escalera", "Subir la escalera", "La escalera"],
+            correct: 0 // Índice de la respuesta correcta (empieza en 0)
+        },
+        {
+            question: "¿Cuál es la técnica?",
+            image: "anx/002.gif",
+            options: ["El camión", "El módulo de tubería", "La manera de bajar la tubería"],
+            correct: 2
+        },
+        // ... Copia y pega bloques hasta tener 10 preguntas ...
+        { question: "¿Cuál es la tecnología?", image: "anx/003.gif", options: ["El camión", "La habilidad del obrero", "La rueda"], correct: 2 },
+        { question: "En este caso la técnica es...", image: "anx/004.gif", options: ["El movimiento de las manos", "La manguera", "La manera de enrrollar"], correct: 2 },
+        { question: "Si la tecnología es el cuchillo, ¿donde está la técnica?", image: "anx/005.gif", options: ["La mesa", "La manera de cortar", "La piña"], correct: 1 },
+        { question: "En este caso la tecnología es...", image: "anx/006.gif", options: ["El lápiz y papel", "La acción de dibujar", "El dibujo"], correct: 0 },
+        { question: "¿Cuál es la técnica?", image: "anx/007.gif", options: ["La máquina", "La habilidad del operador", "Los contenedores"], correct: 1 },
+        { question: "¿Cuál es la técnica y cuál la tecnología?", image: "anx/008.gif", options: ["Saber hacer el mortero es técnica", "Las piedras ya están hechas", "Saber hacer las piedras es técnica | mortero y bolsas es tecnología"], correct: 2 },
+        { question: "¿Cuál es la técnica?", image: "anx/009.gif", options: ["Montar bicicletas", "La bicicleta", "La carretera"], correct: 0 },
+        { question: "En este caso la tecnología es...", image: "anx/010.gif", options: ["Saber moverse", "El agua y traje de baño", "Saber flotar"], correct: 1 }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let scormActive = false;
+
+    // --- LÓGICA SCORM 1.2 ---
+    var API = null;
+
+    function findAPI(win) {
+        let attempts = 0;
+        while ((win.API == null) && (win.parent != null) && (win.parent != win)) {
+            attempts++;
+            if (attempts > 7) return null;
+            win = win.parent;
+        }
+        return win.API;
+    }
+
+    function initSCORM() {
+        API = findAPI(window);
+        if ((API == null) && (window.opener != null) && (typeof(window.opener) != "undefined")) {
+            API = findAPI(window.opener);
+        }
+        if (API != null) {
+            API.LMSInitialize("");
+            API.LMSSetValue("cmi.core.lesson_status", "incomplete");
+            API.LMSCommit("");
+            scormActive = true;
+        } else {
+            console.log("API SCORM no encontrada (Modo local)");
+        }
+    }
+
+    function reportScore(rawScore) {
+        if (scormActive) {
+            API.LMSSetValue("cmi.core.score.raw", rawScore);
+            API.LMSSetValue("cmi.core.score.min", "0");
+            API.LMSSetValue("cmi.core.score.max", "100");
+            
+            if (rawScore >= 80) { // Umbral de aprobación 80%
+                API.LMSSetValue("cmi.core.lesson_status", "passed");
+            } else {
+                API.LMSSetValue("cmi.core.lesson_status", "failed"); // O 'completed' si solo importa terminar
+            }
+            API.LMSCommit("");
+        }
+    }
+
+    function finishSCORM() {
+        if (scormActive) {
+            API.LMSFinish("");
+        }
+    }
+
+    // --- LÓGICA DEL QUIZ ---
+    function startQuiz() {
+        initSCORM();
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('question-screen').classList.remove('hidden');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const data = quizData[currentQuestion];
+        document.getElementById('current-q').innerText = currentQuestion + 1;
+        document.getElementById('q-text').innerText = data.question;
+        document.getElementById('q-image').src = data.image; // Carga imagen desde /anx
+        
+        const optsContainer = document.getElementById('options-container');
+        optsContainer.innerHTML = "";
+        document.getElementById('feedback').innerText = "";
+
+        data.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.innerText = opt;
+            btn.onclick = () => selectAnswer(index);
+            optsContainer.appendChild(btn);
+        });
+    }
+
+    function selectAnswer(index) {
+        const data = quizData[currentQuestion];
+        const feedback = document.getElementById('feedback');
+        
+        // Bloquear botones
+        const btns = document.querySelectorAll('#options-container button');
+        btns.forEach(b => b.disabled = true);
+
+        if (index === data.correct) {
+            score++;
+            feedback.innerText = "¡Correcto!";
+            feedback.className = "correct";
+            btns[index].style.background = "green";
+        } else {
+            feedback.innerText = "Incorrecto";
+            feedback.className = "incorrect";
+            btns[index].style.background = "red";
+            btns[data.correct].style.background = "green"; // Mostrar la correcta
+        }
+
+        setTimeout(() => {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }, 1500);
+    }
+
+    function showResults() {
+        document.getElementById('question-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        
+        const finalPercent = Math.round((score / quizData.length) * 100);
+        document.getElementById('final-score').innerText = finalPercent;
+        
+        const msg = finalPercent >= 80 ? "¡Excelente trabajo!" : "Inténtalo de nuevo.";
+        document.getElementById('status-msg').innerText = msg;
+
+        reportScore(finalPercent);
+    }
+
+    function closeCourse() {
+        finishSCORM();
+        window.close(); // Intenta cerrar la ventana
+        alert("Puedes cerrar esta ventana ahora.");
+    }
+</script>
+<div style="position: absolute; bottom: 0; width: 100%;">
+    <p style="text-align: center; margin: 5px; color: #b696bb; font-size: 10px;">
+      <a href="https://isfodosu.edu.do/" target="_blank" style="color: inherit; text-decoration: none;">
+        ISFODOSU
+      </a> - DIGICON (2026)
+    </p>
+  </div>
+</body>
+
+</html>
