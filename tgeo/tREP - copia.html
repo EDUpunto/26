@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tarjetas Educativas - Geografía</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0px;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 10px;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .timer-container {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 15px 30px;
+        border-radius: 50px;
+        backdrop-filter: blur(10px);
+        margin-bottom: 20px;
+        width: 200px;
+        margin: 0 auto 20px auto;
+      }
+
+      .timer {
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .timer.warning {
+        color: #ff6b6b;
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      .cards-container {
+        display: grid;
+        gap: 35px;
+        row-gap: 5px;
+        width: 100%;
+        max-width: 1200px;
+        perspective: 1000px;
+      }
+
+      /* Pantallas pequeñas: 1 tarjeta */
+      @media (max-width: 767px) {
+        .cards-container {
+          grid-template-columns: 1fr;
+          max-width: 400px;
+        }
+      }
+
+      /* Pantallas medianas: 2 tarjetas */
+      @media (min-width: 768px) and (max-width: 1023px) {
+        .cards-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* Pantallas grandes: 4 tarjetas */
+      @media (min-width: 1024px) {
+        .cards-container {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .card {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        cursor: pointer;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+      }
+
+      .card.flipped {
+        transform: rotateY(180deg);
+      }
+
+      .card-face {
+        position: absolute;
+        width: 100%;
+        height: 90%;
+        backface-visibility: hidden;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .card-front {
+        background: white;
+      }
+
+      .card-back {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        transform: rotateY(180deg);
+      }
+
+      .card-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 15px;
+      }
+
+      .card-question {
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-align: center;
+        color: #333;
+      }
+
+      .card-answer {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .card-explanation {
+        font-size: 0.95rem;
+        text-align: center;
+        line-height: 1.5;
+        opacity: 0.95;
+      }
+
+      .controls {
+        
+        text-align: center;
+      }
+
+      .btn {
+        background: white;
+        color: #667eea;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s;
+        margin: 0 10px;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .instruction {
+        color: white;
+        text-align: center;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        opacity: 0.9;
+      }
+
+      .finished {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        text-align: center;
+        display: none;
+        z-index: 1000;
+      }
+
+      .finished.show {
+        display: block;
+        animation: fadeIn 0.5s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        z-index: 999;
+      }
+
+      .overlay.show {
+        display: block;
+      }
+
+     footer {
+      opacity: 70%;
+  /*position: fixed;*/
+  bottom: 0;
+ 
+
+  display: flex;
+  /*justify-content: center;*/
+  align-items: center;
+        
+
+  padding: 15px 0;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+
+  white-space: nowrap;
+}
+      .img-btn{
+       height: 23px;
+       width: auto;
+       transform: translateY(2px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🌍 Conceptos generales de Geografía</h1>
+       <div class="instruction">
+      💡 Selecciona una tarjeta para revelar su mensaje.
+    </div>
+      <div class="timer-container">
+        <div class="timer" id="timer">05:00</div>
+      </div>
+    </div>
+
+    <div class="cards-container" id="cardsContainer"></div>
+
+   
+    <div class="controls">
+      <button class="btn" onclick="shuffleCards()">🔄 Reorganizar Tarjetas</button>
+      <button class="btn" onclick="resetGame()">🔁 Reiniciar</button>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="finished" id="finished">
+      <h2 style="color: #667eea; margin-bottom: 20px; font-size: 2rem">
+        ⏰ ¡Tiempo Terminado!
+      </h2>
+      <p style="font-size: 1.2rem; margin-bottom: 30px">
+        Has completado el ejercicio de práctica
+      </p>
+      <button class="btn" onclick="resetGame()">Volver a Empezar</button>
+    </div>
+
+    <script>
+      const cardsData = [
+        {
+          image:
+          "anx/001 FIORDO.JPG",  /* 001 */
+          question: "¿Qué es un FIORDO?",
+          answer: "FIORDO",
+          explanation:
+            "Es un valle profundo, estrecho y de paredes verticales o casi verticales, que fue excavado por un glaciar y que luego fue inundado por el mar. Son comunes en lugares como Noruega, Chile y Nueva Zelanda.  Existen unos pocos fiordos de agua dulce. El fiordo más largo del mundo es el Sognefjord en Noruega, con una longitud de aproximadamente 205 kilómetros.",
+        },
+        {
+          image:
+          "anx/002 ESTUARIO.PNG", /* 002 */
+          question: "¿Qué es un ESTUARIO?",
+          answer: "ESTUARIO",
+          explanation:
+            "Es un ecosistema en las desembocaduras profundas de un río en el mar. Allí, se produce una mezcla de agua dulce del río con el agua salada del mar. El lugar queda afectado por las mareas y suele ser un área de gran biodiversidad pues es una zona donde se mezclan muchos nutrientes.",
+        },
+        {
+          image:
+          "anx/003 HUMEDAL.PNG", /* 003 */
+          question: "¿Qué es un HUMEDAL?",
+          answer: "HUMEDAL",
+          explanation:
+            "Cualquier área de tierra que se inunda de manera temporal o permanente. Generalmente no es muy profundo y sus aguas se mueven lentamente. El suelo se satura de agua, lo que crea un ecosistema híbrido entre lo terrestre y lo acuático.",
+        },
+        {
+          image:
+          "anx/004 PANTANO.PNG",/* 004 */
+          question: "¿Qué es un PANTANO?",
+          answer: "PANTANO",
+          explanation:
+            "Es un tipo de humedal con aguas poco profundas y generalmente lentas o estancadas. Su característica principal es que posee una vegetación densa de ÁRBOLES y arbustos.",
+        },
+        {
+          image:
+          "anx/005 ALTIPLANO MX.JPG",/* 005 */
+          question: "¿Qué es una MESETA o ALTIPLANO?",
+          answer: "MESETA o ALTIPLANO",
+          explanation:
+            "Un altiplano (o altiplanicie) es una meseta extensa y elevada situada a gran altitud, generalmente localizada entre dos o más cadenas montañosas (intramontano). Se caracteriza por un relieve plano o suavemente ondulado.  Su altura supera generalmente los 1000 msnm.  En inglés se conoce como plateau.  Ejemplos: la meseta central mexicana y el altiplano andino.",
+        },
+        {
+          image:
+          "anx/006 EUTROFIZACION.jpg",/* 006 */
+          question: "¿Qué es EUTROFIZACIÓN?",
+          answer: "EUTROFIZACIÓN",
+          explanation:
+            "Es el fenómeno de enriquecimiento excesivo de nutrientes —principalmente fósforo y nitrógeno— en ecosistemas acuáticos (lagos, ríos, mares), provocando un crecimiento descontrolado de algas y plantas. Este fenómeno genera algas tóxicas, enturbia el agua, consume el oxígeno disuelto al descomponerse y provoca la muerte de peces, reduciendo drásticamente la biodiversidad.",
+        },
+        {
+          image:
+          "anx/007 DELTA.jpg", /* 007 */
+          question: "¿Qué es un DELTA?",
+          answer: "DELTA",
+          explanation:
+            "Se refiere principalmente a una formación geográfica triangular en la desembocadura de un río por la acumulación de sedimentos.",
+        },
+        {
+          image:
+          "anx/008 PMONTANA.png", /* 008 */
+          question: "¿Qué es un PUERTO DE MONTAÑA?",
+          answer: "PUERTO DE MONTAÑA",
+          explanation:
+            "Es un paso, camino o vía de comunicación entre montañas que  conecta valles diferentes.  Se caracteriza por su altitud elevada, pendientes pronunciadas, curvas cerradas y condiciones climáticas variables.  Son importantes para el transporte, el comercio y el turismo, pero también pueden presentar desafíos debido a su terreno accidentado y condiciones climáticas extremas.",
+        },
+        {
+          image:
+          "anx/009 DESIERTO.jpg", /* 009 */
+          question: "¿Qué es un DESIERTO?",
+          answer: "DESIERTO",
+          explanation:
+            "Ecosistema árido con precipitaciones menores a 250 mm anuales, alta evaporación y escasa vegetación. Se caracteriza por sus temperaturas extremas cálidas o frías, suelos arenosos o rocosos y fauna adaptada a condiciones hostiles.",
+        },
+        {
+          image:
+          "anx/010 TAIGA.jpg", /* 010 */
+          question: "¿Qué es una TAIGA?",
+          answer: "TAIGA",
+          explanation:
+            "Es un bosque boreal, exclusivo del hemisferio norte del planeta.  Es un bosque frío, se caracteriza por sus temperaturas menores a 10 grados Celsius y formaciones boscosas de pinos, abetos y alerces; también el álamo, el arce, el olmo y el roble.  Es la mayor masa forestal del planeta.",
+        },
+        {
+          image:
+          "anx/011 PLAYA.jpg", /* 011 */
+          question: "¿Qué es una PLAYA?",
+          answer: "PLAYA",
+          explanation:
+            "Es una franja de material suelto acumulado como arena, grava o lodo que bordea una masa de agua, como un océano, río o un lago. Las playas se componen de material depositado por las olas y corrientes.  Las playas de arena pueden ser de color blanco, amarillo, gris o negra (de origen volcánico).",
+        },
+        {
+          image:
+          "anx/012 SELVA.jpg", /* 012 */
+          question: "¿Qué es una SELVA?",
+          answer: "SELVA, JUNGLA O BOSQUE LLUVIOSO",
+          explanation:
+            "Es un ecosistema denso caracterizado por un clima cálido con temperaturas altas, precipitaciones abundantes, alta humedad  y una altísima biodiversidad.  Queda situado principalmente en zonas intertropicales cerca del ecuador.  En la selva es dificil caminar entre los árboles debido a la densidad del sotobosque.",
+        },
+        {
+          image:
+          "anx/013 CICLON.jpg", /* 013 */
+          question: "¿Qué es un CICLÓN?",
+          answer: "CICLÓN",
+          explanation:
+            "Es un término genérico.  En el hemisferio norte se llama huracán, en el hemisferio sur tifón.  Es un sistema de vientos fuertes giratorios y lluvias intensas propios de aguas cálidas del océano.  Se caracterizan por su ojo central de calma, rodeado por una pared de nubes con vientos máximos.  Pueden causar daños significativos en áreas costeras debido a sus vientos, lluvias y marejadas ciclónicas.",
+        },
+        {
+          image:
+          "anx/014 SISMO.png", /* 014 */
+          question: "¿Qué es un SISMO o TERREMOTO?",
+          answer: "SISMO o TERREMOTO",
+          explanation:
+            "Es un fenómeno geológico producto del movimiento de las capas internas del planeta.  Los sismos son las vibraciones de la tierra ocasionadas por dichos movimientos. Terremoto o temblor son sinónimos de la palabra sismo.",
+        },
+        {
+          image:
+          "anx/015 BOSQUE.jpg", /* 015 */
+          question: "¿Qué es un BOSQUE?",
+          answer: "BOSQUE",
+          explanation:
+            "Son ecosistemas terrestres densos en vegetación, dominados por árboles y arbustos.  Regulan la temperatura y los ciclos del agua, protegen los suelos y suministran madera, energía, frutos, aire limpio así como espacios recreativos y bienestar.  En el bosque se puede caminar fácilmente entre los árboles.",
+        },
+        {
+          image:
+          "anx/016 SOTOBOSQUE.jpg", /* 016 */
+          question: "¿Qué es un SOTOBOSQUE?",
+          answer: "SOTOBOSQUE",
+          explanation:
+            "Es la parte baja sobre el suelo de la jungla o selva.  Es el conjunto de plantas jóvenes, arbustos, hierbas, plántulas y árboles pequeños que crecen en el nivel inferior de la selva, por debajo del techo de las copas de los árboles. Se caracteriza por su alta humedad y menor luz solar, es vital para la biodiversidad, la fijación de nutrientes y la prevención de la erosión del suelo.",
+        },
+
+
+      ];
+
+      let timeLeft = 300;
+      let timerInterval;
+      let currentCards = [];
+
+      function initGame() {
+        currentCards = [...cardsData];
+        shuffleCards();
+        startTimer();
+      }
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      function shuffleCards() {
+        currentCards = shuffleArray([...currentCards]);
+        renderCards();
+      }
+
+      function renderCards() {
+        const container = document.getElementById("cardsContainer");
+        container.innerHTML = "";
+
+        currentCards.forEach((card, index) => {
+          const cardElement = document.createElement("div");
+          cardElement.className = "card";
+          cardElement.innerHTML = `
+                    <div class="card-face card-front">
+                        <img src="${card.image}" alt="${card.question}" class="card-image">
+                        <div class="card-question">${card.question}</div>
+                    </div>
+                    <div class="card-face card-back">
+                        <div class="card-answer">${card.answer}</div>
+                        <div class="card-explanation">${card.explanation}</div>
+                    </div>
+                `;
+
+          cardElement.addEventListener("click", function () {
+            this.classList.toggle("flipped");
+          });
+
+          container.appendChild(cardElement);
+        });
+      }
+
+      function startTimer() {
+        const timerElement = document.getElementById("timer");
+
+        timerInterval = setInterval(() => {
+          timeLeft--;
+
+          const minutes = Math.floor(timeLeft / 60);
+          const seconds = timeLeft % 60;
+          timerElement.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
+          if (timeLeft <= 20) {
+            timerElement.classList.add("warning");
+          }
+
+          if (timeLeft <= 0) {
+            endGame();
+          }
+        }, 1000);
+      }
+
+      function endGame() {
+        clearInterval(timerInterval);
+        document.getElementById("overlay").classList.add("show");
+        document.getElementById("finished").classList.add("show");
+      }
+
+      function resetGame() {
+        clearInterval(timerInterval);
+        timeLeft = 90;
+        document.getElementById("timer").textContent = "01:30";
+        document.getElementById("timer").classList.remove("warning");
+        document.getElementById("overlay").classList.remove("show");
+        document.getElementById("finished").classList.remove("show");
+
+        // Desvoltear todas las tarjetas
+        document.querySelectorAll(".card").forEach((card) => {
+          card.classList.remove("flipped");
+        });
+
+        initGame();
+      }
+
+      // Iniciar el juego al cargar la página
+      initGame();
+    </script>
+  </body>
+  <footer>
+   
+    <a href="https://www.isfodosu.edu.do/" 
+   class="btn-link" 
+   target="_blank" 
+   rel="noopener noreferrer">
+    <img src="anx/LOGOTIPO ISFODOSU_BLANCO_SIN FONDO (1).png" 
+         alt="ISFODOSU" 
+         class="img-btn">
+</a>
+         │ Desarrollado por Digicon • feb 2026
+  </footer>
+</html>
