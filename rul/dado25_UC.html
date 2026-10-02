@@ -115,6 +115,88 @@
     animation-duration: 30s;
   }
 
+  /* Puntos de colores en el anillo externo */
+  .anillo.anillo1::before,
+  .anillo.anillo1::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+  }
+
+  .anillo.anillo1::before {
+    background: radial-gradient(circle, #00e5ff 0%, #0077b6 100%);
+    box-shadow: 0 0 12px #00e5ff, 0 0 24px rgba(0, 229, 255, 0.6);
+    transform: rotate(0deg) translate(-50%, -50%) translateY(-50%) translateY(-190px);
+    animation: orbitarPunto 8s linear infinite;
+  }
+
+  .anillo.anillo1::after {
+    background: radial-gradient(circle, #ff4ddb 0%, #b3007a 100%);
+    box-shadow: 0 0 12px #ff4ddb, 0 0 24px rgba(255, 77, 219, 0.6);
+    transform: rotate(180deg) translate(-50%, -50%) translateY(-50%) translateY(-190px);
+    animation: orbitarPunto 12s linear infinite reverse;
+  }
+
+  /* Contenedor de puntos distribuidos */
+  .puntos-anillo {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    animation: girarAnillo 22s linear infinite;
+    pointer-events: none;
+  }
+
+  .punto {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+  }
+
+  .punto:nth-child(1) {
+    background: radial-gradient(circle, #00e5ff, #0077b6);
+    box-shadow: 0 0 10px #00e5ff, 0 0 20px rgba(0, 229, 255, 0.5);
+    transform: rotate(0deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(2) {
+    background: radial-gradient(circle, #ff4ddb, #b3007a);
+    box-shadow: 0 0 10px #ff4ddb, 0 0 20px rgba(255, 77, 219, 0.5);
+    transform: rotate(72deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(3) {
+    background: radial-gradient(circle, #ffd700, #ff8c00);
+    box-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.5);
+    transform: rotate(144deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(4) {
+    background: radial-gradient(circle, #00ff88, #00b359);
+    box-shadow: 0 0 10px #00ff88, 0 0 20px rgba(0, 255, 136, 0.5);
+    transform: rotate(216deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(5) {
+    background: radial-gradient(circle, #ff6b6b, #cc0000);
+    box-shadow: 0 0 10px #ff6b6b, 0 0 20px rgba(255, 107, 107, 0.5);
+    transform: rotate(288deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  @keyframes orbitarPunto {
+    from { transform: rotate(0deg) translate(-50%, -50%) translateY(-50%) translateY(-190px); }
+    to   { transform: rotate(360deg) translate(-50%, -50%) translateY(-50%) translateY(-190px); }
+  }
+
   @keyframes girarAnillo {
     from { transform: rotate(0deg); }
     to   { transform: rotate(360deg); }
@@ -161,29 +243,30 @@
   .numero.clickable:hover { transform: scale(1.05); }
 
   .circulo-numero.girando .numero {
-    filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.9)) blur(0.8px);
-    opacity: 0.95;
+    filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.85)) blur(0.1px);
+    opacity: 0.97;
     animation: barrido 0.28s linear infinite;
   }
 
+  /* Efecto de barrido con menor fundido para mejor contraste */
   @keyframes barrido {
     0% {
-      filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.9))
-              drop-shadow(-18px 0 22px rgba(255, 215, 0, 0.95))
-              blur(0.8px);
-      opacity: 0.95;
+      filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.85))
+              drop-shadow(-14px 0 1px rgba(255, 215, 0, 0.75))
+              blur(0.1px);
+      opacity: 0.97;
     }
     50% {
-      filter: drop-shadow(0 0 25px rgba(255, 77, 219, 0.95))
-              drop-shadow(0 0 22px rgba(255, 255, 255, 0.9))
-              blur(0.8px);
+      filter: drop-shadow(0 0 10px rgba(255, 77, 219, 0.85))
+              drop-shadow(0 0 1px rgba(255, 255, 255, 0.7))
+              blur(0.1px);
       opacity: 1;
     }
     100% {
-      filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.9))
-              drop-shadow(18px 0 22px rgba(255, 215, 0, 0.95))
-              blur(0.8px);
-      opacity: 0.95;
+      filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.85))
+              drop-shadow(14px 0 1px rgba(255, 215, 0, 0.75))
+              blur(0.1px);
+      opacity: 0.97;
     }
   }
 
@@ -193,7 +276,7 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 0 40px rgba(255, 215, 0, 1))
-            drop-shadow(0 0 80px rgba(255, 200, 0, 0.85));
+            drop-shadow(0 0 8px rgba(255, 200, 0, 0.85));
     animation: pulsoGanador 0.6s ease-in-out infinite alternate;
   }
 
@@ -295,8 +378,9 @@
     box-shadow: 0 6px 0 #003350;
   }
 
+  /* ===== INSTRUCCIÓN con línea divisoria luminosa ===== */
   .instruccion {
-    margin-top: clamp(22px, 4vh, 40px);
+    margin-top: clamp(50px, 8vh, 90px);
     font-size: clamp(0.78rem, 2.1vw, 1rem);
     color: #9fd8ff;
     text-align: center;
@@ -305,11 +389,77 @@
     z-index: 2;
     padding: 0 10px;
     transition: color 0.3s ease;
+    position: relative;
+  }
+
+  .instruccion::before {
+    content: "";
+    position: absolute;
+    top: calc(-1 * clamp(28px, 4.5vh, 50px));
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(60%, 260px);
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 229, 255, 0.65) 50%,
+      transparent 100%
+    );
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.55);
   }
 
   .instruccion.destacada {
     color: #ffd700;
     text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+  }
+
+  .instruccion.destacada::before {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 215, 0, 0.75) 50%,
+      transparent 100%
+    );
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.65);
+  }
+
+  /* ===== BOTÓN "?" DISCRETO ===== */
+  .btn-creditos {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 229, 255, 0.4);
+    background: rgba(10, 5, 25, 0.55);
+    color: #00e5ff;
+    font-size: 1.2rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: all 0.25s ease;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
+    opacity: 0.6;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+  }
+
+  .btn-creditos:hover {
+    opacity: 1;
+    border-color: rgba(0, 229, 255, 0.9);
+    box-shadow: 0 0 22px rgba(0, 229, 255, 0.6);
+    transform: scale(1.1);
+    background: rgba(0, 229, 255, 0.15);
+  }
+
+  .btn-creditos:active {
+    transform: scale(0.95);
   }
 
   /* ===== MODAL ===== */
@@ -366,6 +516,41 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+  }
+
+  /* Modal de créditos - variante más compacta */
+  .modal-creditos {
+    padding: 36px clamp(22px, 4vw, 40px) 30px;
+  }
+
+  .modal-creditos h2 {
+    margin-top: 0;
+    margin-bottom: 22px;
+    font-size: clamp(1rem, 2.4vw, 1.2rem);
+    color: #0077b6;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 800;
+  }
+
+  .creditos-texto {
+    font-size: clamp(1rem, 2.4vw, 1.2rem);
+    line-height: 1.7;
+    color: #1a1a2e;
+    font-weight: 500;
+  }
+
+  .creditos-texto .nombre {
+    font-weight: 800;
+    color: #0077b6;
+  }
+
+  .creditos-texto .lugar {
+    display: block;
+    margin-top: 14px;
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    color: #4a5568;
+    font-style: italic;
   }
 
   .numero-badge {
@@ -452,7 +637,8 @@
       height: min(60vh, 340px);
     }
     .titulo { margin-bottom: 8px; }
-    .instruccion { margin-top: 20px; }
+    .instruccion { margin-top: 40px; }
+    .instruccion::before { top: -22px; }
     .modal .pregunta-texto {
       font-size: clamp(1rem, 2vw, 1.25rem);
       padding: 16px 20px;
@@ -485,6 +671,15 @@
     .modal {
       max-height: calc(88vh - 36px);
     }
+    .btn-creditos {
+      width: 34px;
+      height: 34px;
+      font-size: 1rem;
+      top: 10px;
+      right: 10px;
+    }
+    .instruccion { margin-top: 42px; }
+    .instruccion::before { top: -22px; }
   }
 
   .modal::-webkit-scrollbar { width: 8px; }
@@ -502,6 +697,14 @@
   <div class="visor">
     <div class="anillo anillo1"></div>
     <div class="anillo anillo2"></div>
+    <!-- Puntos de colores orbitando en el anillo externo -->
+    <div class="puntos-anillo">
+      <div class="punto"></div>
+      <div class="punto"></div>
+      <div class="punto"></div>
+      <div class="punto"></div>
+      <div class="punto"></div>
+    </div>
     <div class="circulo-numero" id="circuloNumero">
       <div class="numero" id="numero">?</div>
     </div>
@@ -511,7 +714,10 @@
 
   <p class="instruccion" id="instruccion">Pulsa LANZAR para girar</p>
 
-  <!-- MODAL -->
+  <!-- BOTÓN "?" DISCRETO PARA CRÉDITOS -->
+  <button class="btn-creditos" id="btnCreditos" title="Créditos" aria-label="Ver créditos">?</button>
+
+  <!-- MODAL DE PREGUNTA -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-wrapper">
       <div class="numero-badge"><span id="modalNumero">1</span></div>
@@ -519,6 +725,22 @@
         <h2>Pregunta</h2>
         <p class="pregunta-texto" id="modalPregunta"></p>
         <button class="btn-cerrar" id="btnCerrar">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE CRÉDITOS -->
+  <div class="modal-overlay" id="modalCreditosOverlay">
+    <div class="modal-wrapper" style="padding-top: 0;">
+      <div class="modal modal-creditos">
+        <h2>Créditos</h2>
+        <p class="creditos-texto">
+          Este Recurso desarrollado por<br>
+          <span class="nombre">Juan Ernesto De Frías</span><br>
+          para <span class="nombre">EDUPUNTO</span>
+          <span class="lugar">Santo Domingo, República Dominicana, 2026.</span>
+        </p>
+        <button class="btn-cerrar" id="btnCerrarCreditos" style="margin-top: 28px;">Cerrar</button>
       </div>
     </div>
   </div>
@@ -550,11 +772,11 @@ const preguntas = [
   /* 17 */ "Fue en 1501 que se trajeron los primeros africanos a trabajar de manera forzada a «La Española» y al continente ¿por qué se trajeron?",
   /* 18 */ "Los europeos se interesaron por el oro pero pronto se acabó su abundancia ¿hacia qué producto de exportación se enfocó la economía de «La Española»?",
   /* 19 */ "¿Cuál fue la función de la Iglesia Católica durante el Periodo Colonial?",
-  /* 20 */ "¿Cuáles fueron los nombres de la isla según los aborígenes antes de 1492? ¿cuál nombre le puso Cristobal Colón a la isla?",
-  /* 21 */ "Al establecer su vida en la «La Española» se produjo un proceso llamado «mestizaje» con la población nativa ¿en qué consistió? ¿hubo cambios en la organización social colonial?",
+  /* 20 */ "¿Cuáles fueron los nombres de la isla según los aborígenes antes de 1492? ¿cuál nombre le asignó Cristobal Colón a la isla?",
+  /* 21 */ "Al establecer su vida en «La Española» los europeos produjeron un proceso llamado «mestizaje» junto a la población nativa ¿en qué consistió? ¿esto se tradujo en cambios en la organización social colonial?",
   /* 22 */ "¿Qué fue el «comercio triangular» y cómo afectó a la isla «La Española»?",
   /* 23 */ "¿Qué fue lo que originó la piratería en el Caribe colonial durante el siglo 16?",
-  /* 24 */ "Desde la Primera Constitución Dominicana de 1844 se menciona el nombre de la isla, ¿cuál es el nombre oficial de nuestra isla según la constitución dominicana vigente?",
+  /* 24 */ "Desde la 1ra Constitución Dominicana de 1844, se menciona el nombre de la isla, ¿cuál es el nombre oficial según la constitución dominicana vigente?",
   /* 25 */ "¿Cuál es el legado cultural y social que dejaron los nativos precolombinos en Quisqueya?"
 ];
 
@@ -570,6 +792,11 @@ const modalOverlay = document.getElementById('modalOverlay');
 const modalNumero = document.getElementById('modalNumero');
 const modalPregunta = document.getElementById('modalPregunta');
 const btnCerrar = document.getElementById('btnCerrar');
+
+// Créditos
+const btnCreditos = document.getElementById('btnCreditos');
+const modalCreditosOverlay = document.getElementById('modalCreditosOverlay');
+const btnCerrarCreditos = document.getElementById('btnCerrarCreditos');
 
 let girando = false;
 let numeroActual = null;
@@ -759,6 +986,18 @@ function cerrarModal() {
   sonidoCerrar();
 }
 
+// Créditos
+function abrirCreditos() {
+  initAudio();
+  modalCreditosOverlay.classList.add('activo');
+  sonidoMoneda();
+}
+
+function cerrarCreditos() {
+  modalCreditosOverlay.classList.remove('activo');
+  sonidoCerrar();
+}
+
 btnLanzar.addEventListener('click', lanzarRuleta);
 
 numeroEl.addEventListener('click', () => {
@@ -774,11 +1013,19 @@ modalOverlay.addEventListener('click', (e) => {
   if (e.target === modalOverlay) cerrarModal();
 });
 
+// Eventos de créditos
+btnCreditos.addEventListener('click', abrirCreditos);
+btnCerrarCreditos.addEventListener('click', cerrarCreditos);
+modalCreditosOverlay.addEventListener('click', (e) => {
+  if (e.target === modalCreditosOverlay) cerrarCreditos();
+});
+
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && modalOverlay.classList.contains('activo')) {
-    cerrarModal();
+  if (e.key === 'Escape') {
+    if (modalOverlay.classList.contains('activo')) cerrarModal();
+    if (modalCreditosOverlay.classList.contains('activo')) cerrarCreditos();
   }
-  if (e.code === 'Space' && !girando && !modalOverlay.classList.contains('activo')) {
+  if (e.code === 'Space' && !girando && !modalOverlay.classList.contains('activo') && !modalCreditosOverlay.classList.contains('activo')) {
     e.preventDefault();
     lanzarRuleta();
   }
