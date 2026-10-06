@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruleta de Preguntas - Historia Dominicana</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 15%, #0d3b2e 0%, #061f18 50%, #010a07 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    padding: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(2px 2px at 20% 30%, rgba(100, 255, 200, 0.6), transparent),
+      radial-gradient(2px 2px at 70% 60%, rgba(255, 220, 120, 0.5), transparent),
+      radial-gradient(1px 1px at 40% 80%, rgba(255, 255, 255, 0.7), transparent),
+      radial-gradient(2px 2px at 85% 20%, rgba(120, 255, 220, 0.5), transparent),
+      radial-gradient(1px 1px at 10% 70%, rgba(255, 255, 255, 0.6), transparent),
+      radial-gradient(1px 1px at 55% 15%, rgba(180, 255, 200, 0.7), transparent);
+    animation: parpadear 4s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes parpadear {
+    from { opacity: 0.4; }
+    to   { opacity: 1; }
+  }
+
+  .titulo-principal {
+    font-size: clamp(1.3rem, 4.5vw, 2.2rem);
+    font-weight: 900;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: clamp(2px, 0.5vh, 6px);
+    background: linear-gradient(90deg, #ffd166, #f4a261, #ffd166);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 16px rgba(255, 209, 102, 0.7));
+    z-index: 2;
+  }
+
+  .titulo {
+    font-size: clamp(0.9rem, 3vw, 1.4rem);
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: clamp(8px, 2vh, 20px);
+    background: linear-gradient(90deg, #06d6a0, #ffd166, #06d6a0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 12px rgba(6, 214, 160, 0.5));
+    z-index: 2;
+  }
+
+  .visor {
+    position: relative;
+    width: min(85vw, 380px);
+    height: min(85vw, 380px);
+    max-height: 62vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(6, 214, 160, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+    z-index: 2;
+    margin-bottom: clamp(10px, 2vh, 25px);
+  }
+
+  .anillo {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px dashed rgba(6, 214, 160, 0.35);
+    animation: girarAnillo 22s linear infinite;
+    pointer-events: none;
+  }
+
+  .anillo.anillo1 { width: 100%; height: 100%; }
+
+  .anillo.anillo2 {
+    width: 86%;
+    height: 86%;
+    border-color: rgba(255, 209, 102, 0.3);
+    animation-direction: reverse;
+    animation-duration: 30s;
+  }
+
+  .anillo.anillo1::before,
+  .anillo.anillo1::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+  }
+
+  .anillo.anillo1::before {
+    background: radial-gradient(circle, #06d6a0 0%, #028a6a 100%);
+    box-shadow: 0 0 12px #06d6a0, 0 0 24px rgba(6, 214, 160, 0.6);
+    transform: rotate(0deg) translate(-50%, -50%) translateY(-50%) translateY(-190px);
+    animation: orbitarPunto 8s linear infinite;
+  }
+
+  .anillo.anillo1::after {
+    background: radial-gradient(circle, #ffd166 0%, #e09f3e 100%);
+    box-shadow: 0 0 12px #ffd166, 0 0 24px rgba(255, 209, 102, 0.6);
+    transform: rotate(180deg) translate(-50%, -50%) translateY(-50%) translateY(-190px);
+    animation: orbitarPunto 12s linear infinite reverse;
+  }
+
+  .puntos-anillo {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    animation: girarAnillo 22s linear infinite;
+    pointer-events: none;
+  }
+
+  .punto {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+  }
+
+  .punto:nth-child(1) {
+    background: radial-gradient(circle, #06d6a0, #028a6a);
+    box-shadow: 0 0 10px #06d6a0, 0 0 20px rgba(6, 214, 160, 0.5);
+    transform: rotate(0deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(2) {
+    background: radial-gradient(circle, #ffd166, #e09f3e);
+    box-shadow: 0 0 10px #ffd166, 0 0 20px rgba(255, 209, 102, 0.5);
+    transform: rotate(72deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(3) {
+    background: radial-gradient(circle, #ef476f, #b8304f);
+    box-shadow: 0 0 10px #ef476f, 0 0 20px rgba(239, 71, 111, 0.5);
+    transform: rotate(144deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(4) {
+    background: radial-gradient(circle, #118ab2, #0a5a75);
+    box-shadow: 0 0 10px #118ab2, 0 0 20px rgba(17, 138, 178, 0.5);
+    transform: rotate(216deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(5) {
+    background: radial-gradient(circle, #f78c6b, #c75d3f);
+    box-shadow: 0 0 10px #f78c6b, 0 0 20px rgba(247, 140, 107, 0.5);
+    transform: rotate(288deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  @keyframes orbitarPunto {
+    from { transform: rotate(0deg) translate(-50%, -50%) translateY(-50%) translateY(-190px); }
+    to   { transform: rotate(360deg) translate(-50%, -50%) translateY(-50%) translateY(-190px); }
+  }
+
+  @keyframes girarAnillo {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  .circulo-numero {
+    position: relative;
+    width: 78%;
+    height: 78%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 35% 30%, #1b5e4a 0%, #0c3328 55%, #04140f 100%);
+    box-shadow:
+      0 0 0 6px rgba(6, 214, 160, 0.25),
+      0 0 40px rgba(6, 214, 160, 0.4),
+      inset 0 0 40px rgba(6, 214, 160, 0.15),
+      inset 0 -20px 40px rgba(255, 209, 102, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    transition: box-shadow 0.5s ease;
+  }
+
+  .numero {
+    font-size: clamp(5rem, 22vw, 11rem);
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(180deg, #ffffff 0%, #06d6a0 45%, #ffd166 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 25px rgba(6, 214, 160, 0.8));
+    user-select: none;
+    transition: transform 0.15s ease, filter 4s ease, opacity 4s ease;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    display: inline-block;
+    padding: 0 0.05em;
+  }
+
+  .numero.clickable { cursor: pointer; }
+
+  .numero.clickable:hover { transform: scale(1.05); }
+
+  .circulo-numero.girando .numero {
+    filter: drop-shadow(0 0 10px rgba(6, 214, 160, 0.85)) blur(0.1px);
+    opacity: 0.97;
+    animation: barrido 0.28s linear infinite;
+  }
+
+  @keyframes barrido {
+    0% {
+      filter: drop-shadow(0 0 10px rgba(6, 214, 160, 0.85))
+              drop-shadow(-14px 0 1px rgba(255, 209, 102, 0.75))
+              blur(0.1px);
+      opacity: 0.97;
+    }
+    50% {
+      filter: drop-shadow(0 0 10px rgba(255, 209, 102, 0.85))
+              drop-shadow(0 0 1px rgba(255, 255, 255, 0.7))
+              blur(0.1px);
+      opacity: 1;
+    }
+    100% {
+      filter: drop-shadow(0 0 10px rgba(6, 214, 160, 0.85))
+              drop-shadow(14px 0 1px rgba(255, 209, 102, 0.75))
+              blur(0.1px);
+      opacity: 0.97;
+    }
+  }
+
+  .numero.ganador {
+    background: linear-gradient(180deg, #fffbe0 0%, #ffd166 45%, #f4a261 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 40px rgba(255, 209, 102, 1))
+            drop-shadow(0 0 8px rgba(255, 180, 60, 0.85));
+    animation: pulsoGanador 0.6s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulsoGanador {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+  }
+
+  .numero.ganador.desvanecer {
+    animation: none;
+    background: linear-gradient(180deg, #ffffff 0%, #06d6a0 45%, #ffd166 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 25px rgba(6, 214, 160, 0.8));
+    transform: scale(1);
+  }
+
+  .circulo-numero.listo {
+    animation: pulsoResplandor 2s ease-in-out infinite;
+  }
+
+  @keyframes pulsoResplandor {
+    0%, 100% {
+      box-shadow:
+        0 0 0 6px rgba(6, 214, 160, 0.25),
+        0 0 40px rgba(6, 214, 160, 0.4),
+        inset 0 0 40px rgba(6, 214, 160, 0.15);
+    }
+    50% {
+      box-shadow:
+        0 0 0 6px rgba(255, 209, 102, 0.4),
+        0 0 60px rgba(255, 209, 102, 0.6),
+        inset 0 0 50px rgba(255, 209, 102, 0.25);
+    }
+  }
+
+  .circulo-numero.dorado {
+    box-shadow:
+      0 0 0 6px rgba(255, 209, 102, 0.6),
+      0 0 70px rgba(255, 209, 102, 0.85),
+      inset 0 0 50px rgba(255, 209, 102, 0.35);
+    transition: box-shadow 4s ease;
+  }
+
+  .btn-lanzar {
+    position: relative;
+    padding: clamp(13px, 1.8vh, 18px) clamp(40px, 10vw, 70px);
+    font-size: clamp(1rem, 2.6vw, 1.35rem);
+    font-weight: 800;
+    letter-spacing: 4px;
+    color: #02120c;
+    background: linear-gradient(180deg, #06d6a0 0%, #04a87d 50%, #028a6a 100%);
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    box-shadow:
+      0 6px 0 #01604a,
+      0 0 30px rgba(6, 214, 160, 0.6),
+      0 12px 30px rgba(0, 150, 120, 0.4);
+    transition: all 0.15s ease;
+    text-transform: uppercase;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .btn-lanzar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    transition: left 0.6s ease;
+  }
+
+  .btn-lanzar:hover:not(:disabled)::after { left: 100%; }
+
+  .btn-lanzar:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 0 #01604a,
+      0 0 45px rgba(6, 214, 160, 0.9),
+      0 16px 35px rgba(0, 150, 120, 0.55);
+  }
+
+  .btn-lanzar:active:not(:disabled) {
+    transform: translateY(5px);
+    box-shadow:
+      0 1px 0 #01604a,
+      0 0 20px rgba(6, 214, 160, 0.7),
+      0 4px 12px rgba(0, 150, 120, 0.4);
+  }
+
+  .btn-lanzar:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: 0 6px 0 #013d2f;
+  }
+
+  .instruccion {
+    margin-top: clamp(50px, 8vh, 90px);
+    font-size: clamp(0.78rem, 2.1vw, 1rem);
+    color: #9fffd8;
+    text-align: center;
+    min-height: 22px;
+    letter-spacing: 0.5px;
+    z-index: 2;
+    padding: 0 10px;
+    transition: color 0.3s ease;
+    position: relative;
+  }
+
+  .instruccion::before {
+    content: "";
+    position: absolute;
+    top: calc(-1 * clamp(28px, 4.5vh, 50px));
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(60%, 260px);
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(6, 214, 160, 0.65) 50%,
+      transparent 100%
+    );
+    box-shadow: 0 0 10px rgba(6, 214, 160, 0.55);
+  }
+
+  .instruccion.destacada {
+    color: #ffd166;
+    text-shadow: 0 0 12px rgba(255, 209, 102, 0.6);
+  }
+
+  .instruccion.destacada::before {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 209, 102, 0.75) 50%,
+      transparent 100%
+    );
+    box-shadow: 0 0 12px rgba(255, 209, 102, 0.65);
+  }
+
+  .btn-creditos {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid rgba(6, 214, 160, 0.4);
+    background: rgba(4, 20, 15, 0.55);
+    color: #06d6a0;
+    font-size: 1.2rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: all 0.25s ease;
+    box-shadow: 0 0 12px rgba(6, 214, 160, 0.2);
+    opacity: 0.6;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+  }
+
+  .btn-creditos:hover {
+    opacity: 1;
+    border-color: rgba(6, 214, 160, 0.9);
+    box-shadow: 0 0 22px rgba(6, 214, 160, 0.6);
+    transform: scale(1.1);
+    background: rgba(6, 214, 160, 0.15);
+  }
+
+  .btn-creditos:active {
+    transform: scale(0.95);
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(1, 10, 7, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+    z-index: 1000;
+    padding: 30px 16px;
+  }
+
+  .modal-overlay.activo {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal-wrapper {
+    position: relative;
+    width: 94%;
+    max-width: 620px;
+    max-height: 88vh;
+    display: flex;
+    justify-content: center;
+    padding-top: 42px;
+    transform: scale(0.7) translateY(40px);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .modal-overlay.activo .modal-wrapper {
+    transform: scale(1) translateY(0);
+  }
+
+  .modal {
+    background: linear-gradient(160deg, #ffffff 0%, #e6fff5 100%);
+    color: #04140f;
+    width: 100%;
+    max-height: calc(88vh - 42px);
+    overflow-y: auto;
+    border-radius: 28px;
+    padding: 40px clamp(22px, 4vw, 40px) clamp(24px, 3.5vw, 34px);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.7),
+      0 0 0 3px rgba(6, 214, 160, 0.85) inset,
+      0 0 50px rgba(6, 214, 160, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .modal-creditos {
+    padding: 36px clamp(22px, 4vw, 40px) 30px;
+  }
+
+  .modal-creditos h2 {
+    margin-top: 0;
+    margin-bottom: 22px;
+    font-size: clamp(1rem, 2.4vw, 1.2rem);
+    color: #028a6a;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 800;
+  }
+
+  .creditos-texto {
+    font-size: clamp(1rem, 2.4vw, 1.2rem);
+    line-height: 1.7;
+    color: #0a1f18;
+    font-weight: 500;
+  }
+
+  .creditos-texto .nombre {
+    font-weight: 800;
+    color: #028a6a;
+  }
+
+  .creditos-texto .lugar {
+    display: block;
+    margin-top: 14px;
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    color: #4a6b60;
+    font-style: italic;
+  }
+
+  .numero-badge {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #06d6a0, #ffd166);
+    color: #04140f;
+    font-size: 2.4rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 6px 22px rgba(6, 214, 160, 0.75),
+      0 0 0 4px #fff,
+      0 0 32px rgba(255, 209, 102, 0.6);
+    z-index: 5;
+  }
+
+  .numero-badge span {
+    display: block;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .modal h2 {
+    margin-top: 4px;
+    margin-bottom: 18px;
+    font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+    color: #028a6a;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 800;
+  }
+
+  .modal .pregunta-texto {
+    width: 100%;
+    font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+    font-weight: 600;
+    line-height: 1.55;
+    color: #0a1f18;
+    padding: clamp(18px, 3vw, 26px) clamp(16px, 3vw, 24px);
+    background: linear-gradient(135deg, rgba(6, 214, 160, 0.12), rgba(255, 209, 102, 0.1));
+    border-left: 6px solid #06d6a0;
+    border-radius: 16px;
+    margin-bottom: 26px;
+    text-align: left;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .btn-cerrar {
+    padding: clamp(11px, 1.6vh, 15px) clamp(34px, 7vw, 50px);
+    font-size: clamp(0.92rem, 2.2vw, 1.05rem);
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    background: linear-gradient(180deg, #028a6a, #01604a);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 5px 18px rgba(1, 96, 74, 0.5);
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .btn-cerrar:hover {
+    background: linear-gradient(180deg, #04a87d, #017a5c);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(2, 138, 106, 0.6);
+  }
+
+  .btn-cerrar:active { transform: translateY(2px); }
+
+  @media (min-width: 900px) and (max-height: 800px) {
+    .visor {
+      width: min(60vh, 340px);
+      height: min(60vh, 340px);
+    }
+    .titulo { margin-bottom: 8px; }
+    .instruccion { margin-top: 40px; }
+    .instruccion::before { top: -22px; }
+    .modal .pregunta-texto {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .visor {
+      width: 78vw;
+      height: 78vw;
+    }
+    .numero { font-size: 26vw; }
+    .modal {
+      border-radius: 22px;
+      padding: 34px 18px 22px;
+    }
+    .modal .pregunta-texto {
+      font-size: 1rem;
+      padding: 14px;
+    }
+    .numero-badge {
+      width: 72px;
+      height: 72px;
+      font-size: 2rem;
+    }
+    .modal-wrapper {
+      padding-top: 36px;
+    }
+    .modal {
+      max-height: calc(88vh - 36px);
+    }
+    .btn-creditos {
+      width: 34px;
+      height: 34px;
+      font-size: 1rem;
+      top: 10px;
+      right: 10px;
+    }
+    .instruccion { margin-top: 42px; }
+    .instruccion::before { top: -22px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 8px; }
+  .modal::-webkit-scrollbar-thumb {
+    background: rgba(2, 138, 106, 0.45);
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+  <h1 class="titulo-principal">✦ HISTORIA DOMINICANA ✦</h1>
+  <h1 class="titulo">✦ 1861 - 1924 | Ruleta de 40 Preguntas ✦</h1>
+
+  <div class="visor">
+    <div class="anillo anillo1"></div>
+    <div class="anillo anillo2"></div>
+    <div class="puntos-anillo">
+      <div class="punto"></div>
+      <div class="punto"></div>
+      <div class="punto"></div>
+      <div class="punto"></div>
+      <div class="punto"></div>
+    </div>
+    <div class="circulo-numero" id="circuloNumero">
+      <div class="numero" id="numero">?</div>
+    </div>
+  </div>
+
+  <button class="btn-lanzar" id="btnLanzar">Lanzar</button>
+
+  <p class="instruccion" id="instruccion">Pulsa LANZAR para girar</p>
+
+  <button class="btn-creditos" id="btnCreditos" title="Créditos" aria-label="Ver créditos">?</button>
+
+  <!-- MODAL DE PREGUNTA -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-wrapper">
+      <div class="numero-badge"><span id="modalNumero">1</span></div>
+      <div class="modal">
+        <h2>Pregunta</h2>
+        <p class="pregunta-texto" id="modalPregunta"></p>
+        <button class="btn-cerrar" id="btnCerrar">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE CRÉDITOS -->
+  <div class="modal-overlay" id="modalCreditosOverlay">
+    <div class="modal-wrapper" style="padding-top: 0;">
+      <div class="modal modal-creditos">
+        <h2>Créditos</h2>
+        <p class="creditos-texto">
+          Este Recurso desarrollado por<br>
+<span class="nombre">Juan Ernesto De Frías</span><br>
+para <a href="https://edupunto.com" target="_blank" class="nombre">EDUPUNTO</a>
+          <span class="lugar">Santo Domingo, República Dominicana, 2026.</span>
+        </p>
+        <button class="btn-cerrar" id="btnCerrarCreditos" style="margin-top: 28px;">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ============================================================
+   ⚙️ CONFIGURACIÓN
+   ------------------------------------------------------------
+   TOTAL_PREGUNTAS se calcula automáticamente a partir del
+   array "preguntas" (ahora 40).
+   ============================================================ */
+const preguntas = [
+  /* 1 */  "¿Qué etapa de la historia dominicana abarca el período de 1887 a 1899?",
+  /* 2 */  "¿Quién encabezó el levantamiento armado en Moca el 2 de mayo de 1861?",
+  /* 3 */  "¿Qué prócer organizó y lideró una expedición armada desde Haití en junio de 1861?",
+  /* 4 */  "¿Quién presidió el tribunal de guerra que condenó a fusilamiento a Sánchez y sus seguidores?",
+  /* 5 */  "¿Qué hacendado organizó una conspiración secreta en Sabaneta en febrero de 1863?",
+  /* 6 */  "¿Qué producto intentó monopolizar España, amenazando el pilar económico del Cibao?",
+  /* 7 */  "¿En qué consistía la política española de 'bagajes'?",
+  /* 8 */  "¿Qué fuerte rumor racial movilizó masivamente a los dominicanos humildes contra la Anexión?",
+  /* 9 */  "¿Qué acción de la iglesia católica española generó choque cultural y rechazo social?",
+  /* 10 */ "¿Qué evento histórico, ocurrido el 16 de agosto de 1863, transformó la rebelión fronteriza en una guerra popular?",
+  /* 11 */ "¿Qué factor estratégico fue determinante para la victoria de las guerrillas dominicanas?",
+  /* 12 */ "¿Qué general comandó a los restauradores en el asalto a la Fortaleza San Luis en Santiago?",
+  /* 13 */ "¿Qué drástica táctica usaron los restauradores el 6 de septiembre de 1863 para forzar la retirada española de Santiago?",
+  /* 14 */ "¿Quién presidió el gobierno provisional restaurador establecido en Santiago en 1863?",
+  /* 15 */ "¿Qué líder dominicano acosó día y noche a los españoles dejándolos acorralados tras el desembarco de Montecristi en 1864?",
+  /* 16 */ "¿Qué gobernador realista fue enviado hacia el norte para intentar sofocar la rebelión tras la caída de Santiago?",
+  /* 17 */ "¿Qué conflicto internacional en su etapa final hizo entender a España que la guerra en Santo Domingo era insostenible?",
+  /* 18 */ "¿En qué fecha se retiraron definitivamente de Santo Domingo las tropas españolas?",
+  /* 19 */ "Durante la inestabilidad política (1865-1887), ¿quiénes eran los principales líderes del Partido Azul?",
+  /* 20 */ "¿A qué sectores económicos representaba el Partido Rojo de Buenaventura Báez?",
+  /* 21 */ "¿Qué territorio intentó vender o arrendar Buenaventura Báez a Estados Unidos en 1869?",
+  /* 22 */ "A partir de 1870, ¿qué nueva industria impulsó el desarrollo económico en la región Este del país?",
+  /* 23 */ "¿Qué evento propició la llegada de inversionistas a la industria azucarera dominicana?",
+  /* 24 */ "¿De quién fue el gobierno en 1876, considerado el primer intento de gobierno liberal en el país?",
+  /* 25 */ "Durante su gobierno provisional (1879-1880), ¿las ideas de qué educador impulsó Gregorio Luperón?",
+  /* 26 */ "¿Quién fue el primer sacerdote católico en ocupar la presidencia de la República Dominicana?",
+  /* 27 */ "¿Qué decreto promulgó el presidente Meriño para enfrentar las conspiraciones del Partido Rojo?",
+  /* 28 */ "¿Qué medida constitucional tomó Ulises Heureaux para perpetuarse en el poder en su giro autoritario?",
+  /* 29 */ "¿Qué título oficial le fue otorgado al dictador Ulises Heureaux por un congreso títere?",
+  /* 30 */ "¿Qué importante obra de infraestructura del gobierno de Lilís fue financiada por la firma holandesa Westendorp?",
+  /* 31 */ "¿Qué nombre popular recibieron los 5 millones de pesos inorgánicos emitidos en 1897 que arruinaron el comercio local?",
+  /* 32 */ "Tras la muerte de Lilís en 1899, ¿quién asumió la presidencia de la República?",
+  /* 33 */ "¿Cómo se le conocía popularmente a los seguidores de Juan Isidro Jimenes en su disputa contra Horacio Vásquez?",
+  /* 34 */ "¿Qué compañía estadounidense asumió el control de toda la deuda dominicana con las potencias europeas a principios del siglo XX?",
+  /* 35 */ "¿Qué presidente dominicano fue asesinado el 19 de noviembre de 1911 en una emboscada liderada por Luis Tejera?",
+  /* 36 */ "¿La amenaza de golpe de estado de qué figura fue uno de los detonantes de la ocupación militar de 1916?",
+  /* 37 */ "Durante la ocupación militar, ¿en qué lugar cerca de Santiago hubo un importante enfrentamiento de resistencia armada?",
+  /* 38 */ "¿Qué fuerza armada fue creada en 1919 por los invasores estadounidenses en Haina, sirviendo de base para el ascenso de Trujillo?",
+  /* 39 */ "¿Cómo se conoció al grupo de resistencia guerrillera nacionalista que operaba en la región este durante la ocupación?",
+  /* 40 */ "¿Qué acuerdo de 1922 sentó las bases para un gobierno provisional, las elecciones y la desocupación estadounidense?"
+];
+
+const TOTAL_PREGUNTAS = preguntas.length;
+const DURACION_GIRO = 3000;
+const DURACION_DESTAQUE = 4000;
+
+const numeroEl = document.getElementById('numero');
+const circuloNumero = document.getElementById('circuloNumero');
+const btnLanzar = document.getElementById('btnLanzar');
+const instruccion = document.getElementById('instruccion');
+const modalOverlay = document.getElementById('modalOverlay');
+const modalNumero = document.getElementById('modalNumero');
+const modalPregunta = document.getElementById('modalPregunta');
+const btnCerrar = document.getElementById('btnCerrar');
+
+// Créditos
+const btnCreditos = document.getElementById('btnCreditos');
+const modalCreditosOverlay = document.getElementById('modalCreditosOverlay');
+const btnCerrarCreditos = document.getElementById('btnCerrarCreditos');
+
+let girando = false;
+let numeroActual = null;
+
+/* ============================================================
+   🔊 SISTEMA DE SONIDO (Web Audio API)
+   ============================================================ */
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) {
+      audioCtx = null;
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+function tocarNota(frecuencia, duracion, tipo = 'square', volumen = 0.12, retardo = 0) {
+  if (!audioCtx) return;
+  const ahora = audioCtx.currentTime + retardo;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = tipo;
+  osc.frequency.setValueAtTime(frecuencia, ahora);
+  gain.gain.setValueAtTime(0.0001, ahora);
+  gain.gain.exponentialRampToValueAtTime(volumen, ahora + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ahora + duracion);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(ahora);
+  osc.stop(ahora + duracion + 0.05);
+}
+
+function sonidoSalto() {
+  if (!audioCtx) return;
+  const ahora = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(320, ahora);
+  osc.frequency.exponentialRampToValueAtTime(880, ahora + 0.16);
+  gain.gain.setValueAtTime(0.0001, ahora);
+  gain.gain.exponentialRampToValueAtTime(0.14, ahora + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ahora + 0.22);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(ahora);
+  osc.stop(ahora + 0.25);
+}
+
+function sonidoTic() {
+  tocarNota(1200, 0.04, 'square', 0.05);
+}
+
+function sonidoVictoria() {
+  if (!audioCtx) return;
+  const notas = [523.25, 659.25, 783.99, 1046.50];
+  notas.forEach((f, i) => {
+    tocarNota(f, 0.16, 'square', 0.13, i * 0.12);
+  });
+  tocarNota(1318.51, 0.5, 'triangle', 0.15, 0.5);
+}
+
+function sonidoMoneda() {
+  if (!audioCtx) return;
+  tocarNota(987.77, 0.08, 'square', 0.12, 0);
+  tocarNota(1318.51, 0.25, 'square', 0.12, 0.08);
+}
+
+function sonidoCerrar() {
+  if (!audioCtx) return;
+  const ahora = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(660, ahora);
+  osc.frequency.exponentialRampToValueAtTime(220, ahora + 0.18);
+  gain.gain.setValueAtTime(0.0001, ahora);
+  gain.gain.exponentialRampToValueAtTime(0.1, ahora + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ahora + 0.22);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(ahora);
+  osc.stop(ahora + 0.25);
+}
+
+/* ============================================================
+   🎰 LÓGICA DE LA RULETA
+   ============================================================ */
+let ticInterval = null;
+let ticRate = 60;
+
+function lanzarRuleta() {
+  if (girando) return;
+
+  initAudio();
+
+  girando = true;
+  btnLanzar.disabled = true;
+  circuloNumero.classList.remove('listo', 'dorado');
+  circuloNumero.classList.add('girando');
+  numeroEl.classList.remove('clickable', 'ganador', 'desvanecer');
+  instruccion.classList.remove('destacada');
+  instruccion.textContent = "Girando... 🌀";
+
+  sonidoSalto();
+
+  ticRate = 55;
+  clearInterval(ticInterval);
+  ticInterval = setInterval(() => {
+    sonidoTic();
+  }, ticRate);
+
+  const resultado = Math.floor(Math.random() * TOTAL_PREGUNTAS) + 1;
+  numeroActual = resultado;
+
+  const inicio = performance.now();
+
+  function animar(ahora) {
+    const transcurrido = ahora - inicio;
+    const progreso = Math.min(transcurrido / DURACION_GIRO, 1);
+
+    if (progreso < 1) {
+      const velocidad = 1 - Math.pow(progreso, 2.8);
+      if (Math.random() < velocidad * 0.95 + 0.05) {
+        const aleatorio = Math.floor(Math.random() * TOTAL_PREGUNTAS) + 1;
+        numeroEl.textContent = aleatorio;
+      }
+      const nuevoRate = 55 + progreso * 180;
+      if (Math.abs(nuevoRate - ticRate) > 15) {
+        ticRate = nuevoRate;
+        clearInterval(ticInterval);
+        ticInterval = setInterval(() => sonidoTic(), ticRate);
+      }
+      requestAnimationFrame(animar);
+    } else {
+      clearInterval(ticInterval);
+      finalizarGiro(resultado);
+    }
+  }
+
+  requestAnimationFrame(animar);
+}
+
+function finalizarGiro(resultado) {
+  numeroEl.style.transform = 'scale(0.6)';
+  numeroEl.textContent = resultado;
+
+  requestAnimationFrame(() => {
+    numeroEl.style.transition = 'transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.5)';
+    numeroEl.style.transform = 'scale(1)';
+  });
+
+  circuloNumero.classList.remove('girando');
+  circuloNumero.classList.add('listo', 'dorado');
+  numeroEl.classList.add('clickable', 'ganador');
+
+  sonidoVictoria();
+
+  girando = false;
+  btnLanzar.disabled = false;
+
+  instruccion.textContent = `¡LISTO! te toca el ${resultado} - Pulsa el número para revelar la pregunta.`;
+  instruccion.classList.add('destacada');
+
+  setTimeout(() => {
+    numeroEl.classList.add('desvanecer');
+    circuloNumero.classList.remove('dorado');
+  }, DURACION_DESTAQUE);
+}
+
+function abrirModal(numero) {
+  initAudio();
+  modalNumero.textContent = numero;
+  modalPregunta.textContent = preguntas[numero - 1] || "Pregunta no disponible";
+  modalOverlay.classList.add('activo');
+  sonidoMoneda();
+}
+
+function cerrarModal() {
+  modalOverlay.classList.remove('activo');
+  sonidoCerrar();
+}
+
+// Créditos
+function abrirCreditos() {
+  initAudio();
+  modalCreditosOverlay.classList.add('activo');
+  sonidoMoneda();
+}
+
+function cerrarCreditos() {
+  modalCreditosOverlay.classList.remove('activo');
+  sonidoCerrar();
+}
+
+btnLanzar.addEventListener('click', lanzarRuleta);
+
+numeroEl.addEventListener('click', () => {
+  if (girando) return;
+  if (numeroActual !== null) {
+    abrirModal(numeroActual);
+  }
+});
+
+btnCerrar.addEventListener('click', cerrarModal);
+
+modalOverlay.addEventListener('click', (e) => {
+  if (e.target === modalOverlay) cerrarModal();
+});
+
+// Eventos de créditos
+btnCreditos.addEventListener('click', abrirCreditos);
+btnCerrarCreditos.addEventListener('click', cerrarCreditos);
+modalCreditosOverlay.addEventListener('click', (e) => {
+  if (e.target === modalCreditosOverlay) cerrarCreditos();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (modalOverlay.classList.contains('activo')) cerrarModal();
+    if (modalCreditosOverlay.classList.contains('activo')) cerrarCreditos();
+  }
+  if (e.code === 'Space' && !girando && !modalOverlay.classList.contains('activo') && !modalCreditosOverlay.classList.contains('activo')) {
+    e.preventDefault();
+    lanzarRuleta();
+  }
+});
+</script>
+
+</body>
+</html>
