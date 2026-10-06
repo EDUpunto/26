@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruleta de Preguntas - Números Giratorios</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 15%, #2a1a5e 0%, #140b30 50%, #05010f 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    padding: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(2px 2px at 20% 30%, rgba(120, 220, 255, 0.6), transparent),
+      radial-gradient(2px 2px at 70% 60%, rgba(255, 180, 255, 0.5), transparent),
+      radial-gradient(1px 1px at 40% 80%, rgba(255, 255, 255, 0.7), transparent),
+      radial-gradient(2px 2px at 85% 20%, rgba(120, 255, 200, 0.5), transparent),
+      radial-gradient(1px 1px at 10% 70%, rgba(255, 255, 255, 0.6), transparent),
+      radial-gradient(1px 1px at 55% 15%, rgba(180, 150, 255, 0.7), transparent);
+    animation: parpadear 4s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes parpadear {
+    from { opacity: 0.4; }
+    to   { opacity: 1; }
+  }
+
+  .titulo-principal {
+    font-size: clamp(1.3rem, 4.5vw, 2.2rem);
+    font-weight: 900;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: clamp(2px, 0.5vh, 6px);
+    background: linear-gradient(90deg, #ffd700, #ffae00, #ffd700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.7));
+    z-index: 2;
+  }
+
+  .titulo {
+    font-size: clamp(0.9rem, 3vw, 1.4rem);
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: clamp(8px, 2vh, 20px);
+    background: linear-gradient(90deg, #00e5ff, #ff4ddb, #ffd700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.5));
+    z-index: 2;
+  }
+
+  .visor {
+    position: relative;
+    width: min(85vw, 380px);
+    height: min(85vw, 380px);
+    max-height: 62vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+    z-index: 2;
+    margin-bottom: clamp(10px, 2vh, 25px);
+  }
+
+  .anillo {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px dashed rgba(0, 229, 255, 0.35);
+    animation: girarAnillo 22s linear infinite;
+    pointer-events: none;
+  }
+
+  .anillo.anillo1 { width: 100%; height: 100%; }
+
+  .anillo.anillo2 {
+    width: 86%;
+    height: 86%;
+    border-color: rgba(255, 77, 219, 0.3);
+    animation-direction: reverse;
+    animation-duration: 30s;
+  }
+
+  /* Puntos de colores en el anillo externo */
+  .anillo.anillo1::before,
+  .anillo.anillo1::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+  }
+
+  .anillo.anillo1::before {
+    background: radial-gradient(circle, #00e5ff 0%, #0077b6 100%);
+    box-shadow: 0 0 12px #00e5ff, 0 0 24px rgba(0, 229, 255, 0.6);
+    transform: rotate(0deg) translate(-50%, -50%) translateY(-50%) translateY(-190px);
+    animation: orbitarPunto 8s linear infinite;
+  }
+
+  .anillo.anillo1::after {
+    background: radial-gradient(circle, #ff4ddb 0%, #b3007a 100%);
+    box-shadow: 0 0 12px #ff4ddb, 0 0 24px rgba(255, 77, 219, 0.6);
+    transform: rotate(180deg) translate(-50%, -50%) translateY(-50%) translateY(-190px);
+    animation: orbitarPunto 12s linear infinite reverse;
+  }
+
+  /* Contenedor de puntos distribuidos */
+  .puntos-anillo {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    animation: girarAnillo 22s linear infinite;
+    pointer-events: none;
+  }
+
+  .punto {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+  }
+
+  .punto:nth-child(1) {
+    background: radial-gradient(circle, #00e5ff, #0077b6);
+    box-shadow: 0 0 10px #00e5ff, 0 0 20px rgba(0, 229, 255, 0.5);
+    transform: rotate(0deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(2) {
+    background: radial-gradient(circle, #ff4ddb, #b3007a);
+    box-shadow: 0 0 10px #ff4ddb, 0 0 20px rgba(255, 77, 219, 0.5);
+    transform: rotate(72deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(3) {
+    background: radial-gradient(circle, #ffd700, #ff8c00);
+    box-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.5);
+    transform: rotate(144deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(4) {
+    background: radial-gradient(circle, #00ff88, #00b359);
+    box-shadow: 0 0 10px #00ff88, 0 0 20px rgba(0, 255, 136, 0.5);
+    transform: rotate(216deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  .punto:nth-child(5) {
+    background: radial-gradient(circle, #ff6b6b, #cc0000);
+    box-shadow: 0 0 10px #ff6b6b, 0 0 20px rgba(255, 107, 107, 0.5);
+    transform: rotate(288deg) translate(-50%, -50%) translateY(-190px);
+  }
+
+  @keyframes orbitarPunto {
+    from { transform: rotate(0deg) translate(-50%, -50%) translateY(-50%) translateY(-190px); }
+    to   { transform: rotate(360deg) translate(-50%, -50%) translateY(-50%) translateY(-190px); }
+  }
+
+  @keyframes girarAnillo {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  .circulo-numero {
+    position: relative;
+    width: 78%;
+    height: 78%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 35% 30%, #3a2a7a 0%, #1a0f45 55%, #0a0425 100%);
+    box-shadow:
+      0 0 0 6px rgba(0, 229, 255, 0.25),
+      0 0 40px rgba(0, 229, 255, 0.4),
+      inset 0 0 40px rgba(0, 229, 255, 0.15),
+      inset 0 -20px 40px rgba(255, 77, 219, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    transition: box-shadow 0.5s ease;
+  }
+
+  .numero {
+    font-size: clamp(5rem, 22vw, 11rem);
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(180deg, #ffffff 0%, #00e5ff 45%, #ff4ddb 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.8));
+    user-select: none;
+    transition: transform 0.15s ease, filter 4s ease, opacity 4s ease;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    display: inline-block;
+    padding: 0 0.05em;
+  }
+
+  .numero.clickable { cursor: pointer; }
+
+  .numero.clickable:hover { transform: scale(1.05); }
+
+  .circulo-numero.girando .numero {
+    filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.85)) blur(0.1px);
+    opacity: 0.97;
+    animation: barrido 0.28s linear infinite;
+  }
+
+  /* Efecto de barrido con menor fundido para mejor contraste */
+  @keyframes barrido {
+    0% {
+      filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.85))
+              drop-shadow(-14px 0 1px rgba(255, 215, 0, 0.75))
+              blur(0.1px);
+      opacity: 0.97;
+    }
+    50% {
+      filter: drop-shadow(0 0 10px rgba(255, 77, 219, 0.85))
+              drop-shadow(0 0 1px rgba(255, 255, 255, 0.7))
+              blur(0.1px);
+      opacity: 1;
+    }
+    100% {
+      filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.85))
+              drop-shadow(14px 0 1px rgba(255, 215, 0, 0.75))
+              blur(0.1px);
+      opacity: 0.97;
+    }
+  }
+
+  .numero.ganador {
+    background: linear-gradient(180deg, #fffbe0 0%, #ffd700 45%, #ffae00 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 40px rgba(255, 215, 0, 1))
+            drop-shadow(0 0 8px rgba(255, 200, 0, 0.85));
+    animation: pulsoGanador 0.6s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulsoGanador {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+  }
+
+  .numero.ganador.desvanecer {
+    animation: none;
+    background: linear-gradient(180deg, #ffffff 0%, #00e5ff 45%, #ff4ddb 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.8));
+    transform: scale(1);
+  }
+
+  .circulo-numero.listo {
+    animation: pulsoResplandor 2s ease-in-out infinite;
+  }
+
+  @keyframes pulsoResplandor {
+    0%, 100% {
+      box-shadow:
+        0 0 0 6px rgba(0, 229, 255, 0.25),
+        0 0 40px rgba(0, 229, 255, 0.4),
+        inset 0 0 40px rgba(0, 229, 255, 0.15);
+    }
+    50% {
+      box-shadow:
+        0 0 0 6px rgba(255, 77, 219, 0.4),
+        0 0 60px rgba(255, 77, 219, 0.6),
+        inset 0 0 50px rgba(255, 77, 219, 0.25);
+    }
+  }
+
+  .circulo-numero.dorado {
+    box-shadow:
+      0 0 0 6px rgba(255, 215, 0, 0.6),
+      0 0 70px rgba(255, 215, 0, 0.85),
+      inset 0 0 50px rgba(255, 215, 0, 0.35);
+    transition: box-shadow 4s ease;
+  }
+
+  .btn-lanzar {
+    position: relative;
+    padding: clamp(13px, 1.8vh, 18px) clamp(40px, 10vw, 70px);
+    font-size: clamp(1rem, 2.6vw, 1.35rem);
+    font-weight: 800;
+    letter-spacing: 4px;
+    color: #05010f;
+    background: linear-gradient(180deg, #00e5ff 0%, #0091d5 50%, #0077b6 100%);
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    box-shadow:
+      0 6px 0 #004e75,
+      0 0 30px rgba(0, 229, 255, 0.6),
+      0 12px 30px rgba(0, 150, 220, 0.4);
+    transition: all 0.15s ease;
+    text-transform: uppercase;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .btn-lanzar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    transition: left 0.6s ease;
+  }
+
+  .btn-lanzar:hover:not(:disabled)::after { left: 100%; }
+
+  .btn-lanzar:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 0 #004e75,
+      0 0 45px rgba(0, 229, 255, 0.9),
+      0 16px 35px rgba(0, 150, 220, 0.55);
+  }
+
+  .btn-lanzar:active:not(:disabled) {
+    transform: translateY(5px);
+    box-shadow:
+      0 1px 0 #004e75,
+      0 0 20px rgba(0, 229, 255, 0.7),
+      0 4px 12px rgba(0, 150, 220, 0.4);
+  }
+
+  .btn-lanzar:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: 0 6px 0 #003350;
+  }
+
+  /* ===== INSTRUCCIÓN con línea divisoria luminosa ===== */
+  .instruccion {
+    margin-top: clamp(50px, 8vh, 90px);
+    font-size: clamp(0.78rem, 2.1vw, 1rem);
+    color: #9fd8ff;
+    text-align: center;
+    min-height: 22px;
+    letter-spacing: 0.5px;
+    z-index: 2;
+    padding: 0 10px;
+    transition: color 0.3s ease;
+    position: relative;
+  }
+
+  .instruccion::before {
+    content: "";
+    position: absolute;
+    top: calc(-1 * clamp(28px, 4.5vh, 50px));
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(60%, 260px);
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 229, 255, 0.65) 50%,
+      transparent 100%
+    );
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.55);
+  }
+
+  .instruccion.destacada {
+    color: #ffd700;
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+  }
+
+  .instruccion.destacada::before {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 215, 0, 0.75) 50%,
+      transparent 100%
+    );
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.65);
+  }
+
+  /* ===== BOTÓN "?" DISCRETO ===== */
+  .btn-creditos {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 229, 255, 0.4);
+    background: rgba(10, 5, 25, 0.55);
+    color: #00e5ff;
+    font-size: 1.2rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: all 0.25s ease;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
+    opacity: 0.6;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+  }
+
+  .btn-creditos:hover {
+    opacity: 1;
+    border-color: rgba(0, 229, 255, 0.9);
+    box-shadow: 0 0 22px rgba(0, 229, 255, 0.6);
+    transform: scale(1.1);
+    background: rgba(0, 229, 255, 0.15);
+  }
+
+  .btn-creditos:active {
+    transform: scale(0.95);
+  }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 5, 20, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+    z-index: 1000;
+    padding: 30px 16px;
+  }
+
+  .modal-overlay.activo {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal-wrapper {
+    position: relative;
+    width: 94%;
+    max-width: 620px;
+    max-height: 88vh;
+    display: flex;
+    justify-content: center;
+    padding-top: 42px;
+    transform: scale(0.7) translateY(40px);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .modal-overlay.activo .modal-wrapper {
+    transform: scale(1) translateY(0);
+  }
+
+  .modal {
+    background: linear-gradient(160deg, #ffffff 0%, #e6f2ff 100%);
+    color: #0a1128;
+    width: 100%;
+    max-height: calc(88vh - 42px);
+    overflow-y: auto;
+    border-radius: 28px;
+    padding: 40px clamp(22px, 4vw, 40px) clamp(24px, 3.5vw, 34px);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.7),
+      0 0 0 3px rgba(0, 229, 255, 0.85) inset,
+      0 0 50px rgba(0, 229, 255, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Modal de créditos - variante más compacta */
+  .modal-creditos {
+    padding: 36px clamp(22px, 4vw, 40px) 30px;
+  }
+
+  .modal-creditos h2 {
+    margin-top: 0;
+    margin-bottom: 22px;
+    font-size: clamp(1rem, 2.4vw, 1.2rem);
+    color: #0077b6;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 800;
+  }
+
+  .creditos-texto {
+    font-size: clamp(1rem, 2.4vw, 1.2rem);
+    line-height: 1.7;
+    color: #1a1a2e;
+    font-weight: 500;
+  }
+
+  .creditos-texto .nombre {
+    font-weight: 800;
+    color: #0077b6;
+  }
+
+  .creditos-texto .lugar {
+    display: block;
+    margin-top: 14px;
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    color: #4a5568;
+    font-style: italic;
+  }
+
+  .numero-badge {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #00e5ff, #ff4ddb);
+    color: #05010f;
+    font-size: 2.4rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 6px 22px rgba(0, 229, 255, 0.75),
+      0 0 0 4px #fff,
+      0 0 32px rgba(255, 77, 219, 0.6);
+    z-index: 5;
+  }
+
+  .numero-badge span {
+    display: block;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .modal h2 {
+    margin-top: 4px;
+    margin-bottom: 18px;
+    font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+    color: #0077b6;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 800;
+  }
+
+  .modal .pregunta-texto {
+    width: 100%;
+    font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+    font-weight: 600;
+    line-height: 1.55;
+    color: #1a1a2e;
+    padding: clamp(18px, 3vw, 26px) clamp(16px, 3vw, 24px);
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.12), rgba(255, 77, 219, 0.1));
+    border-left: 6px solid #00e5ff;
+    border-radius: 16px;
+    margin-bottom: 26px;
+    text-align: left;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .btn-cerrar {
+    padding: clamp(11px, 1.6vh, 15px) clamp(34px, 7vw, 50px);
+    font-size: clamp(0.92rem, 2.2vw, 1.05rem);
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    background: linear-gradient(180deg, #0077b6, #004e75);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 5px 18px rgba(0, 78, 117, 0.5);
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .btn-cerrar:hover {
+    background: linear-gradient(180deg, #0096d6, #005f8f);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 120, 180, 0.6);
+  }
+
+  .btn-cerrar:active { transform: translateY(2px); }
+
+  @media (min-width: 900px) and (max-height: 800px) {
+    .visor {
+      width: min(60vh, 340px);
+      height: min(60vh, 340px);
+    }
+    .titulo { margin-bottom: 8px; }
+    .instruccion { margin-top: 40px; }
+    .instruccion::before { top: -22px; }
+    .modal .pregunta-texto {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .visor {
+      width: 78vw;
+      height: 78vw;
+    }
+    .numero { font-size: 26vw; }
+    .modal {
+      border-radius: 22px;
+      padding: 34px 18px 22px;
+    }
+    .modal .pregunta-texto {
+      font-size: 1rem;
+      padding: 14px;
+    }
+    .numero-badge {
+      width: 72px;
+      height: 72px;
+      font-size: 2rem;
+    }
+    .modal-wrapper {
+      padding-top: 36px;
+    }
+    .modal {
+      max-height: calc(88vh - 36px);
+    }
+    .btn-creditos {
+      width: 34px;
+      height: 34px;
+      font-size: 1rem;
+      top: 10px;
+      right: 10px;
+    }
+    .instruccion { margin-top: 42px; }
+    .instruccion::before { top: -22px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 8px; }
+  .modal::-webkit-scrollbar-thumb {
+    background: rgba(0, 119, 182, 0.45);
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+  <h1 class="titulo-principal">✦ HISTORIA DOMINICANA ✦</h1>
+  <h1 class="titulo">✦ 1492 - 1861 | Ruleta de Preguntas ✦</h1>
+
+  <div class="visor">
+    <div class="anillo anillo1"></div>
+    <div class="anillo anillo2"></div>
+    <!-- Puntos de colores orbitando en el anillo externo -->
+    <div class="puntos-anillo">
+      <div class="punto"></div>
+      <div class="punto"></div>
+      <div class="punto"></div>
+      <div class="punto"></div>
+      <div class="punto"></div>
+    </div>
+    <div class="circulo-numero" id="circuloNumero">
+      <div class="numero" id="numero">?</div>
+    </div>
+  </div>
+
+  <button class="btn-lanzar" id="btnLanzar">Lanzar</button>
+
+  <p class="instruccion" id="instruccion">Pulsa LANZAR para girar</p>
+
+  <!-- BOTÓN "?" DISCRETO PARA CRÉDITOS -->
+  <button class="btn-creditos" id="btnCreditos" title="Créditos" aria-label="Ver créditos">?</button>
+
+  <!-- MODAL DE PREGUNTA -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-wrapper">
+      <div class="numero-badge"><span id="modalNumero">1</span></div>
+      <div class="modal">
+        <h2>Pregunta</h2>
+        <p class="pregunta-texto" id="modalPregunta"></p>
+        <button class="btn-cerrar" id="btnCerrar">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE CRÉDITOS -->
+  <div class="modal-overlay" id="modalCreditosOverlay">
+    <div class="modal-wrapper" style="padding-top: 0;">
+      <div class="modal modal-creditos">
+        <h2>Créditos</h2>
+        <p class="creditos-texto">
+          Este Recurso desarrollado por<br>
+<span class="nombre">Juan Ernesto De Frías</span><br>
+para <a href="https://edupunto.com" target="_blank" class="nombre">EDUPUNTO</a>
+          <span class="lugar">Santo Domingo, República Dominicana, 2026.</span>
+        </p>
+        <button class="btn-cerrar" id="btnCerrarCreditos" style="margin-top: 28px;">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ============================================================
+   ⚙️ CONFIGURACIÓN
+   ------------------------------------------------------------
+   TOTAL_PREGUNTAS se calcula automáticamente a partir del
+   array "preguntas" (ahora 30).
+   ============================================================ */
+const preguntas = [
+  /* 1 */  "¿En 1492, a que se refiería la frase «la Búsqueda de nuevas rutas comerciales» antes de que Colón emprendiera su 1er. viaje?",
+  /* 2 */  "¿Qué encontró Colón en Quisqueya a su llegada el 5.dic.1492?",
+  /* 3 */  "A la llegada de los españoles a Quisqueya en 1492, ¿en qué etapa de la historia se encontraban los pueblos aborígenes?",
+  /* 4 */  "¿Cuál fue el primer interés de valor que encontraron los españoles en Quisqueya en 1492?",
+  /* 5 */  "En 1493 luego de regresar en el 2do viaje, los europeos encontraron «El Fuerte de La Navidad» destruido, ¿cuáles fueron los primeros tres asentamientos humanos que instalaron en Quisqueya?",
+  /* 6 */  "Los europeos esclavizaron a los Taínos y los pusieron a trabajar para ellos ¿en que consistían los tributos exigidos?",
+  /* 7 */  "Los europeos esclavizaron a los Taínos, pero no todo fué pacífico.  Menciona al menos 2 rebeliones.",
+  /* 8 */  "Describe la tecnología de los aborígenes de Quisqueya en 1492, a la llegada de los europeos.",
+  /* 9 */  "¿Cuáles fueron los primeros enfrentamientos entre europeos en la isla «La Española»?",
+  /* 10 */ "¿En que consistió la «Matanza de Jaragua»? ¿Por qué sucedió?",
+  /* 11 */ "Entre 1519 y 1533 en la zona sureste de Barahona se desarrolló la «Rebelión de Enriquillo» ¿En que consistió? ¿quiénes la conformaron? ¿Por qué sucedió?",
+  /* 12 */ "¿En que consistió la «Rebelión de Roldán»? ¿cuándo y por qué sucedió?",
+  /* 13 */ "Colón fue el «Virrey y Gobernador de las Indias» pero en 1500 fue destituido por los reyes católicos y enviado preso a España ¿Por qué sucedió?",
+  /* 14 */ "En 1501 ya existian pocos aborígenes en la isla «La Española» ¿qué provocó el despoblamiento indígena?",
+  /* 15 */ "¿Cuáles eran los elementos técnológicos que tenían los españoles al llegar a la isla de Quisqueya en 1492?",
+  /* 16 */ "¿Qué eran «las encomiendas» durante la colonización? ¿En qué consistian?",
+  /* 17 */ "Fue en 1501 que se trajeron los primeros africanos a trabajar de manera forzada a «La Española» y al continente ¿por qué se trajeron?",
+  /* 18 */ "Los europeos se interesaron por el oro pero pronto se acabó su abundancia ¿hacia qué producto de exportación se enfocó la economía de «La Española»?",
+  /* 19 */ "¿Cuál fue la función de la Iglesia Católica durante el Periodo Colonial?",
+  /* 20 */ "¿Cuáles fueron los nombres de la isla según los aborígenes antes de 1492? ¿cuál nombre le asignó Cristobal Colón a la isla?",
+  /* 21 */ "Al establecer su vida en «La Española» los europeos produjeron un proceso llamado «mestizaje» junto a la población nativa ¿en qué consistió? ¿esto se tradujo en cambios en la organización social colonial?",
+  /* 22 */ "¿Qué fue el «comercio triangular» y cómo afectó a la isla «La Española»?",
+  /* 23 */ "¿Qué fue lo que originó la piratería en el Caribe colonial durante el siglo 16?",
+  /* 24 */ "Desde la 1ra Constitución Dominicana de 1844, se menciona el nombre de la isla, ¿cuál es el nombre oficial según la constitución dominicana vigente?",
+  /* 25 */ "¿Cuál es el legado cultural y social que dejaron los nativos precolombinos en Quisqueya?",
+  /* 26 */ "En 1605 en el oeste de la isla La Española había contrabando, debilidad para controlar el territorio e inseguridad religiosa; se produjo un hecho que transformó la vida en la colonia de La Española para siempre. ¿con cuál nombre se conoce en la historia dominicana?",
+  /* 27 */ "En enero de 1586 un grupo de piratas británicos (inleses) invadieron la ciudad de Santo Domingo por un mes torturando, saqueando, robando y destruyendo. ¿con cuál nombre se identifica este hecho en la historia dominicana?",
+  /* 28 */ "En 1655 la colonia de Santo Domingo estuvo a un solo paso de convertirse en parte del imperio de inglaterra.  ¿Con cuál nombre se identifica este hecho en la historia dominicana?",
+  /* 29 */ "Luego de la unión de los reinos de Castilla y Aragón en 1469, España surgió como país en 1492.  ¿Cuáles hechos relevantes marcaron el año 1492?",
+  /* 30 */ "En 1492 ¿cuántos habitantes se estima que tenía España y cuántos nativos en la isla Quisqueya?"
+];
+
+const TOTAL_PREGUNTAS = preguntas.length;
+const DURACION_GIRO = 3000;
+const DURACION_DESTAQUE = 4000;
+
+const numeroEl = document.getElementById('numero');
+const circuloNumero = document.getElementById('circuloNumero');
+const btnLanzar = document.getElementById('btnLanzar');
+const instruccion = document.getElementById('instruccion');
+const modalOverlay = document.getElementById('modalOverlay');
+const modalNumero = document.getElementById('modalNumero');
+const modalPregunta = document.getElementById('modalPregunta');
+const btnCerrar = document.getElementById('btnCerrar');
+
+// Créditos
+const btnCreditos = document.getElementById('btnCreditos');
+const modalCreditosOverlay = document.getElementById('modalCreditosOverlay');
+const btnCerrarCreditos = document.getElementById('btnCerrarCreditos');
+
+let girando = false;
+let numeroActual = null;
+
+/* ============================================================
+   🔊 SISTEMA DE SONIDO (Web Audio API - estilo Mario Bros)
+   ============================================================ */
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) {
+      audioCtx = null;
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+function tocarNota(frecuencia, duracion, tipo = 'square', volumen = 0.12, retardo = 0) {
+  if (!audioCtx) return;
+  const ahora = audioCtx.currentTime + retardo;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = tipo;
+  osc.frequency.setValueAtTime(frecuencia, ahora);
+  gain.gain.setValueAtTime(0.0001, ahora);
+  gain.gain.exponentialRampToValueAtTime(volumen, ahora + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ahora + duracion);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(ahora);
+  osc.stop(ahora + duracion + 0.05);
+}
+
+function sonidoSalto() {
+  if (!audioCtx) return;
+  const ahora = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(320, ahora);
+  osc.frequency.exponentialRampToValueAtTime(880, ahora + 0.16);
+  gain.gain.setValueAtTime(0.0001, ahora);
+  gain.gain.exponentialRampToValueAtTime(0.14, ahora + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ahora + 0.22);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(ahora);
+  osc.stop(ahora + 0.25);
+}
+
+function sonidoTic() {
+  tocarNota(1200, 0.04, 'square', 0.05);
+}
+
+function sonidoVictoria() {
+  if (!audioCtx) return;
+  const notas = [523.25, 659.25, 783.99, 1046.50];
+  notas.forEach((f, i) => {
+    tocarNota(f, 0.16, 'square', 0.13, i * 0.12);
+  });
+  tocarNota(1318.51, 0.5, 'triangle', 0.15, 0.5);
+}
+
+function sonidoMoneda() {
+  if (!audioCtx) return;
+  tocarNota(987.77, 0.08, 'square', 0.12, 0);
+  tocarNota(1318.51, 0.25, 'square', 0.12, 0.08);
+}
+
+function sonidoCerrar() {
+  if (!audioCtx) return;
+  const ahora = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(660, ahora);
+  osc.frequency.exponentialRampToValueAtTime(220, ahora + 0.18);
+  gain.gain.setValueAtTime(0.0001, ahora);
+  gain.gain.exponentialRampToValueAtTime(0.1, ahora + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ahora + 0.22);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(ahora);
+  osc.stop(ahora + 0.25);
+}
+
+/* ============================================================
+   🎰 LÓGICA DE LA RULETA
+   ============================================================ */
+let ticInterval = null;
+let ticRate = 60;
+
+function lanzarRuleta() {
+  if (girando) return;
+
+  initAudio();
+
+  girando = true;
+  btnLanzar.disabled = true;
+  circuloNumero.classList.remove('listo', 'dorado');
+  circuloNumero.classList.add('girando');
+  numeroEl.classList.remove('clickable', 'ganador', 'desvanecer');
+  instruccion.classList.remove('destacada');
+  instruccion.textContent = "Girando... 🌀";
+
+  sonidoSalto();
+
+  ticRate = 55;
+  clearInterval(ticInterval);
+  ticInterval = setInterval(() => {
+    sonidoTic();
+  }, ticRate);
+
+  const resultado = Math.floor(Math.random() * TOTAL_PREGUNTAS) + 1;
+  numeroActual = resultado;
+
+  const inicio = performance.now();
+
+  function animar(ahora) {
+    const transcurrido = ahora - inicio;
+    const progreso = Math.min(transcurrido / DURACION_GIRO, 1);
+
+    if (progreso < 1) {
+      const velocidad = 1 - Math.pow(progreso, 2.8);
+      if (Math.random() < velocidad * 0.95 + 0.05) {
+        const aleatorio = Math.floor(Math.random() * TOTAL_PREGUNTAS) + 1;
+        numeroEl.textContent = aleatorio;
+      }
+      const nuevoRate = 55 + progreso * 180;
+      if (Math.abs(nuevoRate - ticRate) > 15) {
+        ticRate = nuevoRate;
+        clearInterval(ticInterval);
+        ticInterval = setInterval(() => sonidoTic(), ticRate);
+      }
+      requestAnimationFrame(animar);
+    } else {
+      clearInterval(ticInterval);
+      finalizarGiro(resultado);
+    }
+  }
+
+  requestAnimationFrame(animar);
+}
+
+function finalizarGiro(resultado) {
+  numeroEl.style.transform = 'scale(0.6)';
+  numeroEl.textContent = resultado;
+
+  requestAnimationFrame(() => {
+    numeroEl.style.transition = 'transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.5)';
+    numeroEl.style.transform = 'scale(1)';
+  });
+
+  circuloNumero.classList.remove('girando');
+  circuloNumero.classList.add('listo', 'dorado');
+  numeroEl.classList.add('clickable', 'ganador');
+
+  sonidoVictoria();
+
+  girando = false;
+  btnLanzar.disabled = false;
+
+  instruccion.textContent = `¡LISTO! te toca el ${resultado} - Pulsa el número para revelar la pregunta.`;
+  instruccion.classList.add('destacada');
+
+  setTimeout(() => {
+    numeroEl.classList.add('desvanecer');
+    circuloNumero.classList.remove('dorado');
+  }, DURACION_DESTAQUE);
+}
+
+function abrirModal(numero) {
+  initAudio();
+  modalNumero.textContent = numero;
+  modalPregunta.textContent = preguntas[numero - 1] || "Pregunta no disponible";
+  modalOverlay.classList.add('activo');
+  sonidoMoneda();
+}
+
+function cerrarModal() {
+  modalOverlay.classList.remove('activo');
+  sonidoCerrar();
+}
+
+// Créditos
+function abrirCreditos() {
+  initAudio();
+  modalCreditosOverlay.classList.add('activo');
+  sonidoMoneda();
+}
+
+function cerrarCreditos() {
+  modalCreditosOverlay.classList.remove('activo');
+  sonidoCerrar();
+}
+
+btnLanzar.addEventListener('click', lanzarRuleta);
+
+numeroEl.addEventListener('click', () => {
+  if (girando) return;
+  if (numeroActual !== null) {
+    abrirModal(numeroActual);
+  }
+});
+
+btnCerrar.addEventListener('click', cerrarModal);
+
+modalOverlay.addEventListener('click', (e) => {
+  if (e.target === modalOverlay) cerrarModal();
+});
+
+// Eventos de créditos
+btnCreditos.addEventListener('click', abrirCreditos);
+btnCerrarCreditos.addEventListener('click', cerrarCreditos);
+modalCreditosOverlay.addEventListener('click', (e) => {
+  if (e.target === modalCreditosOverlay) cerrarCreditos();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (modalOverlay.classList.contains('activo')) cerrarModal();
+    if (modalCreditosOverlay.classList.contains('activo')) cerrarCreditos();
+  }
+  if (e.code === 'Space' && !girando && !modalOverlay.classList.contains('activo') && !modalCreditosOverlay.classList.contains('activo')) {
+    e.preventDefault();
+    lanzarRuleta();
+  }
+});
+</script>
+
+</body>
+</html>
