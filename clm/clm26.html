@@ -51,6 +51,8 @@
             width: 280px;
             max-height: 85vh;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         #panel-controles.collapsed {
             max-height: 48px;
@@ -66,22 +68,25 @@
             color: #2c3e50;
             font-size: 15px;
             user-select: none;
+            flex-shrink: 0;
         }
         .panel-header:hover { background: rgba(0,0,0,0.02); }
         .toggle-icon { transition: transform 0.3s ease; font-size: 12px; }
         .collapsed .toggle-icon { transform: rotate(-90deg); }
         .panel-content {
             padding: 12px 16px 16px 16px;
-            transition: opacity 0.3s ease, max-height 0.3s ease;
+            transition: opacity 0.3s ease;
             opacity: 1;
-            max-height: 1000px;
             overflow-y: auto;
+            flex: 1 1 auto;
+            min-height: 0;
         }
         .collapsed .panel-content {
             opacity: 0;
             max-height: 0;
             padding: 0 16px;
             pointer-events: none;
+            overflow: hidden;
         }
 
         .enlaces-discretos {
@@ -141,6 +146,52 @@
             background: none;
             border: none;
             box-shadow: none;
+        }
+
+        /* === DESPLEGABLE (details/summary) === */
+        .desplegable {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fafbfc;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .desplegable summary {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            background: #E9E9ED;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .desplegable summary::-webkit-details-marker { display: none; }
+        .desplegable summary:hover { background: #f8f9fa; color: #2980b9; }
+        .desplegable summary::after {
+            content: '▼';
+            margin-left: auto;
+            font-size: 10px;
+            transition: transform 0.25s ease;
+            color: #7f8c8d;
+        }
+        .desplegable[open] summary {
+            border-radius: 6px 6px 0 0;
+            border-bottom: 1px solid #e0e0e0;
+            background: #dde6f0;
+            color: #1a5276;
+        }
+        .desplegable[open] summary::after {
+            transform: rotate(180deg);
+        }
+        .desplegable .desplegable-contenido {
+            padding: 8px 12px 10px 12px;
+            background: #ffff;
         }
 
         /* Modal Créditos - Estilos mejorados */
@@ -302,21 +353,16 @@
             order: 0;
         }
 
-        /* Scroll personalizado para el modal */
-        .modal-content::-webkit-scrollbar {
-            width: 6px;
-        }
-        .modal-content::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-        }
-        .modal-content::-webkit-scrollbar-thumb {
-            background: #b0c4de;
-            border-radius: 3px;
-        }
-        .modal-content::-webkit-scrollbar-thumb:hover {
-            background: #8aadc9;
-        }
+        /* Scroll personalizado */
+        .modal-content::-webkit-scrollbar { width: 6px; }
+        .modal-content::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+        .modal-content::-webkit-scrollbar-thumb { background: #b0c4de; border-radius: 3px; }
+        .modal-content::-webkit-scrollbar-thumb:hover { background: #8aadc9; }
+
+        .panel-content::-webkit-scrollbar { width: 6px; }
+        .panel-content::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+        .panel-content::-webkit-scrollbar-thumb { background: #b0c4de; border-radius: 3px; }
+        .panel-content::-webkit-scrollbar-thumb:hover { background: #8aadc9; }
 
         @media (max-width: 768px) {
             #panel-titulo {
@@ -399,13 +445,25 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🔴 Frontera RD‑Haití
                 </label>
-                <!-- NUEVAS CAPAS: REGIONES ÚNICAS Y MACROREGIONES -->
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-regiones-unicas" onchange="toggleRegionesUnicas()"> 📋 Regiones Únicas de Planificación
-                </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-macroregiones" onchange="toggleMacroregiones()"> 📊 Macroregiones de Planificación
-                </label>
+
+                <!-- DESPLEGABLE DE DELIMITACIÓN -->
+                <details class="desplegable" id="desplegable-delimitacion">
+                    <summary>🗂️ DELIMITACIÓN</summary>
+                    <div class="desplegable-contenido">
+                        <label class="checkbox-opcion">
+                            <input type="checkbox" name="delimitacion" id="chk-provincias" onchange="toggleDelimitacion('provincias')"> 🗺️ División Provincial RD (2026)
+                        </label>
+                        <label class="checkbox-opcion">
+                            <input type="checkbox" name="delimitacion" id="chk-municipios" onchange="toggleDelimitacion('municipios')"> 🏘️ División Municipal RD (2025)
+                        </label>
+                        <label class="checkbox-opcion">
+                            <input type="checkbox" name="delimitacion" id="chk-regiones-unicas" onchange="toggleDelimitacion('regiones-unicas')"> 📋 Regiones Únicas de Planificación
+                        </label>
+                        <label class="checkbox-opcion">
+                            <input type="checkbox" name="delimitacion" id="chk-macroregiones" onchange="toggleDelimitacion('macroregiones')"> 📊 Macroregiones de Planificación
+                        </label>
+                    </div>
+                </details>
             </div>
 
             <!-- Enlaces -->
@@ -418,18 +476,16 @@
         </div>
     </div>
 
-    <!-- Modal Créditos - REORGANIZADO -->
+    <!-- Modal Créditos -->
     <div id="modal-creditos" class="modal-overlay" onclick="cerrarModalCreditos(event)">
         <div class="modal-content">
 
-            <!-- ENCABEZADO PRINCIPAL -->
             <div class="creditos-header">
                 <h2><strong>I S F O D O S U</strong></h2>
                 <p class="subtitulo">DIGICON</p>
                 <h1>ZONAS CLIMÁTICAS DE LA ISLA DE<br>SANTO DOMINGO</h1>
             </div>
 
-            <!-- SECCIÓN: CONSIDERACIONES -->
             <div class="creditos-seccion">
                 <h3>CONSIDERACIONES</h3>
                 <p>El sistema de Köppen, es considerado el más difundido a nivel mundial por su simplicidad y su estrecha relación entre clima y vegetación.<br>
@@ -437,7 +493,6 @@
                 El mapa climático está basado principalmente en los trabajos de Beck et al. (2018) y Peel et al.(2007).</p>
             </div>
 
-            <!-- SECCIÓN: FUENTES -->
             <div class="creditos-seccion">
                 <h3>FUENTES</h3>
                 <p>Beck, H. E., Zimmermann, N. E., McVicar, T. R., Vergopolan, N., Berg, A., & Wood, E. F. (2018).<br>
@@ -447,52 +502,43 @@
                 <p>Del Rosario, P. J., Morrobel, J., & Escarramán, A. (2013). Territorios rurales y adaptación al cambio climático en República Dominicana.<br>Instituto Dominicano de Investigaciones Agropecuarias y Forestales (IDIAF).</p><br>
                 <p>Jury, M. R., & Chiao, S. (2011). Mesocirculation Associated with Summer Convection over the Central Antilles. Earth Interactions, 15(25), 1-19. https://doi.org/10.1175/2011EI391.1</p><br>
                 <p>Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022. https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de poblacion-y-vivienda-2022/.</p>
-                <p>República Dominicana. Congreso Nacional. (2022). Ley núm. 345-22, Orgánica de Regiones Únicas de Planificación. Gaceta Oficial de la República Dominicana.</p>
             </div>
 
-            <!-- SECCIÓN: ORIGEN DEL PROYECTO -->
             <div class="creditos-seccion">
                 <h3>ORIGEN DEL PROYECTO</h3>
                 <p>Este proyecto surgió de la necesidad de ofrecer un mapa interactivo orientado a las aulas dominicanas. Hubo un primer esfuerzo muy elemental entre 2007 y 2015, con tecnología Flash, que fue publicado en el portal www.educando.edu.do del MINERD y que caducó en el tiempo.</p>
             </div>
 
-            <!-- SECCIÓN: DESARROLLO -->
             <div class="creditos-seccion">
                 <h3>DESARROLLO</h3>
                 <p>En esta oportunidad hemos utilizado la tecnología Leaflet, la plataforma OpenStreetMaps y otras para hacer realidad el recurso. La ingeniería y maquetación de este documento comenzó el 31.Junio.2026.</p>
             </div>
 
-            <!-- SECCIÓN: HERRAMIENTAS UTILIZADAS -->
             <div class="creditos-seccion">
                 <h3>HERRAMIENTAS UTILIZADAS</h3>
                 <p>Para el desarrollo de este proyecto empleé las siguientes herramientas de inteligencia artificial disponibles y en sus versiones gratuitas: DeepSeek, ChatGPT, Perplexity, Gemini y Claude.</p>
             </div>
 
-            <!-- SECCIÓN: PROPÓSITO DE LA IA -->
             <div class="creditos-seccion">
                 <h3>PROPÓSITO DE LA IA</h3>
                 <p>El uso de la inteligencia artificial se orientó principalmente a la generación de código de programación. También se empleó para la verificación de fechas, la localización precisa de documentación y, en menor medida, para la mejora de la redacción.</p>
             </div>
 
-            <!-- SECCIÓN: INTERVENCIÓN Y APORTE HUMANO -->
             <div class="creditos-seccion">
                 <h3>INTERVENCIÓN Y APORTE HUMANO</h3>
                 <p>Estimo que un 85% de la redacción es de mi propiedad. Mi aporte en el código HTML5 fue del 10% o menos. Mis principales intervenciones consistieron en suministrar los textos, los marcadores y los criterios orientadores. La IA generaba código estructurado que yo evaluaba y ajustaba hasta alcanzar el resultado deseado.</p>
             </div>
 
-            <!-- SECCIÓN: DECLARACIÓN DE AUTORÍA -->
             <div class="creditos-seccion declaracion">
                 <h3>DECLARACIÓN DE AUTORÍA</h3>
                 <p><em>"Certifico que el trabajo presentado es el resultado de un proceso de investigación, edición, curaduría, creación y esfuerzo. La IA fue utilizada como herramienta de apoyo, no como sustituta de mi criterio."</em></p>
             </div>
 
-            <!-- SECCIÓN: AUTORÍA Y PRODUCCIÓN -->
             <div class="creditos-seccion autores">
                 <p class="ubicacion">Redacción, diseño y producción general</p>
                 <p class="autor">Juan Ernesto De Frías</p>
             </div>
 
-            <!-- SECCIÓN: MENSAJE / CONTACTO -->
             <div class="creditos-seccion mensaje">
                 <p>Detrás de este recurso hay muchas horas de investigación y trabajo.</p>
                 <p>Tu opinión es fundamental: si observas algún punto que se pueda mejorar, ¡no dudes en escribirme!</p>
@@ -501,20 +547,41 @@
                 </p>
             </div>
 
-            <!-- SECCIÓN: EQUIPO DE TRABAJO -->
             <div class="creditos-seccion equipo">
                 <h3>EQUIPO DE TRABAJO DIGICON</h3>
                 <p>Juan Ernesto De Frías,<br>José Alberto Santos y Carlos Gabriel Tapia<br>
                 Santo Domingo, República Dominicana</p>
             </div>
 
-            <!-- BOTÓN CERRAR -->
             <button class="btn-cerrar-modal" onclick="cerrarModalCreditos()">Cerrar</button>
 
         </div>
     </div>
 
     <script>
+        // ═══════════════════════════════════════════════════════════
+        // 0. FUNCIÓN AUXILIAR PARA OBTENER PROPIEDADES
+        // ═══════════════════════════════════════════════════════════
+        function getProperty(feature, keys) {
+            if (!feature || !feature.properties) return null;
+            var props = feature.properties;
+            for (var i = 0; i < keys.length; i++) {
+                var val = props[keys[i]];
+                if (val !== undefined && val !== null && val !== '') return val;
+            }
+            var propKeys = Object.keys(props);
+            for (var j = 0; j < keys.length; j++) {
+                var buscada = String(keys[j]).toLowerCase();
+                for (var k = 0; k < propKeys.length; k++) {
+                    if (propKeys[k].toLowerCase() === buscada) {
+                        var v = props[propKeys[k]];
+                        if (v !== undefined && v !== null && v !== '') return v;
+                    }
+                }
+            }
+            return null;
+        }
+
         // ═══════════════════════════════════════════════════════════
         // 1. INICIALIZAR MAPA con maxZoom = 12
         // ═══════════════════════════════════════════════════════════
@@ -528,23 +595,17 @@
         L.control.scale({ position: 'bottomright', metric: true, imperial: false }).addTo(map);
         L.control.attribution({ position: 'bottomright' }).addTo(map);
 
-        // Crear un panel personalizado para la capa climática con z-index elevado
-        // para que los bordes de los polígonos estén siempre por encima de otras capas.
         map.createPane('climaPane');
-        map.getPane('climaPane').style.zIndex = 600;  // por encima de overlayPane (400) y shadowPane (500)
+        map.getPane('climaPane').style.zIndex = 600;
 
-        // Panel personalizado para las rutas de ciclones, por encima de la capa climática
         map.createPane('ciclonesPane');
         map.getPane('ciclonesPane').style.zIndex = 610;
 
-        // Panel personalizado para las Comunidades (RD y HT): SIEMPRE por encima
-        // de cualquier otra capa (climaPane, ciclonesPane, frontera, etc.)
         map.createPane('comunidadesPane');
         map.getPane('comunidadesPane').style.zIndex = 650;
 
-        // Panel para las nuevas capas de planificación (regiones y macroregiones)
-        map.createPane('planificacionPane');
-        map.getPane('planificacionPane').style.zIndex = 620; // por encima de ciclones pero debajo de comunidades
+        map.createPane('delimitacionPane');
+        map.getPane('delimitacionPane').style.zIndex = 550;
 
         // ═══════════════════════════════════════════════════════════
         // 2. CAPAS BASE
@@ -810,14 +871,14 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 4. FRONTERA
+        // 4. FRONTERA (ruta corregida a dlim/)
         // ═══════════════════════════════════════════════════════════
         var capaFrontera = null;
         var fronteraCargada = false;
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch('anx/FRONTERA RD_HAI.geojson')
+            fetch(encodeURI('dlim/FRONTERA RD_HAI.geojson'))
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
@@ -860,13 +921,252 @@
             }
         };
 
-        // Carga inicial de la frontera (checkbox marcado por defecto)
         if (document.getElementById('chk-frontera').checked) {
             cargarFrontera();
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 5. CAPA CLIMÁTICA KÖPPEN-GEIGER (RASTER 1 km / COG)
+        // 5. DELIMITACIÓN (nuevas capas desde dlim/)
+        // ═══════════════════════════════════════════════════════════
+        var capaProvincias = null;
+        var capaMunicipios = null;
+        var capaRegionesUnicas = null;
+        var capaMacroregiones = null;
+        var capaSeleccionadaDelim = null; // para el resaltado
+
+        // Estilos
+        var estiloProvincias = {
+            color: "#8E44AD", weight: 2, fillColor: "#BB8FCE",
+            fillOpacity: 0.1, dashArray: "4,4"
+        };
+        var estiloMunicipios = {
+            color: "#E67E22", weight: 1.2, fillColor: "#F5CBA7",
+            fillOpacity: 0.1, dashArray: "2,3"
+        };
+        var estiloRegionesUnicas = {
+            color: "#1ABC9C", weight: 2.5, fillColor: "#48C9B0",
+            fillOpacity: 0.15, dashArray: "6,3"
+        };
+        var estiloMacroregiones = {
+            color: "#C0392B", weight: 3, fillColor: "#E74C3C",
+            fillOpacity: 0.12, dashArray: "8,4"
+        };
+
+        // Estilo de selección y hover para delimitación
+        var estiloHoverDelim = { weight: 3, color: '#FFFF00', fillOpacity: 0.3 };
+        var estiloSeleccionDelim = { weight: 4, color: '#FFFFFF', fillOpacity: 0.4 };
+
+        function agregarEventosDelim(layer, estiloBase) {
+            layer.originalStyle = estiloBase;
+            layer.on('mouseover', function(e) {
+                var capa = e.target;
+                if (capaSeleccionadaDelim !== capa) {
+                    capa.setStyle(estiloHoverDelim);
+                    capa.bringToFront();
+                }
+            });
+            layer.on('mouseout', function(e) {
+                var capa = e.target;
+                if (capaSeleccionadaDelim !== capa) {
+                    capa.setStyle(capa.originalStyle);
+                }
+            });
+            layer.on('click', function(e) {
+                var capa = e.target;
+                if (capaSeleccionadaDelim && capaSeleccionadaDelim !== capa) {
+                    capaSeleccionadaDelim.setStyle(capaSeleccionadaDelim.originalStyle);
+                }
+                capaSeleccionadaDelim = capa;
+                capa.setStyle(estiloSeleccionDelim);
+                capa.bringToFront();
+                if (capa.getPopup()) capa.openPopup();
+            });
+        }
+
+        function crearCapaProvincias() {
+            var grupo = L.layerGroup();
+            var url = 'dlim/PROVINCIAS_RD_2026.json';
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.text();
+                })
+                .then(function(texto) {
+                    var data;
+                    var trimmed = texto.trim();
+                    if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
+                        data = JSON.parse(trimmed);
+                    } else {
+                        var features = trimmed.split(/\r?\n/).filter(l => l.trim() !== '').map(l => JSON.parse(l));
+                        data = { type: "FeatureCollection", features: features };
+                    }
+                    if (!data.features || data.features.length === 0) throw new Error('GeoJSON vacío');
+                    console.log('📦 Provincias cargadas:', url, 'features:', data.features.length);
+                    var capa = L.geoJSON(data, {
+                        style: estiloProvincias,
+                        pane: 'delimitacionPane',
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            layer.bindPopup("<b>🗺️ " + nombre + "</b>");
+                            agregarEventosDelim(layer, estiloProvincias);
+                        }
+                    });
+                    grupo.addLayer(capa);
+                })
+                .catch(function(e) {
+                    console.warn('❌ Error cargando provincias:', e.message);
+                });
+            return grupo;
+        }
+
+        function crearCapaMunicipios() {
+            var grupo = L.layerGroup();
+            var url = 'dlim/MUNICIPIOS_RD_2025.json';
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.json();
+                })
+                .then(function(data) {
+                    if (!data || !data.features || data.features.length === 0) throw new Error('GeoJSON vacío');
+                    console.log('📦 Municipios cargados:', url, 'features:', data.features.length);
+                    var capa = L.geoJSON(data, {
+                        style: estiloMunicipios,
+                        pane: 'delimitacionPane',
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            var provincia = getProperty(feature, ['PROVINCIA', 'PROVINCE', 'provincia', 'Provincia']) || '';
+                            var popupContent = "<b>🏘️ " + nombre + "</b>";
+                            if (provincia) popupContent += "<br>Provincia: " + provincia;
+                            layer.bindPopup(popupContent);
+                            agregarEventosDelim(layer, estiloMunicipios);
+                        }
+                    });
+                    grupo.addLayer(capa);
+                })
+                .catch(function(e) {
+                    console.warn('❌ Error cargando municipios:', e.message);
+                });
+            return grupo;
+        }
+
+        function crearCapaRegionesUnicas() {
+            var grupo = L.layerGroup();
+            var url = 'dlim/regionesunicasRD.geojson';
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.text();
+                })
+                .then(function(texto) {
+                    var data;
+                    var trimmed = texto.trim();
+                    if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
+                        data = JSON.parse(trimmed);
+                    } else {
+                        var features = trimmed.split(/\r?\n/).filter(l => l.trim() !== '').map(l => JSON.parse(l));
+                        data = { type: "FeatureCollection", features: features };
+                    }
+                    if (!data.features || data.features.length === 0) throw new Error('GeoJSON vacío');
+                    console.log('📦 Regiones Únicas cargadas:', url, 'features:', data.features.length);
+                    var capa = L.geoJSON(data, {
+                        style: estiloRegionesUnicas,
+                        pane: 'delimitacionPane',
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            layer.bindPopup("<b>📋 " + nombre + "</b>");
+                            agregarEventosDelim(layer, estiloRegionesUnicas);
+                        }
+                    });
+                    grupo.addLayer(capa);
+                })
+                .catch(function(e) {
+                    console.warn('❌ Error cargando regiones únicas:', e.message);
+                });
+            return grupo;
+        }
+
+        function crearCapaMacroregiones() {
+            var grupo = L.layerGroup();
+            var url = 'dlim/macroregionesRD.geojson';
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.text();
+                })
+                .then(function(texto) {
+                    var data;
+                    var trimmed = texto.trim();
+                    if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
+                        data = JSON.parse(trimmed);
+                    } else {
+                        var features = trimmed.split(/\r?\n/).filter(l => l.trim() !== '').map(l => JSON.parse(l));
+                        data = { type: "FeatureCollection", features: features };
+                    }
+                    if (!data.features || data.features.length === 0) throw new Error('GeoJSON vacío');
+                    console.log('📦 Macroregiones cargadas:', url, 'features:', data.features.length);
+                    var capa = L.geoJSON(data, {
+                        style: estiloMacroregiones,
+                        pane: 'delimitacionPane',
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            layer.bindPopup("<b>📊 " + nombre + "</b>");
+                            agregarEventosDelim(layer, estiloMacroregiones);
+                        }
+                    });
+                    grupo.addLayer(capa);
+                })
+                .catch(function(e) {
+                    console.warn('❌ Error cargando macroregiones:', e.message);
+                });
+            return grupo;
+        }
+
+        // Instanciar capas de delimitación
+        capaProvincias = crearCapaProvincias();
+        capaMunicipios = crearCapaMunicipios();
+        capaRegionesUnicas = crearCapaRegionesUnicas();
+        capaMacroregiones = crearCapaMacroregiones();
+
+        // Toggle exclusivo
+        window.toggleDelimitacion = function(tipo) {
+            var mapa = {
+                'provincias':      { chk: 'chk-provincias',      capa: capaProvincias },
+                'municipios':      { chk: 'chk-municipios',      capa: capaMunicipios },
+                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: capaRegionesUnicas },
+                'macroregiones':   { chk: 'chk-macroregiones',   capa: capaMacroregiones }
+            };
+            var seleccionado = mapa[tipo];
+            if (!seleccionado) return;
+            var activado = document.getElementById(seleccionado.chk).checked;
+            if (activado) {
+                // Desactivar los demás
+                Object.keys(mapa).forEach(function(k) {
+                    if (k !== tipo) {
+                        var otro = mapa[k];
+                        var otroChk = document.getElementById(otro.chk);
+                        if (otroChk && otroChk.checked) otroChk.checked = false;
+                        if (otro.capa && map.hasLayer(otro.capa)) map.removeLayer(otro.capa);
+                    }
+                });
+                // Mostrar la seleccionada
+                if (seleccionado.capa && !map.hasLayer(seleccionado.capa)) {
+                    map.addLayer(seleccionado.capa);
+                }
+            } else {
+                if (seleccionado.capa && map.hasLayer(seleccionado.capa)) {
+                    map.removeLayer(seleccionado.capa);
+                }
+            }
+            // Limpiar selección de polígono si la capa se quitó
+            if (capaSeleccionadaDelim && seleccionado.capa && seleccionado.capa.hasLayer(capaSeleccionadaDelim)) {
+                capaSeleccionadaDelim.setStyle(capaSeleccionadaDelim.originalStyle);
+                capaSeleccionadaDelim = null;
+            }
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // 6. CAPA CLIMÁTICA KÖPPEN-GEIGER
         // ═══════════════════════════════════════════════════════════
         var capaClima = null;
         var climaCargado = false;
@@ -875,26 +1175,24 @@
         var climaRaster = null;
         var climaCanvas = null;
         var climaCanvasLayer = null;
-        var climaImage = null;
         var climaUrl = 'anx/climaKPSD2026_1km_KoppenGeiger_COG.tif';
 
-        // Clasificación completa con descripciones en español
         var clasesKoppen = {
-            1:{codigo:'Af',nombre:'El clima Af es también conocido como clima ecuatorial o de selva tropical. Se caracteriza por temperaturas cálidas constantes todo el año y lluvias abundantes durante los 12 meses.',color:'#0000FF'},
-            2:{codigo:'Am',nombre:'El clima Am representa el clima tropical monzónico. Se caracteriza por temperaturas cálidas constantes todo el año y una estación seca corta seguida de una estación muy húmeda.',color:'#0078FF'},
-            3:{codigo:'Aw',nombre:'El clima Aw designa el clima tropical de sabana o tropical húmedo y seco. Se caracteriza por temperaturas cálidas todo el año y una estación seca muy marcada.',color:'#46AAFA'},
+            1:{codigo:'Af',nombre:'Tropical, selva tropical',color:'#0000FF'},
+            2:{codigo:'Am',nombre:'Tropical, monzónico',color:'#0078FF'},
+            3:{codigo:'Aw',nombre:'Tropical, sabana',color:'#46AAFA'},
             4:{codigo:'BWh',nombre:'Árido, desértico cálido',color:'#FF0000'},
             5:{codigo:'BWk',nombre:'Árido, desértico frío',color:'#FF9696'},
-            6:{codigo:'BSh',nombre:'El clima Bsh corresponde al clima semiárido cálido (o estepario cálido). Se caracteriza por una temperatura media anual superior a los 18°C y precipitaciones escasas (superiores a las de los climas desérticos).',color:'#F5A500'},
+            6:{codigo:'BSh',nombre:'Árido, estepario cálido',color:'#F5A500'},
             7:{codigo:'BSk',nombre:'Árido, estepario frío',color:'#FFDC64'},
             8:{codigo:'Csa',nombre:'Templado, verano seco y cálido',color:'#FFFF00'},
             9:{codigo:'Csb',nombre:'Templado, verano seco y templado',color:'#C8C800'},
             10:{codigo:'Csc',nombre:'Templado, verano seco y frío',color:'#969600'},
             11:{codigo:'Cwa',nombre:'Templado, invierno seco y verano cálido',color:'#96FF96'},
-            12:{codigo:'Cwb',nombre:'El clima Cwb representa un clima templado subhúmedo. Se caracteriza por sus veranos suaves y lluviosos e inviernos secos y frescos, ubicándose principalmente en regiones montañosas dentro de zonas tropicales o subtropicales.',color:'#64C864'},
+            12:{codigo:'Cwb',nombre:'Templado, invierno seco y verano templado',color:'#64C864'},
             13:{codigo:'Cwc',nombre:'Templado, invierno seco y verano frío',color:'#329632'},
             14:{codigo:'Cfa',nombre:'Templado, sin estación seca y verano cálido',color:'#C8FF50'},
-            15:{codigo:'Cfb',nombre:'El clima Cfb representa el clima oceánico o templado húmedo de verano suave. No hay estación seca definida, ya que la lluvia está distribuida de manera bastante uniforme a lo largo del año.',color:'#64FF50'},
+            15:{codigo:'Cfb',nombre:'Templado, sin estación seca y verano templado',color:'#64FF50'},
             16:{codigo:'Cfc',nombre:'Templado, sin estación seca y verano frío',color:'#32C800'},
             17:{codigo:'Dsa',nombre:'Frío, verano seco y cálido',color:'#FF00FF'},
             18:{codigo:'Dsb',nombre:'Frío, verano seco y templado',color:'#C800C8'},
@@ -922,7 +1220,6 @@
             return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)];
         }
 
-        // Dibuja el raster categórico respetando exactamente los colores del legend.txt.
         function dibujarClima(){
             if(!climaRaster || !climaCanvas) return;
             var ctx=climaCanvas.getContext('2d');
@@ -958,9 +1255,7 @@
             dibujarClima();
             var bounds=[[climaRaster.bottom,climaRaster.left],[climaRaster.top,climaRaster.right]];
             climaCanvasLayer=L.imageOverlay(climaCanvas.toDataURL('image/png'),bounds,{
-                opacity:1,
-                interactive:false,
-                pane:'climaPane'
+                opacity:1, interactive:false, pane:'climaPane'
             });
             capaClima=climaCanvasLayer;
             if(climaVisible) capaClima.addTo(map);
@@ -983,8 +1278,6 @@
             return climaRaster.values[row*climaRaster.width+col];
         }
 
-        // Carga completa del COG. El archivo es pequeño y esta vía evita problemas de Range/COG
-        // en servidores que no manejan correctamente las solicitudes HTTP Range.
         function cargarClima(){
             if(climaCargado) return;
             fetch(climaUrl)
@@ -1012,12 +1305,11 @@
                         climaCargado=true;
                         crearCapaClima();
                         console.log('Köppen-Geiger cargado correctamente:',climaRaster.width+' x '+climaRaster.height);
-                        console.log('Extensión:',climaRaster.left,climaRaster.bottom,climaRaster.right,climaRaster.top);
                     });
                 })
                 .catch(function(error){
                     console.error('Error cargando '+climaUrl,error);
-                    alert('No se pudo cargar la capa climática.\n\n'+error.message+'\n\nVerifica que index.html y la carpeta anx/ estén publicados juntos y que el servidor permita cargar archivos .tif.');
+                    alert('No se pudo cargar la capa climática.\n\n'+error.message+'\n\nVerifica que index.html y la carpeta anx/ estén publicados juntos.');
                     climaVisible=false;
                     var btn=document.getElementById('btn-clima');
                     if(btn) btn.classList.remove('active');
@@ -1032,17 +1324,11 @@
                 cargarClima();
                 return;
             }
-            // Si ya está cargado, alternamos visibilidad (mostrar/ocultar)
-            // pero si hay selección previa, al mostrar se resalta.
             climaVisible=!climaVisible;
             if(capaClima){
                 if(climaVisible) {
                     capaClima.addTo(map);
-                    if(selectedKoppen!==null) {
-                        actualizarEstilosClima();
-                    } else {
-                        actualizarEstilosClima();
-                    }
+                    actualizarEstilosClima();
                 } else {
                     map.removeLayer(capaClima);
                 }
@@ -1050,13 +1336,11 @@
             if(btn) btn.classList.toggle('active',climaVisible);
         };
 
-        // Clic sobre cualquier punto: consulta la celda de 1 km y muestra su clase.
         map.on('click',function(e){
             if(!climaVisible || !climaRaster) return;
             var valor=obtenerValorClima(e.latlng);
             var clase=getClaseKoppen(valor);
             if(!clase) return;
-            // Toggle selección: si se hace clic en el mismo código, se deselecciona.
             if(selectedKoppen===clase.codigo) {
                 selectedKoppen=null;
             } else {
@@ -1072,7 +1356,7 @@
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 5.1 RUTA DE CICLONES (1900-2026)
+        // 7. RUTA DE CICLONES
         // ═══════════════════════════════════════════════════════════
         var capaCiclones = null;
         var ciclonesCargado = false;
@@ -1105,11 +1389,7 @@
                         style: function(feature) {
                             var color = getColorCiclon(indiceRuta);
                             indiceRuta++;
-                            return {
-                                color: color,
-                                weight: 3,
-                                opacity: 0.9
-                            };
+                            return { color: color, weight: 3, opacity: 0.9 };
                         },
                         onEachFeature: function(feature, layer) {
                             var props = feature.properties || {};
@@ -1117,14 +1397,12 @@
                             var anio = props.ano !== undefined && props.ano !== null ? props.ano : 'N/D';
                             var nombre = props.Name || 'N/D';
                             var descripcion = props.description || 'Sin descripción';
-
                             layer.bindPopup(
                                 '<b>Fenómeno:</b> ' + fenomeno + '<br>' +
                                 '<b>Año:</b> ' + anio + '<br>' +
                                 '<b>Nombre:</b> ' + nombre + '<br>' +
                                 '<b>Descripción:</b> ' + descripcion
                             );
-
                             layer.on('mouseover', function() {
                                 layer.setStyle({ weight: 6 });
                                 layer.bringToFront();
@@ -1134,7 +1412,6 @@
                             });
                         }
                     });
-
                     ciclonesCargado = true;
                     if (ciclonesVisible) {
                         map.addLayer(capaCiclones);
@@ -1167,116 +1444,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 6. NUEVAS CAPAS: REGIONES ÚNICAS Y MACROREGIONES (SIN RELLENO)
-        // ═══════════════════════════════════════════════════════════
-
-        var capaRegionesUnicas = null;
-        var capaMacroregiones = null;
-
-        // 6.1 Regiones Únicas de Planificación
-        function cargarRegionesUnicas() {
-            if (capaRegionesUnicas) return;
-            fetch('anx/regionesunicasRD.geojson')
-                .then(function(response) {
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    return response.json();
-                })
-                .then(function(data) {
-                    capaRegionesUnicas = L.geoJSON(data, {
-                        pane: 'planificacionPane',
-                        style: {
-                            color: '#FF8C00',    // naranja oscuro
-                            weight: 2,
-                            fill: false,
-                            opacity: 0.8
-                        },
-                        onEachFeature: function(feature, layer) {
-                            var nombre = feature.properties.NOMBRE || feature.properties.NAME || feature.properties.name || 'Región Única';
-                            layer.bindPopup("<b>📋 Región Única: " + nombre + "</b>");
-                        }
-                    });
-                    if (document.getElementById('chk-regiones-unicas').checked) {
-                        map.addLayer(capaRegionesUnicas);
-                    }
-                    console.log('Regiones Únicas de Planificación cargadas correctamente.');
-                })
-                .catch(function(error) {
-                    console.warn('Error cargando regionesunicasRD.geojson:', error.message);
-                });
-        }
-
-        window.toggleRegionesUnicas = function() {
-            var chk = document.getElementById('chk-regiones-unicas');
-            if (chk.checked) {
-                if (!capaRegionesUnicas) {
-                    cargarRegionesUnicas();
-                } else {
-                    map.addLayer(capaRegionesUnicas);
-                }
-            } else {
-                if (capaRegionesUnicas) {
-                    map.removeLayer(capaRegionesUnicas);
-                }
-            }
-        };
-
-        // 6.2 Macroregiones de Planificación
-        function cargarMacroregiones() {
-            if (capaMacroregiones) return;
-            fetch('anx/macroregionesRD.geojson')
-                .then(function(response) {
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    return response.json();
-                })
-                .then(function(data) {
-                    capaMacroregiones = L.geoJSON(data, {
-                        pane: 'planificacionPane',
-                        style: {
-                            color: '#2E86C1',    // azul
-                            weight: 2,
-                            fill: false,
-                            opacity: 0.8
-                        },
-                        onEachFeature: function(feature, layer) {
-                            var nombre = feature.properties.NOMBRE || feature.properties.NAME || feature.properties.name || 'Macroregión';
-                            layer.bindPopup("<b>📊 Macroregión: " + nombre + "</b>");
-                        }
-                    });
-                    if (document.getElementById('chk-macroregiones').checked) {
-                        map.addLayer(capaMacroregiones);
-                    }
-                    console.log('Macroregiones de Planificación cargadas correctamente.');
-                })
-                .catch(function(error) {
-                    console.warn('Error cargando macroregionesRD.geojson:', error.message);
-                });
-        }
-
-        window.toggleMacroregiones = function() {
-            var chk = document.getElementById('chk-macroregiones');
-            if (chk.checked) {
-                if (!capaMacroregiones) {
-                    cargarMacroregiones();
-                } else {
-                    map.addLayer(capaMacroregiones);
-                }
-            } else {
-                if (capaMacroregiones) {
-                    map.removeLayer(capaMacroregiones);
-                }
-            }
-        };
-
-        // Carga inicial si los checkboxes están marcados por defecto
-        if (document.getElementById('chk-regiones-unicas').checked) {
-            cargarRegionesUnicas();
-        }
-        if (document.getElementById('chk-macroregiones').checked) {
-            cargarMacroregiones();
-        }
-
-        // ═══════════════════════════════════════════════════════════
-        // 7. REINICIAR
+        // 8. REINICIAR
         // ═══════════════════════════════════════════════════════════
         window.mostrarTodas = function() {
             // Comunidades: apagar ambas
@@ -1285,12 +1453,12 @@
             toggleComunidadesRD();
             toggleComunidadesHT();
 
-            // Frontera: asegurar que esté activa (si el checkbox está marcado)
+            // Frontera: asegurar que esté activa si el checkbox está marcado
             if (document.getElementById('chk-frontera').checked && capaFrontera && !map.hasLayer(capaFrontera)) {
                 map.addLayer(capaFrontera);
             }
 
-            // Clima: asegurar que esté visible y sin selección
+            // Clima: mostrar y limpiar selección
             if (!climaCargado) {
                 climaVisible = true;
                 document.getElementById('btn-clima').classList.add('active');
@@ -1307,28 +1475,37 @@
                 }
             }
 
-            // Ciclones: ocultar si está visible
+            // Ciclones: ocultar
             if (ciclonesVisible && capaCiclones) {
                 map.removeLayer(capaCiclones);
                 ciclonesVisible = false;
                 document.getElementById('btn-ciclones').classList.remove('active');
             }
 
-            // Regiones Únicas y Macroregiones: apagar (desmarcar checkboxes y quitar capas)
-            document.getElementById('chk-regiones-unicas').checked = false;
-            document.getElementById('chk-macroregiones').checked = false;
-            if (capaRegionesUnicas && map.hasLayer(capaRegionesUnicas)) {
-                map.removeLayer(capaRegionesUnicas);
-            }
-            if (capaMacroregiones && map.hasLayer(capaMacroregiones)) {
-                map.removeLayer(capaMacroregiones);
+            // Delimitación: desactivar todas
+            ['chk-provincias', 'chk-municipios', 'chk-regiones-unicas', 'chk-macroregiones'].forEach(function(id) {
+                var chk = document.getElementById(id);
+                if (chk && chk.checked) {
+                    chk.checked = false;
+                    var tipo = id.replace('chk-', '').replace('regiones-unicas', 'regiones-unicas');
+                    // Llamar manualmente al toggle para quitar la capa
+                    // (evitamos depender del nombre exacto)
+                }
+            });
+            // Quitar capas de delimitación explícitamente
+            [capaProvincias, capaMunicipios, capaRegionesUnicas, capaMacroregiones].forEach(function(c) {
+                if (c && map.hasLayer(c)) map.removeLayer(c);
+            });
+            if (capaSeleccionadaDelim) {
+                capaSeleccionadaDelim.setStyle(capaSeleccionadaDelim.originalStyle);
+                capaSeleccionadaDelim = null;
             }
 
             map.setView([19.03556466237287, -70.89432006796727], 8);
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 8. UTILIDADES UI
+        // 9. UTILIDADES UI
         // ═══════════════════════════════════════════════════════════
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
