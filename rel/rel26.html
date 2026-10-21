@@ -422,12 +422,11 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🌍 Frontera RD-Haití
                 </label>
-                <!-- NUEVAS CAPAS: REGIONES ÚNICAS Y MACROREGIONES -->
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-regiones-unicas" onchange="toggleRegionesUnicas()"> 📋 Regiones Únicas de Planificación
+                    <input type="checkbox" id="chk-provincias" onchange="toggleProvincias()"> 🗺️ División Provincial RD (2026)
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-macroregiones" onchange="toggleMacroregiones()"> 📊 Macroregiones de Planificación
+                    <input type="checkbox" id="chk-municipios" onchange="toggleMunicipios()"> 🏘️ División Municipal RD (2026)
                 </label>
             </div>
 
@@ -441,7 +440,7 @@
         </div>
     </div>
 
-    <!-- Modal Créditos - REEMPLAZADO CON EL NUEVO CONTENIDO -->
+    <!-- Modal Créditos -->
     <div id="modal-creditos" class="modal-overlay" onclick="cerrarModalCreditos(event)">
         <div class="modal-content">
 
@@ -468,7 +467,6 @@
                 <p>Peakery. (s. f.). Peakery: Your basecamp for the world's mountains. Recuperado el 22.jun.2026, de Peakery.com</p>
                 <p>Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022.
 https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de-poblacion-y-vivienda-2022/.</p>
-                <p>República Dominicana. Congreso Nacional. (2022). Ley núm. 345-22, Orgánica de Regiones Únicas de Planificación. Gaceta Oficial de la República Dominicana.</p>
             </div>
 
             <!-- SECCIÓN: ORIGEN DEL PROYECTO -->
@@ -601,11 +599,9 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         var capaComunidadesHT = null;
         var capaAlturasRD = null;
         var capaAlturasHT = null;
+        var capaProvincias = null;
+        var capaMunicipios = null;
         var capaSeleccionada = null;
-
-        // CAPAS NUEVAS
-        var capaRegionesUnicas = null;
-        var capaMacroregiones = null;
 
         // Iconos
         var iconComunidad = L.divIcon({
@@ -672,10 +668,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             { nombre: "Pico Diego de Ocampo", altitud: "1249 m.s.n.m.", sierra: "Cordillera Septentrional", lat: 19.579777, lng: -70.745292 },
             { nombre: "Loma Bocas de Licey", altitud: "1079 m.s.n.m.", sierra: "Cordillera Septentrional", lat: 19.542563, lng: -70.589084 },
             { nombre: "Loma El Aguacate", altitud: "1076 m.s.n.m.", sierra: "Cordillera Septentrional", lat: 19.579492, lng: -70.753596 },
-
-            { nombre: "Pico El Murazo", altitud: "1083 m.s.n.m.", sierra: "Cordillera Septentrional", lat: 19.67059, lng: -70.94985 },
             { nombre: "Loma El Jamo", altitud: "1043 m.s.n.m.", sierra: "Cordillera Septentrional", lat: 19.58271, lng: -70.760435 },
-
             { nombre: "Loma El Mogote", altitud: "967 m.s.n.m.", sierra: "Cordillera Septentrional", lat: 19.483889, lng: -70.488889 },
             { nombre: "Loma El Queso", altitud: "897 m.s.n.m.", sierra: "Cordillera Septentrional", lat: 19.487219, lng: -70.457352 },
             { nombre: "Loma Guaconejo, Pico Occidental", altitud: "606 m.s.n.m.", sierra: "Cordillera Septentrional", lat: 19.315647, lng: -69.991422 },
@@ -1120,6 +1113,108 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
+        // --- NUEVA: División Provincial RD (2026) ---
+        function crearCapaProvincias() {
+            var grupo = L.layerGroup();
+            var archivos = [
+                'anx/PROVINCIAS_RD_2026.geojson'
+            ];
+
+            var estiloProvincias = {
+                color: "#8E44AD",
+                weight: 2,
+                fillColor: "#BB8FCE",
+                fillOpacity: 0.1,
+                dashArray: "4,4"
+            };
+
+            archivos.forEach(function(url) {
+                fetch(encodeURI(url))
+                    .then(function(r) {
+                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                        return r.json();
+                    })
+                    .then(function(data) {
+                        if (!data || !data.features || data.features.length === 0) {
+                            throw new Error('GeoJSON vacío o sin features: ' + url);
+                        }
+                        console.log('📦 Provincias cargadas:', url, 'features:', data.features.length);
+                        var capa = L.geoJSON(data, {
+                            style: estiloProvincias,
+                            onEachFeature: function(feature, layer) {
+                                var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name', 'PROVINCIA']) || 'Sin nombre';
+                                var popupContent = "<b>🗺️ " + nombre + "</b>";
+                                layer.bindPopup(popupContent);
+                                agregarEventosPoligono(layer, estiloProvincias);
+                            }
+                        });
+                        grupo.addLayer(capa);
+                        var chk = document.getElementById('chk-provincias');
+                        if (chk && chk.checked) {
+                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                        }
+                    })
+                    .catch(function(e) {
+                        console.warn('❌ Error cargando provincias:', url, e.message);
+                    });
+            });
+
+            return grupo;
+        }
+
+        // --- NUEVA: División Municipal RD (2026) ---
+        function crearCapaMunicipios() {
+            var grupo = L.layerGroup();
+            var archivos = [
+                'anx/MUNICIPIOS_RD_2025.geojson'
+            ];
+
+            var estiloMunicipios = {
+                color: "#E67E22",
+                weight: 1.2,
+                fillColor: "#F5CBA7",
+                fillOpacity: 0.1,
+                dashArray: "2,3"
+            };
+
+            archivos.forEach(function(url) {
+                fetch(encodeURI(url))
+                    .then(function(r) {
+                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                        return r.json();
+                    })
+                    .then(function(data) {
+                        if (!data || !data.features || data.features.length === 0) {
+                            throw new Error('GeoJSON vacío o sin features: ' + url);
+                        }
+                        console.log('📦 Municipios cargados:', url, 'features:', data.features.length);
+                        var capa = L.geoJSON(data, {
+                            style: estiloMunicipios,
+                            onEachFeature: function(feature, layer) {
+                                var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name', 'MUNICIPIO']) || 'Sin nombre';
+                                var provincia = getProperty(feature, ['PROVINCIA', 'PROVINCE', 'provincia', 'Provincia']) || '';
+                                var popupContent = "<b>🏘️ " + nombre + "</b>";
+                                if (provincia) {
+                                    popupContent += "<br>Provincia: " + provincia;
+                                }
+                                layer.bindPopup(popupContent);
+                                agregarEventosPoligono(layer, estiloMunicipios);
+                            }
+                        });
+                        grupo.addLayer(capa);
+                        var chk = document.getElementById('chk-municipios');
+                        if (chk && chk.checked) {
+                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                        }
+                    })
+                    .catch(function(e) {
+                        console.warn('❌ Error cargando municipios:', url, e.message);
+                    });
+            });
+
+            return grupo;
+        }
+
         // ═══════════════════════════════════════════════════════════
         // 7. INSTANCIAR CAPAS Y TOGGLES
         // ═══════════════════════════════════════════════════════════
@@ -1129,6 +1224,8 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         capaComunidadesHT = crearCapaComunidadesHT();
         capaAlturasRD = crearCapaAlturas(alturasRD);
         capaAlturasHT = crearCapaAlturas(alturasHT);
+        capaProvincias = crearCapaProvincias();
+        capaMunicipios = crearCapaMunicipios();
 
         window.toggleCordilleras = function(btn) {
             btn.classList.toggle('active');
@@ -1180,6 +1277,40 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             else map.removeLayer(capaAlturasHT);
         };
 
+        window.toggleProvincias = function() {
+            var chk = document.getElementById('chk-provincias');
+            if (chk.checked) {
+                if (!map.hasLayer(capaProvincias)) {
+                    map.addLayer(capaProvincias);
+                }
+            } else {
+                if (map.hasLayer(capaProvincias)) {
+                    map.removeLayer(capaProvincias);
+                }
+                if (capaSeleccionada && capaProvincias.hasLayer(capaSeleccionada)) {
+                    capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
+                    capaSeleccionada = null;
+                }
+            }
+        };
+
+        window.toggleMunicipios = function() {
+            var chk = document.getElementById('chk-municipios');
+            if (chk.checked) {
+                if (!map.hasLayer(capaMunicipios)) {
+                    map.addLayer(capaMunicipios);
+                }
+            } else {
+                if (map.hasLayer(capaMunicipios)) {
+                    map.removeLayer(capaMunicipios);
+                }
+                if (capaSeleccionada && capaMunicipios.hasLayer(capaSeleccionada)) {
+                    capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
+                    capaSeleccionada = null;
+                }
+            }
+        };
+
         // ═══════════════════════════════════════════════════════════
         // 8. REINICIAR VISTA
         // ═══════════════════════════════════════════════════════════
@@ -1208,8 +1339,8 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                 'chk-comunidades-ht',
                 'chk-alturas-rd',
                 'chk-alturas-ht',
-                'chk-regiones-unicas',
-                'chk-macroregiones'
+                'chk-provincias',
+                'chk-municipios'
             ];
             checkboxes.forEach(function(id) {
                 var chk = document.getElementById(id);
@@ -1219,9 +1350,6 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     chk.dispatchEvent(evt);
                 }
             });
-            // Asegurar que las capas nuevas se quiten
-            if (capaRegionesUnicas && map.hasLayer(capaRegionesUnicas)) map.removeLayer(capaRegionesUnicas);
-            if (capaMacroregiones && map.hasLayer(capaMacroregiones)) map.removeLayer(capaMacroregiones);
         };
 
         // ═══════════════════════════════════════════════════════════
@@ -1309,113 +1437,6 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         if (document.getElementById('chk-frontera').checked) {
             cargarFrontera();
         }
-
-        // ═══════════════════════════════════════════════════════════
-        // 11. CAPAS NUEVAS: REGIONES ÚNICAS Y MACROREGIONES (SIN RELLENO)
-        // ═══════════════════════════════════════════════════════════
-
-        // 11.1 Regiones Únicas (Ley 345-22)
-        function cargarRegionesUnicas() {
-            if (capaRegionesUnicas) return; // ya cargada
-            fetch(encodeURI('anx/regionesunicasRD.geojson'))
-                .then(function(response) {
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    return response.json();
-                })
-                .then(function(data) {
-                    capaRegionesUnicas = L.geoJSON(data, {
-                        style: {
-                            color: '#FF8C00',    // naranja oscuro
-                            weight: 2,
-                            fill: false,         // sin relleno
-                            opacity: 0.8
-                        },
-                        onEachFeature: function(feature, layer) {
-                            var nombre = getProperty(feature, ['NOMBRE', 'NAME', 'name']) || 'Región Única';
-                            layer.bindPopup("<b>📋 " + nombre + "</b>");
-                        }
-                    });
-                    // Si el checkbox está marcado, añadir al mapa
-                    if (document.getElementById('chk-regiones-unicas').checked) {
-                        map.addLayer(capaRegionesUnicas);
-                    }
-                    console.log('Regiones Únicas cargadas correctamente.');
-                })
-                .catch(function(error) {
-                    console.warn('Error cargando Regiones Únicas:', error.message);
-                });
-        }
-
-        window.toggleRegionesUnicas = function() {
-            var chk = document.getElementById('chk-regiones-unicas');
-            if (chk.checked) {
-                if (!capaRegionesUnicas) {
-                    cargarRegionesUnicas();
-                } else {
-                    map.addLayer(capaRegionesUnicas);
-                }
-            } else {
-                if (capaRegionesUnicas) {
-                    map.removeLayer(capaRegionesUnicas);
-                }
-            }
-        };
-
-        // 11.2 Macroregiones de Planificación
-        function cargarMacroregiones() {
-            if (capaMacroregiones) return;
-            fetch(encodeURI('anx/macroregionesRD.geojson'))
-                .then(function(response) {
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    return response.json();
-                })
-                .then(function(data) {
-                    capaMacroregiones = L.geoJSON(data, {
-                        style: {
-                            color: '#2E86C1',    // azul
-                            weight: 2,
-                            fill: false,
-                            opacity: 0.8
-                        },
-                        onEachFeature: function(feature, layer) {
-                            var nombre = getProperty(feature, ['NOMBRE', 'NAME', 'name']) || 'Macroregión';
-                            layer.bindPopup("<b>📊 " + nombre + "</b>");
-                        }
-                    });
-                    if (document.getElementById('chk-macroregiones').checked) {
-                        map.addLayer(capaMacroregiones);
-                    }
-                    console.log('Macroregiones cargadas correctamente.');
-                })
-                .catch(function(error) {
-                    console.warn('Error cargando Macroregiones:', error.message);
-                });
-        }
-
-        window.toggleMacroregiones = function() {
-            var chk = document.getElementById('chk-macroregiones');
-            if (chk.checked) {
-                if (!capaMacroregiones) {
-                    cargarMacroregiones();
-                } else {
-                    map.addLayer(capaMacroregiones);
-                }
-            } else {
-                if (capaMacroregiones) {
-                    map.removeLayer(capaMacroregiones);
-                }
-            }
-        };
-
-        // Cargar las capas si los checkboxes están marcados por defecto (no lo están)
-        // pero por si acaso:
-        if (document.getElementById('chk-regiones-unicas').checked) {
-            cargarRegionesUnicas();
-        }
-        if (document.getElementById('chk-macroregiones').checked) {
-            cargarMacroregiones();
-        }
-
     </script>
 </body>
 </html>
