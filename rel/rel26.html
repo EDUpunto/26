@@ -46,7 +46,9 @@
             top: 20px;
             right: 20px;
             width: 280px;
-            max-height: 85vh;
+            max-height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
         }
         #panel-controles.collapsed {
@@ -63,22 +65,25 @@
             color: #2c3e50;
             font-size: 15px;
             user-select: none;
+            flex-shrink: 0;
         }
         .panel-header:hover { background: rgba(0,0,0,0.02); }
         .toggle-icon { transition: transform 0.3s ease; font-size: 12px; }
         .collapsed .toggle-icon { transform: rotate(-90deg); }
         .panel-content {
             padding: 12px 16px 16px 16px;
-            transition: opacity 0.3s ease, max-height 0.3s ease;
+            transition: opacity 0.3s ease;
             opacity: 1;
-            max-height: 1000px;
             overflow-y: auto;
+            flex: 1 1 auto;
+            min-height: 0;
         }
         .collapsed .panel-content {
             opacity: 0;
             max-height: 0;
             padding: 0 16px;
             pointer-events: none;
+            overflow: hidden;
         }
 
         .enlaces-discretos {
@@ -279,6 +284,21 @@
             background: #8aadc9;
         }
 
+        .panel-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .panel-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        .panel-content::-webkit-scrollbar-thumb {
+            background: #b0c4de;
+            border-radius: 3px;
+        }
+        .panel-content::-webkit-scrollbar-thumb:hover {
+            background: #8aadc9;
+        }
+
         .leaflet-bottom.leaflet-right {
             margin-bottom: 10px;
             margin-right: 10px;
@@ -426,7 +446,7 @@
                     <input type="checkbox" id="chk-provincias" onchange="toggleProvincias()"> 🗺️ División Provincial RD (2026)
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-municipios" onchange="toggleMunicipios()"> 🏘️ División Municipal RD (2026)
+                    <input type="checkbox" id="chk-municipios" onchange="toggleMunicipios()"> 🏘️ División Municipal RD (2025)
                 </label>
             </div>
 
@@ -987,7 +1007,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             });
         }
 
-        // --- Cordilleras / Sierras (con búsqueda mejorada de propiedades) ---
+        // --- Cordilleras / Sierras ---
         function crearCapaCordilleras() {
             var grupo = L.layerGroup();
             var archivos = [
@@ -1043,7 +1063,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- Llanuras / Valles (con búsqueda mejorada) ---
+        // --- Llanuras / Valles ---
         function crearCapaLlanuras() {
             var grupo = L.layerGroup();
             var archivos = [
@@ -1113,12 +1133,10 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- NUEVA: División Provincial RD (2026) ---
+        // --- División Provincial RD (2026) - soporta .geojsonl ---
         function crearCapaProvincias() {
             var grupo = L.layerGroup();
-            var archivos = [
-                'anx/PROVINCIAS_RD_2026.geojsonl'
-            ];
+            var url = 'anx/PROVINCIAS_RD_2026.geojsonl';
 
             var estiloProvincias = {
                 color: "#8E44AD",
@@ -1128,41 +1146,51 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                 dashArray: "4,4"
             };
 
-            archivos.forEach(function(url) {
-                fetch(encodeURI(url))
-                    .then(function(r) {
-                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
-                        return r.json();
-                    })
-                    .then(function(data) {
-                        if (!data || !data.features || data.features.length === 0) {
-                            throw new Error('GeoJSON vacío o sin features: ' + url);
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.text();
+                })
+                .then(function(texto) {
+                    var data;
+                    var trimmed = texto.trim();
+                    if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
+                        data = JSON.parse(trimmed);
+                    } else {
+                        var features = trimmed.split(/\r?\n/)
+                            .filter(function(l) { return l.trim() !== ''; })
+                            .map(function(l) { return JSON.parse(l); });
+                        data = { type: "FeatureCollection", features: features };
+                    }
+
+                    if (!data.features || data.features.length === 0) {
+                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Provincias cargadas:', url, 'features:', data.features.length);
+
+                    var capa = L.geoJSON(data, {
+                        style: estiloProvincias,
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name', 'PROVINCIA']) || 'Sin nombre';
+                            layer.bindPopup("<b>🗺️ " + nombre + "</b>");
+                            agregarEventosPoligono(layer, estiloProvincias);
                         }
-                        console.log('📦 Provincias cargadas:', url, 'features:', data.features.length);
-                        var capa = L.geoJSON(data, {
-                            style: estiloProvincias,
-                            onEachFeature: function(feature, layer) {
-                                var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name', 'PROVINCIA']) || 'Sin nombre';
-                                var popupContent = "<b>🗺️ " + nombre + "</b>";
-                                layer.bindPopup(popupContent);
-                                agregarEventosPoligono(layer, estiloProvincias);
-                            }
-                        });
-                        grupo.addLayer(capa);
-                        var chk = document.getElementById('chk-provincias');
-                        if (chk && chk.checked) {
-                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
-                        }
-                    })
-                    .catch(function(e) {
-                        console.warn('❌ Error cargando provincias:', url, e.message);
                     });
-            });
+                    grupo.addLayer(capa);
+
+                    var chk = document.getElementById('chk-provincias');
+                    if (chk && chk.checked) {
+                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    }
+                })
+                .catch(function(e) {
+                    console.warn('❌ Error cargando provincias:', url, e.message);
+                });
 
             return grupo;
         }
 
-        // --- NUEVA: División Municipal RD (2026) ---
+        // --- División Municipal RD (2025) ---
         function crearCapaMunicipios() {
             var grupo = L.layerGroup();
             var archivos = [
