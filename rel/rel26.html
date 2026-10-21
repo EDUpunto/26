@@ -185,7 +185,7 @@
         }
         .desplegable .desplegable-contenido {
             padding: 8px 12px 10px 12px;
-            background: #ffffff;
+            background: #ffff;
         }
 
         /* === ESTILOS DEL MODAL DE CRÉDITOS MEJORADOS === */
@@ -493,18 +493,18 @@
                 <details class="desplegable" id="desplegable-delimitacion">
                     <summary>🗂️ DELIMITACIÓN</summary>
                     <div class="desplegable-contenido">
-                        <label class="checkbox-opcion">
-                            <input type="checkbox" name="delimitacion" id="chk-provincias" onchange="toggleDelimitacion('provincias')"> 🗺️ División Provincial RD (2026)
-                        </label>
-                        <label class="checkbox-opcion">
-                            <input type="checkbox" name="delimitacion" id="chk-municipios" onchange="toggleDelimitacion('municipios')"> 🏘️ División Municipal RD (2025)
-                        </label>
-                        <label class="checkbox-opcion">
-                            <input type="checkbox" name="delimitacion" id="chk-regiones-unicas" onchange="toggleDelimitacion('regiones-unicas')"> 📋 Regiones Únicas de Planificación
-                        </label>
-                        <label class="checkbox-opcion">
-                            <input type="checkbox" name="delimitacion" id="chk-macroregiones" onchange="toggleDelimitacion('macroregiones')"> 📊 Macroregiones de Planificación
-                        </label>
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-provincias" onchange="toggleDelimitacion('provincias')"> 🗺️ División Provincial RD (2026)
+                    </label>
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-municipios" onchange="toggleDelimitacion('municipios')"> 🏘️ División Municipal RD (2025)
+                    </label>
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-regiones-unicas" onchange="toggleDelimitacion('regiones-unicas')"> 📋 Regiones Únicas de Planificación
+                    </label>
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-macroregiones" onchange="toggleDelimitacion('macroregiones')"> 📊 Macroregiones de Planificación
+                    </label>
                     </div>
                 </details>
             </div>
@@ -613,24 +613,42 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
     </div>
 
     <script>
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // 0. FUNCIÓN AUXILIAR PARA OBTENER PROPIEDADES
-        // ═══════════════════════════════════════════════════════════
+        //    (CORREGIDA: ahora ignora mayúsculas/minúsculas,
+        //     así "NAME_ES" encuentra también "name_es")
+        // ════
         function getProperty(feature, keys) {
             if (!feature || !feature.properties) return null;
+            var props = feature.properties;
+
+            // 1) Búsqueda exacta
             for (var i = 0; i < keys.length; i++) {
-                var key = keys[i];
-                var val = feature.properties[key];
+                var val = props[keys[i]];
                 if (val !== undefined && val !== null && val !== '') {
                     return val;
+                }
+            }
+
+            // 2) Búsqueda sin distinguir mayúsculas/minúsculas
+            var propKeys = Object.keys(props);
+            for (var j = 0; j < keys.length; j++) {
+                var buscada = String(keys[j]).toLowerCase();
+                for (var k = 0; k < propKeys.length; k++) {
+                    if (propKeys[k].toLowerCase() === buscada) {
+                        var v = props[propKeys[k]];
+                        if (v !== undefined && v !== null && v !== '') {
+                            return v;
+                        }
+                    }
                 }
             }
             return null;
         }
 
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // 1. MAPA
-        // ═══════════════════════════════════════════════════════════
+        // ════
         var map = L.map('map', { 
             zoomControl: false,
             attributionControl: false 
@@ -640,9 +658,9 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         L.control.scale({ position: 'bottomright', metric: true, imperial: false }).addTo(map);
         L.control.attribution({ position: 'bottomright' }).addTo(map);
 
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // 2. CAPAS BASE
-        // ═══════════════════════════════════════════════════════════
+        // ════
 
         var capaDibujo = L.tileLayer('https://maps-for-free.com/layer/relief/z{z}/row{y}/{z}_{x}-{y}.jpg', {
             maxZoom: 11,
@@ -669,9 +687,9 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             }
         };
 
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // 3. ESTADO GLOBAL
-        // ═══════════════════════════════════════════════════════════
+        // ════
         var capaCordilleras = null;
         var capaLlanuras = null;
         var capaComunidadesRD = null;
@@ -687,19 +705,19 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         // Iconos
         var iconComunidad = L.divIcon({
             className: 'custom-div-icon',
-            html: '<svg viewBox="0 0 24 24" width="24" height="24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F4B09F" stroke="#666666" stroke-width="2"/></svg>',
+            html: '<svg viewBox="0 0 24 24" width="24" height="24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#F4B09F" stroke="#6666" stroke-width="2"/></svg>',
             iconSize: [24, 24], iconAnchor: [12, 12]
         });
 
         var iconAltura = L.divIcon({
             className: 'custom-div-icon',
-            html: "<div style='background-color:#FFFFFF; width:16px; height:16px; clip-path:polygon(50% 0%, 0% 100%, 100% 100%); border:2px solid #333333; box-shadow:0 2px 6px rgba(0,0,0,0.4);'></div>",
+            html: "<div style='background-color:#FFFF; width:16px; height:16px; clip-path:polygon(50% 0%, 0% 100%, 100% 100%); border:2px solid #3333; box-shadow:0 2px 6px rgba(0,0,0,0.4);'></div>",
             iconSize: [16, 16], iconAnchor: [8, 16]
         });
 
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // 4. ESTILOS PARA RELIEVE
-        // ═══════════════════════════════════════════════════════════
+        // ════
         var estiloCordilleras = {
             color: "#8B4513",
             weight: 2,
@@ -715,19 +733,19 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
 
         var estiloHover = {
             weight: 2,
-            color: '#FFFFFF',
+            color: '#FFFF',
             fillOpacity: 0.5
         };
 
         var estiloSeleccion = {
             weight: 3,
-            color: '#FFFFFF',
+            color: '#FFFF',
             fillOpacity: 0.5
         };
 
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // 5. DATOS DE ALTURAS
-        // ═══════════════════════════════════════════════════════════
+        // ════
         var alturasRD = [
             { nombre: "Monte La Meseta", altitud: "605 m.s.n.m.", sierra: "Sierra de Samaná", lat: 19.312225, lng: -69.293875 },
             { nombre: "Loma Trillo Valle-Rincon", altitud: "532 m.s.n.m.", sierra: "Sierra de Samaná", lat: 19.282609, lng: -69.300991 },
@@ -801,9 +819,9 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             { nombre: "Morne Cavalier", altitud: "2184 m.s.n.m.", sierra: "Macizo de la Hotte", lat: 18.358611, lng: -74.026111 }
         ];
 
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // 6. FUNCIONES DE CREACIÓN DE CAPAS
-        // ═══════════════════════════════════════════════════════════
+        // ════
 
         function crearCapaComunidadesRD() {
             const ciudadesRD = [
@@ -972,7 +990,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             var grupo = L.layerGroup();
             ciudadesRD.forEach(function(c) {
                 var marker = L.marker([c.lat, c.lng], { icon: iconComunidad });
-                marker.bindPopup("<b>" + c.nombre + "</b><br>Población 2022: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
+                marker.bindPopup("<​b>" + c.nombre + "</b><br>Población 2022: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
                 marker.addTo(grupo);
             });
             return grupo;
@@ -1018,7 +1036,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             var grupo = L.layerGroup();
             ciudadesHT.forEach(function(c) {
                 var marker = L.marker([c.lat, c.lng], { icon: iconComunidad });
-                marker.bindPopup("<b>" + c.nombre + "</b><br>Población: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
+                marker.bindPopup("<​b>" + c.nombre + "</b><br>Población: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
                 marker.addTo(grupo);
             });
             return grupo;
@@ -1089,35 +1107,35 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             archivos.forEach(function(url) {
                 fetch(encodeURI(url))
                     .then(function(r) {
-                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
-                        return r.json();
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.json();
                     })
                     .then(function(data) {
-                        if (!data || !data.features || data.features.length === 0) {
-                            throw new Error('GeoJSON vacío o sin features: ' + url);
-                        }
-                        console.log('📦 Cordillera cargada:', url, 'features:', data.features.length);
-                        var capa = L.geoJSON(data, {
-                            style: estiloCordilleras,
-                            onEachFeature: function(feature, layer) {
-                                var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name']) || 'Sin nombre';
-                                var descripcion = getProperty(feature, ['NAME2', 'DESCRIPCION', 'Descripcion', 'description', 'DESC']) || '';
-                                var popupContent = "<b>" + nombre + "</b>";
-                                if (descripcion) {
-                                    popupContent += "<br>" + descripcion;
-                                }
-                                layer.bindPopup(popupContent);
-                                agregarEventosPoligono(layer, estiloCordilleras);
-                            }
-                        });
-                        grupo.addLayer(capa);
-                        var btn = document.getElementById('btn-cordilleras');
-                        if (btn && btn.classList.contains('active')) {
-                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
-                        }
+                    if (!data || !data.features || data.features.length === 0) {
+                    throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Cordillera cargada:', url, 'features:', data.features.length);
+                    var capa = L.geoJSON(data, {
+                    style: estiloCordilleras,
+                    onEachFeature: function(feature, layer) {
+                    var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name']) || 'Sin nombre';
+                    var descripcion = getProperty(feature, ['NAME2', 'DESCRIPCION', 'Descripcion', 'description', 'DESC']) || '';
+                    var popupContent = "<​b>" + nombre + "<​/b>";
+                    if (descripcion) {
+                    popupContent += "<​br>" + descripcion;
+                    }
+                    layer.bindPopup(popupContent);
+                    agregarEventosPoligono(layer, estiloCordilleras);
+                    }
+                    });
+                    grupo.addLayer(capa);
+                    var btn = document.getElementById('btn-cordilleras');
+                    if (btn && btn.classList.contains('active')) {
+                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    }
                     })
                     .catch(function(e) {
-                        console.warn('❌ Error cargando cordillera:', url, e.message);
+                    console.warn('❌ Error cargando cordillera:', url, e.message);
                     });
             });
 
@@ -1159,35 +1177,35 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             archivos.forEach(function(url) {
                 fetch(encodeURI(url))
                     .then(function(r) {
-                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
-                        return r.json();
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.json();
                     })
                     .then(function(data) {
-                        if (!data || !data.features || data.features.length === 0) {
-                            throw new Error('GeoJSON vacío o sin features: ' + url);
-                        }
-                        console.log('📦 Llanura cargada:', url, 'features:', data.features.length);
-                        var capa = L.geoJSON(data, {
-                            style: estiloLlanuras,
-                            onEachFeature: function(feature, layer) {
-                                var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name']) || 'Sin nombre';
-                                var descripcion = getProperty(feature, ['NAME2', 'DESCRIPCION', 'Descripcion', 'description', 'DESC']) || '';
-                                var popupContent = "<b>" + nombre + "</b>";
-                                if (descripcion) {
-                                    popupContent += "<br>" + descripcion;
-                                }
-                                layer.bindPopup(popupContent);
-                                agregarEventosPoligono(layer, estiloLlanuras);
-                            }
-                        });
-                        grupo.addLayer(capa);
-                        var btn = document.getElementById('btn-llanuras');
-                        if (btn && btn.classList.contains('active')) {
-                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
-                        }
+                    if (!data || !data.features || data.features.length === 0) {
+                    throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Llanura cargada:', url, 'features:', data.features.length);
+                    var capa = L.geoJSON(data, {
+                    style: estiloLlanuras,
+                    onEachFeature: function(feature, layer) {
+                    var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name']) || 'Sin nombre';
+                    var descripcion = getProperty(feature, ['NAME2', 'DESCRIPCION', 'Descripcion', 'description', 'DESC']) || '';
+                    var popupContent = "<​b>" + nombre + "<​/b>";
+                    if (descripcion) {
+                    popupContent += "<​br>" + descripcion;
+                    }
+                    layer.bindPopup(popupContent);
+                    agregarEventosPoligono(layer, estiloLlanuras);
+                    }
+                    });
+                    grupo.addLayer(capa);
+                    var btn = document.getElementById('btn-llanuras');
+                    if (btn && btn.classList.contains('active')) {
+                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    }
                     })
                     .catch(function(e) {
-                        console.warn('❌ Error cargando llanura:', url, e.message);
+                    console.warn('❌ Error cargando llanura:', url, e.message);
                     });
             });
 
@@ -1216,33 +1234,33 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     var data;
                     var trimmed = texto.trim();
                     if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
-                        data = JSON.parse(trimmed);
+                    data = JSON.parse(trimmed);
                     } else {
-                        var features = trimmed.split(/\r?\n/)
-                            .filter(function(l) { return l.trim() !== ''; })
-                            .map(function(l) { return JSON.parse(l); });
-                        data = { type: "FeatureCollection", features: features };
+                    var features = trimmed.split(/\r?\n/)
+                    .filter(function(l) { return l.trim() !== ''; })
+                    .map(function(l) { return JSON.parse(l); });
+                    data = { type: "FeatureCollection", features: features };
                     }
 
                     if (!data.features || data.features.length === 0) {
-                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    throw new Error('GeoJSON vacío o sin features: ' + url);
                     }
                     console.log('📦 Provincias cargadas:', url, 'features:', data.features.length);
 
                     var capa = L.geoJSON(data, {
-                        style: estiloProvincias,
-                        onEachFeature: function(feature, layer) {
-                            // NAME_ES es el campo del nombre
-                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
-                            layer.bindPopup("<b>🗺️ " + nombre + "</b>");
-                            agregarEventosPoligono(layer, estiloProvincias);
-                        }
+                    style: estiloProvincias,
+                    onEachFeature: function(feature, layer) {
+                    // NAME_ES es el campo del nombre (sin distinguir mayúsculas/minúsculas)
+                    var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                    layer.bindPopup("<b>🗺️ " + nombre + "<​/b>");
+                    agregarEventosPoligono(layer, estiloProvincias);
+                    }
                     });
                     grupo.addLayer(capa);
 
                     var chk = document.getElementById('chk-provincias');
                     if (chk && chk.checked) {
-                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
                     }
                 })
                 .catch(function(e) {
@@ -1270,36 +1288,36 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             archivos.forEach(function(url) {
                 fetch(encodeURI(url))
                     .then(function(r) {
-                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
-                        return r.json();
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.json();
                     })
                     .then(function(data) {
-                        if (!data || !data.features || data.features.length === 0) {
-                            throw new Error('GeoJSON vacío o sin features: ' + url);
-                        }
-                        console.log('📦 Municipios cargados:', url, 'features:', data.features.length);
-                        var capa = L.geoJSON(data, {
-                            style: estiloMunicipios,
-                            onEachFeature: function(feature, layer) {
-                                // NAME_ES es el campo del nombre
-                                var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
-                                var provincia = getProperty(feature, ['PROVINCIA', 'PROVINCE', 'provincia', 'Provincia']) || '';
-                                var popupContent = "<b>🏘️ " + nombre + "</b>";
-                                if (provincia) {
-                                    popupContent += "<br>Provincia: " + provincia;
-                                }
-                                layer.bindPopup(popupContent);
-                                agregarEventosPoligono(layer, estiloMunicipios);
-                            }
-                        });
-                        grupo.addLayer(capa);
-                        var chk = document.getElementById('chk-municipios');
-                        if (chk && chk.checked) {
-                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
-                        }
+                    if (!data || !data.features || data.features.length === 0) {
+                    throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Municipios cargados:', url, 'features:', data.features.length);
+                    var capa = L.geoJSON(data, {
+                    style: estiloMunicipios,
+                    onEachFeature: function(feature, layer) {
+                    // NAME_ES es el campo del nombre (sin distinguir mayúsculas/minúsculas)
+                    var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                    var provincia = getProperty(feature, ['PROVINCIA', 'PROVINCE', 'provincia', 'Provincia']) || '';
+                    var popupContent = "<b>🏘️ " + nombre + "<​/b>";
+                    if (provincia) {
+                    popupContent += "<br>Provincia: " + provincia;
+                    }
+                    layer.bindPopup(popupContent);
+                    agregarEventosPoligono(layer, estiloMunicipios);
+                    }
+                    });
+                    grupo.addLayer(capa);
+                    var chk = document.getElementById('chk-municipios');
+                    if (chk && chk.checked) {
+                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    }
                     })
                     .catch(function(e) {
-                        console.warn('❌ Error cargando municipios:', url, e.message);
+                    console.warn('❌ Error cargando municipios:', url, e.message);
                     });
             });
 
@@ -1328,33 +1346,33 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     var data;
                     var trimmed = texto.trim();
                     if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
-                        data = JSON.parse(trimmed);
+                    data = JSON.parse(trimmed);
                     } else {
-                        var features = trimmed.split(/\r?\n/)
-                            .filter(function(l) { return l.trim() !== ''; })
-                            .map(function(l) { return JSON.parse(l); });
-                        data = { type: "FeatureCollection", features: features };
+                    var features = trimmed.split(/\r?\n/)
+                    .filter(function(l) { return l.trim() !== ''; })
+                    .map(function(l) { return JSON.parse(l); });
+                    data = { type: "FeatureCollection", features: features };
                     }
 
                     if (!data.features || data.features.length === 0) {
-                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    throw new Error('GeoJSON vacío o sin features: ' + url);
                     }
                     console.log('📦 Regiones Únicas cargadas:', url, 'features:', data.features.length);
 
                     var capa = L.geoJSON(data, {
-                        style: estiloRegionesUnicas,
-                        onEachFeature: function(feature, layer) {
-                            // NAME_ES es el campo del nombre
-                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
-                            layer.bindPopup("<b>📋 " + nombre + "</b>");
-                            agregarEventosPoligono(layer, estiloRegionesUnicas);
-                        }
+                    style: estiloRegionesUnicas,
+                    onEachFeature: function(feature, layer) {
+                    // En este archivo el campo viene como "name_es" (minúsculas)
+                    var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                    layer.bindPopup("<b>📋 " + nombre + "<​/b>");
+                    agregarEventosPoligono(layer, estiloRegionesUnicas);
+                    }
                     });
                     grupo.addLayer(capa);
 
                     var chk = document.getElementById('chk-regiones-unicas');
                     if (chk && chk.checked) {
-                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
                     }
                 })
                 .catch(function(e) {
@@ -1386,33 +1404,33 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     var data;
                     var trimmed = texto.trim();
                     if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
-                        data = JSON.parse(trimmed);
+                    data = JSON.parse(trimmed);
                     } else {
-                        var features = trimmed.split(/\r?\n/)
-                            .filter(function(l) { return l.trim() !== ''; })
-                            .map(function(l) { return JSON.parse(l); });
-                        data = { type: "FeatureCollection", features: features };
+                    var features = trimmed.split(/\r?\n/)
+                    .filter(function(l) { return l.trim() !== ''; })
+                    .map(function(l) { return JSON.parse(l); });
+                    data = { type: "FeatureCollection", features: features };
                     }
 
                     if (!data.features || data.features.length === 0) {
-                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    throw new Error('GeoJSON vacío o sin features: ' + url);
                     }
                     console.log('📦 Macroregiones cargadas:', url, 'features:', data.features.length);
 
                     var capa = L.geoJSON(data, {
-                        style: estiloMacroregiones,
-                        onEachFeature: function(feature, layer) {
-                            // NAME_ES es el campo del nombre
-                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
-                            layer.bindPopup("<b>📊 " + nombre + "</b>");
-                            agregarEventosPoligono(layer, estiloMacroregiones);
-                        }
+                    style: estiloMacroregiones,
+                    onEachFeature: function(feature, layer) {
+                    // NAME_ES es el campo del nombre (sin distinguir mayúsculas/minúsculas)
+                    var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                    layer.bindPopup("<b>📊 " + nombre + "<​/b>");
+                    agregarEventosPoligono(layer, estiloMacroregiones);
+                    }
                     });
                     grupo.addLayer(capa);
 
                     var chk = document.getElementById('chk-macroregiones');
                     if (chk && chk.checked) {
-                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
                     }
                 })
                 .catch(function(e) {
@@ -1422,9 +1440,9 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // 7. INSTANCIAR CAPAS Y TOGGLES
-        // ═══════════════════════════════════════════════════════════
+        // ════
         capaCordilleras = crearCapaCordilleras();
         capaLlanuras = crearCapaLlanuras();
         capaComunidadesRD = crearCapaComunidadesRD();
@@ -1486,9 +1504,9 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             else map.removeLayer(capaAlturasHT);
         };
 
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // TOGGLE EXCLUSIVO PARA DELIMITACIÓN (solo uno a la vez)
-        // ═══════════════════════════════════════════════════════════
+        // ════
         window.toggleDelimitacion = function(tipo) {
             var mapa = {
                 'provincias':      { chk: 'chk-provincias',      capa: capaProvincias },
@@ -1506,14 +1524,14 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             if (activado) {
                 Object.keys(mapa).forEach(function(k) {
                     if (k !== tipo) {
-                        var otro = mapa[k];
-                        var otroChk = document.getElementById(otro.chk);
-                        if (otroChk && otroChk.checked) {
-                            otroChk.checked = false;
-                        }
-                        if (otro.capa && map.hasLayer(otro.capa)) {
-                            map.removeLayer(otro.capa);
-                        }
+                    var otro = mapa[k];
+                    var otroChk = document.getElementById(otro.chk);
+                    if (otroChk && otroChk.checked) {
+                    otroChk.checked = false;
+                    }
+                    if (otro.capa && map.hasLayer(otro.capa)) {
+                    map.removeLayer(otro.capa);
+                    }
                     }
                 });
                 // Añadir la capa seleccionada
@@ -1534,9 +1552,9 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             }
         };
 
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // 8. REINICIAR VISTA
-        // ═══════════════════════════════════════════════════════════
+        // ════
         window.reiniciarVista = function() {
             map.setView([19.03556466237287, -70.89432006796727], 8);
             
@@ -1580,9 +1598,9 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             });
         };
 
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // 9. UTILIDADES UI
-        // ═══════════════════════════════════════════════════════════
+        // ════
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
         };
@@ -1611,9 +1629,9 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             }
         };
 
-        // ═══════════════════════════════════════════════════════════
+        // ════
         // 10. CAPA DE FRONTERA - ruta dlim/
-        // ═══════════════════════════════════════════════════════════
+        // ════
         var capaFrontera = null;
         var fronteraCargada = false;
 
@@ -1626,19 +1644,19 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                 })
                 .then(function(data) {
                     capaFrontera = L.geoJSON(data, {
-                        style: {
-                            color: '#FF0000',
-                            weight: 3,
-                            fill: false
-                        },
-                        onEachFeature: function(feature, layer) {
-                            var nombre = feature.properties.NAME || 'Frontera';
-                            layer.bindPopup("<b>" + nombre + "</b>");
-                        }
+                    style: {
+                    color: '#FF0000',
+                    weight: 3,
+                    fill: false
+                    },
+                    onEachFeature: function(feature, layer) {
+                    var nombre = feature.properties.NAME || 'Frontera';
+                    layer.bindPopup("<​b>" + nombre + "<​/b>");
+                    }
                     });
                     fronteraCargada = true;
                     if (document.getElementById('chk-frontera').checked) {
-                        map.addLayer(capaFrontera);
+                    map.addLayer(capaFrontera);
                     }
                     console.log('Frontera cargada correctamente.');
                 })
