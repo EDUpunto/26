@@ -46,7 +46,9 @@
             top: 20px;
             right: 20px;
             width: 280px;
-            max-height: 85vh;
+            max-height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
         }
         #panel-controles.collapsed {
@@ -63,22 +65,25 @@
             color: #2c3e50;
             font-size: 15px;
             user-select: none;
+            flex-shrink: 0;
         }
         .panel-header:hover { background: rgba(0,0,0,0.02); }
         .toggle-icon { transition: transform 0.3s ease; font-size: 12px; }
         .collapsed .toggle-icon { transform: rotate(-90deg); }
         .panel-content {
             padding: 12px 16px 16px 16px;
-            transition: opacity 0.3s ease, max-height 0.3s ease;
+            transition: opacity 0.3s ease;
             opacity: 1;
-            max-height: calc(85vh - 48px);
             overflow-y: auto;
+            flex: 1 1 auto;
+            min-height: 0;
         }
         .collapsed .panel-content {
             opacity: 0;
             max-height: 0;
             padding: 0 16px;
             pointer-events: none;
+            overflow: hidden;
         }
         .panel-content::-webkit-scrollbar { width: 6px; }
         .panel-content::-webkit-scrollbar-track { background: transparent; }
@@ -133,29 +138,51 @@
             font-size: 12px; color: #333; cursor: pointer;
         }
         .checkbox-opcion input { accent-color: #2980b9; width: 14px; height: 14px; cursor: pointer; }
-        .symbol-rombo {
-            display: inline-block;
-            width: 11px;
-            height: 11px;
-            border: 1px solid #555;
-            transform: rotate(45deg);
-            flex-shrink: 0;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+
+        /* === DESPLEGABLE (details/summary) === */
+        .desplegable {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fafbfc;
+            overflow: hidden;
+            margin-top: 8px;
         }
-        .symbol-rect {
-            display: inline-block;
-            width: 15px;
-            height: 6px;
-            border: 1px solid #555;
-            flex-shrink: 0;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        .desplegable summary {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            background: #E9E9ED;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
         }
-        .icono-puerto-chk {
-            font-size: 18px;
-            line-height: 1;
-            display: inline-block;
-            width: 20px;
-            text-align: center;
+        .desplegable summary::-webkit-details-marker { display: none; }
+        .desplegable summary:hover { background: #f8f9fa; color: #2980b9; }
+        .desplegable summary::after {
+            content: '▼';
+            margin-left: auto;
+            font-size: 10px;
+            transition: transform 0.25s ease;
+            color: #7f8c8d;
+        }
+        .desplegable[open] summary {
+            border-radius: 6px 6px 0 0;
+            border-bottom: 1px solid #e0e0e0;
+            background: #dde6f0;
+            color: #1a5276;
+        }
+        .desplegable[open] summary::after {
+            transform: rotate(180deg);
+        }
+        .desplegable .desplegable-contenido {
+            padding: 8px 12px 10px 12px;
+            background: #ffff;
         }
 
         /* === ESTILOS DEL MODAL DE CRÉDITOS MEJORADOS === */
@@ -333,16 +360,24 @@
         }
 
         @media (max-width: 768px) {
-            #panel-titulo { 
-                top: 10px; left: 10px; right: 10px; width: auto; 
-                text-align: center; border-left: none; border-bottom: 3px solid #2980b9;
+            #panel-titulo {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                width: auto;
+                text-align: center;
+                border-left: none;
+                border-bottom: 3px solid #2980b9;
             }
-            #panel-controles { 
-                top: 70px; right: 10px; width: 260px; 
-                max-height: 70vh;
-            }
-            .panel-content {
-                max-height: calc(70vh - 48px);
+            #panel-titulo h1 { font-size: 18px; }
+            #panel-titulo p  { font-size: 12px; margin-top: 2px; }
+
+            #panel-controles {
+                top: 80px;
+                right: 10px;
+                left: 10px;
+                width: auto;
+                max-height: calc(100vh - 100px);
             }
             .modal-content {
                 padding: 20px;
@@ -351,7 +386,21 @@
             }
         }
         @media (max-width: 480px) {
-            #panel-controles { width: calc(100vw - 20px); right: 10px; }
+            #panel-titulo {
+                top: 8px;
+                left: 8px;
+                right: 8px;
+            }
+            #panel-titulo h1 { font-size: 16px; }
+            #panel-titulo p  { font-size: 11px; }
+
+            #panel-controles {
+                top: 76px;
+                right: 8px;
+                left: 8px;
+                width: auto;
+                max-height: calc(100vh - 94px);
+            }
             .modal-content {
                 padding: 15px;
                 width: 95%;
@@ -455,13 +504,25 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-frontera" checked onchange="toggleFrontera()"> 🔴 Frontera RD‑Haití
                 </label>
-                <!-- NUEVAS CAPAS: REGIONES ÚNICAS Y MACROREGIONES -->
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-regiones-unicas" onchange="toggleRegionesUnicas()"> 📋 Regiones Únicas de Planificación
-                </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chk-macroregiones" onchange="toggleMacroregiones()"> 📊 Macroregiones de Planificación
-                </label>
+
+                <!-- DESPLEGABLE DE DELIMITACIÓN -->
+                <details class="desplegable" id="desplegable-delimitacion">
+                    <summary>🗂️ DELIMITACIÓN</summary>
+                    <div class="desplegable-contenido">
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-provincias" onchange="toggleDelimitacion('provincias')"> 🗺️ División Provincial RD (2026)
+                    </label>
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-municipios" onchange="toggleDelimitacion('municipios')"> 🏘️ División Municipal RD (2025)
+                    </label>
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-regiones-unicas" onchange="toggleDelimitacion('regiones-unicas')"> 📋 Regiones Únicas de Planificación
+                    </label>
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-macroregiones" onchange="toggleDelimitacion('macroregiones')"> 📊 Macroregiones de Planificación
+                    </label>
+                    </div>
+                </details>
             </div>
 
             <!-- Enlaces -->
@@ -497,7 +558,6 @@
                 <p>Bondarenko M., Priyatikanto R., Tejedor-Garavito N., Zhang W., McKeen T., Cunningham A., Woods T., Hilton J., Cihan D., Nosatiuk B., Brinkhoff T., Tatem A., Sorichetta A.. 2025 Constrained estimates of 2015-2030 total number of people per grid square at a resolution of 30 arc (approximately 1000m at the equator) R2025A version v1. Global Demographic Data Project - Funded by The Bill and Melinda Gates Foundation (INV-045237). WorldPop - School of Geography and Environmental Science, University of Southampton. DOI:10.5258/SOTON/WP00839</p>
                 <p>Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022.<br> https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de-poblacion-y-vivienda-2022/.</p>
                 <p>Raifer, M. (s. f.). Overpass Turbo [Aplicación web]. https://overpass-turbo.eu/</p>
-                <p>República Dominicana. Congreso Nacional. (2022). Ley núm. 345-22, Orgánica de Regiones Únicas de Planificación. Gaceta Oficial de la República Dominicana.</p>
             </div>
 
             <!-- SECCIÓN: ORIGEN DEL PROYECTO -->
@@ -566,6 +626,29 @@
 
     <script>
         // ═══════════════════════════════════════════════════════════
+        // 0. FUNCIÓN AUXILIAR PARA OBTENER PROPIEDADES (ignora mayúsculas)
+        // ═══════════════════════════════════════════════════════════
+        function getProperty(feature, keys) {
+            if (!feature || !feature.properties) return null;
+            var props = feature.properties;
+            for (var i = 0; i < keys.length; i++) {
+                var val = props[keys[i]];
+                if (val !== undefined && val !== null && val !== '') return val;
+            }
+            var propKeys = Object.keys(props);
+            for (var j = 0; j < keys.length; j++) {
+                var buscada = String(keys[j]).toLowerCase();
+                for (var k = 0; k < propKeys.length; k++) {
+                    if (propKeys[k].toLowerCase() === buscada) {
+                        var v = props[propKeys[k]];
+                        if (v !== undefined && v !== null && v !== '') return v;
+                    }
+                }
+            }
+            return null;
+        }
+
+        // ═══════════════════════════════════════════════════════════
         // 1. INICIALIZAR MAPA con maxZoom = 12
         // ═══════════════════════════════════════════════════════════
         var map = L.map('map', { 
@@ -577,10 +660,6 @@
         L.control.zoom({ position: 'bottomright' }).addTo(map);
         L.control.scale({ position: 'bottomright', metric: true, imperial: false }).addTo(map);
         L.control.attribution({ position: 'bottomright' }).addTo(map);
-
-        // Panel para las nuevas capas de planificación (regiones y macroregiones)
-        map.createPane('planificacionPane');
-        map.getPane('planificacionPane').style.zIndex = 620;
 
         // ═══════════════════════════════════════════════════════════
         // 2. CAPAS BASE
@@ -964,14 +1043,12 @@
         ciudadesRD.forEach(function(c) {
             var marker = L.marker([c.lat, c.lng], { icon: iconComunidad });
             marker.bindPopup("<b>" + c.nombre + "</b>" + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
-           /* marker.bindPopup("<b>" + c.nombre + "</b><br>Población 2022: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4)); */
             marker.addTo(capaComunidadesRD);
         });
 
         ciudadesHT.forEach(function(c) {
             var marker = L.marker([c.lat, c.lng], { icon: iconComunidad });
             marker.bindPopup("<b>" + c.nombre + "</b>" + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4));
-            /* marker.bindPopup("<b>" + c.nombre + "</b><br>Población: " + c.pob + "<br>Coordenadas: " + c.lat.toFixed(4) + ", " + c.lng.toFixed(4)); */
             marker.addTo(capaComunidadesHT);
         });
 
@@ -988,14 +1065,14 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 5. FRONTERA
+        // 5. FRONTERA (ruta dlim/)
         // ═══════════════════════════════════════════════════════════
         var capaFrontera = null;
         var fronteraCargada = false;
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch('anx/FRONTERA RD_HAI.geojson')
+            fetch(encodeURI('dlim/FRONTERA RD_HAI.geojson'))
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
@@ -1038,13 +1115,12 @@
             }
         };
 
-        // Carga inicial de la frontera (checkbox marcado por defecto)
         if (document.getElementById('chk-frontera').checked) {
             cargarFrontera();
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 5.1 PUERTOS / MARINAS (con nuevo icono unificado)
+        // 5.1 PUERTOS / MARINAS
         // ═══════════════════════════════════════════════════════════
         var puertosDataRD = [
         { tipo: "turístico", nombre: "Puerto turístico Cabo Rojo", lat: 17.925237701801414, lng: -71.66036845323396, profundidad: "10.9 metros" },
@@ -1110,7 +1186,6 @@
             'fondeadero': '#F7BB57'
         };
 
-        // Nuevo icono unificado: círculo de color con ancla blanca
         function iconoPuerto(color) {
             return L.divIcon({
                 className: 'custom-div-icon',
@@ -1159,7 +1234,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 5.2 AEROPUERTOS INTERNACIONALES (icono avión con fondo blanco)
+        // 5.2 AEROPUERTOS
         // ═══════════════════════════════════════════════════════════
         var capaAeropuertos = null;
         var aeropuertosCargados = false;
@@ -1218,7 +1293,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 6. GENERADORAS ELÉCTRICAS (con fondo #D9E6FD)
+        // 6. GENERADORAS ELÉCTRICAS
         // ═══════════════════════════════════════════════════════════
         var capaElectricidad = null;
         var electricidadCargada = false;
@@ -1284,7 +1359,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 7. VÍAS (naranja con borde negro) - icono ya está bien (🛣️)
+        // 7. VÍAS
         // ═══════════════════════════════════════════════════════════
         var capaViasRDBase = null;
         var capaViasRDNaranja = null;
@@ -1366,116 +1441,275 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 8. NUEVAS CAPAS: REGIONES ÚNICAS Y MACROREGIONES (SIN RELLENO)
+        // 7.1 CAPAS DE DELIMITACIÓN (exclusivas)
         // ═══════════════════════════════════════════════════════════
-
+        var capaProvincias = null;
+        var capaMunicipios = null;
         var capaRegionesUnicas = null;
         var capaMacroregiones = null;
+        var capaSeleccionadaDelim = null;
 
-        // 8.1 Regiones Únicas de Planificación
-        function cargarRegionesUnicas() {
-            if (capaRegionesUnicas) return;
-            fetch('anx/regionesunicasRD.geojson')
-                .then(function(response) {
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    return response.json();
+        function agregarEventosPoligonoDelim(layer, estiloBase) {
+            layer.originalStyle = estiloBase;
+            layer.on('mouseover', function(e) {
+                var capa = e.target;
+                if (capaSeleccionadaDelim !== capa) {
+                    capa.setStyle({ weight: 3, color: '#FFFF00', fillOpacity: 0.4 });
+                    capa.bringToFront();
+                }
+            });
+            layer.on('mouseout', function(e) {
+                var capa = e.target;
+                if (capaSeleccionadaDelim !== capa) {
+                    capa.setStyle(capa.originalStyle);
+                }
+            });
+            layer.on('click', function(e) {
+                var capa = e.target;
+                if (capaSeleccionadaDelim && capaSeleccionadaDelim !== capa) {
+                    capaSeleccionadaDelim.setStyle(capaSeleccionadaDelim.originalStyle);
+                }
+                capaSeleccionadaDelim = capa;
+                capa.setStyle({ weight: 3, color: '#FFFF00', fillOpacity: 0.4 });
+                capa.bringToFront();
+                if (capa.getPopup()) capa.openPopup();
+            });
+        }
+
+        function crearCapaProvincias() {
+            var grupo = L.layerGroup();
+            var url = 'dlim/PROVINCIAS_RD_2026.json';
+            var estiloProvincias = {
+                color: "#8E44AD",
+                weight: 2,
+                fillColor: "#BB8FCE",
+                fillOpacity: 0.1,
+                dashArray: "4,4"
+            };
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.text();
                 })
-                .then(function(data) {
-                    capaRegionesUnicas = L.geoJSON(data, {
-                        pane: 'planificacionPane',
-                        style: {
-                            color: '#FF8C00',    // naranja oscuro
-                            weight: 2,
-                            fill: false,
-                            opacity: 0.8
-                        },
+                .then(function(texto) {
+                    var data;
+                    var trimmed = texto.trim();
+                    if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
+                        data = JSON.parse(trimmed);
+                    } else {
+                        var features = trimmed.split(/\r?\n/)
+                            .filter(function(l) { return l.trim() !== ''; })
+                            .map(function(l) { return JSON.parse(l); });
+                        data = { type: "FeatureCollection", features: features };
+                    }
+                    if (!data.features || data.features.length === 0) {
+                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Provincias cargadas:', url, 'features:', data.features.length);
+                    var capa = L.geoJSON(data, {
+                        style: estiloProvincias,
                         onEachFeature: function(feature, layer) {
-                            var nombre = feature.properties.NOMBRE || feature.properties.NAME || feature.properties.name || 'Región Única';
-                            layer.bindPopup("<b>📋 Región Única: " + nombre + "</b>");
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            layer.bindPopup("<b>🗺️ " + nombre + "</b>");
+                            agregarEventosPoligonoDelim(layer, estiloProvincias);
                         }
                     });
-                    if (document.getElementById('chk-regiones-unicas').checked) {
-                        map.addLayer(capaRegionesUnicas);
+                    grupo.addLayer(capa);
+                    var chk = document.getElementById('chk-provincias');
+                    if (chk && chk.checked) {
+                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
                     }
-                    console.log('Regiones Únicas de Planificación cargadas correctamente.');
                 })
-                .catch(function(error) {
-                    console.warn('Error cargando regionesunicasRD.geojson:', error.message);
+                .catch(function(e) {
+                    console.warn('❌ Error cargando provincias:', url, e.message);
                 });
+            return grupo;
         }
 
-        window.toggleRegionesUnicas = function() {
-            var chk = document.getElementById('chk-regiones-unicas');
-            if (chk.checked) {
-                if (!capaRegionesUnicas) {
-                    cargarRegionesUnicas();
-                } else {
-                    map.addLayer(capaRegionesUnicas);
-                }
-            } else {
-                if (capaRegionesUnicas) {
-                    map.removeLayer(capaRegionesUnicas);
-                }
-            }
-        };
-
-        // 8.2 Macroregiones de Planificación
-        function cargarMacroregiones() {
-            if (capaMacroregiones) return;
-            fetch('anx/macroregionesRD.geojson')
-                .then(function(response) {
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    return response.json();
+        function crearCapaMunicipios() {
+            var grupo = L.layerGroup();
+            var url = 'dlim/MUNICIPIOS_RD_2025.json';
+            var estiloMunicipios = {
+                color: "#E67E22",
+                weight: 1.2,
+                fillColor: "#F5CBA7",
+                fillOpacity: 0.1,
+                dashArray: "2,3"
+            };
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.json();
                 })
                 .then(function(data) {
-                    capaMacroregiones = L.geoJSON(data, {
-                        pane: 'planificacionPane',
-                        style: {
-                            color: '#2E86C1',    // azul
-                            weight: 2,
-                            fill: false,
-                            opacity: 0.8
-                        },
+                    if (!data || !data.features || data.features.length === 0) {
+                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Municipios cargados:', url, 'features:', data.features.length);
+                    var capa = L.geoJSON(data, {
+                        style: estiloMunicipios,
                         onEachFeature: function(feature, layer) {
-                            var nombre = feature.properties.NOMBRE || feature.properties.NAME || feature.properties.name || 'Macroregión';
-                            layer.bindPopup("<b>📊 Macroregión: " + nombre + "</b>");
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            var provincia = getProperty(feature, ['PROVINCIA', 'PROVINCE', 'provincia', 'Provincia']) || '';
+                            var popupContent = "<b>🏘️ " + nombre + "</b>";
+                            if (provincia) popupContent += "<br>Provincia: " + provincia;
+                            layer.bindPopup(popupContent);
+                            agregarEventosPoligonoDelim(layer, estiloMunicipios);
                         }
                     });
-                    if (document.getElementById('chk-macroregiones').checked) {
-                        map.addLayer(capaMacroregiones);
+                    grupo.addLayer(capa);
+                    var chk = document.getElementById('chk-municipios');
+                    if (chk && chk.checked) {
+                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
                     }
-                    console.log('Macroregiones de Planificación cargadas correctamente.');
                 })
-                .catch(function(error) {
-                    console.warn('Error cargando macroregionesRD.geojson:', error.message);
+                .catch(function(e) {
+                    console.warn('❌ Error cargando municipios:', url, e.message);
                 });
+            return grupo;
         }
 
-        window.toggleMacroregiones = function() {
-            var chk = document.getElementById('chk-macroregiones');
-            if (chk.checked) {
-                if (!capaMacroregiones) {
-                    cargarMacroregiones();
-                } else {
-                    map.addLayer(capaMacroregiones);
+        function crearCapaRegionesUnicas() {
+            var grupo = L.layerGroup();
+            var url = 'dlim/regionesunicasRD.geojson';
+            var estiloRegionesUnicas = {
+                color: "#1ABC9C",
+                weight: 2.5,
+                fillColor: "#48C9B0",
+                fillOpacity: 0.15,
+                dashArray: "6,3"
+            };
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.text();
+                })
+                .then(function(texto) {
+                    var data;
+                    var trimmed = texto.trim();
+                    if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
+                        data = JSON.parse(trimmed);
+                    } else {
+                        var features = trimmed.split(/\r?\n/)
+                            .filter(function(l) { return l.trim() !== ''; })
+                            .map(function(l) { return JSON.parse(l); });
+                        data = { type: "FeatureCollection", features: features };
+                    }
+                    if (!data.features || data.features.length === 0) {
+                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Regiones Únicas cargadas:', url, 'features:', data.features.length);
+                    var capa = L.geoJSON(data, {
+                        style: estiloRegionesUnicas,
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            layer.bindPopup("<b>📋 " + nombre + "</b>");
+                            agregarEventosPoligonoDelim(layer, estiloRegionesUnicas);
+                        }
+                    });
+                    grupo.addLayer(capa);
+                    var chk = document.getElementById('chk-regiones-unicas');
+                    if (chk && chk.checked) {
+                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    }
+                })
+                .catch(function(e) {
+                    console.warn('❌ Error cargando regiones únicas:', url, e.message);
+                });
+            return grupo;
+        }
+
+        function crearCapaMacroregiones() {
+            var grupo = L.layerGroup();
+            var url = 'dlim/macroregionesRD.geojson';
+            var estiloMacroregiones = {
+                color: "#C0392B",
+                weight: 3,
+                fillColor: "#E74C3C",
+                fillOpacity: 0.12,
+                dashArray: "8,4"
+            };
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.text();
+                })
+                .then(function(texto) {
+                    var data;
+                    var trimmed = texto.trim();
+                    if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
+                        data = JSON.parse(trimmed);
+                    } else {
+                        var features = trimmed.split(/\r?\n/)
+                            .filter(function(l) { return l.trim() !== ''; })
+                            .map(function(l) { return JSON.parse(l); });
+                        data = { type: "FeatureCollection", features: features };
+                    }
+                    if (!data.features || data.features.length === 0) {
+                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Macroregiones cargadas:', url, 'features:', data.features.length);
+                    var capa = L.geoJSON(data, {
+                        style: estiloMacroregiones,
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            layer.bindPopup("<b>📊 " + nombre + "</b>");
+                            agregarEventosPoligonoDelim(layer, estiloMacroregiones);
+                        }
+                    });
+                    grupo.addLayer(capa);
+                    var chk = document.getElementById('chk-macroregiones');
+                    if (chk && chk.checked) {
+                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    }
+                })
+                .catch(function(e) {
+                    console.warn('❌ Error cargando macroregiones:', url, e.message);
+                });
+            return grupo;
+        }
+
+        // Crear las capas de delimitación (se cargan en segundo plano)
+        capaProvincias = crearCapaProvincias();
+        capaMunicipios = crearCapaMunicipios();
+        capaRegionesUnicas = crearCapaRegionesUnicas();
+        capaMacroregiones = crearCapaMacroregiones();
+
+        window.toggleDelimitacion = function(tipo) {
+            var mapa = {
+                'provincias':      { chk: 'chk-provincias',      capa: capaProvincias },
+                'municipios':      { chk: 'chk-municipios',      capa: capaMunicipios },
+                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: capaRegionesUnicas },
+                'macroregiones':   { chk: 'chk-macroregiones',   capa: capaMacroregiones }
+            };
+            var seleccionado = mapa[tipo];
+            if (!seleccionado) return;
+            var activado = document.getElementById(seleccionado.chk).checked;
+            if (activado) {
+                Object.keys(mapa).forEach(function(k) {
+                    if (k !== tipo) {
+                        var otro = mapa[k];
+                        var otroChk = document.getElementById(otro.chk);
+                        if (otroChk && otroChk.checked) otroChk.checked = false;
+                        if (otro.capa && map.hasLayer(otro.capa)) map.removeLayer(otro.capa);
+                    }
+                });
+                if (seleccionado.capa && !map.hasLayer(seleccionado.capa)) {
+                    map.addLayer(seleccionado.capa);
                 }
             } else {
-                if (capaMacroregiones) {
-                    map.removeLayer(capaMacroregiones);
+                if (seleccionado.capa && map.hasLayer(seleccionado.capa)) {
+                    map.removeLayer(seleccionado.capa);
                 }
             }
+            if (capaSeleccionadaDelim && seleccionado.capa && seleccionado.capa.hasLayer(capaSeleccionadaDelim)) {
+                capaSeleccionadaDelim.setStyle(capaSeleccionadaDelim.originalStyle);
+                capaSeleccionadaDelim = null;
+            }
         };
-
-        // Carga inicial si los checkboxes están marcados por defecto
-        if (document.getElementById('chk-regiones-unicas').checked) {
-            cargarRegionesUnicas();
-        }
-        if (document.getElementById('chk-macroregiones').checked) {
-            cargarMacroregiones();
-        }
 
         // ═══════════════════════════════════════════════════════════
-        // 9. REINICIAR
+        // 8. REINICIAR
         // ═══════════════════════════════════════════════════════════
         window.mostrarTodas = function() {
             // Población: solo RD
@@ -1525,11 +1759,18 @@
             document.getElementById('chkElectricidad').checked = false;
             if (capaElectricidad && map.hasLayer(capaElectricidad)) map.removeLayer(capaElectricidad);
 
-            // Regiones Únicas y Macroregiones: apagar
-            document.getElementById('chk-regiones-unicas').checked = false;
-            document.getElementById('chk-macroregiones').checked = false;
-            if (capaRegionesUnicas && map.hasLayer(capaRegionesUnicas)) map.removeLayer(capaRegionesUnicas);
-            if (capaMacroregiones && map.hasLayer(capaMacroregiones)) map.removeLayer(capaMacroregiones);
+            // Delimitación: desactivar todas
+            ['chk-provincias', 'chk-municipios', 'chk-regiones-unicas', 'chk-macroregiones'].forEach(function(id) {
+                var chk = document.getElementById(id);
+                if (chk) chk.checked = false;
+            });
+            [capaProvincias, capaMunicipios, capaRegionesUnicas, capaMacroregiones].forEach(function(c) {
+                if (c && map.hasLayer(c)) map.removeLayer(c);
+            });
+            if (capaSeleccionadaDelim) {
+                capaSeleccionadaDelim.setStyle(capaSeleccionadaDelim.originalStyle);
+                capaSeleccionadaDelim = null;
+            }
 
             // Vista
             map.setView([19.03556466237287, -70.89432006796727], 8);
@@ -1538,7 +1779,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 10. UTILIDADES UI
+        // 9. UTILIDADES UI
         // ═══════════════════════════════════════════════════════════
         window.togglePanel = function(panelId) {
             document.getElementById(panelId).classList.toggle('collapsed');
@@ -1555,7 +1796,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 11. CARGA INICIAL
+        // 10. CARGA INICIAL
         // ═══════════════════════════════════════════════════════════
         window.addEventListener('load', function() {
             // Forzar vista dibujo
@@ -1571,7 +1812,7 @@
                 'chkTur', 'chkMarina', 'chkArmada', 'chkCarga', 'chkFondeadero',
                 'chk-comunidades-rd', 'chk-comunidades-ht',
                 'chkElectricidad',
-                'chk-regiones-unicas', 'chk-macroregiones'
+                'chk-provincias', 'chk-municipios', 'chk-regiones-unicas', 'chk-macroregiones'
             ];
             checkboxes.forEach(function(id) {
                 var chk = document.getElementById(id);
@@ -1589,8 +1830,6 @@
                     else if (id === 'chk-comunidades-rd') toggleComunidadesRD();
                     else if (id === 'chk-comunidades-ht') toggleComunidadesHT();
                     else if (id === 'chkElectricidad') toggleElectricidad();
-                    else if (id === 'chk-regiones-unicas') toggleRegionesUnicas();
-                    else if (id === 'chk-macroregiones') toggleMacroregiones();
                 }
             });
 
