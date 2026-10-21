@@ -1194,10 +1194,10 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- División Provincial RD (2026) - soporta .geojson ---
+        // --- División Provincial RD (2026) - ruta corregida a dlim/ y popup con NAME_ES ---
         function crearCapaProvincias() {
             var grupo = L.layerGroup();
-            var url = 'anx/PROVINCIAS_RD_2026.json';
+            var url = 'dlim/PROVINCIAS_RD_2026.json';
 
             var estiloProvincias = {
                 color: "#8E44AD",
@@ -1232,7 +1232,8 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     var capa = L.geoJSON(data, {
                         style: estiloProvincias,
                         onEachFeature: function(feature, layer) {
-                            var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name', 'PROVINCIA']) || 'Sin nombre';
+                            // El nombre está en el campo NAME_ES
+                            var nombre = getProperty(feature, ['NAME_ES', 'NAME', 'NOMBRE', 'name', 'Name', 'PROVINCIA']) || 'Sin nombre';
                             layer.bindPopup("<b>🗺️ " + nombre + "</b>");
                             agregarEventosPoligono(layer, estiloProvincias);
                         }
@@ -1251,11 +1252,11 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- División Municipal RD (2025) ---
+        // --- División Municipal RD (2025) - ruta corregida a dlim/ y popup con NAME_ES ---
         function crearCapaMunicipios() {
             var grupo = L.layerGroup();
             var archivos = [
-                'anx/MUNICIPIOS_RD_2025.json'
+                'dlim/MUNICIPIOS_RD_2025.json'
             ];
 
             var estiloMunicipios = {
@@ -1280,7 +1281,8 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                         var capa = L.geoJSON(data, {
                             style: estiloMunicipios,
                             onEachFeature: function(feature, layer) {
-                                var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name', 'MUNICIPIO']) || 'Sin nombre';
+                                // El nombre está en el campo NAME_ES
+                                var nombre = getProperty(feature, ['NAME_ES', 'NAME', 'NOMBRE', 'name', 'Name', 'MUNICIPIO']) || 'Sin nombre';
                                 var provincia = getProperty(feature, ['PROVINCIA', 'PROVINCE', 'provincia', 'Provincia']) || '';
                                 var popupContent = "<b>🏘️ " + nombre + "</b>";
                                 if (provincia) {
@@ -1304,10 +1306,10 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- Regiones Únicas de Planificación ---
+        // --- Regiones Únicas de Planificación - ruta corregida a dlim/ y popup con NAME_ES ---
         function crearCapaRegionesUnicas() {
             var grupo = L.layerGroup();
-            var url = 'anx/REGIONES_UNICAS_PLANIFICACION.geojson';
+            var url = 'dlim/regionesunicasRD.geojson';
 
             var estiloRegionesUnicas = {
                 color: "#1ABC9C",
@@ -1342,7 +1344,8 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     var capa = L.geoJSON(data, {
                         style: estiloRegionesUnicas,
                         onEachFeature: function(feature, layer) {
-                            var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name', 'REGION', 'REGION_UNICA']) || 'Sin nombre';
+                            // El nombre está en el campo NAME_ES
+                            var nombre = getProperty(feature, ['NAME_ES', 'NAME', 'NOMBRE', 'name', 'Name', 'REGION', 'REGION_UNICA']) || 'Sin nombre';
                             layer.bindPopup("<b>📋 " + nombre + "</b>");
                             agregarEventosPoligono(layer, estiloRegionesUnicas);
                         }
@@ -1361,10 +1364,10 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- Macroregiones de Planificación ---
+        // --- Macroregiones de Planificación - ruta corregida a dlim/ y popup con NAME_ES ---
         function crearCapaMacroregiones() {
             var grupo = L.layerGroup();
-            var url = 'anx/MACRORREGIONES_PLANIFICACION.geojson';
+            var url = 'dlim/macroregionesRD.geojson';
 
             var estiloMacroregiones = {
                 color: "#C0392B",
@@ -1399,7 +1402,8 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     var capa = L.geoJSON(data, {
                         style: estiloMacroregiones,
                         onEachFeature: function(feature, layer) {
-                            var nombre = getProperty(feature, ['NAME', 'NOMBRE', 'name', 'Name', 'MACROREGION', 'MACRO_REGION']) || 'Sin nombre';
+                            // El nombre está en el campo NAME_ES
+                            var nombre = getProperty(feature, ['NAME_ES', 'NAME', 'NOMBRE', 'name', 'Name', 'MACROREGION', 'MACRO_REGION']) || 'Sin nombre';
                             layer.bindPopup("<b>📊 " + nombre + "</b>");
                             agregarEventosPoligono(layer, estiloMacroregiones);
                         }
@@ -1608,14 +1612,14 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 10. CAPA DE FRONTERA
+        // 10. CAPA DE FRONTERA - ruta corregida a dlim/
         // ═══════════════════════════════════════════════════════════
         var capaFrontera = null;
         var fronteraCargada = false;
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch(encodeURI('anx/FRONTERA RD_HAI.geojson'))
+            fetch(encodeURI('dlim/FRONTERA RD_HAI.geojson'))
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
