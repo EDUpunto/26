@@ -1194,7 +1194,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- División Provincial RD (2026) - ruta corregida a dlim/ y popup con NAME_ES ---
+        // --- División Provincial RD (2026) - ruta dlim/ y popup con NAME_ES ---
         function crearCapaProvincias() {
             var grupo = L.layerGroup();
             var url = 'dlim/PROVINCIAS_RD_2026.json';
@@ -1232,8 +1232,8 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     var capa = L.geoJSON(data, {
                         style: estiloProvincias,
                         onEachFeature: function(feature, layer) {
-                            // El nombre está en el campo NAME_ES
-                            var nombre = getProperty(feature, ['NAME_ES', 'NAME', 'NOMBRE', 'name', 'Name', 'PROVINCIA']) || 'Sin nombre';
+                            // NAME_ES es el campo del nombre
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
                             layer.bindPopup("<b>🗺️ " + nombre + "</b>");
                             agregarEventosPoligono(layer, estiloProvincias);
                         }
@@ -1252,7 +1252,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- División Municipal RD (2025) - ruta corregida a dlim/ y popup con NAME_ES ---
+        // --- División Municipal RD (2025) - ruta dlim/ y popup con NAME_ES ---
         function crearCapaMunicipios() {
             var grupo = L.layerGroup();
             var archivos = [
@@ -1281,8 +1281,8 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                         var capa = L.geoJSON(data, {
                             style: estiloMunicipios,
                             onEachFeature: function(feature, layer) {
-                                // El nombre está en el campo NAME_ES
-                                var nombre = getProperty(feature, ['NAME_ES', 'NAME', 'NOMBRE', 'name', 'Name', 'MUNICIPIO']) || 'Sin nombre';
+                                // NAME_ES es el campo del nombre
+                                var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
                                 var provincia = getProperty(feature, ['PROVINCIA', 'PROVINCE', 'provincia', 'Provincia']) || '';
                                 var popupContent = "<b>🏘️ " + nombre + "</b>";
                                 if (provincia) {
@@ -1306,7 +1306,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- Regiones Únicas de Planificación - ruta corregida a dlim/ y popup con NAME_ES ---
+        // --- Regiones Únicas de Planificación - ruta dlim/ y popup con NAME_ES ---
         function crearCapaRegionesUnicas() {
             var grupo = L.layerGroup();
             var url = 'dlim/regionesunicasRD.geojson';
@@ -1344,8 +1344,8 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     var capa = L.geoJSON(data, {
                         style: estiloRegionesUnicas,
                         onEachFeature: function(feature, layer) {
-                            // El nombre está en el campo NAME_ES
-                            var nombre = getProperty(feature, ['NAME_ES', 'NAME', 'NOMBRE', 'name', 'Name', 'REGION', 'REGION_UNICA']) || 'Sin nombre';
+                            // NAME_ES es el campo del nombre
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
                             layer.bindPopup("<b>📋 " + nombre + "</b>");
                             agregarEventosPoligono(layer, estiloRegionesUnicas);
                         }
@@ -1364,7 +1364,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- Macroregiones de Planificación - ruta corregida a dlim/ y popup con NAME_ES ---
+        // --- Macroregiones de Planificación - ruta dlim/ y popup con NAME_ES ---
         function crearCapaMacroregiones() {
             var grupo = L.layerGroup();
             var url = 'dlim/macroregionesRD.geojson';
@@ -1402,8 +1402,8 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     var capa = L.geoJSON(data, {
                         style: estiloMacroregiones,
                         onEachFeature: function(feature, layer) {
-                            // El nombre está en el campo NAME_ES
-                            var nombre = getProperty(feature, ['NAME_ES', 'NAME', 'NOMBRE', 'name', 'Name', 'MACROREGION', 'MACRO_REGION']) || 'Sin nombre';
+                            // NAME_ES es el campo del nombre
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
                             layer.bindPopup("<b>📊 " + nombre + "</b>");
                             agregarEventosPoligono(layer, estiloMacroregiones);
                         }
@@ -1612,7 +1612,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 10. CAPA DE FRONTERA - ruta corregida a dlim/
+        // 10. CAPA DE FRONTERA - ruta dlim/
         // ═══════════════════════════════════════════════════════════
         var capaFrontera = null;
         var fronteraCargada = false;
