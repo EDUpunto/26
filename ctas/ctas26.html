@@ -47,29 +47,11 @@
             right: 20px;
             width: 280px;
             max-height: 85vh;
-            overflow-y: auto;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         #panel-controles.collapsed {
             max-height: 48px;
-            overflow: hidden;
         }
-        
-        #panel-controles::-webkit-scrollbar {
-            width: 5px;
-        }
-        #panel-controles::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.05);
-            border-radius: 3px;
-        }
-        #panel-controles::-webkit-scrollbar-thumb {
-            background: #2980b9;
-            border-radius: 3px;
-        }
-        #panel-controles::-webkit-scrollbar-thumb:hover {
-            background: #1a5276;
-        }
-
         .panel-header {
             display: flex;
             justify-content: space-between;
@@ -81,11 +63,6 @@
             color: #2c3e50;
             font-size: 15px;
             user-select: none;
-            position: sticky;
-            top: 0;
-            background: rgba(255, 255, 255, 0.98);
-            z-index: 1;
-            border-radius: 12px 12px 0 0;
         }
         .panel-header:hover { background: rgba(0,0,0,0.02); }
         .toggle-icon { transition: transform 0.3s ease; font-size: 12px; }
@@ -94,8 +71,8 @@
             padding: 12px 16px 16px 16px;
             transition: opacity 0.3s ease, max-height 0.3s ease;
             opacity: 1;
-            max-height: 2000px;
-            overflow-y: visible;
+            max-height: 1000px;
+            overflow-y: auto;
         }
         .collapsed .panel-content {
             opacity: 0;
@@ -208,26 +185,54 @@
             border-radius: 2px;
             flex-shrink: 0;
         }
-        .symbol-regiones {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            background: transparent;
-            border: 2px solid #B87C1A;
-            border-radius: 2px;
-            flex-shrink: 0;
+
+        /* === DESPLEGABLE (details/summary) === */
+        .desplegable {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fafbfc;
+            overflow: hidden;
+            margin-top: 8px;
         }
-        .symbol-macroregiones {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            background: transparent;
-            border: 2px solid #ff6b35;   
-            border-radius: 2px;
-            flex-shrink: 0;
+        .desplegable summary {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            background: #E9E9ED;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .desplegable summary::-webkit-details-marker { display: none; }
+        .desplegable summary:hover { background: #f8f9fa; color: #2980b9; }
+        .desplegable summary::after {
+            content: '▼';
+            margin-left: auto;
+            font-size: 10px;
+            transition: transform 0.25s ease;
+            color: #7f8c8d;
+        }
+        .desplegable[open] summary {
+            border-radius: 6px 6px 0 0;
+            border-bottom: 1px solid #e0e0e0;
+            background: #dde6f0;
+            color: #1a5276;
+        }
+        .desplegable[open] summary::after {
+            transform: rotate(180deg);
+        }
+        .desplegable .desplegable-contenido {
+            padding: 8px 12px 10px 12px;
+            background: #ffff;
         }
 
-        /* === ESTILOS DEL MODAL DE CRÉDITOS === */
+        /* === ESTILOS DEL MODAL DE CRÉDITOS MEJORADOS === */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 2000; display: none;
@@ -485,13 +490,23 @@
             <div class="grupo-control">
                 <h4>Capas costeras</h4>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkAccidentes" checked> <span class="legend-symbol" style="background:#8E44AD;"></span> Accidentes costeros
+                    <input type="checkbox" id="chkAccRD" checked> <span class="legend-symbol" style="background:#8E44AD;"></span> Accidentes costeros RD
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkRios"> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos
+                    <input type="checkbox" id="chkAccHT" checked> <span class="legend-symbol" style="background:#8E44AD;"></span> Accidentes costeros HAITÍ
                 </label>
                 <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkPlayas"> <span class="symbol-playa"></span> Playas
+                    <input type="checkbox" id="chkRiosRD"> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos RD
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkRiosHT"> <span class="legend-symbol" style="background:#00BFFF;"></span> Desembocadura ríos HAITÍ
+                </label>
+                <!-- Nuevos checkboxes -->
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkPlayasRD"> <span class="symbol-playa"></span> Playas RD
+                </label>
+                <label class="checkbox-opcion">
+                    <input type="checkbox" id="chkPlayasHT"> <span class="symbol-playa"></span> Playas HAITÍ
                 </label>
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chkManglares"> <span class="symbol-manglar"></span> Manglares costeros
@@ -513,17 +528,25 @@
                 <label class="checkbox-opcion">
                     <input type="checkbox" id="chk-frontera" checked> <span class="symbol-line"></span> Frontera RD-Haití
                 </label>
-            </div>
 
-            <!-- Regiones -->
-            <div class="grupo-control">
-                <h4>Planificación Territorial</h4>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkRegionesUnicas"> <span class="symbol-regiones"></span> Regiones Únicas de Planificación
-                </label>
-                <label class="checkbox-opcion">
-                    <input type="checkbox" id="chkMacroregiones"> <span class="symbol-macroregiones"></span> Macroregiones de Planificación
-                </label>
+                <!-- DESPLEGABLE DE DELIMITACIÓN -->
+                <details class="desplegable" id="desplegable-delimitacion">
+                    <summary>🗂️ DELIMITACIÓN</summary>
+                    <div class="desplegable-contenido">
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-provincias" onchange="toggleDelimitacion('provincias')"> 🗺️ División Provincial RD (2026)
+                    </label>
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-municipios" onchange="toggleDelimitacion('municipios')"> 🏘️ División Municipal RD (2025)
+                    </label>
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-regiones-unicas" onchange="toggleDelimitacion('regiones-unicas')"> 📋 Regiones Únicas de Planificación
+                    </label>
+                    <label class="checkbox-opcion">
+                    <input type="checkbox" name="delimitacion" id="chk-macroregiones" onchange="toggleDelimitacion('macroregiones')"> 📊 Macroregiones de Planificación
+                    </label>
+                    </div>
+                </details>
             </div>
 
             <!-- Reiniciar -->
@@ -541,19 +564,25 @@
         </div>
     </div>
 
-    <!-- Modal Créditos -->
+    <!-- Modal Créditos - REORGANIZADO CON LA MISMA ESTRUCTURA -->
     <div id="modal-creditos" class="modal-overlay" onclick="cerrarModalCreditos(event)">
         <div class="modal-content">
+
+            <!-- ENCABEZADO PRINCIPAL -->
             <div class="creditos-header">
                 <h2><strong>I S F O D O S U</strong></h2>
                 <p class="subtitulo">DIGICON</p>
                 <h1>COSTAS DE LA ISLA DE<br>SANTO DOMINGO</h1>
             </div>
+
+            <!-- SECCIÓN: CONSIDERACIONES -->
             <div class="creditos-seccion">
                 <h3>CONSIDERACIONES</h3>
                 <p>Las costas de la isla de Santo Domingo es un mapa interactivo realizado con visión y propósitos educativos.<br>
                 Los puntos que identifican los accidentes costeros, desembocaduras de ríos, playas, manglares y barreras coralinas se realizaron con Sistemas de Información Geográfica (SIG) y otras herramientas.</p>
             </div>
+
+            <!-- SECCIÓN: FUENTES -->
             <div class="creditos-seccion">
                 <h3>FUENTES</h3>
                 <p>Autoridad Portuaria Dominicana. (s. f.). Nuestros puertos. https://portuaria.gob.do/nuestros-puertos/</p>
@@ -561,36 +590,51 @@
                 <p>Ramirez, Elias & Garcia, Carlos & Martell Dubois, Raul. (2014). Geomorfología Costera y Regeneración de Playas en Republica Dominicana. IPGH.</p>
                 <p>Batista, J. L. (2016). Recursos hidrográficos superficiales de la República Dominicana. IPGH.</p>
                 <p>Oficina Nacional de Estadística. (2024). Informe general del X Censo Nacional de Población y Vivienda 2022.<br> https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-de-poblacion-y-vivienda-2022/.</p>
-                <p>República Dominicana. Congreso Nacional. (2022). Ley núm. 345-22, Orgánica de Regiones Únicas de Planificación. Gaceta Oficial de la República Dominicana.</p>
             </div>
+
+            <!-- SECCIÓN: ORIGEN DEL PROYECTO -->
             <div class="creditos-seccion">
                 <h3>ORIGEN DEL PROYECTO</h3>
                 <p>Este proyecto surgió de la necesidad de ofrecer un mapa interactivo orientado a las aulas dominicanas. Hubo un primer esfuerzo entre 2007 y 2015 con tecnología Flash que fue publicado en el portal www.educando.edu.do del MINERD.</p>
             </div>
+
+            <!-- SECCIÓN: DESARROLLO -->
             <div class="creditos-seccion">
                 <h3>DESARROLLO</h3>
                 <p>En esta oportunidad hemos utilizado la tecnología Leaflet, QGis, Google Earth Pro, NASA, la plataforma OpenStreetMaps y otras para hacer realidad el recurso. La ingeniería y maquetación de este documento comenzó el 16.mayo.2026.</p>
             </div>
+
+            <!-- SECCIÓN: HERRAMIENTAS UTILIZADAS -->
             <div class="creditos-seccion">
                 <h3>HERRAMIENTAS UTILIZADAS</h3>
                 <p>Para el desarrollo de este proyecto empleé las siguientes herramientas de inteligencia artificial disponibles y en sus versiones gratuitas: DeepSeek, ChatGPT, Perplexity, Gemini y Claude.</p>
             </div>
+
+            <!-- SECCIÓN: PROPÓSITO DE LA IA -->
             <div class="creditos-seccion">
                 <h3>PROPÓSITO DE LA IA</h3>
                 <p>El uso de la inteligencia artificial se orientó principalmente a la generación de código de programación. También se empleó para la verificación de fechas, la localización precisa de documentación y, en menor medida, para la mejora de la redacción.</p>
             </div>
+
+            <!-- SECCIÓN: INTERVENCIÓN Y APORTE HUMANO -->
             <div class="creditos-seccion">
                 <h3>INTERVENCIÓN Y APORTE HUMANO</h3>
                 <p>Estimo que un 85% de la redacción es de mi propiedad. Mi aporte en el código HTML5 fue del 10% o menos. Mis principales intervenciones consistieron en suministrar los textos, los marcadores y los criterios orientadores. La IA generaba código estructurado que yo evaluaba y ajustaba hasta alcanzar el resultado deseado.</p>
             </div>
+
+            <!-- SECCIÓN: DECLARACIÓN DE AUTORÍA -->
             <div class="creditos-seccion declaracion">
                 <h3>DECLARACIÓN DE AUTORÍA</h3>
                 <p><em>"Certifico que el trabajo presentado es el resultado de un proceso de investigación, edición, curaduría, creación y esfuerzo. La IA fue utilizada como herramienta de apoyo, no como sustituta de mi criterio."</em></p>
             </div>
+
+            <!-- SECCIÓN: AUTORÍA Y PRODUCCIÓN -->
             <div class="creditos-seccion autores">
                 <p class="ubicacion">Redacción, diseño y producción general</p>
                 <p class="autor">Juan Ernesto De Frías</p>
             </div>
+
+            <!-- SECCIÓN: MENSAJE / CONTACTO -->
             <div class="creditos-seccion mensaje">
                 <p>Detrás de este recurso hay muchas horas de investigación y trabajo.</p>
                 <p>Tu opinión es fundamental: si observas algún punto que se pueda mejorar, ¡no dudes en escribirme!</p>
@@ -598,12 +642,17 @@
                     <a href="mailto:edefrias@gmail.com">edefrias@gmail.com</a>
                 </p>
             </div>
+
+            <!-- SECCIÓN: EQUIPO DE TRABAJO -->
             <div class="creditos-seccion equipo">
                 <h3>EQUIPO DE TRABAJO DIGICON</h3>
                 <p>Juan Ernesto De Frías,<br>José Alberto Santos y Carlos Gabriel Tapia<br>
                 Santo Domingo, República Dominicana</p>
             </div>
+
+            <!-- BOTÓN CERRAR -->
             <button class="btn-cerrar-modal" onclick="cerrarModalCreditos()">Cerrar</button>
+
         </div>
     </div>
 
@@ -624,9 +673,9 @@
         // 2. CAPAS BASE
         // ═══════════════════════════════════════════════════════════
 
-        var capaOpenStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
+        var capaCalles = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'CyclOSM | Mapa base'
         });
 
         var capaSatelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -634,8 +683,8 @@
             attribution: 'Esri World Imagery'
         });
 
-        var capaBaseActual = capaOpenStreetMap;
-        capaOpenStreetMap.addTo(map);
+        var capaBaseActual = capaCalles;
+        capaCalles.addTo(map);
 
         window.cambiarBase = function(tipo, btn) {
             document.querySelectorAll('#panel-controles .grupo-control:first-child .btn-opcion').forEach(b => b.classList.remove('active'));
@@ -645,7 +694,7 @@
             if (tipo === 'satelite') {
                 capaBaseActual = capaSatelite;
             } else {
-                capaBaseActual = capaOpenStreetMap;
+                capaBaseActual = capaCalles;
             }
             capaBaseActual.addTo(map);
         };
@@ -1049,21 +1098,7 @@
             });
         }
 
-        // Icono para Playas y Manglares (tamaño reducido, mismo que accidentes)
-        function crearIconoPoligono(colorHex, bordeColor) {
-            bordeColor = bordeColor || colorHex;
-            return L.divIcon({
-                className: 'custom-polygon-marker',
-                html: `<svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3));">
-                    <rect x="2" y="2" width="20" height="20" rx="3" fill="${colorHex}" stroke="${bordeColor}" stroke-width="1.5" />
-                </svg>`,
-                iconSize: [24, 24],
-                iconAnchor: [12, 12],
-                popupAnchor: [0, -12]
-            });
-        }
-
-        var iconoEstrella = function(colorHex) {
+        function crearIconoEstrella(colorHex) {
             colorHex = colorHex || '#F4B09F';
             const svg = `<svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.5));">
                 <path d="M12 2L15 9L22 9L17 14L19 21L12 17L5 21L7 14L2 9L9 9Z" fill="${colorHex}" stroke="#333333" stroke-width="1.2"/>
@@ -1075,16 +1110,12 @@
                 iconAnchor: [18, 18],
                 popupAnchor: [0, -20]
             });
-        };
+        }
 
         var iconoRD = crearApuntadorSVG('#8E44AD');
         var iconoHaiti = crearApuntadorSVG('#8E44AD');
-        var iconoEstrellaRD = iconoEstrella('#F4B09F');
-        var iconoEstrellaHT = iconoEstrella('#F4B09F');
-
-        // Iconos para Playas y Manglares (con colores específicos y tamaño reducido)
-        var iconoPlaya = crearIconoPoligono('#F4D03F', '#B7950B');
-        var iconoManglar = crearIconoPoligono('#2E7D32', '#1B5E20');
+        var iconoEstrellaRD = crearIconoEstrella('#F4B09F');
+        var iconoEstrellaHT = crearIconoEstrella('#F4B09F');
 
         // Capas existentes
         var layerAccidentesRD = L.layerGroup().addTo(map);
@@ -1099,10 +1130,6 @@
         var layerPlayasHT = L.layerGroup();
         var layerManglares = L.layerGroup();
         var layerCorales = L.layerGroup();
-
-        // Capas para regiones y macroregiones - SOLO LÍMITES
-        var layerRegionesUnicas = L.layerGroup();
-        var layerMacroregiones = L.layerGroup();
 
         // ---------- Accidentes costeros ----------
         puntosRD.forEach(function(p) {
@@ -1168,10 +1195,46 @@
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 5. FUNCIÓN PARA CARGAR GEOJSON
+        // 5. CARGAR CAPAS GEOJSON (Playas, Manglares, Corales)
         // ═══════════════════════════════════════════════════════════
 
-        function cargarGeoJSON(url, capa, estilo, popupProp, popupFijo) {
+        // ─────────────────────────────────────────────────────────
+        // Icono rectangular para marcadores tipo "playa" (proporción 2.5:1)
+        // Para futuros cambios: ajustar ANCHO_PLAYA/ALTO_PLAYA manteniendo
+        // la razón 2.5:1, o pasar otro color/borde al invocar la función.
+        // ─────────────────────────────────────────────────────────
+        function crearIconoRectangularPlaya(colorRelleno, colorBorde) {
+            var ANCHO_PLAYA = 20; // px
+            var ALTO_PLAYA = 8;   // px  (20 / 8 = 2.5 -> proporción 2.5:1)
+            return function(feature, latlng) {
+                var icono = L.divIcon({
+                    className: '', // sin clase de Leaflet por defecto (evita el pin azul)
+                    html: '<div style="width:' + ANCHO_PLAYA + 'px; height:' + ALTO_PLAYA + 'px; ' +
+                          'background:' + colorRelleno + '; border:1px solid ' + colorBorde + '; ' +
+                          'box-sizing:border-box;"></div>',
+                    iconSize: [ANCHO_PLAYA, ALTO_PLAYA],
+                    iconAnchor: [ANCHO_PLAYA / 2, ALTO_PLAYA / 2]
+                });
+                return L.marker(latlng, { icon: icono });
+            };
+        }
+
+        // ─────────────────────────────────────────────────────────
+        // Marcador circular para "Manglares costeros" (solo cambia color,
+        // conserva la forma de punto). Para futuros cambios: modificar
+        // 'radius', 'color' (borde) o 'fillColor' (relleno) aquí.
+        // ─────────────────────────────────────────────────────────
+        function crearMarcadorManglar(feature, latlng) {
+            return L.circleMarker(latlng, {
+                radius: 6,
+                color: '#1B5E20',     // borde
+                weight: 1,
+                fillColor: '#2E7D32', // relleno
+                fillOpacity: 0.8
+            });
+        }
+
+        function cargarGeoJSON(url, capa, estilo, popupProp, pointToLayerFn, popupFijo) {
             fetch(url)
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
@@ -1181,6 +1244,9 @@
                     var opciones = {
                         style: estilo,
                         onEachFeature: function(feature, layer) {
+                            // Si se define 'popupFijo', se usa siempre ese texto
+                            // (ignora las propiedades del feature). Para futuros
+                            // cambios: editar el texto en la llamada a cargarGeoJSON().
                             if (popupFijo) {
                                 layer.bindPopup(popupFijo);
                             } else if (popupProp && feature.properties) {
@@ -1189,6 +1255,12 @@
                             }
                         }
                     };
+                    // 'pointToLayer' solo afecta a features de tipo Point.
+                    // Si el GeoJSON es Polygon/LineString, Leaflet la ignora
+                    // y sigue usando 'style' con normalidad (sin romper nada).
+                    if (pointToLayerFn) {
+                        opciones.pointToLayer = pointToLayerFn;
+                    }
                     L.geoJSON(data, opciones).addTo(capa);
                     console.log('Cargado: ' + url);
                 })
@@ -1197,79 +1269,35 @@
                 });
         }
 
-        // ═══════════════════════════════════════════════════════════
-        // 6. CARGAR CAPAS GEOJSON - Con iconos personalizados para Playas y Manglares
-        // ═══════════════════════════════════════════════════════════
+        // Playas RD (color amarillo, borde ocre)
+        // Marcador: rectángulo proporción 2.5:1, color #F4D03F (ver crearIconoRectangularPlaya)
+        cargarGeoJSON('anx/PLAYASDOM.geojson', layerPlayasRD, {
+            color: '#B7950B',
+            weight: 2,
+            fillColor: '#F4D03F',
+            fillOpacity: 0.6
+        }, 'Name', crearIconoRectangularPlaya('#F4D03F', '#B7950B'));
 
-        // Función para cargar puntos de playa y manglar con iconos personalizados
-        function cargarGeoJSONConIconos(url, capa, icono, popupProp) {
-            fetch(url)
-                .then(function(response) {
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    return response.json();
-                })
-                .then(function(data) {
-                    // Si es un FeatureCollection, procesamos cada feature
-                    var features = data.features || data;
-                    if (!Array.isArray(features)) {
-                        features = [features];
-                    }
-                    features.forEach(function(feature) {
-                        var geom = feature.geometry;
-                        if (!geom) return;
-                        var coords = geom.coordinates;
-                        var lat, lng;
-                        if (geom.type === 'Point') {
-                            lng = coords[0];
-                            lat = coords[1];
-                        } else if (geom.type === 'Polygon' || geom.type === 'MultiPolygon') {
-                            // Tomamos el centroide del polígono
-                            var centroid = getCentroid(geom);
-                            lat = centroid[1];
-                            lng = centroid[0];
-                        } else {
-                            return;
-                        }
-                        var nombre = feature.properties ? (feature.properties.Name || feature.properties.NOMBRE || '') : '';
-                        var popupContent = nombre ? '<strong>' + nombre + '</strong>' : '';
-                        L.marker([lat, lng], { icon: icono })
-                            .bindPopup(popupContent)
-                            .addTo(capa);
-                    });
-                    console.log('Cargados puntos con iconos desde: ' + url);
-                })
-                .catch(function(error) {
-                    console.warn('Error cargando ' + url + ': ' + error.message);
-                });
-        }
+        // Playas HT
+        // Marcador: rectángulo proporción 2.5:1, color #F4D03F (ver crearIconoRectangularPlaya)
+        cargarGeoJSON('anx/PLAYASHT.geojson', layerPlayasHT, {
+            color: '#B7950B',
+            weight: 2,
+            fillColor: '#F4D03F',
+            fillOpacity: 0.6
+        }, 'Name', crearIconoRectangularPlaya('#F4D03F', '#B7950B'));
 
-        // Función auxiliar para calcular centroide de un polígono
-        function getCentroid(geom) {
-            var coords = geom.coordinates;
-            if (geom.type === 'Polygon') {
-                coords = coords[0];
-            } else if (geom.type === 'MultiPolygon') {
-                // Tomamos el primer polígono
-                coords = coords[0][0];
-            }
-            var sumX = 0, sumY = 0, count = 0;
-            coords.forEach(function(coord) {
-                sumX += coord[0];
-                sumY += coord[1];
-                count++;
-            });
-            return [sumX / count, sumY / count];
-        }
+        // Manglares (verde oscuro)
+        // Marcador: círculo color #2E7D32 (ver crearMarcadorManglar)
+        // Popup fijo "Manglar / humedal" para todos los features
+        cargarGeoJSON('anx/manglaresSD.geojson', layerManglares, {
+            color: '#1B5E20',
+            weight: 2,
+            fillColor: '#2E7D32',
+            fillOpacity: 0.5
+        }, 'Name', crearMarcadorManglar, 'Manglar / humedal');
 
-        // Playas RD con icono personalizado
-        cargarGeoJSONConIconos('anx/PLAYASDOM.geojson', layerPlayasRD, iconoPlaya, 'Name');
-        // Playas HT con icono personalizado
-        cargarGeoJSONConIconos('anx/PLAYASHT.geojson', layerPlayasHT, iconoPlaya, 'Name');
-
-        // Manglares con icono personalizado
-        cargarGeoJSONConIconos('anx/manglaresSD.geojson', layerManglares, iconoManglar, 'Name');
-
-        // Corales - se mantienen como polígonos con estilo (no hay icono específico)
+        // Corales (turquesa)
         cargarGeoJSON('anx/coralesSD.geojson', layerCorales, {
             color: '#008B8B',
             weight: 2,
@@ -1277,118 +1305,71 @@
             fillOpacity: 0.5
         }, 'Name');
 
-        // ─────────────────────────────────────────────────────────
-        // REGIONES ÚNICAS (Ley 345-22) - SOLO LÍMITES color #00ff66
-        // ─────────────────────────────────────────────────────────
-        cargarGeoJSON('anx/regionesunicasRD.geojson', layerRegionesUnicas, {
-            color: '#B87B18',
-            weight: 3,
-            fill: false,
-            opacity: 0.9
-        }, 'NOMBRE', function(feature) {
-            var nombre = feature.properties.NOMBRE || feature.properties.name || 'Región';
-            return '<strong>🏛️ ' + nombre + '</strong><br><span style="font-size:0.8rem;">Región Única de Planificación (Ley 345-22)</span>';
-        });
-
-        // ─────────────────────────────────────────────────────────
-        // MACROREGIONES - SOLO LÍMITES color #ff6b35
-        // ─────────────────────────────────────────────────────────
-        cargarGeoJSON('anx/macroregionesRD.geojson', layerMacroregiones, {
-            color: '#ff6b35',
-            weight: 4,
-            fill: false,
-            opacity: 0.9
-        }, 'NOMBRE', function(feature) {
-            var nombre = feature.properties.NOMBRE || feature.properties.name || 'Macrorregión';
-            return '<strong>🗺️ ' + nombre + '</strong><br><span style="font-size:0.8rem;">Macrorregión de Planificación</span>';
-        });
-
         // ═══════════════════════════════════════════════════════════
-        // 7. CONTROLES UI
+        // 6. CONTROLES UI
         // ═══════════════════════════════════════════════════════════
 
-        // Checkboxes combinados - controlan ambas capas (RD y HAITÍ) simultáneamente
-        document.getElementById('chkAccidentes').addEventListener('change', function(e) {
-            if (e.target.checked) {
-                map.addLayer(layerAccidentesRD);
-                map.addLayer(layerAccidentesHAITI);
-            } else {
-                map.removeLayer(layerAccidentesRD);
-                map.removeLayer(layerAccidentesHAITI);
-            }
+        // Checkboxes existentes
+        document.getElementById('chkAccRD').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(layerAccidentesRD) : map.removeLayer(layerAccidentesRD);
         });
-
-        document.getElementById('chkRios').addEventListener('change', function(e) {
-            if (e.target.checked) {
-                map.addLayer(layerRiosRD);
-                map.addLayer(layerRiosHAITI);
-            } else {
-                map.removeLayer(layerRiosRD);
-                map.removeLayer(layerRiosHAITI);
-            }
+        document.getElementById('chkAccHT').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(layerAccidentesHAITI) : map.removeLayer(layerAccidentesHAITI);
         });
-
-        document.getElementById('chkPlayas').addEventListener('change', function(e) {
-            if (e.target.checked) {
-                map.addLayer(layerPlayasRD);
-                map.addLayer(layerPlayasHT);
-            } else {
-                map.removeLayer(layerPlayasRD);
-                map.removeLayer(layerPlayasHT);
-            }
+        document.getElementById('chkRiosRD').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(layerRiosRD) : map.removeLayer(layerRiosRD);
         });
-
-        document.getElementById('chkManglares').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerManglares) : map.removeLayer(layerManglares);
+        document.getElementById('chkRiosHT').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(layerRiosHAITI) : map.removeLayer(layerRiosHAITI);
         });
-
-        document.getElementById('chkCorales').addEventListener('change', function(e) {
-            e.target.checked ? map.addLayer(layerCorales) : map.removeLayer(layerCorales);
-        });
-
         document.getElementById('chkCiudadesRD').addEventListener('change', function(e) {
             e.target.checked ? map.addLayer(layerCiudadesRD) : map.removeLayer(layerCiudadesRD);
         });
-
         document.getElementById('chkCiudadesHT').addEventListener('change', function(e) {
             e.target.checked ? map.addLayer(layerCiudadesHT) : map.removeLayer(layerCiudadesHT);
         });
 
-        // Checkboxes para Regiones - SOLO LÍMITES
-        document.getElementById('chkRegionesUnicas').addEventListener('change', function(e) {
-            if (e.target.checked) {
-                map.addLayer(layerRegionesUnicas);
-            } else {
-                map.removeLayer(layerRegionesUnicas);
-            }
+        // Nuevos checkboxes
+        document.getElementById('chkPlayasRD').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(layerPlayasRD) : map.removeLayer(layerPlayasRD);
         });
-
-        document.getElementById('chkMacroregiones').addEventListener('change', function(e) {
-            if (e.target.checked) {
-                map.addLayer(layerMacroregiones);
-            } else {
-                map.removeLayer(layerMacroregiones);
-            }
+        document.getElementById('chkPlayasHT').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(layerPlayasHT) : map.removeLayer(layerPlayasHT);
+        });
+        document.getElementById('chkManglares').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(layerManglares) : map.removeLayer(layerManglares);
+        });
+        document.getElementById('chkCorales').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(layerCorales) : map.removeLayer(layerCorales);
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 8. BOTÓN REINICIAR
+        // 7. BOTÓN REINICIAR
         // ═══════════════════════════════════════════════════════════
         document.getElementById('resetMapBtn').addEventListener('click', function() {
+            // 1. Cambiar a vista Dibujo
             cambiarBase('mapa', document.getElementById('vistaDibujoBtn'));
+
+            // 2. Centrar y zoom original
             map.setView([19.03556466237287, -70.89432006796727], 8);
 
+            // 3. Estados según lo solicitado
             var estadoInicial = {
-                chkAccidentes: true,
-                chkRios: false,
-                chkPlayas: false,
-                chkManglares: false,
-                chkCorales: false,
+                chkAccRD: true,
+                chkAccHT: true,
+                chkRiosRD: false,
+                chkRiosHT: false,
                 chkCiudadesRD: false,
                 chkCiudadesHT: false,
                 'chk-frontera': true,
-                chkRegionesUnicas: false,
-                chkMacroregiones: false
+                chkPlayasRD: false,
+                chkPlayasHT: false,
+                chkManglares: false,
+                chkCorales: false,
+                'chk-provincias': false,
+                'chk-municipios': false,
+                'chk-regiones-unicas': false,
+                'chk-macroregiones': false
             };
 
             Object.keys(estadoInicial).forEach(function(id) {
@@ -1401,10 +1382,15 @@
                     }
                 }
             });
+
+            // Limpiar capas de delimitación
+            [capaProvincias, capaMunicipios, capaRegionesUnicas, capaMacroregiones].forEach(function(c) {
+                if (c && map.hasLayer(c)) map.removeLayer(c);
+            });
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 9. FRONTERA
+        // 8. FRONTERA (ruta corregida a dlim/)
         // ═══════════════════════════════════════════════════════════
 
         var capaFrontera = null;
@@ -1414,7 +1400,7 @@
         function cargarFrontera() {
             if (fronteraCargada || fronteraCargando) return;
             fronteraCargando = true;
-            fetch('anx/FRONTERA RD_HAI.geojson')
+            fetch('dlim/FRONTERA RD_HAI.geojson')
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
@@ -1466,6 +1452,352 @@
         }
 
         // ═══════════════════════════════════════════════════════════
+        // 9. DELIMITACIÓN (nuevas capas desde dlim/)
+        // ═══════════════════════════════════════════════════════════
+
+        // Funciones auxiliares para cargar GeoJSON con soporte de propiedades
+        function getProperty(feature, keys) {
+            if (!feature || !feature.properties) return null;
+            var props = feature.properties;
+
+            // 1) Búsqueda exacta
+            for (var i = 0; i < keys.length; i++) {
+                var val = props[keys[i]];
+                if (val !== undefined && val !== null && val !== '') {
+                    return val;
+                }
+            }
+
+            // 2) Búsqueda sin distinguir mayúsculas/minúsculas
+            var propKeys = Object.keys(props);
+            for (var j = 0; j < keys.length; j++) {
+                var buscada = String(keys[j]).toLowerCase();
+                for (var k = 0; k < propKeys.length; k++) {
+                    if (propKeys[k].toLowerCase() === buscada) {
+                        var v = props[propKeys[k]];
+                        if (v !== undefined && v !== null && v !== '') {
+                            return v;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        function agregarEventosPoligono(layer, estiloBase) {
+            layer.originalStyle = estiloBase;
+
+            layer.on('mouseover', function(e) {
+                var capa = e.target;
+                if (capaSeleccionada !== capa) {
+                    capa.setStyle({ weight: 3, color: '#FFFF', fillOpacity: 0.5 });
+                    capa.bringToFront();
+                }
+            });
+
+            layer.on('mouseout', function(e) {
+                var capa = e.target;
+                if (capaSeleccionada !== capa) {
+                    capa.setStyle(capa.originalStyle);
+                }
+            });
+
+            layer.on('click', function(e) {
+                var capa = e.target;
+                if (capaSeleccionada && capaSeleccionada !== capa) {
+                    capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
+                }
+                capaSeleccionada = capa;
+                capa.setStyle({ weight: 3, color: '#FFFF', fillOpacity: 0.5 });
+                capa.bringToFront();
+                map.fitBounds(capa.getBounds());
+                if (capa.getPopup()) {
+                    capa.openPopup();
+                }
+            });
+        }
+
+        var capaSeleccionada = null;
+
+        // --- Capa de Provincias ---
+        function crearCapaProvincias() {
+            var grupo = L.layerGroup();
+            var url = 'dlim/PROVINCIAS_RD_2026.json';
+
+            var estiloProvincias = {
+                color: "#8E44AD",
+                weight: 2,
+                fillColor: "#BB8FCE",
+                fillOpacity: 0.1,
+                dashArray: "4,4"
+            };
+
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.text();
+                })
+                .then(function(texto) {
+                    var data;
+                    var trimmed = texto.trim();
+                    if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
+                        data = JSON.parse(trimmed);
+                    } else {
+                        var features = trimmed.split(/\r?\n/)
+                            .filter(function(l) { return l.trim() !== ''; })
+                            .map(function(l) { return JSON.parse(l); });
+                        data = { type: "FeatureCollection", features: features };
+                    }
+
+                    if (!data.features || data.features.length === 0) {
+                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Provincias cargadas:', url, 'features:', data.features.length);
+
+                    var capa = L.geoJSON(data, {
+                        style: estiloProvincias,
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            layer.bindPopup("<b>🗺️ " + nombre + "</b>");
+                            agregarEventosPoligono(layer, estiloProvincias);
+                        }
+                    });
+                    grupo.addLayer(capa);
+
+                    var chk = document.getElementById('chk-provincias');
+                    if (chk && chk.checked) {
+                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    }
+                })
+                .catch(function(e) {
+                    console.warn('❌ Error cargando provincias:', url, e.message);
+                });
+
+            return grupo;
+        }
+
+        // --- Capa de Municipios ---
+        function crearCapaMunicipios() {
+            var grupo = L.layerGroup();
+            var archivos = [
+                'dlim/MUNICIPIOS_RD_2025.json'
+            ];
+
+            var estiloMunicipios = {
+                color: "#E67E22",
+                weight: 1.2,
+                fillColor: "#F5CBA7",
+                fillOpacity: 0.1,
+                dashArray: "2,3"
+            };
+
+            archivos.forEach(function(url) {
+                fetch(encodeURI(url))
+                    .then(function(r) {
+                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                        return r.json();
+                    })
+                    .then(function(data) {
+                        if (!data || !data.features || data.features.length === 0) {
+                            throw new Error('GeoJSON vacío o sin features: ' + url);
+                        }
+                        console.log('📦 Municipios cargados:', url, 'features:', data.features.length);
+                        var capa = L.geoJSON(data, {
+                            style: estiloMunicipios,
+                            onEachFeature: function(feature, layer) {
+                                var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                                var provincia = getProperty(feature, ['PROVINCIA', 'PROVINCE', 'provincia', 'Provincia']) || '';
+                                var popupContent = "<b>🏘️ " + nombre + "</b>";
+                                if (provincia) {
+                                    popupContent += "<br>Provincia: " + provincia;
+                                }
+                                layer.bindPopup(popupContent);
+                                agregarEventosPoligono(layer, estiloMunicipios);
+                            }
+                        });
+                        grupo.addLayer(capa);
+                        var chk = document.getElementById('chk-municipios');
+                        if (chk && chk.checked) {
+                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                        }
+                    })
+                    .catch(function(e) {
+                        console.warn('❌ Error cargando municipios:', url, e.message);
+                    });
+            });
+
+            return grupo;
+        }
+
+        // --- Capa de Regiones Únicas ---
+        function crearCapaRegionesUnicas() {
+            var grupo = L.layerGroup();
+            var url = 'dlim/regionesunicasRD.geojson';
+
+            var estiloRegionesUnicas = {
+                color: "#1ABC9C",
+                weight: 2.5,
+                fillColor: "#48C9B0",
+                fillOpacity: 0.15,
+                dashArray: "6,3"
+            };
+
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.text();
+                })
+                .then(function(texto) {
+                    var data;
+                    var trimmed = texto.trim();
+                    if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
+                        data = JSON.parse(trimmed);
+                    } else {
+                        var features = trimmed.split(/\r?\n/)
+                            .filter(function(l) { return l.trim() !== ''; })
+                            .map(function(l) { return JSON.parse(l); });
+                        data = { type: "FeatureCollection", features: features };
+                    }
+
+                    if (!data.features || data.features.length === 0) {
+                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Regiones Únicas cargadas:', url, 'features:', data.features.length);
+
+                    var capa = L.geoJSON(data, {
+                        style: estiloRegionesUnicas,
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            layer.bindPopup("<b>📋 " + nombre + "</b>");
+                            agregarEventosPoligono(layer, estiloRegionesUnicas);
+                        }
+                    });
+                    grupo.addLayer(capa);
+
+                    var chk = document.getElementById('chk-regiones-unicas');
+                    if (chk && chk.checked) {
+                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    }
+                })
+                .catch(function(e) {
+                    console.warn('❌ Error cargando regiones únicas:', url, e.message);
+                });
+
+            return grupo;
+        }
+
+        // --- Capa de Macroregiones ---
+        function crearCapaMacroregiones() {
+            var grupo = L.layerGroup();
+            var url = 'dlim/macroregionesRD.geojson';
+
+            var estiloMacroregiones = {
+                color: "#C0392B",
+                weight: 3,
+                fillColor: "#E74C3C",
+                fillOpacity: 0.12,
+                dashArray: "8,4"
+            };
+
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.text();
+                })
+                .then(function(texto) {
+                    var data;
+                    var trimmed = texto.trim();
+                    if (trimmed.charAt(0) === '{' && trimmed.indexOf('"FeatureCollection"') !== -1) {
+                        data = JSON.parse(trimmed);
+                    } else {
+                        var features = trimmed.split(/\r?\n/)
+                            .filter(function(l) { return l.trim() !== ''; })
+                            .map(function(l) { return JSON.parse(l); });
+                        data = { type: "FeatureCollection", features: features };
+                    }
+
+                    if (!data.features || data.features.length === 0) {
+                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Macroregiones cargadas:', url, 'features:', data.features.length);
+
+                    var capa = L.geoJSON(data, {
+                        style: estiloMacroregiones,
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            layer.bindPopup("<b>📊 " + nombre + "</b>");
+                            agregarEventosPoligono(layer, estiloMacroregiones);
+                        }
+                    });
+                    grupo.addLayer(capa);
+
+                    var chk = document.getElementById('chk-macroregiones');
+                    if (chk && chk.checked) {
+                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    }
+                })
+                .catch(function(e) {
+                    console.warn('❌ Error cargando macroregiones:', url, e.message);
+                });
+
+            return grupo;
+        }
+
+        // Instanciar capas de delimitación
+        var capaProvincias = crearCapaProvincias();
+        var capaMunicipios = crearCapaMunicipios();
+        var capaRegionesUnicas = crearCapaRegionesUnicas();
+        var capaMacroregiones = crearCapaMacroregiones();
+
+        // ════
+        // TOGGLE EXCLUSIVO PARA DELIMITACIÓN (solo uno a la vez)
+        // ════
+        window.toggleDelimitacion = function(tipo) {
+            var mapa = {
+                'provincias':      { chk: 'chk-provincias',      capa: capaProvincias },
+                'municipios':      { chk: 'chk-municipios',      capa: capaMunicipios },
+                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: capaRegionesUnicas },
+                'macroregiones':   { chk: 'chk-macroregiones',   capa: capaMacroregiones }
+            };
+
+            var seleccionado = mapa[tipo];
+            if (!seleccionado) return;
+
+            var activado = document.getElementById(seleccionado.chk).checked;
+
+            // Si se activó, desactivar los otros y quitar sus capas
+            if (activado) {
+                Object.keys(mapa).forEach(function(k) {
+                    if (k !== tipo) {
+                        var otro = mapa[k];
+                        var otroChk = document.getElementById(otro.chk);
+                        if (otroChk && otroChk.checked) {
+                            otroChk.checked = false;
+                        }
+                        if (otro.capa && map.hasLayer(otro.capa)) {
+                            map.removeLayer(otro.capa);
+                        }
+                    }
+                });
+                // Añadir la capa seleccionada
+                if (seleccionado.capa && !map.hasLayer(seleccionado.capa)) {
+                    map.addLayer(seleccionado.capa);
+                }
+            } else {
+                // Si se desactivó, quitar su capa
+                if (seleccionado.capa && map.hasLayer(seleccionado.capa)) {
+                    map.removeLayer(seleccionado.capa);
+                }
+            }
+
+            // Limpiar selección de polígono si pertenece a una capa que se quitó
+            if (capaSeleccionada && seleccionado.capa && seleccionado.capa.hasLayer(capaSeleccionada)) {
+                capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
+                capaSeleccionada = null;
+            }
+        };
+
+        // ═══════════════════════════════════════════════════════════
         // 10. Sincronización inicial de capas con los checkboxes
         // ═══════════════════════════════════════════════════════════
         document.querySelectorAll('#panel-controles input[type="checkbox"]').forEach(function(chk) {
@@ -1490,6 +1822,7 @@
             }
         };
 
+        // Ajuste móvil
         function ajustarPanelMobil() {
             if (window.innerWidth <= 768) {
                 var titulo = document.getElementById('panel-titulo');
