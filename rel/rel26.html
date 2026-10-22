@@ -700,6 +700,12 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         var capaMacroregiones = null;
         var capaSeleccionada = null;
 
+        // Flags de carga diferida para delimitación
+        var provinciasCargada = false;
+        var municipiosCargada = false;
+        var regionesUnicasCargada = false;
+        var macroregionesCargada = false;
+
         // Iconos
         var iconComunidad = L.divIcon({
             className: 'custom-div-icon',
@@ -1202,7 +1208,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- División Provincial RD (2026) - CORREGIDO ---
+        // --- División Provincial RD (2026) - Carga diferida ---
         function crearCapaProvincias() {
             var grupo = L.layerGroup();
             var url = 'dlim/PROVINCIAS_RD_2026.json';
@@ -1254,7 +1260,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- División Municipal RD (2025) - CORREGIDO ---
+        // --- División Municipal RD (2025) - Carga diferida ---
         function crearCapaMunicipios() {
             var grupo = L.layerGroup();
             var archivos = [
@@ -1303,10 +1309,10 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- Regiones Únicas de Planificación - CORREGIDO ---
+        // --- Regiones Únicas de Planificación - Carga diferida ---
         function crearCapaRegionesUnicas() {
             var grupo = L.layerGroup();
-            var url = 'dlim/regionesunicasRD.geojson';
+            var url = 'dlim/regionesunicasRD.json';
 
             var estiloRegionesUnicas = {
                 color: "#1ABC9C",
@@ -1355,10 +1361,10 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- Macroregiones de Planificación - CORREGIDO ---
+        // --- Macroregiones de Planificación - Carga diferida ---
         function crearCapaMacroregiones() {
             var grupo = L.layerGroup();
-            var url = 'dlim/macroregionesRD.geojson';
+            var url = 'dlim/macroregionesRD.json';
 
             var estiloMacroregiones = {
                 color: "#C0392B",
@@ -1410,16 +1416,16 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         // ════
         // 7. INSTANCIAR CAPAS Y TOGGLES
         // ════
+        // Capas que se cargan al inicio (relieve y marcadores)
         capaCordilleras = crearCapaCordilleras();
         capaLlanuras = crearCapaLlanuras();
         capaComunidadesRD = crearCapaComunidadesRD();
         capaComunidadesHT = crearCapaComunidadesHT();
         capaAlturasRD = crearCapaAlturas(alturasRD);
         capaAlturasHT = crearCapaAlturas(alturasHT);
-        capaProvincias = crearCapaProvincias();
-        capaMunicipios = crearCapaMunicipios();
-        capaRegionesUnicas = crearCapaRegionesUnicas();
-        capaMacroregiones = crearCapaMacroregiones();
+
+        // Las capas de delimitación se crean solo cuando el usuario las activa
+        // (ver toggleDelimitacion)
 
         window.toggleCordilleras = function(btn) {
             btn.classList.toggle('active');
@@ -1472,14 +1478,14 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         };
 
         // ════
-        // TOGGLE EXCLUSIVO PARA DELIMITACIÓN (CORREGIDO)
+        // TOGGLE EXCLUSIVO PARA DELIMITACIÓN CON CARGA DIFERIDA
         // ════
         window.toggleDelimitacion = function(tipo) {
             var mapa = {
-                'provincias':      { chk: 'chk-provincias',      capa: capaProvincias },
-                'municipios':      { chk: 'chk-municipios',      capa: capaMunicipios },
-                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: capaRegionesUnicas },
-                'macroregiones':   { chk: 'chk-macroregiones',   capa: capaMacroregiones }
+                'provincias':      { chk: 'chk-provincias',      getCapa: function() { return capaProvincias; },      setCapa: function(c) { capaProvincias = c; },      flag: function() { return provinciasCargada; },      setFlag: function(v) { provinciasCargada = v; },      crear: crearCapaProvincias },
+                'municipios':      { chk: 'chk-municipios',      getCapa: function() { return capaMunicipios; },      setCapa: function(c) { capaMunicipios = c; },      flag: function() { return municipiosCargada; },      setFlag: function(v) { municipiosCargada = v; },      crear: crearCapaMunicipios },
+                'regiones-unicas': { chk: 'chk-regiones-unicas', getCapa: function() { return capaRegionesUnicas; }, setCapa: function(c) { capaRegionesUnicas = c; }, flag: function() { return regionesUnicasCargada; }, setFlag: function(v) { regionesUnicasCargada = v; }, crear: crearCapaRegionesUnicas },
+                'macroregiones':   { chk: 'chk-macroregiones',   getCapa: function() { return capaMacroregiones; },   setCapa: function(c) { capaMacroregiones = c; },   flag: function() { return macroregionesCargada; },   setFlag: function(v) { macroregionesCargada = v; },   crear: crearCapaMacroregiones }
             };
 
             var seleccionado = mapa[tipo];
@@ -1496,24 +1502,35 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     if (otroChk && otroChk.checked) {
                     otroChk.checked = false;
                     }
-                    if (otro.capa && map.hasLayer(otro.capa)) {
-                    map.removeLayer(otro.capa);
+                    if (otro.getCapa() && map.hasLayer(otro.getCapa())) {
+                    map.removeLayer(otro.getCapa());
                     }
                     }
                 });
-                // Añadir la capa seleccionada (aunque aún esté cargando; el layerGroup se llenará después)
-                if (seleccionado.capa && !map.hasLayer(seleccionado.capa)) {
-                    map.addLayer(seleccionado.capa);
+
+                // Si la capa no está cargada aún, crearla (fetch) y añadirla
+                if (!seleccionado.flag()) {
+                    seleccionado.setFlag(true);
+                    var nuevaCapa = seleccionado.crear();
+                    seleccionado.setCapa(nuevaCapa);
+                    map.addLayer(nuevaCapa);
+                } else {
+                    var capaExistente = seleccionado.getCapa();
+                    if (capaExistente && !map.hasLayer(capaExistente)) {
+                    map.addLayer(capaExistente);
+                    }
                 }
             } else {
                 // Si se desactivó, quitar su capa
-                if (seleccionado.capa && map.hasLayer(seleccionado.capa)) {
-                    map.removeLayer(seleccionado.capa);
+                var capaActual = seleccionado.getCapa();
+                if (capaActual && map.hasLayer(capaActual)) {
+                    map.removeLayer(capaActual);
                 }
             }
 
             // Limpiar selección de polígono si pertenece a una capa que se quitó
-            if (capaSeleccionada && seleccionado.capa && seleccionado.capa.hasLayer(capaSeleccionada)) {
+            var capaRef = seleccionado.getCapa();
+            if (capaSeleccionada && capaRef && capaRef.hasLayer(capaSeleccionada)) {
                 capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
                 capaSeleccionada = null;
             }
@@ -1597,14 +1614,14 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         };
 
         // ════
-        // 10. CAPA DE FRONTERA - CORREGIDA
+        // 10. CAPA DE FRONTERA - CORREGIDA (Carga diferida)
         // ════
         var capaFrontera = null;
         var fronteraCargada = false;
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch(encodeURI('dlim/FRONTERA RD_HAI.geojson'))
+            fetch(encodeURI('dlim/FRONTERA RD_HAI.json'))
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
