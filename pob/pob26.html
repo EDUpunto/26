@@ -535,24 +535,21 @@
         </div>
     </div>
 
-    <!-- Modal Créditos - REORGANIZADO CON LA MISMA ESTRUCTURA -->
+    <!-- Modal Créditos -->
     <div id="modal-creditos" class="modal-overlay" onclick="cerrarModalCreditos(event)">
         <div class="modal-content">
 
-            <!-- ENCABEZADO PRINCIPAL -->
             <div class="creditos-header">
                 <h2><strong>I S F O D O S U</strong></h2>
                 <p class="subtitulo">DIGICON</p>
                 <h1>POBLACIÓN DE LA ISLA DE<br>SANTO DOMINGO</h1>
             </div>
 
-            <!-- SECCIÓN: CONSIDERACIONES -->
             <div class="creditos-seccion">
                 <h3>CONSIDERACIONES</h3>
                 <p>Este es un mapa interactivo realizado con visión y propósitos educativos.<br> Este mapa es una estimación generada mediante modelos espaciales basada en Bondarenko et al.(2025). La resolución típica es cercana a 1000 × 1000 metros, es decir, cada píxel representa una estimación de población dentro de una celda aproximadamente de 30 arco-segundos en el ecuador.<br>Para una mejor visualización se ha ajustado el mapa para que se visualicen las cuadrículas de pixeles con valor de 150 hab/km² o más.</p>
             </div>
 
-            <!-- SECCIÓN: FUENTES -->
             <div class="creditos-seccion">
                 <h3>FUENTES</h3>
                 <p>Bondarenko M., Priyatikanto R., Tejedor-Garavito N., Zhang W., McKeen T., Cunningham A., Woods T., Hilton J., Cihan D., Nosatiuk B., Brinkhoff T., Tatem A., Sorichetta A.. 2025 Constrained estimates of 2015-2030 total number of people per grid square at a resolution of 30 arc (approximately 1000m at the equator) R2025A version v1. Global Demographic Data Project - Funded by The Bill and Melinda Gates Foundation (INV-045237). WorldPop - School of Geography and Environmental Science, University of Southampton. DOI:10.5258/SOTON/WP00839</p>
@@ -560,49 +557,41 @@
                 <p>Raifer, M. (s. f.). Overpass Turbo [Aplicación web]. https://overpass-turbo.eu/</p>
             </div>
 
-            <!-- SECCIÓN: ORIGEN DEL PROYECTO -->
             <div class="creditos-seccion">
                 <h3>ORIGEN DEL PROYECTO</h3>
                 <p>Este proyecto surgió de la necesidad de ofrecer un mapa interactivo orientado a las aulas dominicanas. Hubo un primer esfuerzo entre 2007 y 2015 con tecnología Flash que fue publicado en el portal www.educando.edu.do del MINERD.</p>
             </div>
 
-            <!-- SECCIÓN: DESARROLLO -->
             <div class="creditos-seccion">
                 <h3>DESARROLLO</h3>
                 <p>En esta oportunidad hemos utilizado las tecnologías Leaflet, Overpass, QGis, Google Earth Pro, NASA, la plataforma OpenStreetMaps y otras para hacer realidad el recurso. La ingeniería y maquetación de este documento comenzó el 25.Jun.2026.</p>
             </div>
 
-            <!-- SECCIÓN: HERRAMIENTAS UTILIZADAS -->
             <div class="creditos-seccion">
                 <h3>HERRAMIENTAS UTILIZADAS</h3>
                 <p>Para el desarrollo de este proyecto empleé las siguientes herramientas de inteligencia artificial disponibles y en sus versiones gratuitas: DeepSeek, ChatGPT, Perplexity, Gemini y Claude.</p>
             </div>
 
-            <!-- SECCIÓN: PROPÓSITO DE LA IA -->
             <div class="creditos-seccion">
                 <h3>PROPÓSITO DE LA IA</h3>
                 <p>El uso de la inteligencia artificial se orientó principalmente a la generación de código de programación. También se empleó para la verificación de fechas, la localización precisa de documentación y, en menor medida, para la mejora de la redacción.</p>
             </div>
 
-            <!-- SECCIÓN: INTERVENCIÓN Y APORTE HUMANO -->
             <div class="creditos-seccion">
                 <h3>INTERVENCIÓN Y APORTE HUMANO</h3>
                 <p>Estimo que un 85% de la redacción es de mi propiedad. Mi aporte en el código HTML5 fue del 10% o menos. Mis principales intervenciones consistieron en suministrar los textos, los marcadores y los criterios orientadores. La IA generaba código estructurado que yo evaluaba y ajustaba hasta alcanzar el resultado deseado.</p>
             </div>
 
-            <!-- SECCIÓN: DECLARACIÓN DE AUTORÍA -->
             <div class="creditos-seccion declaracion">
                 <h3>DECLARACIÓN DE AUTORÍA</h3>
                 <p><em>"Certifico que el trabajo presentado es el resultado de un proceso de investigación, edición, curaduría, creación y esfuerzo. La IA fue utilizada como herramienta de apoyo, no como sustituta de mi criterio."</em></p>
             </div>
 
-            <!-- SECCIÓN: AUTORÍA Y PRODUCCIÓN -->
             <div class="creditos-seccion autores">
                 <p class="ubicacion">Redacción, diseño y producción general</p>
                 <p class="autor">Juan Ernesto De Frías</p>
             </div>
 
-            <!-- SECCIÓN: MENSAJE / CONTACTO -->
             <div class="creditos-seccion mensaje">
                 <p>Detrás de este recurso hay muchas horas de investigación y trabajo.</p>
                 <p>Tu opinión es fundamental: si observas algún punto que se pueda mejorar, ¡no dudes en escribirme!</p>
@@ -611,14 +600,12 @@
                 </p>
             </div>
 
-            <!-- SECCIÓN: EQUIPO DE TRABAJO -->
             <div class="creditos-seccion equipo">
                 <h3>EQUIPO DE TRABAJO DIGICON</h3>
                 <p>Juan Ernesto De Frías,<br>José Alberto Santos y Carlos Gabriel Tapia<br>
                 Santo Domingo, República Dominicana</p>
             </div>
 
-            <!-- BOTÓN CERRAR -->
             <button class="btn-cerrar-modal" onclick="cerrarModalCreditos()">Cerrar</button>
 
         </div>
@@ -649,7 +636,7 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 1. INICIALIZAR MAPA con maxZoom = 12
+        // 1. INICIALIZAR MAPA
         // ═══════════════════════════════════════════════════════════
         var map = L.map('map', { 
             zoomControl: false,
@@ -688,15 +675,15 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 3. CAPAS DE POBLACIÓN (GEOJSON) con color DINÁMICO por DN
+        // 3. CAPAS DE POBLACIÓN
         // ═══════════════════════════════════════════════════════════
-        var UMBRAL = 150;  // hab/km²
+        var UMBRAL = 150;
 
         var capaPobRD = null;
         var capaPobHT = null;
         var pobRDCargada = false;
         var pobHTCargada = false;
-        var capaActiva = 'rd';  // Por defecto solo RD
+        var capaActiva = 'rd';
 
         function getColor(dn, minDN, maxDN) {
             if (dn === null || dn === undefined || maxDN === minDN) {
@@ -828,7 +815,7 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 4. COMUNIDADES (puntos)
+        // 4. COMUNIDADES
         // ═══════════════════════════════════════════════════════════
         var iconComunidad = L.divIcon({
             className: 'custom-div-icon',
@@ -1065,14 +1052,17 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 5. FRONTERA (ruta dlim/)
+        // 5. FRONTERA (carga diferida a demanda)
         // ═══════════════════════════════════════════════════════════
         var capaFrontera = null;
         var fronteraCargada = false;
+        var fronteraCargando = false;
 
-        function cargarFrontera() {
-            if (fronteraCargada) return;
-            fetch(encodeURI('dlim/FRONTERA RD_HAI.geojson'))
+        function cargarFrontera(callback) {
+            if (fronteraCargada) { if (callback) callback(); return; }
+            if (fronteraCargando) return;
+            fronteraCargando = true;
+            fetch(encodeURI('dlim/FRONTERA_RD_HAI.json'))
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
@@ -1090,12 +1080,15 @@
                         }
                     });
                     fronteraCargada = true;
+                    fronteraCargando = false;
                     if (document.getElementById('chk-frontera').checked) {
                         map.addLayer(capaFrontera);
                     }
+                    if (callback) callback();
                     console.log('Frontera cargada correctamente.');
                 })
                 .catch(function(error) {
+                    fronteraCargando = false;
                     console.warn('Error cargando frontera:', error.message);
                 });
         }
@@ -1115,9 +1108,7 @@
             }
         };
 
-        if (document.getElementById('chk-frontera').checked) {
-            cargarFrontera();
-        }
+        // La frontera se activa en carga inicial (ver sección 10)
 
         // ═══════════════════════════════════════════════════════════
         // 5.1 PUERTOS / MARINAS
@@ -1441,13 +1432,20 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 7.1 CAPAS DE DELIMITACIÓN (exclusivas)
+        // 7.1 CAPAS DE DELIMITACIÓN (CARGA DIFERIDA)
         // ═══════════════════════════════════════════════════════════
         var capaProvincias = null;
         var capaMunicipios = null;
         var capaRegionesUnicas = null;
         var capaMacroregiones = null;
         var capaSeleccionadaDelim = null;
+
+        var estadosDelim = {
+            provincias: { cargada: false, cargando: false },
+            municipios: { cargada: false, cargando: false },
+            'regiones-unicas': { cargada: false, cargando: false },
+            macroregiones: { cargada: false, cargando: false }
+        };
 
         function agregarEventosPoligonoDelim(layer, estiloBase) {
             layer.originalStyle = estiloBase;
@@ -1515,12 +1513,15 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    estadosDelim.provincias.cargada = true;
+                    estadosDelim.provincias.cargando = false;
                     var chk = document.getElementById('chk-provincias');
                     if (chk && chk.checked) {
                         if (!map.hasLayer(grupo)) map.addLayer(grupo);
                     }
                 })
                 .catch(function(e) {
+                    estadosDelim.provincias.cargando = false;
                     console.warn('❌ Error cargando provincias:', url, e.message);
                 });
             return grupo;
@@ -1558,12 +1559,15 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    estadosDelim.municipios.cargada = true;
+                    estadosDelim.municipios.cargando = false;
                     var chk = document.getElementById('chk-municipios');
                     if (chk && chk.checked) {
                         if (!map.hasLayer(grupo)) map.addLayer(grupo);
                     }
                 })
                 .catch(function(e) {
+                    estadosDelim.municipios.cargando = false;
                     console.warn('❌ Error cargando municipios:', url, e.message);
                 });
             return grupo;
@@ -1571,7 +1575,7 @@
 
         function crearCapaRegionesUnicas() {
             var grupo = L.layerGroup();
-            var url = 'dlim/regionesunicasRD.geojson';
+            var url = 'dlim/regionesunicasRD.json';
             var estiloRegionesUnicas = {
                 color: "#1ABC9C",
                 weight: 2.5,
@@ -1608,12 +1612,15 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    estadosDelim['regiones-unicas'].cargada = true;
+                    estadosDelim['regiones-unicas'].cargando = false;
                     var chk = document.getElementById('chk-regiones-unicas');
                     if (chk && chk.checked) {
                         if (!map.hasLayer(grupo)) map.addLayer(grupo);
                     }
                 })
                 .catch(function(e) {
+                    estadosDelim['regiones-unicas'].cargando = false;
                     console.warn('❌ Error cargando regiones únicas:', url, e.message);
                 });
             return grupo;
@@ -1621,7 +1628,7 @@
 
         function crearCapaMacroregiones() {
             var grupo = L.layerGroup();
-            var url = 'dlim/macroregionesRD.geojson';
+            var url = 'dlim/macroregionesRD.json';
             var estiloMacroregiones = {
                 color: "#C0392B",
                 weight: 3,
@@ -1658,51 +1665,74 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    estadosDelim.macroregiones.cargada = true;
+                    estadosDelim.macroregiones.cargando = false;
                     var chk = document.getElementById('chk-macroregiones');
                     if (chk && chk.checked) {
                         if (!map.hasLayer(grupo)) map.addLayer(grupo);
                     }
                 })
                 .catch(function(e) {
+                    estadosDelim.macroregiones.cargando = false;
                     console.warn('❌ Error cargando macroregiones:', url, e.message);
                 });
             return grupo;
         }
 
-        // Crear las capas de delimitación (se cargan en segundo plano)
-        capaProvincias = crearCapaProvincias();
-        capaMunicipios = crearCapaMunicipios();
-        capaRegionesUnicas = crearCapaRegionesUnicas();
-        capaMacroregiones = crearCapaMacroregiones();
+        // NO se crean de antemano. Se crean al marcar la casilla.
+        // Las variables capaProvincias, etc., se asignan dentro de toggleDelimitacion.
 
         window.toggleDelimitacion = function(tipo) {
-            var mapa = {
-                'provincias':      { chk: 'chk-provincias',      capa: capaProvincias },
-                'municipios':      { chk: 'chk-municipios',      capa: capaMunicipios },
-                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: capaRegionesUnicas },
-                'macroregiones':   { chk: 'chk-macroregiones',   capa: capaMacroregiones }
+            var info = {
+                'provincias':      { chk: 'chk-provincias',      crear: crearCapaProvincias,      getCapa: function(){return capaProvincias;},      setCapa: function(c){capaProvincias = c;} },
+                'municipios':      { chk: 'chk-municipios',      crear: crearCapaMunicipios,      getCapa: function(){return capaMunicipios;},      setCapa: function(c){capaMunicipios = c;} },
+                'regiones-unicas': { chk: 'chk-regiones-unicas', crear: crearCapaRegionesUnicas, getCapa: function(){return capaRegionesUnicas;}, setCapa: function(c){capaRegionesUnicas = c;} },
+                'macroregiones':   { chk: 'chk-macroregiones',   crear: crearCapaMacroregiones,   getCapa: function(){return capaMacroregiones;},   setCapa: function(c){capaMacroregiones = c;} }
             };
-            var seleccionado = mapa[tipo];
+            var seleccionado = info[tipo];
             if (!seleccionado) return;
-            var activado = document.getElementById(seleccionado.chk).checked;
+            var chk = document.getElementById(seleccionado.chk);
+            var activado = chk.checked;
+
             if (activado) {
-                Object.keys(mapa).forEach(function(k) {
+                // Desactivar las otras casillas y capas
+                Object.keys(info).forEach(function(k) {
                     if (k !== tipo) {
-                        var otro = mapa[k];
+                        var otro = info[k];
                         var otroChk = document.getElementById(otro.chk);
-                        if (otroChk && otroChk.checked) otroChk.checked = false;
-                        if (otro.capa && map.hasLayer(otro.capa)) map.removeLayer(otro.capa);
+                        if (otroChk && otroChk.checked) {
+                            otroChk.checked = false;
+                            var otraCapa = otro.getCapa();
+                            if (otraCapa && map.hasLayer(otraCapa)) map.removeLayer(otraCapa);
+                        }
                     }
                 });
-                if (seleccionado.capa && !map.hasLayer(seleccionado.capa)) {
-                    map.addLayer(seleccionado.capa);
+
+                var estado = estadosDelim[tipo];
+                var capa = seleccionado.getCapa();
+
+                if (capa) {
+                    // Ya está cargada (o cargando), solo mostrarla si ya existe
+                    if (estado.cargada && !map.hasLayer(capa)) {
+                        map.addLayer(capa);
+                    }
+                    // Si está cargando, el .then la añadirá al mapa
+                } else if (!estado.cargando) {
+                    // Primera vez: iniciar carga
+                    estado.cargando = true;
+                    var nuevaCapa = seleccionado.crear();
+                    seleccionado.setCapa(nuevaCapa);
+                    // La función crearCapaXxx añade el layer al mapa si el checkbox está marcado
                 }
             } else {
-                if (seleccionado.capa && map.hasLayer(seleccionado.capa)) {
-                    map.removeLayer(seleccionado.capa);
+                // Desmarcado: quitar del mapa si existe
+                var capaActual = seleccionado.getCapa();
+                if (capaActual && map.hasLayer(capaActual)) {
+                    map.removeLayer(capaActual);
                 }
             }
-            if (capaSeleccionadaDelim && seleccionado.capa && seleccionado.capa.hasLayer(capaSeleccionadaDelim)) {
+
+            if (capaSeleccionadaDelim && seleccionado.getCapa() && seleccionado.getCapa().hasLayer(capaSeleccionadaDelim)) {
                 capaSeleccionadaDelim.setStyle(capaSeleccionadaDelim.originalStyle);
                 capaSeleccionadaDelim = null;
             }
@@ -1837,10 +1867,10 @@
             var chkFrontera = document.getElementById('chk-frontera');
             if (chkFrontera && !chkFrontera.checked) {
                 chkFrontera.checked = true;
-                toggleFrontera();
-            } else if (chkFrontera && chkFrontera.checked) {
-                if (!fronteraCargada) cargarFrontera();
-                else if (capaFrontera && !map.hasLayer(capaFrontera)) map.addLayer(capaFrontera);
+            }
+            // Cargar frontera (diferida) si el checkbox está marcado
+            if (chkFrontera && chkFrontera.checked && !fronteraCargada) {
+                cargarFrontera();
             }
 
             // Establecer vista y zoom
