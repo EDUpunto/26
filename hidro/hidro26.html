@@ -643,11 +643,17 @@
         var capaPresas = null;
         var capaLagos = null;
 
-        // Capas de delimitación (nuevas)
+        // Capas de delimitación (lazy load)
         var capaProvincias = null;
         var capaMunicipios = null;
         var capaRegionesUnicas = null;
         var capaMacroregiones = null;
+
+        // Flags para saber si ya se cargaron
+        var provinciasCargadas = false;
+        var municipiosCargados = false;
+        var regionesUnicasCargadas = false;
+        var macroregionesCargadas = false;
 
         // ═══════════════════════════════════════════════════════════
         // 4. ESTILOS E ICONOS
@@ -1319,14 +1325,14 @@
         cargarParCuenca('anx/haiti/cuencaBLANCHE.json', 'anx/haiti/cauceBLANCHE.json', 'del río Blanco (Blanche)', true);
 
         // ═══════════════════════════════════════════════════════════
-        // 13. CAPA DE FRONTERA (ACTIVA)
+        // 13. CAPA DE FRONTERA (ACTIVA, nombre actualizado)
         // ═══════════════════════════════════════════════════════════
         var capaFrontera = null;
         var fronteraCargada = false;
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch(encodeURI('dlim/FRONTERA RD_HAI.geojson'))
+            fetch(encodeURI('dlim/FRONTERA_RD_HAI.json'))
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
@@ -1374,11 +1380,15 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 14. CREACIÓN DE CAPAS DE DELIMITACIÓN (desde carpeta dlim/)
+        // 14. CARGA DIFERIDA (LAZY LOAD) DE CAPAS DE DELIMITACIÓN
+        //     Los nombres de archivo han sido actualizados.
         // ═══════════════════════════════════════════════════════════
 
         // --- División Provincial RD (2026) ---
-        function crearCapaProvincias() {
+        function cargarProvincias() {
+            if (provinciasCargadas) return;
+            provinciasCargadas = true;
+
             var grupo = L.layerGroup();
             var url = 'dlim/PROVINCIAS_RD_2026.json';
 
@@ -1420,6 +1430,7 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    capaProvincias = grupo;
 
                     var chk = document.getElementById('chk-provincias');
                     if (chk && chk.checked) {
@@ -1428,13 +1439,15 @@
                 })
                 .catch(function(e) {
                     console.warn('❌ Error cargando provincias:', url, e.message);
+                    provinciasCargadas = false; // permitir reintentar
                 });
-
-            return grupo;
         }
 
         // --- División Municipal RD (2025) ---
-        function crearCapaMunicipios() {
+        function cargarMunicipios() {
+            if (municipiosCargados) return;
+            municipiosCargados = true;
+
             var grupo = L.layerGroup();
             var url = 'dlim/MUNICIPIOS_RD_2025.json';
 
@@ -1469,6 +1482,8 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    capaMunicipios = grupo;
+
                     var chk = document.getElementById('chk-municipios');
                     if (chk && chk.checked) {
                         if (!map.hasLayer(grupo)) map.addLayer(grupo);
@@ -1476,15 +1491,17 @@
                 })
                 .catch(function(e) {
                     console.warn('❌ Error cargando municipios:', url, e.message);
+                    municipiosCargados = false;
                 });
-
-            return grupo;
         }
 
         // --- Regiones Únicas de Planificación ---
-        function crearCapaRegionesUnicas() {
+        function cargarRegionesUnicas() {
+            if (regionesUnicasCargadas) return;
+            regionesUnicasCargadas = true;
+
             var grupo = L.layerGroup();
-            var url = 'dlim/regionesunicasRD.geojson';
+            var url = 'dlim/regionesunicasRD.json';
 
             var estiloRegionesUnicas = {
                 color: "#1ABC9C",
@@ -1524,6 +1541,7 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    capaRegionesUnicas = grupo;
 
                     var chk = document.getElementById('chk-regiones-unicas');
                     if (chk && chk.checked) {
@@ -1532,15 +1550,17 @@
                 })
                 .catch(function(e) {
                     console.warn('❌ Error cargando regiones únicas:', url, e.message);
+                    regionesUnicasCargadas = false;
                 });
-
-            return grupo;
         }
 
         // --- Macroregiones de Planificación ---
-        function crearCapaMacroregiones() {
+        function cargarMacroregiones() {
+            if (macroregionesCargadas) return;
+            macroregionesCargadas = true;
+
             var grupo = L.layerGroup();
-            var url = 'dlim/macroregionesRD.geojson';
+            var url = 'dlim/macroregionesRD.json';
 
             var estiloMacroregiones = {
                 color: "#C0392B",
@@ -1580,6 +1600,7 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    capaMacroregiones = grupo;
 
                     var chk = document.getElementById('chk-macroregiones');
                     if (chk && chk.checked) {
@@ -1588,26 +1609,19 @@
                 })
                 .catch(function(e) {
                     console.warn('❌ Error cargando macroregiones:', url, e.message);
+                    macroregionesCargadas = false;
                 });
-
-            return grupo;
         }
 
-        // Instanciar capas de delimitación
-        capaProvincias = crearCapaProvincias();
-        capaMunicipios = crearCapaMunicipios();
-        capaRegionesUnicas = crearCapaRegionesUnicas();
-        capaMacroregiones = crearCapaMacroregiones();
-
         // ═══════════════════════════════════════════════════════════
-        // 15. TOGGLE EXCLUSIVO PARA DELIMITACIÓN
+        // 15. TOGGLE EXCLUSIVO PARA DELIMITACIÓN (con lazy load)
         // ═══════════════════════════════════════════════════════════
         window.toggleDelimitacion = function(tipo) {
             var mapa = {
-                'provincias':      { chk: 'chk-provincias',      capa: capaProvincias },
-                'municipios':      { chk: 'chk-municipios',      capa: capaMunicipios },
-                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: capaRegionesUnicas },
-                'macroregiones':   { chk: 'chk-macroregiones',   capa: capaMacroregiones }
+                'provincias':      { chk: 'chk-provincias',      capa: capaProvincias,      cargar: cargarProvincias },
+                'municipios':      { chk: 'chk-municipios',      capa: capaMunicipios,      cargar: cargarMunicipios },
+                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: capaRegionesUnicas,  cargar: cargarRegionesUnicas },
+                'macroregiones':   { chk: 'chk-macroregiones',   capa: capaMacroregiones,   cargar: cargarMacroregiones }
             };
 
             var seleccionado = mapa[tipo];
@@ -1629,11 +1643,18 @@
                         }
                     }
                 });
-                // Añadir la capa seleccionada
-                if (seleccionado.capa && !map.hasLayer(seleccionado.capa)) {
-                    map.addLayer(seleccionado.capa);
+
+                // Lazy load: si la capa aún no existe, cargarla
+                if (!seleccionado.capa && seleccionado.cargar) {
+                    seleccionado.cargar();
+                } else if (seleccionado.capa) {
+                    // Ya está cargada, añadirla
+                    if (!map.hasLayer(seleccionado.capa)) {
+                        map.addLayer(seleccionado.capa);
+                    }
                 }
             } else {
+                // Desmarcado: quitar capa si existe
                 if (seleccionado.capa && map.hasLayer(seleccionado.capa)) {
                     map.removeLayer(seleccionado.capa);
                 }
