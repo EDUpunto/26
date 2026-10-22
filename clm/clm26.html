@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -871,14 +872,14 @@
         };
 
         // ═══════════════════════════════════════════════════════════
-        // 4. FRONTERA (ruta corregida a dlim/)
+        // 4. FRONTERA (archivo renombrado a .json)
         // ═══════════════════════════════════════════════════════════
         var capaFrontera = null;
         var fronteraCargada = false;
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch(encodeURI('dlim/FRONTERA RD_HAI.geojson'))
+            fetch(encodeURI('dlim/FRONTERA RD_HAI.json'))
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
@@ -926,13 +927,13 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 5. DELIMITACIÓN (nuevas capas desde dlim/)
+        // 5. DELIMITACIÓN (carga diferida + nombres corregidos)
         // ═══════════════════════════════════════════════════════════
         var capaProvincias = null;
         var capaMunicipios = null;
         var capaRegionesUnicas = null;
         var capaMacroregiones = null;
-        var capaSeleccionadaDelim = null; // para el resaltado
+        var capaSeleccionadaDelim = null;
 
         // Estilos
         var estiloProvincias = {
@@ -952,7 +953,6 @@
             fillOpacity: 0.12, dashArray: "8,4"
         };
 
-        // Estilo de selección y hover para delimitación
         var estiloHoverDelim = { weight: 3, color: '#FFFF00', fillOpacity: 0.3 };
         var estiloSeleccionDelim = { weight: 4, color: '#FFFFFF', fillOpacity: 0.4 };
 
@@ -1052,7 +1052,7 @@
 
         function crearCapaRegionesUnicas() {
             var grupo = L.layerGroup();
-            var url = 'dlim/regionesunicasRD.geojson';
+            var url = 'dlim/regionesunicasRD.json';
             fetch(encodeURI(url))
                 .then(function(r) {
                     if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
@@ -1088,7 +1088,7 @@
 
         function crearCapaMacroregiones() {
             var grupo = L.layerGroup();
-            var url = 'dlim/macroregionesRD.geojson';
+            var url = 'dlim/macroregionesRD.json';
             fetch(encodeURI(url))
                 .then(function(r) {
                     if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
@@ -1122,46 +1122,75 @@
             return grupo;
         }
 
-        // Instanciar capas de delimitación
-        capaProvincias = crearCapaProvincias();
-        capaMunicipios = crearCapaMunicipios();
-        capaRegionesUnicas = crearCapaRegionesUnicas();
-        capaMacroregiones = crearCapaMacroregiones();
+        // Función para crear la capa bajo demanda (lazy loading)
+        function cargarDelimitacion(tipo) {
+            if (tipo === 'provincias' && !capaProvincias) {
+                capaProvincias = crearCapaProvincias();
+            } else if (tipo === 'municipios' && !capaMunicipios) {
+                capaMunicipios = crearCapaMunicipios();
+            } else if (tipo === 'regiones-unicas' && !capaRegionesUnicas) {
+                capaRegionesUnicas = crearCapaRegionesUnicas();
+            } else if (tipo === 'macroregiones' && !capaMacroregiones) {
+                capaMacroregiones = crearCapaMacroregiones();
+            }
+        }
 
-        // Toggle exclusivo
+        // Toggle con carga diferida y exclusividad
         window.toggleDelimitacion = function(tipo) {
             var mapa = {
-                'provincias':      { chk: 'chk-provincias',      capa: capaProvincias },
-                'municipios':      { chk: 'chk-municipios',      capa: capaMunicipios },
-                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: capaRegionesUnicas },
-                'macroregiones':   { chk: 'chk-macroregiones',   capa: capaMacroregiones }
+                'provincias':      { chk: 'chk-provincias',      capa: function() { return capaProvincias; },    cargar: function() { cargarDelimitacion('provincias'); } },
+                'municipios':      { chk: 'chk-municipios',      capa: function() { return capaMunicipios; },    cargar: function() { cargarDelimitacion('municipios'); } },
+                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: function() { return capaRegionesUnicas; }, cargar: function() { cargarDelimitacion('regiones-unicas'); } },
+                'macroregiones':   { chk: 'chk-macroregiones',   capa: function() { return capaMacroregiones; },  cargar: function() { cargarDelimitacion('macroregiones'); } }
             };
+
             var seleccionado = mapa[tipo];
             if (!seleccionado) return;
             var activado = document.getElementById(seleccionado.chk).checked;
+
             if (activado) {
-                // Desactivar los demás
+                // Primero, desactivar todos los demás y quitar sus capas
                 Object.keys(mapa).forEach(function(k) {
                     if (k !== tipo) {
                         var otro = mapa[k];
                         var otroChk = document.getElementById(otro.chk);
                         if (otroChk && otroChk.checked) otroChk.checked = false;
-                        if (otro.capa && map.hasLayer(otro.capa)) map.removeLayer(otro.capa);
+                        var otraCapa = otro.capa();
+                        if (otraCapa && map.hasLayer(otraCapa)) map.removeLayer(otraCapa);
                     }
                 });
-                // Mostrar la seleccionada
-                if (seleccionado.capa && !map.hasLayer(seleccionado.capa)) {
-                    map.addLayer(seleccionado.capa);
+
+                // Cargar la capa si no existe (lazy)
+                if (!seleccionado.capa()) {
+                    seleccionado.cargar();
                 }
+
+                // Esperar un tick para que la capa se cree (fetch asíncrono) y luego añadirla
+                // Usamos un setTimeout 0 para darle oportunidad al fetch, pero como es asíncrono
+                // la capa podría no estar lista aún. En su lugar, modificamos los creadores
+                // para que añadan la capa al mapa directamente si ya está en el layerGroup.
+                // Solución simple: añadir la capa cuando esté lista mediante un intervalo corto.
+                var intentos = 0;
+                var interval = setInterval(function() {
+                    var capa = seleccionado.capa();
+                    if (capa) {
+                        clearInterval(interval);
+                        if (map.hasLayer(capa)) map.removeLayer(capa);
+                        map.addLayer(capa);
+                    } else if (intentos++ > 20) {
+                        clearInterval(interval);
+                        console.warn('No se pudo cargar la capa de delimitación: ' + tipo);
+                    }
+                }, 100);
+
             } else {
-                if (seleccionado.capa && map.hasLayer(seleccionado.capa)) {
-                    map.removeLayer(seleccionado.capa);
+                var capa = seleccionado.capa();
+                if (capa && map.hasLayer(capa)) map.removeLayer(capa);
+                // Limpiar selección
+                if (capaSeleccionadaDelim) {
+                    capaSeleccionadaDelim.setStyle(capaSeleccionadaDelim.originalStyle);
+                    capaSeleccionadaDelim = null;
                 }
-            }
-            // Limpiar selección de polígono si la capa se quitó
-            if (capaSeleccionadaDelim && seleccionado.capa && seleccionado.capa.hasLayer(capaSeleccionadaDelim)) {
-                capaSeleccionadaDelim.setStyle(capaSeleccionadaDelim.originalStyle);
-                capaSeleccionadaDelim = null;
             }
         };
 
@@ -1487,12 +1516,10 @@
                 var chk = document.getElementById(id);
                 if (chk && chk.checked) {
                     chk.checked = false;
-                    var tipo = id.replace('chk-', '').replace('regiones-unicas', 'regiones-unicas');
-                    // Llamar manualmente al toggle para quitar la capa
-                    // (evitamos depender del nombre exacto)
                 }
             });
-            // Quitar capas de delimitación explícitamente
+
+            // Quitar capas de delimitación explícitamente (si existen)
             [capaProvincias, capaMunicipios, capaRegionesUnicas, capaMacroregiones].forEach(function(c) {
                 if (c && map.hasLayer(c)) map.removeLayer(c);
             });
@@ -1523,3 +1550,4 @@
     </script>
 </body>
 </html>
+```
