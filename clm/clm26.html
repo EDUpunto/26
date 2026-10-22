@@ -878,7 +878,7 @@
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch(encodeURI('dlim/FRONTERA RD_HAI.json'))
+            fetch(encodeURI('dlim/FRONTERA_RD_HAI.json'))
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
