@@ -615,8 +615,6 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
     <script>
         // ════
         // 0. FUNCIÓN AUXILIAR PARA OBTENER PROPIEDADES
-        //    (CORREGIDA: ahora ignora mayúsculas/minúsculas,
-        //     así "NAME_ES" encuentra también "name_es")
         // ════
         function getProperty(feature, keys) {
             if (!feature || !feature.properties) return null;
@@ -1129,10 +1127,6 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     }
                     });
                     grupo.addLayer(capa);
-                    var btn = document.getElementById('btn-cordilleras');
-                    if (btn && btn.classList.contains('active')) {
-                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
-                    }
                     })
                     .catch(function(e) {
                     console.warn('❌ Error cargando cordillera:', url, e.message);
@@ -1199,10 +1193,6 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     }
                     });
                     grupo.addLayer(capa);
-                    var btn = document.getElementById('btn-llanuras');
-                    if (btn && btn.classList.contains('active')) {
-                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
-                    }
                     })
                     .catch(function(e) {
                     console.warn('❌ Error cargando llanura:', url, e.message);
@@ -1212,7 +1202,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- División Provincial RD (2026) - ruta dlim/ y popup con NAME_ES ---
+        // --- División Provincial RD (2026) - CORREGIDO ---
         function crearCapaProvincias() {
             var grupo = L.layerGroup();
             var url = 'dlim/PROVINCIAS_RD_2026.json';
@@ -1256,11 +1246,6 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     }
                     });
                     grupo.addLayer(capa);
-
-                    var chk = document.getElementById('chk-provincias');
-                    if (chk && chk.checked) {
-                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
-                    }
                 })
                 .catch(function(e) {
                     console.warn('❌ Error cargando provincias:', url, e.message);
@@ -1269,7 +1254,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- División Municipal RD (2025) - ruta dlim/ y popup con NAME_ES ---
+        // --- División Municipal RD (2025) - CORREGIDO ---
         function crearCapaMunicipios() {
             var grupo = L.layerGroup();
             var archivos = [
@@ -1309,10 +1294,6 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     }
                     });
                     grupo.addLayer(capa);
-                    var chk = document.getElementById('chk-municipios');
-                    if (chk && chk.checked) {
-                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
-                    }
                     })
                     .catch(function(e) {
                     console.warn('❌ Error cargando municipios:', url, e.message);
@@ -1322,7 +1303,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- Regiones Únicas de Planificación - ruta dlim/ y popup con NAME_ES ---
+        // --- Regiones Únicas de Planificación - CORREGIDO ---
         function crearCapaRegionesUnicas() {
             var grupo = L.layerGroup();
             var url = 'dlim/regionesunicasRD.geojson';
@@ -1366,11 +1347,6 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     }
                     });
                     grupo.addLayer(capa);
-
-                    var chk = document.getElementById('chk-regiones-unicas');
-                    if (chk && chk.checked) {
-                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
-                    }
                 })
                 .catch(function(e) {
                     console.warn('❌ Error cargando regiones únicas:', url, e.message);
@@ -1379,7 +1355,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
             return grupo;
         }
 
-        // --- Macroregiones de Planificación - ruta dlim/ y popup con NAME_ES ---
+        // --- Macroregiones de Planificación - CORREGIDO ---
         function crearCapaMacroregiones() {
             var grupo = L.layerGroup();
             var url = 'dlim/macroregionesRD.geojson';
@@ -1423,11 +1399,6 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     }
                     });
                     grupo.addLayer(capa);
-
-                    var chk = document.getElementById('chk-macroregiones');
-                    if (chk && chk.checked) {
-                    if (!map.hasLayer(grupo)) map.addLayer(grupo);
-                    }
                 })
                 .catch(function(e) {
                     console.warn('❌ Error cargando macroregiones:', url, e.message);
@@ -1501,7 +1472,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         };
 
         // ════
-        // TOGGLE EXCLUSIVO PARA DELIMITACIÓN (solo uno a la vez)
+        // TOGGLE EXCLUSIVO PARA DELIMITACIÓN (CORREGIDO)
         // ════
         window.toggleDelimitacion = function(tipo) {
             var mapa = {
@@ -1530,7 +1501,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     }
                     }
                 });
-                // Añadir la capa seleccionada
+                // Añadir la capa seleccionada (aunque aún esté cargando; el layerGroup se llenará después)
                 if (seleccionado.capa && !map.hasLayer(seleccionado.capa)) {
                     map.addLayer(seleccionado.capa);
                 }
@@ -1626,7 +1597,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         };
 
         // ════
-        // 10. CAPA DE FRONTERA - ruta dlim/
+        // 10. CAPA DE FRONTERA - CORREGIDA
         // ════
         var capaFrontera = null;
         var fronteraCargada = false;
@@ -1651,6 +1622,7 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
                     }
                     });
                     fronteraCargada = true;
+                    // Añadir solo si el checkbox está marcado
                     if (document.getElementById('chk-frontera').checked) {
                     map.addLayer(capaFrontera);
                     }
