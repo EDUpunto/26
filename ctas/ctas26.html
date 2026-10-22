@@ -1390,7 +1390,7 @@
         });
 
         // ═══════════════════════════════════════════════════════════
-        // 8. FRONTERA (ruta corregida a dlim/)
+        // 8. FRONTERA (ruta actualizada a dlim/FRONTERA_RD_HAI.json)
         // ═══════════════════════════════════════════════════════════
 
         var capaFrontera = null;
@@ -1400,7 +1400,7 @@
         function cargarFrontera() {
             if (fronteraCargada || fronteraCargando) return;
             fronteraCargando = true;
-            fetch('dlim/FRONTERA RD_HAI.geojson')
+            fetch('dlim/FRONTERA_RD_HAI.json')
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
@@ -1452,7 +1452,7 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 9. DELIMITACIÓN (nuevas capas desde dlim/)
+        // 9. DELIMITACIÓN (carga diferida, nombres de archivo actualizados)
         // ═══════════════════════════════════════════════════════════
 
         // Funciones auxiliares para cargar GeoJSON con soporte de propiedades
@@ -1519,8 +1519,27 @@
 
         var capaSeleccionada = null;
 
+        // --- Variables de control para carga diferida ---
+        var capaProvincias = null;
+        var capaMunicipios = null;
+        var capaRegionesUnicas = null;
+        var capaMacroregiones = null;
+
+        var provinciasCargada = false;
+        var municipiosCargada = false;
+        var regionesUnicasCargada = false;
+        var macroregionesCargada = false;
+
+        var provinciasCargando = false;
+        var municipiosCargando = false;
+        var regionesUnicasCargando = false;
+        var macroregionesCargando = false;
+
         // --- Capa de Provincias ---
-        function crearCapaProvincias() {
+        function cargarProvincias() {
+            if (provinciasCargada || provinciasCargando) return;
+            provinciasCargando = true;
+
             var grupo = L.layerGroup();
             var url = 'dlim/PROVINCIAS_RD_2026.json';
 
@@ -1563,6 +1582,9 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    capaProvincias = grupo;
+                    provinciasCargada = true;
+                    provinciasCargando = false;
 
                     var chk = document.getElementById('chk-provincias');
                     if (chk && chk.checked) {
@@ -1570,18 +1592,18 @@
                     }
                 })
                 .catch(function(e) {
+                    provinciasCargando = false;
                     console.warn('❌ Error cargando provincias:', url, e.message);
                 });
-
-            return grupo;
         }
 
         // --- Capa de Municipios ---
-        function crearCapaMunicipios() {
+        function cargarMunicipios() {
+            if (municipiosCargada || municipiosCargando) return;
+            municipiosCargando = true;
+
             var grupo = L.layerGroup();
-            var archivos = [
-                'dlim/MUNICIPIOS_RD_2025.json'
-            ];
+            var url = 'dlim/MUNICIPIOS_RD_2025.json';
 
             var estiloMunicipios = {
                 color: "#E67E22",
@@ -1591,48 +1613,53 @@
                 dashArray: "2,3"
             };
 
-            archivos.forEach(function(url) {
-                fetch(encodeURI(url))
-                    .then(function(r) {
-                        if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
-                        return r.json();
-                    })
-                    .then(function(data) {
-                        if (!data || !data.features || data.features.length === 0) {
-                            throw new Error('GeoJSON vacío o sin features: ' + url);
-                        }
-                        console.log('📦 Municipios cargados:', url, 'features:', data.features.length);
-                        var capa = L.geoJSON(data, {
-                            style: estiloMunicipios,
-                            onEachFeature: function(feature, layer) {
-                                var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
-                                var provincia = getProperty(feature, ['PROVINCIA', 'PROVINCE', 'provincia', 'Provincia']) || '';
-                                var popupContent = "<b>🏘️ " + nombre + "</b>";
-                                if (provincia) {
-                                    popupContent += "<br>Provincia: " + provincia;
-                                }
-                                layer.bindPopup(popupContent);
-                                agregarEventosPoligono(layer, estiloMunicipios);
-                            }
-                        });
-                        grupo.addLayer(capa);
-                        var chk = document.getElementById('chk-municipios');
-                        if (chk && chk.checked) {
-                            if (!map.hasLayer(grupo)) map.addLayer(grupo);
-                        }
-                    })
-                    .catch(function(e) {
-                        console.warn('❌ Error cargando municipios:', url, e.message);
-                    });
-            });
+            fetch(encodeURI(url))
+                .then(function(r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + url);
+                    return r.json();
+                })
+                .then(function(data) {
+                    if (!data || !data.features || data.features.length === 0) {
+                        throw new Error('GeoJSON vacío o sin features: ' + url);
+                    }
+                    console.log('📦 Municipios cargados:', url, 'features:', data.features.length);
 
-            return grupo;
+                    var capa = L.geoJSON(data, {
+                        style: estiloMunicipios,
+                        onEachFeature: function(feature, layer) {
+                            var nombre = getProperty(feature, ['NAME_ES']) || 'Sin nombre';
+                            var provincia = getProperty(feature, ['PROVINCIA', 'PROVINCE', 'provincia', 'Provincia']) || '';
+                            var popupContent = "<b>🏘️ " + nombre + "</b>";
+                            if (provincia) {
+                                popupContent += "<br>Provincia: " + provincia;
+                            }
+                            layer.bindPopup(popupContent);
+                            agregarEventosPoligono(layer, estiloMunicipios);
+                        }
+                    });
+                    grupo.addLayer(capa);
+                    capaMunicipios = grupo;
+                    municipiosCargada = true;
+                    municipiosCargando = false;
+
+                    var chk = document.getElementById('chk-municipios');
+                    if (chk && chk.checked) {
+                        if (!map.hasLayer(grupo)) map.addLayer(grupo);
+                    }
+                })
+                .catch(function(e) {
+                    municipiosCargando = false;
+                    console.warn('❌ Error cargando municipios:', url, e.message);
+                });
         }
 
         // --- Capa de Regiones Únicas ---
-        function crearCapaRegionesUnicas() {
+        function cargarRegionesUnicas() {
+            if (regionesUnicasCargada || regionesUnicasCargando) return;
+            regionesUnicasCargando = true;
+
             var grupo = L.layerGroup();
-            var url = 'dlim/regionesunicasRD.geojson';
+            var url = 'dlim/regionesunicasRD.json';
 
             var estiloRegionesUnicas = {
                 color: "#1ABC9C",
@@ -1673,6 +1700,9 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    capaRegionesUnicas = grupo;
+                    regionesUnicasCargada = true;
+                    regionesUnicasCargando = false;
 
                     var chk = document.getElementById('chk-regiones-unicas');
                     if (chk && chk.checked) {
@@ -1680,16 +1710,18 @@
                     }
                 })
                 .catch(function(e) {
+                    regionesUnicasCargando = false;
                     console.warn('❌ Error cargando regiones únicas:', url, e.message);
                 });
-
-            return grupo;
         }
 
         // --- Capa de Macroregiones ---
-        function crearCapaMacroregiones() {
+        function cargarMacroregiones() {
+            if (macroregionesCargada || macroregionesCargando) return;
+            macroregionesCargando = true;
+
             var grupo = L.layerGroup();
-            var url = 'dlim/macroregionesRD.geojson';
+            var url = 'dlim/macroregionesRD.json';
 
             var estiloMacroregiones = {
                 color: "#C0392B",
@@ -1730,6 +1762,9 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    capaMacroregiones = grupo;
+                    macroregionesCargada = true;
+                    macroregionesCargando = false;
 
                     var chk = document.getElementById('chk-macroregiones');
                     if (chk && chk.checked) {
@@ -1737,27 +1772,20 @@
                     }
                 })
                 .catch(function(e) {
+                    macroregionesCargando = false;
                     console.warn('❌ Error cargando macroregiones:', url, e.message);
                 });
-
-            return grupo;
         }
 
-        // Instanciar capas de delimitación
-        var capaProvincias = crearCapaProvincias();
-        var capaMunicipios = crearCapaMunicipios();
-        var capaRegionesUnicas = crearCapaRegionesUnicas();
-        var capaMacroregiones = crearCapaMacroregiones();
-
         // ════
-        // TOGGLE EXCLUSIVO PARA DELIMITACIÓN (solo uno a la vez)
+        // TOGGLE EXCLUSIVO PARA DELIMITACIÓN CON CARGA DIFERIDA
         // ════
         window.toggleDelimitacion = function(tipo) {
             var mapa = {
-                'provincias':      { chk: 'chk-provincias',      capa: capaProvincias },
-                'municipios':      { chk: 'chk-municipios',      capa: capaMunicipios },
-                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: capaRegionesUnicas },
-                'macroregiones':   { chk: 'chk-macroregiones',   capa: capaMacroregiones }
+                'provincias':      { chk: 'chk-provincias',      cargar: cargarProvincias,      capa: function() { return capaProvincias; } },
+                'municipios':      { chk: 'chk-municipios',      cargar: cargarMunicipios,      capa: function() { return capaMunicipios; } },
+                'regiones-unicas': { chk: 'chk-regiones-unicas', cargar: cargarRegionesUnicas,  capa: function() { return capaRegionesUnicas; } },
+                'macroregiones':   { chk: 'chk-macroregiones',   cargar: cargarMacroregiones,   capa: function() { return capaMacroregiones; } }
             };
 
             var seleccionado = mapa[tipo];
@@ -1774,24 +1802,29 @@
                         if (otroChk && otroChk.checked) {
                             otroChk.checked = false;
                         }
-                        if (otro.capa && map.hasLayer(otro.capa)) {
-                            map.removeLayer(otro.capa);
+                        var otraCapa = otro.capa();
+                        if (otraCapa && map.hasLayer(otraCapa)) {
+                            map.removeLayer(otraCapa);
                         }
                     }
                 });
-                // Añadir la capa seleccionada
-                if (seleccionado.capa && !map.hasLayer(seleccionado.capa)) {
-                    map.addLayer(seleccionado.capa);
+                // Iniciar carga (diferida) y añadir al mapa cuando esté lista
+                seleccionado.cargar();
+                // Si la capa ya está cargada, añadirla inmediatamente
+                var capaActual = seleccionado.capa();
+                if (capaActual && !map.hasLayer(capaActual)) {
+                    map.addLayer(capaActual);
                 }
             } else {
-                // Si se desactivó, quitar su capa
-                if (seleccionado.capa && map.hasLayer(seleccionado.capa)) {
-                    map.removeLayer(seleccionado.capa);
+                // Si se desactivó, quitar su capa (si existe)
+                var capaActual = seleccionado.capa();
+                if (capaActual && map.hasLayer(capaActual)) {
+                    map.removeLayer(capaActual);
                 }
             }
 
             // Limpiar selección de polígono si pertenece a una capa que se quitó
-            if (capaSeleccionada && seleccionado.capa && seleccionado.capa.hasLayer(capaSeleccionada)) {
+            if (capaSeleccionada && seleccionado.capa() && seleccionado.capa().hasLayer(capaSeleccionada)) {
                 capaSeleccionada.setStyle(capaSeleccionada.originalStyle);
                 capaSeleccionada = null;
             }
