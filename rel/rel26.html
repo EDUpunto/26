@@ -1614,14 +1614,14 @@ https://www.one.gob.do/publicaciones/2024/informe-general-del-x-censo-nacional-d
         };
 
         // ════
-        // 10. CAPA DE FRONTERA - CORREGIDA (Carga diferida)
+        // 10. CAPA DE FRONTERA - CORREGIDA
         // ════
         var capaFrontera = null;
         var fronteraCargada = false;
 
         function cargarFrontera() {
             if (fronteraCargada) return;
-            fetch(encodeURI('dlim/FRONTERA RD_HAI.json'))
+            fetch('dlim/FRONTERA_RD_HAI.json')
                 .then(function(response) {
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     return response.json();
