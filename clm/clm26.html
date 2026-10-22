@@ -926,7 +926,7 @@
         }
 
         // ═══════════════════════════════════════════════════════════
-        // 5. DELIMITACIÓN (carga diferida + nombres corregidos)
+        // 5. DELIMITACIÓN (carga diferida + nombres .json)
         // ═══════════════════════════════════════════════════════════
         var capaProvincias = null;
         var capaMunicipios = null;
@@ -982,7 +982,7 @@
             });
         }
 
-        function crearCapaProvincias() {
+        function crearCapaProvincias(callback) {
             var grupo = L.layerGroup();
             var url = 'dlim/PROVINCIAS_RD_2026.json';
             fetch(encodeURI(url))
@@ -1011,14 +1011,16 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    if (callback) callback(grupo);
                 })
                 .catch(function(e) {
                     console.warn('❌ Error cargando provincias:', e.message);
+                    if (callback) callback(null);
                 });
             return grupo;
         }
 
-        function crearCapaMunicipios() {
+        function crearCapaMunicipios(callback) {
             var grupo = L.layerGroup();
             var url = 'dlim/MUNICIPIOS_RD_2025.json';
             fetch(encodeURI(url))
@@ -1042,14 +1044,16 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    if (callback) callback(grupo);
                 })
                 .catch(function(e) {
                     console.warn('❌ Error cargando municipios:', e.message);
+                    if (callback) callback(null);
                 });
             return grupo;
         }
 
-        function crearCapaRegionesUnicas() {
+        function crearCapaRegionesUnicas(callback) {
             var grupo = L.layerGroup();
             var url = 'dlim/regionesunicasRD.json';
             fetch(encodeURI(url))
@@ -1078,14 +1082,16 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    if (callback) callback(grupo);
                 })
                 .catch(function(e) {
                     console.warn('❌ Error cargando regiones únicas:', e.message);
+                    if (callback) callback(null);
                 });
             return grupo;
         }
 
-        function crearCapaMacroregiones() {
+        function crearCapaMacroregiones(callback) {
             var grupo = L.layerGroup();
             var url = 'dlim/macroregionesRD.json';
             fetch(encodeURI(url))
@@ -1114,33 +1120,35 @@
                         }
                     });
                     grupo.addLayer(capa);
+                    if (callback) callback(grupo);
                 })
                 .catch(function(e) {
                     console.warn('❌ Error cargando macroregiones:', e.message);
+                    if (callback) callback(null);
                 });
             return grupo;
         }
 
-        // Función para crear la capa bajo demanda (lazy loading)
-        function cargarDelimitacion(tipo) {
-            if (tipo === 'provincias' && !capaProvincias) {
-                capaProvincias = crearCapaProvincias();
-            } else if (tipo === 'municipios' && !capaMunicipios) {
-                capaMunicipios = crearCapaMunicipios();
-            } else if (tipo === 'regiones-unicas' && !capaRegionesUnicas) {
-                capaRegionesUnicas = crearCapaRegionesUnicas();
-            } else if (tipo === 'macroregiones' && !capaMacroregiones) {
-                capaMacroregiones = crearCapaMacroregiones();
+        // Función de carga bajo demanda (lazy loading) con callback
+        function cargarDelimitacion(tipo, callback) {
+            if (tipo === 'provincias') {
+                capaProvincias = crearCapaProvincias(callback);
+            } else if (tipo === 'municipios') {
+                capaMunicipios = crearCapaMunicipios(callback);
+            } else if (tipo === 'regiones-unicas') {
+                capaRegionesUnicas = crearCapaRegionesUnicas(callback);
+            } else if (tipo === 'macroregiones') {
+                capaMacroregiones = crearCapaMacroregiones(callback);
             }
         }
 
         // Toggle con carga diferida y exclusividad
         window.toggleDelimitacion = function(tipo) {
             var mapa = {
-                'provincias':      { chk: 'chk-provincias',      capa: function() { return capaProvincias; },    cargar: function() { cargarDelimitacion('provincias'); } },
-                'municipios':      { chk: 'chk-municipios',      capa: function() { return capaMunicipios; },    cargar: function() { cargarDelimitacion('municipios'); } },
-                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: function() { return capaRegionesUnicas; }, cargar: function() { cargarDelimitacion('regiones-unicas'); } },
-                'macroregiones':   { chk: 'chk-macroregiones',   capa: function() { return capaMacroregiones; },  cargar: function() { cargarDelimitacion('macroregiones'); } }
+                'provincias':      { chk: 'chk-provincias',      capa: function() { return capaProvincias; } },
+                'municipios':      { chk: 'chk-municipios',      capa: function() { return capaMunicipios; } },
+                'regiones-unicas': { chk: 'chk-regiones-unicas', capa: function() { return capaRegionesUnicas; } },
+                'macroregiones':   { chk: 'chk-macroregiones',   capa: function() { return capaMacroregiones; } }
             };
 
             var seleccionado = mapa[tipo];
@@ -1161,27 +1169,19 @@
 
                 // Cargar la capa si no existe (lazy)
                 if (!seleccionado.capa()) {
-                    seleccionado.cargar();
-                }
-
-                // Esperar un tick para que la capa se cree (fetch asíncrono) y luego añadirla
-                // Usamos un setTimeout 0 para darle oportunidad al fetch, pero como es asíncrono
-                // la capa podría no estar lista aún. En su lugar, modificamos los creadores
-                // para que añadan la capa al mapa directamente si ya está en el layerGroup.
-                // Solución simple: añadir la capa cuando esté lista mediante un intervalo corto.
-                var intentos = 0;
-                var interval = setInterval(function() {
+                    cargarDelimitacion(tipo, function(capaCreada) {
+                        if (capaCreada) {
+                            var capaExistente = seleccionado.capa();
+                            if (capaExistente && map.hasLayer(capaExistente)) map.removeLayer(capaExistente);
+                            map.addLayer(capaCreada);
+                        }
+                    });
+                } else {
                     var capa = seleccionado.capa();
-                    if (capa) {
-                        clearInterval(interval);
-                        if (map.hasLayer(capa)) map.removeLayer(capa);
+                    if (capa && !map.hasLayer(capa)) {
                         map.addLayer(capa);
-                    } else if (intentos++ > 20) {
-                        clearInterval(interval);
-                        console.warn('No se pudo cargar la capa de delimitación: ' + tipo);
                     }
-                }, 100);
-
+                }
             } else {
                 var capa = seleccionado.capa();
                 if (capa && map.hasLayer(capa)) map.removeLayer(capa);
